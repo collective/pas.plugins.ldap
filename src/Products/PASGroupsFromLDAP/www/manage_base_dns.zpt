@@ -1,0 +1,84 @@
+<h1 tal:replace="structure here/manage_page_header|nothing">Header</h1>
+
+<h2 tal:define="manage_tabs_message options/manage_tabs_message | nothing"
+    tal:replace="structure here/manage_tabs">Tabs</h2>
+
+<h3>LDAP Group Settings</h3>
+
+
+
+<form tal:define="conf context/getConfig"
+      method="post" action="manage_changeConfiguration">
+<table>
+  <tr>
+    <td>LDAP server and port</td>
+    <td><input type="text" name="server" size="31"
+               tal:attributes="value conf/server"  /> :
+        <input type="text" name="port"  size="5"
+               tal:attributes="value conf/port"  /></td>
+  </tr>
+  <tr>
+    <td>Manager DN (user name)</td>
+    <td><input type="text" name="managerdn" size="40"
+               tal:attributes="value conf/managerdn"  /></td>
+  </tr>
+  <tr>
+    <td>Password</td>
+    <td><input type="password" name="password" size="40"
+               tal:attributes="value conf/password"  /></td>
+  </tr>
+  <tr>
+    <td>Group DN</td>
+    <td><input type="text" name="groupdn"  size="40"
+               tal:attributes="value conf/groupdn"  /></td>
+  </tr>
+  <tr>
+    <td>Scope</td>
+    <td><input type="text" name="scope"  size="40"
+               tal:attributes="value conf/scope"  /></td>
+  </tr>
+  <tr>
+    <td>ObjectClass</td>
+    <td><input type="text" name="objectclasses"  size="40"
+               tal:attributes="value python:', '.join(conf['objectclasses'])"  /></td>
+  </tr>
+  <tr>
+    <td>Escape [yes|no]<br /><i>('yes' for ActiveDirectory)</i></td>
+    <td><input type="text" name="escapevalues"  size="40"
+               tal:attributes="value python:conf['escapevalues'] and 'yes' or 'no'"  /></td>
+  </tr>
+  <tr>
+    <td>Attribute for group ID</td>
+    <td><input type="text" name="attributeid"  size="40"
+               tal:attributes="value conf/attributeid"  /></td>
+  </tr>
+  <tr>
+    <td>Attribute for group title</td>
+    <td><input type="text" name="attributetitle"  size="40"
+               tal:attributes="value conf/attributetitle"  /></td>
+  </tr>
+  <tr>
+    <td>Attribute for members in group <br /><i>(must contain ids expected by PAS)</i></td>
+    <td><input type="text" name="attributemembers"  size="40"
+                tal:attributes="value conf/attributemembers"  /></td>
+   </tr>
+   <tr>
+    <td>Property that contains userid for group lookup<br /><i>(The property name of the property of Member objects <br />that contains the value to be matched on group lookups.)</i></td>
+    <td><input type="text" name="attributegroupattr"  size="40"
+               tal:attributes="value conf/attributegroupattr|nothing"  /></td>
+  </tr>
+  <tr>
+     <td>&nbsp;</td>
+     <td><input type="submit" name="submit" value="submit" /></td>
+   </tr>
+</table>
+
+</form>
+<h3>Connection state</h3>
+<p tal:define="statemessage context/checkServerProperties;
+                       state python:statemessage[0];
+                       message python:statemessage[1];">
+  <strong tal:condition="state" style="color: green;" tal:content="message" />
+  <strong tal:condition="not: state" style="color: red;" tal:content="message" />
+</p>
+<tal:footer tal:replace="structure here/manage_page_footer|nothing">footer</tal:footer>

@@ -1,0 +1,35 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:five="http://namespaces.zope.org/five">
+
+  <five:registerPackage package="." />
+    
+  <include file="profiles.zcml" />
+  
+  <include package="bda.ldap" />
+
+  <five:implements
+      class="._plugin.GroupsFromLDAPMultiPlugin"
+      interface="._plugin.IGroupsFromLDAPMultiPlugin"
+  />
+
+  <adapter
+      factory=".exportimport.PASGroupsFromLDAPXMLAdapter"
+      provides="Products.GenericSetup.interfaces.IBody"
+      for="._plugin.IGroupsFromLDAPMultiPlugin
+           Products.GenericSetup.interfaces.ISetupEnviron"
+      />
+
+  <adapter
+      factory=".exportimport.PASGroupsFromLDAPConfigurationExportImport"
+      provides="Products.GenericSetup.interfaces.IFilesystemExporter"
+      for="._plugin.IGroupsFromLDAPMultiPlugin"
+      />
+
+  <adapter
+      factory=".exportimport.PASGroupsFromLDAPConfigurationExportImport"
+      provides="Products.GenericSetup.interfaces.IFilesystemImporter"
+      for="._plugin.IGroupsFromLDAPMultiPlugin"
+      />
+
+</configure>

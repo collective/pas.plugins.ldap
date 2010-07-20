@@ -1,0 +1,45 @@
+====================
+LDAPPropertiesPlugin
+====================
+
+This test runs atm only in context of a in BlueDynamics BKS-KPF project 
+accessible OpenDirectory LDAP Server. Sorry for our lazyness. Contributions with 
+more generic code are very appreciated.
+
+First lets see if the plugin is properly installed.
+
+    >>> pas = portal.acl_users
+    >>> pas
+    <PluggableAuthService at ...>
+
+    >>> portal.portal_quickinstaller.installProduct('PASGroupsFromLDAP')
+
+    >>> plugin = pas.groupbyldap
+    >>> plugin
+    <GroupsFromLDAPMultiPlugin at ...>
+
+    >>> plugin.ldap
+    <bda.ldap.properties.PloneLDAPWrapper object at ...>
+
+And check also if the adapters are registered properly
+    >>> from bda.ldap.properties import IUserProperties
+    >>> up = IUserProperties(plugin.ldap)
+    >>> up
+    <bda.ldap.properties.LDAPUserProperties object at ...>
+
+    >>> gp = IGroupProperties(plugin.lw)
+    <bda.ldap.properties.LDAPGroupProperties object at ...>
+
+Next set wrappers parameters to our testserver:
+    >>> plugin.ldap.setUserBase('cn=users,dc=deimos,dc=bks-campus,dc=ch')
+    >>> plugin.ldap.setGroupBase('cn=groups,dc=deimos,dc=bks-campus,dc=ch')
+    >>> plugin.ldap.setUidField('uid')
+    >>> plugin.ldap.setLoginnameField('cn')
+    >>> plugin.ldap.setGivennameField('givenName')
+    >>> plugin.ldap.setSurnameField('sn')
+    >>> plugin.ldap.setMailField('mail')
+    >>> plugin.ldap.setGroupmemberField('memberUid')
+    >>> plugin.ldap.setGidsField('cn')
+    >>> plugin.ldap.setGnamesField('apple-group-realname')
+
+    >>> self.interact(locals())

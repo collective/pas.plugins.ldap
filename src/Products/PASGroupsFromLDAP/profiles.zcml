@@ -1,0 +1,16 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="PASGroupsFromLDAP">
+
+  <include package="Products.GenericSetup" file="meta.zcml" />
+
+  <genericsetup:registerProfile
+      name="default"
+      title="PASGroupsFromLDAP"
+      directory="profile"
+      description="Extension profile for PASGroupsFromLDAP."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
+</configure>

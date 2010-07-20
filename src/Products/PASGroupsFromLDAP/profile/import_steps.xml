@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<import-steps>
+ <import-step id="setuppasgroupsfromldap" 
+              handler="Products.PASGroupsFromLDAP.setuphandlers.setupPlugin"
+              title="Setup LDAP Groups Plugin"
+              version="20080921">
+  <dependency step="plone-final"/>
+  Setup LDAP Groups Plugin
+ </import-step>
+</import-steps>
+ 

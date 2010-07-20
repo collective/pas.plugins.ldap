@@ -1,0 +1,72 @@
+<h1>
+  Groups from LDAP
+</h1>
+
+<p class="form-help">
+  Add a PASGroupsFromLDAP Plugin.
+</p>
+
+<form action="manage_addGroupsFromLDAPMultiPlugin" method="POST">
+<table>
+  <tr>
+    <td>Id</td>
+    <td><input type="text" name="id" size="40" />
+    </td>
+  </tr>
+  <tr>
+    <td>Title</td>
+    <td><input type="text" name="title" size="40" />
+    </td>
+  </tr>
+  <tr>
+    <td>LDAP server and port</td>
+    <td><input type="text" name="server" size="31" /> :
+        <input type="text" name="port"  size="5" /></td>
+  </tr>
+  <tr>
+    <td>Manager DN (user name)</td>
+    <td><input type="text" name="managerdn" size="40" /></td>
+  </tr>
+  <tr>
+    <td>Password</td>
+    <td><input type="password" name="password" size="40" /></td>
+  </tr>
+  <tr>
+    <td>Group DN</td>
+    <td><input type="text" name="groupdn"  size="40" /></td>
+  </tr>
+  <tr>
+    <td>Scope</td>
+    <td><input type="text" name="scope"  size="40" /></td>
+  </tr>
+  <tr>
+    <td>ObjectClass</td>
+    <td><input type="text" name="objectclasses"  size="40" /></td>
+  </tr>
+  <tr>
+    <td>Escape [yes|no]<br /><i>('yes' for ActiveDirectory)</i></td>
+    <td><input type="text" name="escapevalues"  size="40" /></td>
+  </tr>
+  <tr>
+    <td>Attribute for group ID</td>
+    <td><input type="text" name="attributeid"  size="40" /></td>
+  </tr>
+  <tr>
+    <td>Attribute for group title</td>
+    <td><input type="text" name="attributetitle"  size="40" /></td>
+  </tr>
+  <tr>
+    <td>Attribute for members in group <br /><i>(must contain ids expected by PAS)</i></td>
+                tal:attributes="value conf/attributemembers"  /></td>
+   </tr>
+   <tr>
+    <td>Property that contains userid for group lookup<br /><i>(The property name of the property of Member objects <br />that contains the value to be matched on group lookups.)</i></td>
+    <td><input type="text" name="groupattr"  size="40"
+               tal:attributes="value conf/attributegroupattr|nothing"  /></td>
+  </tr>
+  <tr>
+     <td>&nbsp;</td>
+     <td><input type="submit" name="submit" value="submit" /></td>
+   </tr>
+</table>
+</form>
