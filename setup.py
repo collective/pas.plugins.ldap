@@ -5,7 +5,7 @@ version = '1.2.3'
 shortdesc ="Zope 2 PAS Plugin providing groups from LDAP directory"
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.txt')).read()
 
-setup(name='Products.PASGroupsFromLDAP',
+setup(name='bda.pasldap',
       version=version,
       description=shortdesc,
       long_description=longdesc,
@@ -23,7 +23,7 @@ setup(name='Products.PASGroupsFromLDAP',
       license='',
       packages=find_packages('src'),
       package_dir = {'': 'src'},
-      namespace_packages=['Products'],
+      namespace_packages=['bda'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[

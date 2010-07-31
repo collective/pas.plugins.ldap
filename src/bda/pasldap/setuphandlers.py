@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009 BlueDynamics Alliance, Austria http://bluedynamics.com
+# Copyright (c) 2006-2010 BlueDynamics Alliance, Austria http://bluedynamics.com
 # GNU General Public License (GPL)
 
 from Products.PluggableAuthService.interfaces.plugins import IGroupsPlugin
@@ -7,10 +7,10 @@ from Products.PluggableAuthService.interfaces.plugins import \
 from Products.PluggableAuthService.interfaces.plugins import IPropertiesPlugin
 from Products.PlonePAS.plugins.group import IGroupIntrospection
 
-PLUGINID = 'groups_from_ldap'
+PLUGINID = 'ldap'
 
 def isNotThisProfile(context):
-    return context.readDataFile("pasgroupsfromldap_marker.txt") is None
+    return context.readDataFile("bdapasldap_marker.txt") is None
 
 def setupPlugin(context):
     if isNotThisProfile(context):
