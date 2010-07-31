@@ -31,6 +31,11 @@ setup(name='bda.pasldap',
           # -*- Extra requirements: -*
       ],
       extras_require={
+          'test': [
+              'interlude',
+              'zope.configuration',
+              'zope.testing',
+          ]
       },
       entry_points="""
       # -*- Entry points: -*-

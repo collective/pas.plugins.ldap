@@ -1,0 +1,121 @@
+# users
+dn: cn=user1,dc=my-domain,dc=com
+cn: user1
+objectClass: top
+objectClass: person
+userPassword: foo1
+sn: Meier
+telephoneNumber: 1234
+
+dn: cn=user2,ou=customers,dc=my-domain,dc=com
+cn: user2
+objectClass: top
+objectClass: person
+userPassword: foo2
+sn: Müller
+telephoneNumber: 1234
+
+dn: cn=user3,ou=customers,dc=my-domain,dc=com
+cn: user3
+objectClass: top
+objectClass: person
+userPassword: foo3
+sn: Schmidt
+description: foo
+telephoneNumber: 1234
+
+# street abused to define group membership, a la memberOf
+# i.e. the membership is defined by an attribute pointing to the group dn
+dn: cn=nästy\, User,oU=Customers,DC=My-Domain, dc=com
+cn: nästy, User
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+userPassword: nästy
+sn: Umhauer
+description: foo
+telephoneNumber: 1234
+street: cn=group2,dc=my-domain,dc=com
+
+dn: ou=newusershere,dc=my-domain,dc=com
+ou: newusershere
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=newgroupshere,dc=my-domain,dc=com
+ou: newgroupshere
+objectClass: top
+objectClass: organizationalUnit
+
+
+# groupOfNames-style groups, with group in group
+dn: cn=group1,dc=my-domain,dc=com
+cn: group1
+objectClass: top
+objectClass: groupOfNames
+member: cn=user3,ou=customers,dc=my-domain,dc=com
+member: cn=user2,ou=customers,dc=my-domain,dc=com
+member: cn=group2,dc=my-domain,dc=com
+
+dn: cn=group2,dc=my-domain,dc=com
+cn: group2
+objectClass: top
+objectClass: groupOfNames
+member: cn=nästy\, User,oU=Customers,DC=My-Domain, dc=com
+member: cn=aduser2,dc=my-domain,dc=com
+
+
+# posixGroups simulation, group defined by pointing to a unique attribute of a
+# group (the primary group) + referencing a users by a unique attribute
+dn: o=group3,dc=my-domain,dc=com
+o: group3
+objectClass: top
+objectClass: organization
+# the gidNumber
+st: 42
+
+dn: o=group4,dc=my-domain,dc=com
+o: group4
+objectClass: top
+objectClass: organization
+# the gidNumber
+st: 43
+# memberUid
+description: 18
+description: 20
+
+dn: ou=puser1,dc=my-domain,dc=com
+ou: puser1
+objectClass: top
+objectClass: organizationalUnit
+# uidNumber
+telexNumber: 17
+# the gidNumber
+st: 42
+
+dn: ou=puser2,dc=my-domain,dc=com
+ou: puser2
+objectClass: top
+objectClass: organizationalUnit
+# uidNumber
+telexNumber: 18
+# the gidNumber
+st: 43
+
+dn: ou=puser3,dc=my-domain,dc=com
+ou: puser3
+objectClass: top
+objectClass: organizationalUnit
+# uidNumber
+telexNumber: 19
+# the gidNumber
+st: 43
+
+dn: ou=puser4,dc=my-domain,dc=com
+ou: puser4
+objectClass: top
+objectClass: organizationalUnit
+# uidNumber
+telexNumber: 20
+# the gidNumber
+st: 43
