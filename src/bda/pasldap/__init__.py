@@ -3,21 +3,21 @@
 
 from AccessControl.Permissions import add_user_folders
 from Products.PluggableAuthService import registerMultiPlugin
-from Products.PASGroupsFromLDAP._plugin import (
-    GroupsFromLDAPMultiPlugin,
-    manage_addGroupsFromLDAPMultiPluginForm,
-    manage_addGroupsFromLDAPMultiPlugin 
+from bda.pasldap._plugin import (
+    LDAPPlugin,
+    manage_addLDAPPluginForm,
+    manage_addLDAPPlugin 
 )
 
 def initialize(context):
-    registerMultiPlugin(GroupsFromLDAPMultiPlugin.meta_type)
+    registerMultiPlugin(LDAPPlugin.meta_type)
     context.registerClass(
-        GroupsFromLDAPMultiPlugin,
+        LDAPPlugin,
         permission=add_user_folders,
         icon="www/ldap.gif",
         constructors=(
-            manage_addGroupsFromLDAPMultiPluginForm,
-            manage_addGroupsFromLDAPMultiPlugin,
+            manage_addLDAPPluginForm,
+            manage_addLDAPPlugin,
         ),
         visibility=None
     )

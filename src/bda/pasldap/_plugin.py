@@ -2,7 +2,7 @@
 # GNU General Public License (GPL)
 
 import logging
-logger = logging.getLogger('PASGroupsFromLDAP')
+logger = logging.getLogger('LDAPPlugin')
 
 import socket, os
 import types
@@ -37,26 +37,26 @@ ALLOWED_SCOPES = {'BASE': BASE, 'ONELEVEL': ONELEVEL, 'SUBTREE': SUBTREE}
 
 _wwwdir = os.path.join( package_home( globals() ), 'www' )
 
-manage_addGroupsFromLDAPMultiPluginForm = PageTemplateFile(
-    os.path.join(_wwwdir, 'addGroupsFromLDAPMultiPlugin'),
+manage_addLDAPPluginForm = PageTemplateFile(
+    os.path.join(_wwwdir, 'addLDAPPlugin'),
     globals(),
-    __name__='addGroupsFromLDAPMultiPlugin')
+    __name__='addLDAPPlugin')
 
-def manage_addGroupsFromLDAPMultiPlugin(self, id, title, server, port,
+def manage_addLDAPPlugin(self, id, title, server, port,
                                         managerdn, password, groupdn, scope,
                                         objectclasses, escapevalues,
                                         attributeid, attributetitle,
                                         attributemembers, 
                                         attributegroupattr=None, 
                                         REQUEST=None):
-    """Factory method to instantiate a GroupsFromLDAPMultiPlugin.
+    """Factory method to instantiate a LDAPPlugin.
     """
     # Make sure we really are working in our container (the
     # PluggableAuthService object.
     self = self.this()
 
     # Instantiate the folderish adapter object
-    plugin = GroupsFromLDAPMultiPlugin(id, title=title)
+    plugin = LDAPPlugin(id, title=title)
     self._setObject(id, plugin)
     
     if REQUEST is None:
@@ -83,19 +83,19 @@ def manage_addGroupsFromLDAPMultiPlugin(self, id, title, server, port,
     if REQUEST is not None:
         REQUEST.RESPONSE.redirect('%s/manage_main' % self.absolute_url())
     
-class IGroupsFromLDAPMultiPlugin(Interface):
+class ILDAPPlugin(Interface):
     """Marker Interface"""
 
-class GroupsFromLDAPMultiPlugin(BasePlugin, Cacheable):
+class LDAPPlugin(BasePlugin, Cacheable):
     ''' fetches group info from LDAP and provides in PAS'''
 
     security = ClassSecurityInfo()
 
-    implements(IGroupsFromLDAPMultiPlugin)
+    implements(ILDAPPlugin)
 
     __implements__ = (getattr(BasePlugin,'__implements__',()),)
 
-    meta_type = 'GroupsFromLDAPMultiPlugin'
+    meta_type = 'LDAPPlugin'
 
     config_whitelist=['server','port','managerdn','password',
                       'groupdn','scope','objectclasses','escapevalues',
@@ -327,7 +327,7 @@ class GroupsFromLDAPMultiPlugin(BasePlugin, Cacheable):
         If titleattr is given, return a list of tuples containing (id, title) 
         of the groups, otherwise return a list of ids.
         """
-        view_name = createViewName('GroupsFromLDAPMultiPlugin.searchGroups', 
+        view_name = createViewName('LDAPPlugin.searchGroups', 
                                    self.id)
         keywords = { 'key': '='.join([str(basedn), str(groupattr), str(scope),
                                       str(search), str(objectClass),
@@ -375,7 +375,7 @@ class GroupsFromLDAPMultiPlugin(BasePlugin, Cacheable):
         bda.ldap.base and optional a list of objectClass names. 
         Return a list of group ids.
         """
-        view_name = createViewName('GroupsFromLDAPMultiPlugin.searchGroupsOfUser', 
+        view_name = createViewName('LDAPPlugin.searchGroupsOfUser', 
                                    self.id)
         keywords = {'key': '='.join([str(basedn), str(groupattr), str(userattr),
                                      str(uservalue), str(scope), 
@@ -420,7 +420,7 @@ class GroupsFromLDAPMultiPlugin(BasePlugin, Cacheable):
         bda.ldap.base and optional a list of objectClass names. 
         Returns a list of member ids.
         """
-        view_name = createViewName('GroupsFromLDAPMultiPlugin.searchMembersOfGroup', 
+        view_name = createViewName('LDAPPlugin.searchMembersOfGroup', 
                                    self.id)
         keywords = {'key': '&'.join([basedn, groupattr, userattr, groupvalue,
                                      str(scope), str(objectClass)])}
@@ -461,7 +461,7 @@ class GroupsFromLDAPMultiPlugin(BasePlugin, Cacheable):
         """
 
         # See if the group can be retrieved from the cache
-        view_name = createViewName('GroupsFromLDAPMultiPlugin.makeGroup', 
+        view_name = createViewName('LDAPPlugin.makeGroup', 
                                    self.id)
         keywords = { 'group_id' : groupid,
 
@@ -627,9 +627,11 @@ class GroupsFromLDAPMultiPlugin(BasePlugin, Cacheable):
                       ,
                       ) + BasePlugin.manage_options + Cacheable.manage_options
 
-classImplements(GroupsFromLDAPMultiPlugin, IGroupsPlugin,
-                                           IGroupEnumerationPlugin,
-                                           IGroupIntrospection,
-                                           IPropertiesPlugin,
-                                           IRolesPlugin)
-InitializeClass(GroupsFromLDAPMultiPlugin)
+classImplements(LDAPPlugin,
+        IGroupsPlugin,
+        IGroupEnumerationPlugin,
+        IGroupIntrospection,
+        IPropertiesPlugin,
+        IRolesPlugin,
+        )
+InitializeClass(LDAPPlugin)

@@ -7,9 +7,9 @@
 
   <genericsetup:registerProfile
       name="default"
-      title="PASGroupsFromLDAP"
+      title="PAS LDAP Plugin"
       directory="profile"
-      description="Extension profile for PASGroupsFromLDAP."
+      description="Extension profile for bda.pasldap"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 

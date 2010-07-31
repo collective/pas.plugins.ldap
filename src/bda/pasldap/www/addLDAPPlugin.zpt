@@ -6,7 +6,7 @@
   Add a PASGroupsFromLDAP Plugin.
 </p>
 
-<form action="manage_addGroupsFromLDAPMultiPlugin" method="POST">
+<form action="manage_addLDAPPlugin" method="POST">
 <table>
   <tr>
     <td>Id</td>

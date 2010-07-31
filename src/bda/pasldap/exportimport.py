@@ -13,7 +13,7 @@ from Products.GenericSetup.interfaces import IFilesystemExporter
 from Products.GenericSetup.interfaces import IFilesystemImporter
 
 
-class PASGroupsFromLDAPConfigurationExportImport(Implicit):
+class LDAPPluginConfigurationExportImport(Implicit):
 
     implements(IFilesystemExporter, IFilesystemImporter)
 
@@ -23,7 +23,7 @@ class PASGroupsFromLDAPConfigurationExportImport(Implicit):
     def export(self, export_context, subdir, root=False):
         """ See IFilesystemExporter. """
         filename = os.path.join(subdir, '%s.xml' % self.context.getId())
-        logger = export_context.getLogger('PASGroupsFromLDAP')
+        logger = export_context.getLogger('LDAPPlugin')
 
         exporter = zapi.queryMultiAdapter((self.context, export_context), IBody)
         if exporter is None:
@@ -35,17 +35,17 @@ class PASGroupsFromLDAPConfigurationExportImport(Implicit):
         
     def import_(self, import_context, subdir, root=False):
         """ See IFilesystemImporter. """        
-        logger = import_context.getLogger('PASGroupsFromLDAP')
+        logger = import_context.getLogger('LDAPPlugin')
         filename = os.path.join(subdir, '%s.xml' % self.context.getId())
         body = import_context.readDataFile(filename, import_context.getEncoding())        
         importer = zapi.queryMultiAdapter((self.context, import_context), IBody)
         if importer is None:
             logger.warning('Import adapter missing.')
             return
-        logger.info('PASGroupsFromLDAP plugin imported')
+        logger.info('LDAPPlugin plugin imported')
 
 
-class PASGroupsFromLDAPXMLAdapter(XMLAdapterBase):
+class LDAPPluginXMLAdapter(XMLAdapterBase):
     """import pas groups from ldap config"""
     
     implements(IBody)

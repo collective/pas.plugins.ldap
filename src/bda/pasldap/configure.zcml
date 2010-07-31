@@ -9,27 +9,27 @@
   <include package="bda.ldap" />
 
   <five:implements
-      class="._plugin.GroupsFromLDAPMultiPlugin"
-      interface="._plugin.IGroupsFromLDAPMultiPlugin"
+      class="._plugin.LDAPPlugin"
+      interface="._plugin.ILDAPPlugin"
   />
 
   <adapter
-      factory=".exportimport.PASGroupsFromLDAPXMLAdapter"
+      factory=".exportimport.LDAPPluginXMLAdapter"
       provides="Products.GenericSetup.interfaces.IBody"
-      for="._plugin.IGroupsFromLDAPMultiPlugin
+      for="._plugin.ILDAPPlugin
            Products.GenericSetup.interfaces.ISetupEnviron"
       />
 
   <adapter
-      factory=".exportimport.PASGroupsFromLDAPConfigurationExportImport"
+      factory=".exportimport.LDAPPluginConfigurationExportImport"
       provides="Products.GenericSetup.interfaces.IFilesystemExporter"
-      for="._plugin.IGroupsFromLDAPMultiPlugin"
+      for="._plugin.ILDAPPlugin"
       />
 
   <adapter
-      factory=".exportimport.PASGroupsFromLDAPConfigurationExportImport"
+      factory=".exportimport.LDAPPluginConfigurationExportImport"
       provides="Products.GenericSetup.interfaces.IFilesystemImporter"
-      for="._plugin.IGroupsFromLDAPMultiPlugin"
+      for="._plugin.ILDAPPlugin"
       />
 
 </configure>

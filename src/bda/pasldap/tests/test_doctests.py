@@ -23,7 +23,7 @@ PloneTestCase.installProduct('PASGroupsFromLDAP')
 PloneTestCase.installProduct('Five')
 
 ZCMLS = (
-    Products.PASGroupsFromLDAP,
+    bda.pasldap,
     )
 
 for package in ZCMLS:
@@ -64,7 +64,7 @@ PloneTestCase.PloneTestCase.interact = interact
 def test_suite():
     testsuite = unittest.TestSuite((
         ZopeDocFileSuite('propertiesplugin.txt',
-                         package='Products.PASGroupsFromLDAP.docs',
+                         package='bda.pasldap.docs',
                          test_class=PloneTestCase.PloneTestCase,
                          optionflags=doctest.ELLIPSIS|doctest.REPORT_ONLY_FIRST_FAILURE),
     ))

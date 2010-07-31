@@ -20,8 +20,8 @@ def setupPlugin(context):
     registry = pas.plugins
     groupplugins = [id for id, pi in registry.listPlugins(IGroupsPlugin)]
     if PLUGINID not in groupplugins:
-        factories = pas.manage_addProduct['PASGroupsFromLDAP']    
-        factories.manage_addGroupsFromLDAPMultiPlugin(PLUGINID,
+        factories = pas.manage_addProduct['LDAPPlugin']    
+        factories.manage_addLDAPPlugin(PLUGINID,
                                                       'Plone groups from LDAP',
                                                       '127.0.0.1',
                                                       '389',
