@@ -2,17 +2,18 @@
            xmlns:browser="http://namespaces.zope.org/browser"
            xmlns:five="http://namespaces.zope.org/five">
 
+  <include package="bda.ldap" />
+
   <five:registerPackage package="." />
     
   <include file="profiles.zcml" />
   
-  <include package="bda.ldap" />
-
   <five:implements
       class="._plugin.LDAPPlugin"
       interface="._plugin.ILDAPPlugin"
   />
 
+<!--
   <adapter
       factory=".exportimport.LDAPPluginXMLAdapter"
       provides="Products.GenericSetup.interfaces.IBody"
@@ -31,5 +32,6 @@
       provides="Products.GenericSetup.interfaces.IFilesystemImporter"
       for="._plugin.ILDAPPlugin"
       />
+-->
 
 </configure>

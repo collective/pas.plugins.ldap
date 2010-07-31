@@ -27,8 +27,10 @@ setup(name='bda.pasldap',
       zip_safe=False,
       install_requires=[
           'setuptools', 
-          'bda.ldap>=1.6.0',
           # -*- Extra requirements: -*
+          'Plone', # ? should be required by plone.app.folder but isnt
+          'Products.PlonePAS',
+          'bda.ldap>=1.6.0',
       ],
       extras_require={
           'test': [
