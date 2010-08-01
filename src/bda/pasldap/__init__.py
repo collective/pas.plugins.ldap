@@ -3,11 +3,7 @@
 
 from AccessControl.Permissions import add_user_folders
 from Products.PluggableAuthService import registerMultiPlugin
-from bda.pasldap._plugin import (
-    LDAPPlugin,
-    manage_addLDAPPluginForm,
-    manage_addLDAPPlugin 
-)
+from bda.pasldap._plugin import LDAPPlugin
 
 def initialize(context):
     registerMultiPlugin(LDAPPlugin.meta_type)
@@ -16,7 +12,6 @@ def initialize(context):
         permission=add_user_folders,
         icon="www/ldap.gif",
         constructors=(
-            manage_addLDAPPluginForm,
             manage_addLDAPPlugin,
         ),
         visibility=None

@@ -1,13 +1,13 @@
 # Copyright (c) 2006-2010 BlueDynamics Alliance, Austria http://bluedynamics.com
 # GNU General Public License (GPL)
 
-from Products.PluggableAuthService.interfaces.plugins import IGroupsPlugin
-from Products.PluggableAuthService.interfaces.plugins import \
-    IGroupEnumerationPlugin
-from Products.PluggableAuthService.interfaces.plugins import IPropertiesPlugin
-from Products.PlonePAS.plugins.group import IGroupIntrospection
+from StringIO import StringIO
+from Products.PlonePAS.Extensions.Install import activatePluginInterfaces
 
-PLUGINID = 'ldap'
+from bda.pasldap._plugin import addLDAPPlugin
+
+ID = 'ldap'
+TITLE = 'LDAP Plugin'
 
 def isNotThisProfile(context):
     return context.readDataFile("bdapasldap_marker.txt") is None
@@ -15,28 +15,14 @@ def isNotThisProfile(context):
 def setupPlugin(context):
     if isNotThisProfile(context):
         return 
+    out = StringIO()
     portal = context.getSite()
     pas = portal.acl_users
-    registry = pas.plugins
-    groupplugins = [id for id, pi in registry.listPlugins(IGroupsPlugin)]
-    if PLUGINID not in groupplugins:
-        factories = pas.manage_addProduct['LDAPPlugin']    
-        factories.manage_addLDAPPlugin(PLUGINID,
-                                                      'Plone groups from LDAP',
-                                                      '127.0.0.1',
-                                                      '389',
-                                                      'cn=admin,dc=domain,dc=com',
-                                                      'secret',
-                                                      'ou=groups,dc=domain,dc=com',
-                                                      'SUBTREE',
-                                                      'posixGroup',
-                                                      'no',
-                                                      'groupid',
-                                                      'groupid',
-                                                      'uid',
-                                                      None,
-                                                      REQUEST=None)
-        registry.activatePlugin(IGroupsPlugin, PLUGINID )
-        registry.activatePlugin(IGroupEnumerationPlugin, PLUGINID )
-        registry.activatePlugin(IGroupIntrospection, PLUGINID )
-        registry.activatePlugin(IPropertiesPlugin, PLUGINID )
+    installed = pas.objectIds()
+    if ID not in installed:
+        addLDAPPlugin(pas, ID, TITLE)
+        # register for various jobs
+        activatePluginInterfaces(portal, ID, out)
+    else:
+        print >> out, TITLE+" already installed."
+    print out.getvalue()

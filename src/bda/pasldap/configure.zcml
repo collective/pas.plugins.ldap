@@ -1,17 +1,20 @@
-<configure xmlns="http://namespaces.zope.org/zope"
-           xmlns:browser="http://namespaces.zope.org/browser"
-           xmlns:five="http://namespaces.zope.org/five">
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="bda.pasldap"
+    >
 
   <include package="bda.ldap" />
 
-  <five:registerPackage package="." />
-    
-  <include file="profiles.zcml" />
-  
-  <five:implements
-      class="._plugin.LDAPPlugin"
-      interface="._plugin.ILDAPPlugin"
-  />
+  <genericsetup:registerProfile
+      name="default"
+      title="PAS LDAP Plugin"
+      directory="profile"
+      description="Extension profile for bda.pasldap"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
 
 <!--
   <adapter
