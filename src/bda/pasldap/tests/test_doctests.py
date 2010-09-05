@@ -15,8 +15,6 @@ optionflags = (doctest.NORMALIZE_WHITESPACE|
 def test_suite():
     suite = ZopeTestCase.FunctionalDocFileSuite(
             # the files to test
-            'integration-pasldap.txt',
-            'functional.txt',
             optionflags=optionflags,
             globs={'interact': interact,
                    'pprint': pprint,},

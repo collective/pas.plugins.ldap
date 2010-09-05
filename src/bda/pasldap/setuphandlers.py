@@ -2,12 +2,13 @@
 # GNU General Public License (GPL)
 
 from StringIO import StringIO
-from Products.PlonePAS.Extensions.Install import activatePluginInterfaces
 
 from bda.pasldap._plugin import UsersReadOnly
 
+
 def isNotThisProfile(context):
     return context.readDataFile("bdapasldap_marker.txt") is None
+
 
 def setupPlugin(context):
     if isNotThisProfile(context):
@@ -21,8 +22,14 @@ def setupPlugin(context):
     if ID not in installed:
         plugin = UsersReadOnly(ID, title=TITLE)
         pas._setObject(ID, plugin)
-        activatePluginInterfaces(portal, ID, out)
-        #XXX move plugin to top
+        for info in pas.plugins.listPluginTypeInfo():
+            interface = info['interface']
+            if interface.providedBy(plugin):
+                pas.plugins.activatePlugin(interface, plugin.getId())
+                pas.plugins.movePluginsDown(
+                        interface,
+                        [x[0] for x in pas.plugins.listPlugins(interface)[:-1]],
+                        )
     else:
         print >> out, TITLE+" already installed."
     print out.getvalue()
