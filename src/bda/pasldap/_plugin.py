@@ -21,11 +21,13 @@ import Acquisition
 import sys
 from zope.component import getUtility
 from zope.interface import Interface, implements
-from Products.CMFPlone.interfaces import IPloneSiteRoot
+from Products.CMFCore.interfaces import ISiteRoot
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
 from Products.PlonePAS import interfaces as plonepas_interfaces
 
+from bda.ldap.interfaces import ILDAPProps
+from bda.ldap.interfaces import ILDAPUsersConfig
 from bda.ldap.users import LDAPUsers
 #from bda.ldap.groups import LDAPGroups
 
@@ -85,7 +87,6 @@ class UsersReadOnly(BasePlugin):
     def __init__(self, id, title=None):
         self.id = id
         self.title = title
-        self._portal = getUtility(IPloneSiteRoot)
 
     @property
     def users(self):
@@ -96,15 +97,19 @@ class UsersReadOnly(BasePlugin):
             return self._v_users
 
     def _init_users(self):
-        # get config
-        #props = ILDAPProps(self._portal)
-        #gcfg = ILDAPGroupsConfig(self._portal)
-        #ucfg = ILDAPUsersConfig(self._portal)
-        from bda.ldap.testing import props, ucfg
-        ucfg.props.port = 22345
-        # create users / groups
-        self._v_users = LDAPUsers(ucfg)
-        #self._v_groups = LDAPGroups(gcfg)
+        #from bda.ldap.testing import props, ucfg
+        site = getUtility(ISiteRoot)
+        props = ILDAPProps(site)
+        ucfg = ILDAPUsersConfig(site)
+        #gcfg = ILDAPGroupsConfig(site)
+        self._v_users = LDAPUsers(props, ucfg)
+        #self._v_groups = LDAPGroups(props, gcfg)
+
+        #props.port = 12345
+        #ucfg.attrmap['id'] = 'uid'
+        #ucfg.attrmap['login'] = 'sn'
+        #ucfg.attrmap['fullname'] = 'cn'
+        #ucfg.attrmap['email'] = 'telephoneNumber'
 
     ###
     # pas_interfaces.IAuthenticationPlugin

@@ -14,8 +14,8 @@ def setupPlugin(context):
     if isNotThisProfile(context):
         return 
     out = StringIO()
-    portal = context.getSite()
-    pas = portal.acl_users
+    site = context.getSite()
+    pas = site.acl_users
     installed = pas.objectIds()
     ID = 'ldap_users_readonly'
     TITLE = 'LDAP users readonly'
