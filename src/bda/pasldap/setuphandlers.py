@@ -17,10 +17,10 @@ def setupPlugin(context):
     site = context.getSite()
     pas = site.acl_users
     installed = pas.objectIds()
-    ID = 'ldap_users_readonly'
-    TITLE = 'LDAP users readonly'
+    ID = 'ldap_bda'
+    TITLE = 'BDA LDAP plugin'
     if ID not in installed:
-        plugin = UsersReadOnly(ID, title=TITLE)
+        plugin = LDAPPlugin(ID, title=TITLE)
         pas._setObject(ID, plugin)
         for info in pas.plugins.listPluginTypeInfo():
             interface = info['interface']
