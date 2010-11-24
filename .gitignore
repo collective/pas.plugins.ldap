@@ -1,4 +1,6 @@
+*.pyc
 /bin
 /devsrc/
 /parts/
 /var/
+src/bda.pasldap.egg-info
