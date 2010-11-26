@@ -1,11 +1,6 @@
-# Copyright (c) 2006-2009 BlueDynamics Alliance, Austria http://bluedynamics.com
-# GNU General Public License (GPL)
-
-
 #import socket, os
 #import types
 #from sets import Set
-
 #from Acquisition import Implicit, aq_parent, aq_base, aq_inner
 #from AccessControl import getSecurityManager
 #from OFS.Cache import Cacheable
@@ -13,27 +8,29 @@
 #from Products.PluggableAuthService.permissions import ManageGroups
 #from Products.PluggableAuthService.UserPropertySheet import UserPropertySheet
 
-
 import logging
 logger = logging.getLogger('bda.plone.ldap')
 
 import Acquisition
 import sys
+from zope.interface import (
+    Interface,
+    implements,
+)
 from zope.component import getUtility
-from zope.interface import Interface, implements
+from bda.ldap.interfaces import (
+    ILDAPProps,
+    ILDAPUsersConfig,
+    ILDAPGroupsConfig,
+)
+from bda.ldap.users import LDAPUsers
+#from bda.ldap.groups import LDAPGroups
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
 from Products.PlonePAS import interfaces as plonepas_interfaces
 
-from bda.ldap.interfaces import ILDAPProps
-from bda.ldap.interfaces import ILDAPUsersConfig
-from bda.ldap.users import LDAPUsers
-#from bda.ldap.groups import LDAPGroups
-
-
 backends = dict()
-
 
 WHAT_TO_DEBUG = set([
         'authentication',
@@ -70,16 +67,14 @@ class ifnotenabledreturn(object):
         decor.retval = retval
 
     def __call__(decor, method):
-        if not wrapped_method.im_self.enabled:
+        import pdb;pdb.set_trace()
+        if not method.im_self.enabled:
             return decor.retval
         def wrapper(*args, **kws):
             return method(*args, **kws)
         return wrapper
 
-
-XXXXX: 3 plugins!!!!! users and groups  +  properties
-
-
+#XXXXX: 3 plugins!!!!! users and groups  +  properties
 
 class LDAPPlugin(BasePlugin):
     """Glue layer for making bda.ldap available to PAS.
@@ -125,23 +120,15 @@ class LDAPPlugin(BasePlugin):
             return self._v_users
 
     def _init_users(self):
-        #from bda.ldap.testing import props, ucfg
         site = getUtility(ISiteRoot)
         props = ILDAPProps(site)
         ucfg = ILDAPUsersConfig(site)
-        from bda.ldap.testing import props, ucfg
-        ucfg.attrmap = {}
-        ucfg.attrmap['id'] = 'uid'
-        ucfg.attrmap['login'] = 'sn'
-        ucfg.attrmap['fullname'] = 'cn'
-        ucfg.attrmap['email'] = 'telephoneNumber'
         #gcfg = ILDAPGroupsConfig(site)
         try:
             self._v_users = LDAPUsers(props, ucfg)
         except ValueError, e:
             pass
         #self._v_groups = LDAPGroups(props, gcfg)
-
 
     ###
     # pas_interfaces.IAuthenticationPlugin
@@ -155,7 +142,7 @@ class LDAPPlugin(BasePlugin):
 
         o 'credentials' will be a mapping, as returned by IExtractionPlugin.
 
-        o Return a  tuple consisting of user ID (which may be different 
+        o Return a tuple consisting of user ID (which may be different 
           from the login name) and login
 
         o If the credentials cannot be authenticated, return None.
@@ -227,10 +214,10 @@ class LDAPPlugin(BasePlugin):
         if login:
             kws['login'] = login
         matches = self.users.search(
-                criteria=kws,
-                attrlist=('login',),
-                exact_match=exact_match
-                )
+            criteria=kws,
+            attrlist=('login',),
+            exact_match=exact_match
+        )
         pluginid = self.getId()
         return [dict(
             id=id.encode('ascii', 'replace'),
