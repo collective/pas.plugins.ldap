@@ -32,13 +32,17 @@ from bda.ldap.users import LDAPUsers
 #from bda.ldap.groups import LDAPGroups
 
 
+backends = dict()
+
+
 WHAT_TO_DEBUG = set([
         'authentication',
+        'properties',
         'userenumeration',
         ])
 
 
-class debug:
+class debug(object):
     """ Decorator which helps to control what aspects of a program to debug
     on per-function basis. Aspects are provided as list of arguments.
     It DOESN'T slowdown functions which aren't supposed to be debugged.
@@ -59,12 +63,30 @@ class debug:
             return func
 
 
-class UsersReadOnly(BasePlugin):
-    """Glue layer for making bda.ldap available to PAS, readonly users. 
+class ifnotenabledreturn(object):
+    """checks whether plugin is enabled, returns revtal otherwise
+    """
+    def __init__(decor, retval=None):
+        decor.retval = retval
+
+    def __call__(decor, method):
+        if not wrapped_method.im_self.enabled:
+            return decor.retval
+        def wrapper(*args, **kws):
+            return method(*args, **kws)
+        return wrapper
+
+
+XXXXX: 3 plugins!!!!! users and groups  +  properties
+
+
+
+class LDAPPlugin(BasePlugin):
+    """Glue layer for making bda.ldap available to PAS.
     """
     # Tell PAS not to swallow our exceptions
     _dont_swallow_my_exceptions = True
-    meta_type = 'ReadOnlyLDAPUsers'
+    meta_type = 'BDALDAPPlugin'
     implements(
             pas_interfaces.IAuthenticationPlugin,
             pas_interfaces.IUserEnumerationPlugin,
@@ -87,9 +109,15 @@ class UsersReadOnly(BasePlugin):
     def __init__(self, id, title=None):
         self.id = id
         self.title = title
+        self._enabled = False
+
+    @property
+    def enabled(self):
+        return self._enabled
 
     @property
     def users(self):
+        bda.pasldap._
         try:
             return self._v_users
         except AttributeError:
@@ -101,15 +129,19 @@ class UsersReadOnly(BasePlugin):
         site = getUtility(ISiteRoot)
         props = ILDAPProps(site)
         ucfg = ILDAPUsersConfig(site)
+        from bda.ldap.testing import props, ucfg
+        ucfg.attrmap = {}
+        ucfg.attrmap['id'] = 'uid'
+        ucfg.attrmap['login'] = 'sn'
+        ucfg.attrmap['fullname'] = 'cn'
+        ucfg.attrmap['email'] = 'telephoneNumber'
         #gcfg = ILDAPGroupsConfig(site)
-        self._v_users = LDAPUsers(props, ucfg)
+        try:
+            self._v_users = LDAPUsers(props, ucfg)
+        except ValueError, e:
+            pass
         #self._v_groups = LDAPGroups(props, gcfg)
 
-        #props.port = 12345
-        #ucfg.attrmap['id'] = 'uid'
-        #ucfg.attrmap['login'] = 'sn'
-        #ucfg.attrmap['fullname'] = 'cn'
-        #ucfg.attrmap['email'] = 'telephoneNumber'
 
     ###
     # pas_interfaces.IAuthenticationPlugin
@@ -117,6 +149,7 @@ class UsersReadOnly(BasePlugin):
     #  Map credentials to a user ID.
     #
     @debug(['authentication'])
+    @ifnotenabledreturn(None)
     def authenticateCredentials(self, credentials):
         """ credentials -> (userid, login)
 
@@ -131,10 +164,11 @@ class UsersReadOnly(BasePlugin):
             login = credentials['login']
             pw = credentials['password']
         except KeyError:
+            # credentials were not meant for us
             return None
         uid = self.users.authenticate(login=login, pw=pw)
         if uid:
-            return (uid, credentials['login'])
+            return (uid, login)
 
     ###
     # pas_interfaces.IUserEnumerationPlugin
@@ -143,6 +177,7 @@ class UsersReadOnly(BasePlugin):
     #    o XXX:  can these be done by a single plugin?
     #
     @debug(['userenumeration'])
+    @ifnotenabledreturn(tuple())
     def enumerateUsers(self, id=None, login=None, exact_match=False,
             sort_by=None, max_results=None, **kws):
         """ -> ( user_info_1, ... user_info_N )
@@ -196,10 +231,11 @@ class UsersReadOnly(BasePlugin):
                 attrlist=('login',),
                 exact_match=exact_match
                 )
+        pluginid = self.getId()
         return [dict(
             id=id.encode('ascii', 'replace'),
             login=attrs['login'],
-            pluginid=self.getId()
+            pluginid=pluginid,
             ) for id, attrs in matches]
 
     ###
@@ -207,6 +243,7 @@ class UsersReadOnly(BasePlugin):
     #
     #    Return a property set for a user.
     #
+    @debug(['properties'])
     def getPropertiesForUser(self, user, request=None):
         """ user -> {}
 
@@ -221,6 +258,8 @@ class UsersReadOnly(BasePlugin):
         o May assign properties based on values in the REQUEST object, if
           present
         """
+        if not self.initialized:
+            return {}
         try:
             luser = self.users[user.getId()]
         except KeyError:
