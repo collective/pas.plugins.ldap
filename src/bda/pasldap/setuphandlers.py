@@ -1,9 +1,6 @@
-# Copyright (c) 2006-2010 BlueDynamics Alliance, Austria http://bluedynamics.com
-# GNU General Public License (GPL)
-
 from StringIO import StringIO
 
-from bda.pasldap._plugin import UsersReadOnly
+from bda.pasldap._plugin import LDAPPlugin
 
 
 def isNotThisProfile(context):

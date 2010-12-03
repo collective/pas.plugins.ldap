@@ -1,6 +1,3 @@
-# Copyright (c) 2006-2009 BlueDynamics Alliance, Austria http://bluedynamics.com
-# GNU General Public License (GPL) 
-
 import types
 import os.path
 from zope.app import zapi

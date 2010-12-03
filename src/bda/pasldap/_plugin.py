@@ -47,7 +47,7 @@ class debug(object):
     def __init__(self, aspects=None):
         self.aspects = set(aspects)
 
-    def __call__(self, func): 
+    def __call__(self, func):
         if self.aspects & WHAT_TO_DEBUG:
             def newfunc(*args, **kws):
                 logger.debug('%s: args=%s, kws=%s', func.func_name, args, kws)
@@ -67,16 +67,17 @@ class ifnotenabledreturn(object):
         decor.retval = retval
 
     def __call__(decor, method):
-        import pdb;pdb.set_trace()
-        if not method.im_self.enabled:
-            return decor.retval
+        try:
+            if not method.im_self.enabled:
+                return decor.retval
+        except Exception:
+            pass # XXX: ????
         def wrapper(*args, **kws):
             return method(*args, **kws)
         return wrapper
 
-#XXXXX: 3 plugins!!!!! users and groups  +  properties
 
-class LDAPPlugin(BasePlugin):
+class LDAPPlugin(BasePlugin, object):
     """Glue layer for making bda.ldap available to PAS.
     """
     # Tell PAS not to swallow our exceptions
@@ -86,7 +87,7 @@ class LDAPPlugin(BasePlugin):
             pas_interfaces.IAuthenticationPlugin,
             pas_interfaces.IUserEnumerationPlugin,
             pas_interfaces.IPropertiesPlugin,
-### probably not needed here:
+### not needed or later:
 #            pas_interfaces.ICredentialsResetPlugin,
 #            pas_interfaces.IGroupEnumerationPlugin,
 #            pas_interfaces.IGroupsPlugin,
@@ -104,20 +105,19 @@ class LDAPPlugin(BasePlugin):
     def __init__(self, id, title=None):
         self.id = id
         self.title = title
-        self._enabled = False
 
-    @property
-    def enabled(self):
-        return self._enabled
-
+    def reset(self):
+        delattr(self, '_v_users')
+    
     @property
     def users(self):
-        bda.pasldap._
         try:
             return self._v_users
         except AttributeError:
             self._init_users()
-            return self._v_users
+            if hasattr(self, '_v_users'):
+                return self._v_users
+            return None
 
     def _init_users(self):
         site = getUtility(ISiteRoot)
@@ -128,6 +128,8 @@ class LDAPPlugin(BasePlugin):
             self._v_users = LDAPUsers(props, ucfg)
         except ValueError, e:
             pass
+        except Exception, e:
+            print e
         #self._v_groups = LDAPGroups(props, gcfg)
 
     ###
@@ -147,6 +149,8 @@ class LDAPPlugin(BasePlugin):
 
         o If the credentials cannot be authenticated, return None.
         """
+        if self.users is None:
+            return None
         try:
             login = credentials['login']
             pw = credentials['password']
@@ -209,6 +213,8 @@ class LDAPPlugin(BasePlugin):
         """
         # TODO: max_results in bda.ldap
         # TODO: sort_by in bda.ldap
+        if self.users is None:
+            return tuple()
         if id:
             kws['id'] = id
         if login:
@@ -245,7 +251,7 @@ class LDAPPlugin(BasePlugin):
         o May assign properties based on values in the REQUEST object, if
           present
         """
-        if not self.initialized:
+        if self.users is None:
             return {}
         try:
             luser = self.users[user.getId()]

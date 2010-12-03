@@ -16,8 +16,8 @@ setup(name='bda.pasldap',
             'Programming Language :: Python',           
       ], # Get strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       keywords='zope2',
-      author='Florian Friesdorf',
-      author_email='flo@chaoflow.net',
+      author='BlueDynamics Alliance',
+      author_email='dev@bluedynamics.com',
       url='',
       license='',
       packages=find_packages('src'),
@@ -37,6 +37,7 @@ setup(name='bda.pasldap',
               'interlude',
               'zope.configuration',
               'zope.testing',
+              'PILwoTK',
           ]
       },
       entry_points="""
