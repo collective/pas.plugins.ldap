@@ -1,111 +1,40 @@
-#import socket, os
-#import types
-#from sets import Set
-#from Acquisition import Implicit, aq_parent, aq_base, aq_inner
-#from AccessControl import getSecurityManager
-#from OFS.Cache import Cacheable
-#from Products.PlonePAS.plugins.group import PloneGroup
-#from Products.PluggableAuthService.permissions import ManageGroups
-#from Products.PluggableAuthService.UserPropertySheet import UserPropertySheet
-
 import logging
 logger = logging.getLogger('bda.plone.ldap')
 
-import Acquisition
-import sys
-from zope.interface import (
-    Interface,
-    implements,
-)
+from zope.interface import implements
 from zope.component import getUtility
 from bda.ldap.interfaces import (
     ILDAPProps,
     ILDAPUsersConfig,
-    ILDAPGroupsConfig,
-)
+    ILDAPGroupsConfig)
 from bda.ldap.users import LDAPUsers
 #from bda.ldap.groups import LDAPGroups
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
 from Products.PlonePAS import interfaces as plonepas_interfaces
-
-backends = dict()
-
-WHAT_TO_DEBUG = set([
-        'authentication',
-        'properties',
-        'userenumeration',
-        ])
-
-
-class debug(object):
-    """ Decorator which helps to control what aspects of a program to debug
-    on per-function basis. Aspects are provided as list of arguments.
-    It DOESN'T slowdown functions which aren't supposed to be debugged.
-    """
-    def __init__(self, aspects=None):
-        self.aspects = set(aspects)
-
-    def __call__(self, func):
-        if self.aspects & WHAT_TO_DEBUG:
-            def newfunc(*args, **kws):
-                logger.debug('%s: args=%s, kws=%s', func.func_name, args, kws)
-                result = func(*args, **kws)
-                logger.debug('%s: --> %s', func.func_name, result)
-                return result
-            newfunc.__doc__ = func.__doc__
-            return newfunc
-        else:
-            return func
-
-
-class ifnotenabledreturn(object):
-    """checks whether plugin is enabled, returns revtal otherwise
-    """
-    def __init__(decor, retval=None):
-        decor.retval = retval
-
-    def __call__(decor, method):
-        try:
-            if not method.im_self.enabled:
-                return decor.retval
-        except Exception:
-            pass # XXX: ????
-        def wrapper(*args, **kws):
-            return method(*args, **kws)
-        return wrapper
-
+from bda.pasldap.sheet import LDAPUserPropertySheet
+from bda.pasldap.utils import (
+    debug,
+    ifnotenabledreturn)
 
 class LDAPPlugin(BasePlugin, object):
     """Glue layer for making bda.ldap available to PAS.
     """
-    # Tell PAS not to swallow our exceptions
-    _dont_swallow_my_exceptions = True
-    meta_type = 'BDALDAPPlugin'
+    
     implements(
-            pas_interfaces.IAuthenticationPlugin,
-            pas_interfaces.IUserEnumerationPlugin,
-            pas_interfaces.IPropertiesPlugin,
-### not needed or later:
-#            pas_interfaces.ICredentialsResetPlugin,
-#            pas_interfaces.IGroupEnumerationPlugin,
-#            pas_interfaces.IGroupsPlugin,
-#            pas_interfaces.IRolesPlugin,
-#            pas_interfaces.IRoleEnumerationPlugin,
-#            pas_interfaces.IUpdatePlugin,
-#            pas_interfaces.IValidationPlugin,
-#            plonepas_interfaces.group.IGroupIntrospection,
-#            plonepas_interfaces.group.IGroupManagement,
-#            plonepas_interfaces.plugins.IMutablePropertiesPlugin,
-#            plonepas_interfaces.plugins.IUserIntrospection,
-#            plonepas_interfaces.plugins.IUserManagement,
-            )
-
+        pas_interfaces.IAuthenticationPlugin,
+        pas_interfaces.IUserEnumerationPlugin,
+        pas_interfaces.IPropertiesPlugin,
+        plonepas_interfaces.plugins.IMutablePropertiesPlugin)
+    
+    _dont_swallow_my_exceptions = True # Tell PAS not to swallow our exceptions
+    meta_type = 'BDALDAPPlugin'
+    
     def __init__(self, id, title=None):
         self.id = id
         self.title = title
-
+    
     def reset(self):
         delattr(self, '_v_users')
     
@@ -118,7 +47,7 @@ class LDAPPlugin(BasePlugin, object):
             if hasattr(self, '_v_users'):
                 return self._v_users
             return None
-
+    
     def _init_users(self):
         site = getUtility(ISiteRoot)
         props = ILDAPProps(site)
@@ -129,18 +58,17 @@ class LDAPPlugin(BasePlugin, object):
         except ValueError, e:
             pass
         except Exception, e:
-            print e
+            logger.error('LDAPPlugin._init_users: %s' % str(e))
         #self._v_groups = LDAPGroups(props, gcfg)
-
-    ###
-    # pas_interfaces.IAuthenticationPlugin
-    #
-    #  Map credentials to a user ID.
-    #
+    
+    ###########################################################################
+    # IAuthenticationPlugin
+    ###########################################################################
+    
     @debug(['authentication'])
     @ifnotenabledreturn(None)
     def authenticateCredentials(self, credentials):
-        """ credentials -> (userid, login)
+        """credentials -> (userid, login)
 
         o 'credentials' will be a mapping, as returned by IExtractionPlugin.
 
@@ -160,18 +88,16 @@ class LDAPPlugin(BasePlugin, object):
         uid = self.users.authenticate(login=login, pw=pw)
         if uid:
             return (uid, login)
-
-    ###
-    # pas_interfaces.IUserEnumerationPlugin
-    #
-    #   Allow querying users by ID, and searching for users.
-    #    o XXX:  can these be done by a single plugin?
-    #
+    
+    ###########################################################################
+    # IUserEnumerationPlugin
+    ###########################################################################
+    
     @debug(['userenumeration'])
     @ifnotenabledreturn(tuple())
     def enumerateUsers(self, id=None, login=None, exact_match=False,
             sort_by=None, max_results=None, **kws):
-        """ -> ( user_info_1, ... user_info_N )
+        """-> ( user_info_1, ... user_info_N )
 
         o Return mappings for users matching the given criteria.
 
@@ -225,25 +151,21 @@ class LDAPPlugin(BasePlugin, object):
             exact_match=exact_match
         )
         pluginid = self.getId()
-        return [dict(
+        ret = [dict(
             id=id.encode('ascii', 'replace'),
-            login=attrs['login'],
+            login=attrs['login'][0], #XXX: see bda.ldap.users.Users.search
             pluginid=pluginid,
             ) for id, attrs in matches]
-
-    ###
-    # pas_interfaces.IPropertiesPlugin
-    #
-    #    Return a property set for a user.
-    #
-    @debug(['properties'])
+        return ret
+    
+    ###########################################################################
+    # IMutablePropertiesPlugin (including signature of IPropertiesPlugin)
+    ###########################################################################
+    
     def getPropertiesForUser(self, user, request=None):
-        """ user -> {}
+        """User -> IMutablePropertySheet || {}
 
-        o User will implement IPropertiedUser.
-
-        o Plugin should return a dictionary or an object providing
-          IPropertySheet.
+        o User will implement IPropertiedUser. ???
 
         o Plugin may scribble on the user, if needed (but must still
           return a mapping, even if empty).
@@ -251,119 +173,26 @@ class LDAPPlugin(BasePlugin, object):
         o May assign properties based on values in the REQUEST object, if
           present
         """
-        if self.users is None:
-            return {}
         try:
-            luser = self.users[user.getId()]
-        except KeyError:
-            return {}
-        return dict([x for x in luser.attrs.items() if x[0] != 'id'])
+            sheet = LDAPUserPropertySheet(user, self)
+            return sheet
+        except Exception, e:
+            # XXX: specific exception(s)
+            logger.error('LDAPPlugin.getPropertiesForUser: %s' % str(e))
+            return dict()
+    
+    def setPropertiesForUser(self, user, propertysheet):
+        """Set modified properties on the user persistently.
 
-
-### attic below here
-
-
-
-## class LDAPPlugin(Users):
-##    """
-##    """
-#class LDAPPlugin(BasePlugin):
-#    """Glue layer for making bda.ldap available to PAS
-#    """
-#    # Tell PAS not to swallow our exceptions
-#    _dont_swallow_my_exceptions = True
-#    meta_type = 'LDAPPlugin'
-#    implements(ILDAPPlugin,
-#            pas_interfaces.IAuthenticationPlugin,
-##            pas_interfaces.ICredentialsResetPlugin,
-##            pas_interfaces.IGroupEnumerationPlugin,
-##            pas_interfaces.IGroupsPlugin,
-##            pas_interfaces.IRolesPlugin,
-##            pas_interfaces.IRoleEnumerationPlugin,
-##            pas_interfaces.IUpdatePlugin,
-#            pas_interfaces.IUserEnumerationPlugin,
-##            pas_interfaces.IValidationPlugin,
-##            plonepas_interfaces.group.IGroupIntrospection,
-##            plonepas_interfaces.group.IGroupManagement,
-#            pas_interfaces.IPropertiesPlugin,
-##            plonepas_interfaces.plugins.IMutablePropertiesPlugin,
-##            plonepas_interfaces.plugins.IUserIntrospection,
-##            plonepas_interfaces.plugins.IUserManagement,
-#            )
-#
-#    @property
-#    def groups(self):
-#        try:
-#            return self._v_groups
-#        except AttributeError:
-#            self._init_ldap()
-#            return self._v_groups
-#
-##### Below here unused so far
-#
-#
-#
-#
-#    ###
-#    # pas_interfaces.IGroupsPlugin
-#    def getGroupsForPrincipal(self, principal, request=None):
-#
-#        """ principal -> ( group_1, ... group_N )
-#
-#        o Return a sequence of group names to which the principal 
-#          (either a user or another group) belongs.
-#
-#        o May assign groups based on values in the REQUEST object, if present
-#        """
-#
-#    ###
-#    # pas_interfaces.IPropertiesPlugin
-#    # plonepas_interfaces.plugins.IMutablePropertiesPlugin
-#    #
-#    #    Return a property set for a user. Property set can either an
-#    #    object conforming to the IMutable property sheet interface or a
-#    #    dictionary (in which case the properties are not persistently
-#    #    mutable).
-#
-#    # pas_interfaces.IPropertiesPlugin,
-#    def getPropertiesForUser(self, user, request=None):
-#        """
-#        User -> IMutablePropertySheet || {}
-#
-#        o User will implement IPropertiedUser.
-#
-#        o Plugin may scribble on the user, if needed (but must still
-#          return a mapping, even if empty).
-#
-#        o May assign properties based on values in the REQUEST object, if
-#          present
-#        """
-#
-#    # plonepas_interfaces.plugins.IMutablePropertiesPlugin
-#    def setPropertiesForUser(self, user, propertysheet):
-#        """
-#        Set modified properties on the user persistently.
-#
-#        Raise a ValueError if the property or property value is invalid
-#        """
-#
-#    # plonepas_interfaces.plugins.IMutablePropertiesPlugin
-#    def deleteUser(self, user_id):
-#        """
-#        Remove properties stored for a user
-#        """
-#
-#
-#    ####
-#    # pas_interfaces.IUserAdderPlugin
-#    # plonepas_interfaces.plugins.IUserManagement
-#
-#    def doAddUser(self, login, password):
-#        """ Add a user record to a User Manager, with the given login
-#            and password
-#
-#        o Return a Boolean indicating whether a user was added or not
-#        """
-#        if login == 'test_user_1_':
-#            logger.warn("Not creating Zope's testuser '%s' in ldap.")
-#            return False
+        Does nothing, it is called by MutablePropertySheet in setProperty and
+        setProperties. This should not affect us at all
+        """
+        pass
+    
+    def deleteUser(self, user_id):
+        """Remove properties stored for a user.
+        
+        Does nothing, if a user is deleted by ``doDeleteUser``, all it's
+        properties are away as well.
+        """
+        pass
