@@ -209,13 +209,7 @@ class LDAPPlugin(BasePlugin, object):
         the pas engine api for the same but are set via a role
         manager)
         """
-        user = self.users[login]
-        user.context.attrs['userPassword'] = password
-        user.context()
-        # XXX: encryption stuff
-        #user.context.attrs.load() # XXX: tmp
-        #old = user.context.attrs['userPassword']
-        #self.users.passwd(login, old, password)
+        self.users.passwd(login, None, password)
 
     def doDeleteUser(self, login):
         """Remove a user record from a User Manager, with the given login
