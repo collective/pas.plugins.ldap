@@ -27,6 +27,12 @@ class LDAPUserPropertySheet(UserPropertySheet):
                 # XXX: maybe 'login' should be editable if existent ??
                 continue
             self._attrmap[k] = v
+        
+        # XXX: tmp - load props each time they are accessed.
+        if not self._plugin.REQUEST.get('_ldap_props_reloaded'):
+            self._luser.attrs.context.load()
+            self._plugin.REQUEST['_ldap_props_reloaded'] = 1
+        
         for key in self._attrmap:
             self._properties[key] = self._luser.attrs.get(key, '')
         UserPropertySheet.__init__(self, user, schema=None, **self._properties)
