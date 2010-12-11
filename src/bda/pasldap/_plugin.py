@@ -1,5 +1,5 @@
 import logging
-logger = logging.getLogger('bda.plone.ldap')
+logger = logging.getLogger('bda.pasldap')
 
 from zope.interface import implements
 from zope.component import getUtility
@@ -26,7 +26,10 @@ class LDAPPlugin(BasePlugin, object):
         pas_interfaces.IAuthenticationPlugin,
         pas_interfaces.IUserEnumerationPlugin,
         pas_interfaces.IPropertiesPlugin,
-        plonepas_interfaces.plugins.IMutablePropertiesPlugin)
+        plonepas_interfaces.plugins.IMutablePropertiesPlugin,
+        plonepas_interfaces.plugins.IUserManagement,
+        plonepas_interfaces.capabilities.IDeleteCapability,
+        plonepas_interfaces.capabilities.IPasswordSetCapability)
     
     _dont_swallow_my_exceptions = True # Tell PAS not to swallow our exceptions
     meta_type = 'BDALDAPPlugin'
@@ -196,3 +199,51 @@ class LDAPPlugin(BasePlugin, object):
         properties are away as well.
         """
         pass
+    
+    ###########################################################################
+    # IUserManagement
+    ###########################################################################
+
+    def doChangeUser(self, login, password, **kw):
+        """Change a user's password (differs from role) roles are set in
+        the pas engine api for the same but are set via a role
+        manager)
+        """
+        user = self.users[login]
+        user.context.attrs['userPassword'] = password
+        user.context()
+        # XXX: encryption stuff
+        #user.context.attrs.load() # XXX: tmp
+        #old = user.context.attrs['userPassword']
+        #self.users.passwd(login, old, password)
+
+    def doDeleteUser(self, login):
+        """Remove a user record from a User Manager, with the given login
+        and password
+
+        o Return a Boolean indicating whether a user was removed or
+          not
+        """
+        # XXX
+        return False
+    
+    ###########################################################################
+    # IPasswordSetCapability - plone ui specific
+    ###########################################################################
+
+    def allowPasswordSet(self, id):
+        """True if this plugin can set the password of a certain user.
+        """
+        return len(self.users.search(criteria={'id': id},
+                                     attrlist=(),
+                                     exact_match=True)) > 0
+    
+    ###########################################################################
+    # IDeleteCapability - plone ui specific
+    ###########################################################################
+
+    def allowDeletePrincipal(self, id):
+        """True if this plugin can delete a certain user/group.
+        """
+        # XXX
+        return False
