@@ -21,7 +21,6 @@ from bda.pasldap.utils import (
 class LDAPPlugin(BasePlugin, object):
     """Glue layer for making bda.ldap available to PAS.
     """
-    
     implements(
         pas_interfaces.IAuthenticationPlugin,
         pas_interfaces.IUserEnumerationPlugin,
@@ -164,10 +163,15 @@ class LDAPPlugin(BasePlugin, object):
             ) for id, attrs in matches]
         return ret
     
-    ###########################################################################
-    # IMutablePropertiesPlugin (including signature of IPropertiesPlugin)
-    ###########################################################################
-    
+    ###
+    # plonepas_interfaces.plugins.IMutablePropertiesPlugin
+    # (including signature of pas_interfaces.IPropertiesPlugin)
+    #
+    #  Return a property set for a user. Property set can either an object
+    #  conforming to the IMutable property sheet interface or a dictionary (in
+    #  which case the properties are not persistently mutable).
+    #
+
     def getPropertiesForUser(self, user, request=None):
         """User -> IMutablePropertySheet || {}
 
@@ -203,9 +207,10 @@ class LDAPPlugin(BasePlugin, object):
         """
         pass
     
-    ###########################################################################
-    # IUserManagement
-    ###########################################################################
+    ###
+    # plonepas_interfaces.plugins.IUserManagement
+    # (including signature of pas_interfaces.IUserAdderPlugin)
+    #
 
     def doChangeUser(self, login, password, **kw):
         """Change a user's password (differs from role) roles are set in
@@ -224,21 +229,23 @@ class LDAPPlugin(BasePlugin, object):
         # XXX
         return False
     
-    ###########################################################################
-    # IPasswordSetCapability - plone ui specific
-    ###########################################################################
-
+    ###
+    # plonepas_interfaces.capabilities.IPasswordSetCapability
+    # (plone ui specific)
+    #
     def allowPasswordSet(self, id):
         """True if this plugin can set the password of a certain user.
         """
+        # XXX: should just be bool(self.get('id')), currently not because user
+        # might be deleted and we don't know about
         return len(self.users.search(criteria={'id': id},
                                      attrlist=(),
                                      exact_match=True)) > 0
     
-    ###########################################################################
-    # IDeleteCapability - plone ui specific
-    ###########################################################################
-
+    ###
+    # plonepas_interfaces.capabilities.IDeleteCapability
+    # (plone ui specific)
+    #
     def allowDeletePrincipal(self, id):
         """True if this plugin can delete a certain user/group.
         """
