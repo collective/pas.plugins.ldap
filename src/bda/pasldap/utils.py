@@ -40,8 +40,9 @@ class ifnotenabledreturn(object):
     def __call__(decor, method):
         try:
             enabled = method.im_self.enabled
-        except AttributeError:
+        except AttributeError, e:
             # XXX: not sure when this happens, but it happens
+            logger.debug('%s' % (str(e),))
             enabled = False
         if not enabled:
             return decor.retval
