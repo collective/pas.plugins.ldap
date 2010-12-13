@@ -72,8 +72,8 @@ class LDAPPlugin(BasePlugin, object):
     #
     #  Map credentials to a user ID.
     #
-    @debug(['authentication'])
     @ifnotenabledreturn(None)
+    @debug(['authentication'])
     def authenticateCredentials(self, credentials):
         """credentials -> (userid, login)
 
@@ -100,8 +100,8 @@ class LDAPPlugin(BasePlugin, object):
     #   Allow querying users by ID, and searching for users.
     #    o XXX:  can these be done by a single plugin?
     #
-    @debug(['userenumeration'])
     @ifnotenabledreturn(tuple())
+    @debug(['userenumeration'])
     def enumerateUsers(self, id=None, login=None, exact_match=False,
             sort_by=None, max_results=None, **kws):
         """-> ( user_info_1, ... user_info_N )
