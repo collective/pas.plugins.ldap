@@ -64,10 +64,11 @@ class LDAPPlugin(BasePlugin, object):
             logger.error('LDAPPlugin._init_users: %s' % str(e))
         #self._v_groups = LDAPGroups(props, gcfg)
     
-    ###########################################################################
-    # IAuthenticationPlugin
-    ###########################################################################
-    
+    ###
+    # pas_interfaces.IAuthenticationPlugin
+    #
+    #  Map credentials to a user ID.
+    #
     @debug(['authentication'])
     @ifnotenabledreturn(None)
     def authenticateCredentials(self, credentials):
@@ -92,10 +93,12 @@ class LDAPPlugin(BasePlugin, object):
         if uid:
             return (uid, login)
     
-    ###########################################################################
-    # IUserEnumerationPlugin
-    ###########################################################################
-    
+    ###
+    # pas_interfaces.IUserEnumerationPlugin
+    #
+    #   Allow querying users by ID, and searching for users.
+    #    o XXX:  can these be done by a single plugin?
+    #
     @debug(['userenumeration'])
     @ifnotenabledreturn(tuple())
     def enumerateUsers(self, id=None, login=None, exact_match=False,
