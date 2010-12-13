@@ -46,7 +46,7 @@ class ifnotenabledreturn(object):
             enabled = False
 
         def wrapper(*args, **kws):
-            if not method.im_self.enabled:
+            if not enabled:
                 logger.error('bda ldap disabled: %s defaulting' % \
                         (method.func_name,))
                 return decor.retval
