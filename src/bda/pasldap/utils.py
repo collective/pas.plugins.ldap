@@ -1,6 +1,6 @@
 import ldap
 import logging
-logger = logging.getLogger('bda.plone.ldap')
+logger = logging.getLogger('bda.pasldap')
 
 
 WHAT_TO_DEBUG = set([
@@ -43,12 +43,12 @@ class ifnotenabledreturn(object):
             enabled = method.im_self.enabled
         except AttributeError, e:
             # XXX: not sure when this happens, but it happens
-            logger.debug('%s' % (str(e),))
+            logger.error('%s' % (str(e),))
             enabled = False
 
         def wrapper(*args, **kws):
             if not enabled:
-                logger.error('bda ldap disabled: %s defaulting' % \
+                logger.info('disabled: %s defaulting' % \
                         (method.func_name,))
                 return decor.retval
             try:
