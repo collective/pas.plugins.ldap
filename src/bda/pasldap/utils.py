@@ -1,5 +1,7 @@
+import ldap
 import logging
 logger = logging.getLogger('bda.plone.ldap')
+
 
 WHAT_TO_DEBUG = set([
     'authentication',
@@ -30,17 +32,26 @@ class debug(object):
 
 
 class ifnotenabledreturn(object):
-    """Checks whether plugin is enabled, returns revtal otherwise
+    """Checks whether plugin is enabled, returns retval otherwise
     """
     def __init__(decor, retval=None):
         decor.retval = retval
 
     def __call__(decor, method):
         try:
-            if not method.im_self.enabled:
-                return decor.retval
-        except Exception:
-            pass # XXX: ????
+            enabled = method.im_self.enabled
+        except AttributeError:
+            # XXX: not sure when this happens, but it happens
+            enabled = False
+        if not enabled:
+            return decor.retval
+
         def wrapper(*args, **kws):
-            return method(*args, **kws)
+            try:
+                retval = method(*args, **kws)
+            except Exception, e:
+                logger.error('%s' % (str(e),))
+                return decor.retval
+            return retval
+
         return wrapper

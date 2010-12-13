@@ -49,6 +49,10 @@ class LDAPPlugin(BasePlugin, object):
             if hasattr(self, '_v_users'):
                 return self._v_users
             return None
+
+    @property
+    def enabled(self):
+        return bool(self.users)
     
     def _init_users(self):
         site = getUtility(ISiteRoot)
@@ -80,8 +84,6 @@ class LDAPPlugin(BasePlugin, object):
 
         o If the credentials cannot be authenticated, return None.
         """
-        if self.users is None:
-            return None
         try:
             login = credentials['login']
             pw = credentials['password']
@@ -144,8 +146,6 @@ class LDAPPlugin(BasePlugin, object):
         """
         # TODO: max_results in bda.ldap
         # TODO: sort_by in bda.ldap
-        if self.users is None:
-            return tuple()
         if id:
             kws['id'] = id
         if login:
@@ -172,6 +172,7 @@ class LDAPPlugin(BasePlugin, object):
     #  which case the properties are not persistently mutable).
     #
 
+    @ifnotenabledreturn(dict())
     def getPropertiesForUser(self, user, request=None):
         """User -> IMutablePropertySheet || {}
 
@@ -183,14 +184,9 @@ class LDAPPlugin(BasePlugin, object):
         o May assign properties based on values in the REQUEST object, if
           present
         """
-        try:
-            sheet = LDAPUserPropertySheet(user, self)
-            return sheet
-        except Exception, e:
-            # XXX: specific exception(s)
-            logger.error('LDAPPlugin.getPropertiesForUser: %s' % str(e))
-            return dict()
+        return LDAPUserPropertySheet(user, self)
     
+    @ifnotenabledreturn(None)
     def setPropertiesForUser(self, user, propertysheet):
         """Set modified properties on the user persistently.
 
@@ -199,6 +195,7 @@ class LDAPPlugin(BasePlugin, object):
         """
         pass
     
+    @ifnotenabledreturn(None)
     def deleteUser(self, user_id):
         """Remove properties stored for a user.
         
@@ -212,6 +209,7 @@ class LDAPPlugin(BasePlugin, object):
     # (including signature of pas_interfaces.IUserAdderPlugin)
     #
 
+    @ifnotenabledreturn(False)
     def doChangeUser(self, login, password, **kw):
         """Change a user's password (differs from role) roles are set in
         the pas engine api for the same but are set via a role
@@ -219,6 +217,7 @@ class LDAPPlugin(BasePlugin, object):
         """
         self.users.passwd(login, None, password)
 
+    @ifnotenabledreturn(False)
     def doDeleteUser(self, login):
         """Remove a user record from a User Manager, with the given login
         and password
@@ -233,6 +232,7 @@ class LDAPPlugin(BasePlugin, object):
     # plonepas_interfaces.capabilities.IPasswordSetCapability
     # (plone ui specific)
     #
+    @ifnotenabledreturn(False)
     def allowPasswordSet(self, id):
         """True if this plugin can set the password of a certain user.
         """
@@ -246,6 +246,7 @@ class LDAPPlugin(BasePlugin, object):
     # plonepas_interfaces.capabilities.IDeleteCapability
     # (plone ui specific)
     #
+    @ifnotenabledreturn(False)
     def allowDeletePrincipal(self, id):
         """True if this plugin can delete a certain user/group.
         """
