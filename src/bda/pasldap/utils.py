@@ -43,7 +43,7 @@ class ifnotenabledreturn(object):
             enabled = method.im_self.enabled
         except AttributeError, e:
             # XXX: not sure when this happens, but it happens
-            logger.error('%s' % (str(e),))
+            logger.error('%s: %s' % (method.func_name, str(e),))
             enabled = False
 
         def wrapper(*args, **kws):
