@@ -25,6 +25,7 @@ class debug(object):
                 result = func(*args, **kws)
                 logger.debug('%s: --> %s', func.func_name, result)
                 return result
+            newfunc.func_name = func.func_name
             newfunc.__doc__ = func.__doc__
             return newfunc
         else:
@@ -57,5 +58,6 @@ class ifnotenabledreturn(object):
                 return decor.retval
             return retval
 
+        wrapper.func_name = method.func_name
         wrapper.__doc__ = method.__doc__
         return wrapper
