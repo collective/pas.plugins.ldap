@@ -38,15 +38,10 @@ class ifnotenabledreturn(object):
         decor.retval = retval
 
     def __call__(decor, method):
-        try:
-            enabled = method.im_self.enabled
-        except AttributeError, e:
-            # XXX: not sure when this happens, but it happens
-            logger.debug('%s' % (str(e),))
-            enabled = False
-
         def wrapper(*args, **kws):
-            if not enabled:
+            if not method.enabled:
+                logger.error('bda ldap disabled: %s defaulting' % \
+                        (method.func_name,))
                 return decor.retval
             try:
                 retval = method(*args, **kws)
@@ -54,5 +49,5 @@ class ifnotenabledreturn(object):
                 logger.error('%s' % (str(e),))
                 return decor.retval
             return retval
-
+        wrapper.__doc__ = method.__doc__
         return wrapper
