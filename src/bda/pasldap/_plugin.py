@@ -1,3 +1,4 @@
+import ldap
 import logging
 logger = logging.getLogger('bda.pasldap')
 
@@ -17,6 +18,7 @@ from bda.pasldap.sheet import LDAPUserPropertySheet
 from bda.pasldap.utils import (
     debug,
     ifnotenabledreturn)
+
 
 class LDAPPlugin(BasePlugin, object):
     """Glue layer for making bda.ldap available to PAS.
@@ -41,6 +43,10 @@ class LDAPPlugin(BasePlugin, object):
         delattr(self, '_v_users')
     
     @property
+    def enabled(self):
+        return self.users is not None
+
+    @property
     def users(self):
         try:
             return self._v_users
@@ -50,10 +56,6 @@ class LDAPPlugin(BasePlugin, object):
                 return self._v_users
             return None
 
-    @property
-    def enabled(self):
-        return bool(self.users)
-    
     def _init_users(self):
         site = getUtility(ISiteRoot)
         props = ILDAPProps(site)
@@ -61,10 +63,10 @@ class LDAPPlugin(BasePlugin, object):
         #gcfg = ILDAPGroupsConfig(site)
         try:
             self._v_users = LDAPUsers(props, ucfg)
-        except ValueError, e:
-            pass
+#        except ValueError, e:
+#            pass
         except Exception, e:
-            logger.error('LDAPPlugin._init_users: %s' % str(e))
+            logger.error('caught: %s.' % str(e))
         #self._v_groups = LDAPGroups(props, gcfg)
     
     ###
