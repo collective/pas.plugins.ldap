@@ -44,10 +44,10 @@ class ifnotenabledreturn(object):
             # XXX: not sure when this happens, but it happens
             logger.debug('%s' % (str(e),))
             enabled = False
-        if not enabled:
-            return decor.retval
 
         def wrapper(*args, **kws):
+            if not enabled:
+                return decor.retval
             try:
                 retval = method(*args, **kws)
             except Exception, e:
