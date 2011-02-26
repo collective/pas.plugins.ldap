@@ -1,19 +1,19 @@
 import logging
 logger = logging.getLogger('bda.plone.ldap')
 
-from zope.component import getUtility
-from bda.ldap.interfaces import ILDAPUsersConfig
+from Products.CMFCore.interfaces import ISiteRoot
+from Products.PlonePAS.interfaces.propertysheets import IMutablePropertySheet
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.UserPropertySheet import UserPropertySheet
-from Products.PlonePAS.interfaces.propertysheets import IMutablePropertySheet
-from Products.CMFCore.interfaces import ISiteRoot
+from node.ext.ldap.interfaces import ILDAPUsersConfig
+from zope.component import getUtility
 
 
 class LDAPUserPropertySheet(UserPropertySheet):
-    
+
     def __init__(self, user, plugin):
         """Instanciate LDAPUserPropertySheet.
-        
+
         @param user: user id
         @param plugin: LDAPPlugin instance
         """
@@ -27,19 +27,19 @@ class LDAPUserPropertySheet(UserPropertySheet):
                 # XXX: maybe 'login' should be editable if existent ??
                 continue
             self._attrmap[k] = v
-        
+
         # XXX: tmp - load props each time they are accessed.
         if not self._plugin.REQUEST.get('_ldap_props_reloaded'):
             self._luser.attrs.context.load()
             self._plugin.REQUEST['_ldap_props_reloaded'] = 1
-        
+
         for key in self._attrmap:
             self._properties[key] = self._luser.attrs.get(key, '')
         UserPropertySheet.__init__(self, user, schema=None, **self._properties)
-    
+
     def canWriteProperty(self, obj, id):
         return id in self._properties
-    
+
     def setProperty(self, obj, id, value):
         assert(id in self._properties)
         self._properties[id] = self._luser.attrs[id] = value
@@ -48,7 +48,7 @@ class LDAPUserPropertySheet(UserPropertySheet):
         except Exception, e:
             # XXX: specific exception(s)
             logger.error('LDAPUserPropertySheet.setProperty: %s' % str(e))
-    
+
     def setProperties(self, obj, mapping):
         for id in mapping:
             assert(id in self._properties)

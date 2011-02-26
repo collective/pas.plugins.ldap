@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.1'
+version = '0.9dev'
 shortdesc ="Zope 2 PAS Plugin providing users and groups from LDAP directory"
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.txt')).read()
 
@@ -18,7 +18,7 @@ setup(name='bda.pasldap',
       keywords='zope2',
       author='BlueDynamics Alliance',
       author_email='dev@bluedynamics.com',
-      url='',
+      url='https://github.com/bluedynamics/bda.pasldap',
       license='',
       packages=find_packages('src'),
       package_dir = {'': 'src'},
@@ -30,7 +30,7 @@ setup(name='bda.pasldap',
           # -*- Extra requirements: -*
           'Plone', # ? should be required by plone.app.folder but isnt
           'Products.PlonePAS',
-          'bda.ldap>=1.6.0',
+          'node.ext.ldap',
       ],
       extras_require={
           'test': [

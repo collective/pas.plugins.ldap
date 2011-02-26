@@ -4,12 +4,12 @@ logger = logging.getLogger('bda.pasldap')
 
 from zope.interface import implements
 from zope.component import getUtility
-from bda.ldap.interfaces import (
+from node.ext.ldap.interfaces import (
     ILDAPProps,
     ILDAPUsersConfig,
     ILDAPGroupsConfig)
-from bda.ldap.users import LDAPUsers
-#from bda.ldap.groups import LDAPGroups
+from node.ext.ldap.users import LDAPUsers
+#from node.ext.ldap.groups import LDAPGroups
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
@@ -21,7 +21,7 @@ from bda.pasldap.utils import (
 
 
 class LDAPPlugin(BasePlugin, object):
-    """Glue layer for making bda.ldap available to PAS.
+    """Glue layer for making node.ext.ldap available to PAS.
     """
     implements(
         pas_interfaces.IAuthenticationPlugin,
@@ -31,17 +31,17 @@ class LDAPPlugin(BasePlugin, object):
         plonepas_interfaces.plugins.IUserManagement,
         plonepas_interfaces.capabilities.IDeleteCapability,
         plonepas_interfaces.capabilities.IPasswordSetCapability)
-    
+
     _dont_swallow_my_exceptions = True # Tell PAS not to swallow our exceptions
     meta_type = 'BDALDAPPlugin'
-    
+
     def __init__(self, id, title=None):
         self.id = id
         self.title = title
-    
+
     def reset(self):
         delattr(self, '_v_users')
-    
+
     @property
     def enabled(self):
         return self.users is not None
@@ -68,7 +68,7 @@ class LDAPPlugin(BasePlugin, object):
         except Exception, e:
             logger.error('caught: %s.' % str(e))
         #self._v_groups = LDAPGroups(props, gcfg)
-    
+
     ###
     # pas_interfaces.IAuthenticationPlugin
     #
@@ -81,7 +81,7 @@ class LDAPPlugin(BasePlugin, object):
 
         o 'credentials' will be a mapping, as returned by IExtractionPlugin.
 
-        o Return a tuple consisting of user ID (which may be different 
+        o Return a tuple consisting of user ID (which may be different
           from the login name) and login
 
         o If the credentials cannot be authenticated, return None.
@@ -95,7 +95,7 @@ class LDAPPlugin(BasePlugin, object):
         uid = self.users.authenticate(login=login, pw=pw)
         if uid:
             return (uid, login)
-    
+
     ###
     # pas_interfaces.IUserEnumerationPlugin
     #
@@ -128,7 +128,7 @@ class LDAPPlugin(BasePlugin, object):
           plugin should return mappings for all users satisfying the criteria.
 
         o Minimal keys in the returned mappings:
-        
+
           'id' -- (required) the user ID, which may be different than
                   the login name
 
@@ -146,8 +146,8 @@ class LDAPPlugin(BasePlugin, object):
         o Insufficiently-specified criteria may have catastrophic
           scaling issues for some implementations.
         """
-        # TODO: max_results in bda.ldap
-        # TODO: sort_by in bda.ldap
+        # TODO: max_results in node.ext.ldap
+        # TODO: sort_by in node.ext.ldap
         if id:
             kws['id'] = id
         if login:
@@ -160,11 +160,11 @@ class LDAPPlugin(BasePlugin, object):
         pluginid = self.getId()
         ret = [dict(
             id=id.encode('ascii', 'replace'),
-            login=attrs['login'][0], #XXX: see bda.ldap.users.Users.search
+            login=attrs['login'][0], #XXX: see node.ext.ldap.users.Users.search
             pluginid=pluginid,
             ) for id, attrs in matches]
         return ret
-    
+
     ###
     # plonepas_interfaces.plugins.IMutablePropertiesPlugin
     # (including signature of pas_interfaces.IPropertiesPlugin)
@@ -187,7 +187,7 @@ class LDAPPlugin(BasePlugin, object):
           present
         """
         return LDAPUserPropertySheet(user, self)
-    
+
     @ifnotenabledreturn(None)
     def setPropertiesForUser(self, user, propertysheet):
         """Set modified properties on the user persistently.
@@ -196,16 +196,16 @@ class LDAPPlugin(BasePlugin, object):
         setProperties. This should not affect us at all
         """
         pass
-    
+
     @ifnotenabledreturn(None)
     def deleteUser(self, user_id):
         """Remove properties stored for a user.
-        
+
         Does nothing, if a user is deleted by ``doDeleteUser``, all it's
         properties are away as well.
         """
         pass
-    
+
     ###
     # plonepas_interfaces.plugins.IUserManagement
     # (including signature of pas_interfaces.IUserAdderPlugin)
@@ -229,7 +229,7 @@ class LDAPPlugin(BasePlugin, object):
         """
         # XXX
         return False
-    
+
     ###
     # plonepas_interfaces.capabilities.IPasswordSetCapability
     # (plone ui specific)
@@ -243,7 +243,7 @@ class LDAPPlugin(BasePlugin, object):
         return len(self.users.search(criteria={'id': id},
                                      attrlist=(),
                                      exact_match=True)) > 0
-    
+
     ###
     # plonepas_interfaces.capabilities.IDeleteCapability
     # (plone ui specific)

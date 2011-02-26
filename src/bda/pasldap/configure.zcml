@@ -6,7 +6,7 @@
     i18n_domain="bda.pasldap"
     >
 
-  <include package="bda.ldap" />
+  <include package="node.ext.ldap" />
 
   <genericsetup:registerProfile
       name="default"

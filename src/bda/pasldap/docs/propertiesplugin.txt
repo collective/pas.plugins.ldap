@@ -19,16 +19,16 @@ First lets see if the plugin is properly installed.
     <GroupsFromLDAPMultiPlugin at ...>
 
     >>> plugin.ldap
-    <bda.ldap.properties.PloneLDAPWrapper object at ...>
+    <node.ext.ldap.properties.PloneLDAPWrapper object at ...>
 
 And check also if the adapters are registered properly
-    >>> from bda.ldap.properties import IUserProperties
+    >>> from node.ext.ldap.properties import IUserProperties
     >>> up = IUserProperties(plugin.ldap)
     >>> up
-    <bda.ldap.properties.LDAPUserProperties object at ...>
+    <node.ext.ldap.properties.LDAPUserProperties object at ...>
 
     >>> gp = IGroupProperties(plugin.lw)
-    <bda.ldap.properties.LDAPGroupProperties object at ...>
+    <node.ext.ldap.properties.LDAPGroupProperties object at ...>
 
 Next set wrappers parameters to our testserver:
     >>> plugin.ldap.setUserBase('cn=users,dc=deimos,dc=bks-campus,dc=ch')
