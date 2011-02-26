@@ -36,13 +36,13 @@ def debug(aspects=None):
     return decorator
 
 
-def ifnotenabledreturn(default=None):
+def ifnotenabledreturn(default=None, enabled_attr="enabled"):
     """generate decorator that checks whether plugin is enabled, returns retval
     otherwise
     """
     def decorator(method):
         def wrapper(self, *args, **kws):
-            if not self.enabled:
+            if not getattr(self, enabled_attr):
                 logger.info('disabled; %s defaulting.' % \
                         (method.func_name,))
                 return default
@@ -55,3 +55,9 @@ def ifnotenabledreturn(default=None):
             return retval
         return wrapfunc(method, wrapper)
     return decorator
+
+def if_groups_not_enabled_return(default=None):
+    return ifnotenabledreturn(default, "groups_enabled")
+
+def if_users_not_enabled_return(default=None):
+    return ifnotenabledreturn(default, "users_enabled")
