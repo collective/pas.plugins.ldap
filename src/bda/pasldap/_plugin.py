@@ -337,6 +337,7 @@ class LDAPPlugin(BasePlugin, object):
         o May assign properties based on values in the REQUEST object, if
           present
         """
+        # XXX: this seems to be also called for groups
         return LDAPUserPropertySheet(user, self)
 
     @if_users_not_enabled_return(None)
