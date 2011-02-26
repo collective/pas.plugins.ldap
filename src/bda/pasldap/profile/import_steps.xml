@@ -3,7 +3,7 @@
  <import-step id="bda" 
               handler="bda.pasldap.setuphandlers.setupPlugin"
               title="Setup LDAP Plugin"
-              version="20100731">
+              version="20110226">
   <dependency step="plone-final"/>
   Setup LDAP Plugin
  </import-step>
