@@ -1,2 +1,3 @@
-* Tasks
+* Tasks                                                   :bda:pas:ldap:osha:
+** NEXT implement yet failing code for groups
 ** TODO check security with respect to recent PAS bug in plone
