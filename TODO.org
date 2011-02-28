@@ -1,4 +1,8 @@
 * Tasks                                                   :bda:pas:ldap:osha:
-** NEXT implement yet failing code for groups
+** DONE implement yet failing code for groups
+CLOSED: [2011-02-28 Mon 02:30]
+** NEXT test manually via bda.plone.ldap
+DEPS: node.ext.ldap group support
+here we need a link to the actual todo
 ** TODO check security with respect to recent PAS bug in plone
 ** TODO add flags for readonly groups and users with decorators
