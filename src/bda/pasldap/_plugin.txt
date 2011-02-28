@@ -1,21 +1,6 @@
-pas.plugins.listPluginTypeInfo() relevent for us
+pas.plugins.listPluginTypeInfo()
 
- {'description': 'Group Management provides add/write/deletion of groups and member management',
-  'id': 'IGroupManagement',
-  'interface': <InterfaceClass Products.PlonePAS.interfaces.group.IGroupManagement>,
-  'methods': ['removePrincipalFromGroup',
-              'addPrincipalToGroup',
-              'removeGroup',
-              'updateGroup',
-              'setRolesForGroup',
-              'addGroup'],
-  'title': 'group_management'},
- {'description': 'Groups plugins determine the groups to which a user belongs.',
-  'id': 'IGroupsPlugin',
-  'interface': <InterfaceClass Products.PluggableAuthService.interfaces.plugins.IGroupsPlugin>,
-  'methods': ['getGroupsForPrincipal'],
-  'title': 'groups'},
-
+the remaining ones we are not yet using and don't see yet why we should
 
  {'description': 'Group Introspection provides listings of groups and membership',
   'id': 'IGroupIntrospection',
@@ -27,11 +12,6 @@ pas.plugins.listPluginTypeInfo() relevent for us
   'interface': <InterfaceClass Products.PluggableAuthService.interfaces.plugins.IUpdatePlugin>,
   'methods': ['updateUserInfo'],
   'title': 'update'},
- {'description': 'User Adder plugins allow the Pluggable Auth Service to create users.',
-  'id': 'IUserAdderPlugin',
-  'interface': <InterfaceClass Products.PluggableAuthService.interfaces.plugins.IUserAdderPlugin>,
-  'methods': ['doAddUser'],
-  'title': 'user_adder'},
  {'description': 'The User Introspection plugins allow the Pluggable Auth Service to provide lists of users',
   'id': 'IUserIntrospection',
   'interface': <InterfaceClass Products.PlonePAS.interfaces.plugins.IUserIntrospection>,

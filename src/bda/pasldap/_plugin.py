@@ -31,12 +31,13 @@ class LDAPPlugin(BasePlugin, object):
         pas_interfaces.IGroupsPlugin,
         pas_interfaces.IPropertiesPlugin,
         pas_interfaces.IUserEnumerationPlugin,
+        plonepas_interfaces.capabilities.IDeleteCapability,
+        plonepas_interfaces.capabilities.IGroupCapability,
+        plonepas_interfaces.capabilities.IPasswordSetCapability,
         plonepas_interfaces.group.IGroupManagement,
         plonepas_interfaces.plugins.IMutablePropertiesPlugin,
         plonepas_interfaces.plugins.IUserManagement,
-        plonepas_interfaces.capabilities.IDeleteCapability,
-        plonepas_interfaces.capabilities.IGroupCapability,
-        plonepas_interfaces.capabilities.IPasswordSetCapability)
+        )
 
     #XXX: turn this to False when going productive, just in case
     _dont_swallow_my_exceptions = True # Tell PAS not to swallow our exceptions
