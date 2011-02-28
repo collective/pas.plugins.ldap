@@ -1,3 +1,4 @@
 * Tasks                                                   :bda:pas:ldap:osha:
 ** NEXT implement yet failing code for groups
 ** TODO check security with respect to recent PAS bug in plone
+** TODO add flags for readonly groups and users with decorators

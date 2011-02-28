@@ -21,6 +21,10 @@ from bda.pasldap.utils import (
     if_users_not_enabled_return,
 )
 
+# XXX
+# comments in here are mostly taken from the corresponding interface
+# declarations. Once we know what we are and are not going to support
+# we could think about cleaning them up
 
 class LDAPPlugin(BasePlugin, object):
     """Glue layer for making node.ext.ldap available to PAS.
@@ -46,9 +50,6 @@ class LDAPPlugin(BasePlugin, object):
     def __init__(self, id, title=None):
         self.id = id
         self.title = title
-
-    def reset(self):
-        delattr(self, '_v_users')
 
     @property
     def groups_enabled(self):
@@ -96,6 +97,10 @@ class LDAPPlugin(BasePlugin, object):
         except Exception, e:
             logger.error('caught: %s.' % str(e))
 
+    def reset(self):
+        for name in ('_v_groups', '_v_users'):
+            delattr(self, name)
+
     ###
     # pas_interfaces.IAuthenticationPlugin
     #
@@ -128,6 +133,7 @@ class LDAPPlugin(BasePlugin, object):
     #
     #  Allow querying groups by ID, and searching for groups.
     #    o XXX:  can these be done by a single plugin?
+    #
     @if_groups_not_enabled_return(tuple())
     def enumerateGroups(self, id=None, exact_match=False, sort_by=None,
                         max_results=None, **kw):
@@ -170,14 +176,20 @@ class LDAPPlugin(BasePlugin, object):
         o Insufficiently-specified criteria may have catastrophic
           scaling issues for some implementations.
         """
-        # XXX
-        return tuple()
+        if id:
+            kw['id'] = id
+        matches = self.groups.search(criteria=kw, exact_match=exact_match)
+        pluginid = self.getId()
+        ret = [
+            dict(id=id.encode('ascii', 'replace'), pluginid=pluginid)
+            for id in matches
+            ]
+        return ret
 
     ###
     # pas_interfaces.IGroupsPlugin
     #
     #  Determine the groups to which a user belongs.
-    #
     @if_groups_not_enabled_return(tuple())
     def getGroupsForPrincipal(self, principal, request=None):
         """principal -> ( group_1, ... group_N )
@@ -187,8 +199,18 @@ class LDAPPlugin(BasePlugin, object):
 
         o May assign groups based on values in the REQUEST object, if present
         """
-        # XXX
-        return tuple()
+        try:
+            _principal = self.users[principal.getId()]
+        except KeyError:
+            # XXX: that's where group in group will happen, but so far
+            # group nodes do not provide membership info so we just
+            # return if there is no user
+            return tuple()
+            try:
+                _principal = self.groups[principal.getId()]
+            except KeyError:
+                return tuple()
+        return _principal.groups.keys()
 
     ###
     # pas_interfaces.IUserEnumerationPlugin
@@ -199,7 +221,7 @@ class LDAPPlugin(BasePlugin, object):
     @if_users_not_enabled_return(tuple())
     @debug(['userenumeration'])
     def enumerateUsers(self, id=None, login=None, exact_match=False,
-            sort_by=None, max_results=None, **kws):
+            sort_by=None, max_results=None, **kw):
         """-> ( user_info_1, ... user_info_N )
 
         o Return mappings for users matching the given criteria.
@@ -243,11 +265,11 @@ class LDAPPlugin(BasePlugin, object):
         # TODO: max_results in node.ext.ldap
         # TODO: sort_by in node.ext.ldap
         if id:
-            kws['id'] = id
+            kw['id'] = id
         if login:
-            kws['login'] = login
+            kw['login'] = login
         matches = self.users.search(
-            criteria=kws,
+            criteria=kw,
             attrlist=('login',),
             exact_match=exact_match
         )
@@ -262,7 +284,6 @@ class LDAPPlugin(BasePlugin, object):
     ###
     # plonepas_interfaces.group.IGroupManagement
     #
-
     @if_groups_not_enabled_return(False)
     def addGroup(self, id, **kw):
         """
@@ -296,7 +317,7 @@ class LDAPPlugin(BasePlugin, object):
         set roles for group
         return True on success
         """
-        #XXX
+        #XXX: should we? can we?
         return False
 
     @if_groups_not_enabled_return(False)
@@ -325,7 +346,6 @@ class LDAPPlugin(BasePlugin, object):
     #  conforming to the IMutable property sheet interface or a dictionary (in
     #  which case the properties are not persistently mutable).
     #
-
     @if_users_not_enabled_return(dict())
     def getPropertiesForUser(self, user, request=None):
         """User -> IMutablePropertySheet || {}
@@ -338,15 +358,17 @@ class LDAPPlugin(BasePlugin, object):
         o May assign properties based on values in the REQUEST object, if
           present
         """
-        # XXX: this seems to be also called for groups
+        # XXX: this seems to be also called for groups - do something about it
         return LDAPUserPropertySheet(user, self)
 
     @if_users_not_enabled_return(None)
     def setPropertiesForUser(self, user, propertysheet):
         """Set modified properties on the user persistently.
 
-        Does nothing, it is called by MutablePropertySheet in setProperty and
-        setProperties. This should not affect us at all
+        Does nothing, it is called by MutablePropertySheet in
+        setProperty and setProperties. This should not affect us at
+        all as we handle setting of properties via our own
+        LDAPPropertySheet
         """
         pass
 
@@ -363,6 +385,15 @@ class LDAPPlugin(BasePlugin, object):
     # plonepas_interfaces.plugins.IUserManagement
     # (including signature of pas_interfaces.IUserAdderPlugin)
     #
+    @if_users_not_enabled_return(False)
+    def doAddUser(self, login, password):
+        """ Add a user record to a User Manager, with the given login
+            and password
+
+        o Return a Boolean indicating whether a user was added or not
+        """
+        # XXX
+        return False
 
     @if_users_not_enabled_return(False)
     def doChangeUser(self, login, password, **kw):
@@ -397,7 +428,7 @@ class LDAPPlugin(BasePlugin, object):
     ###
     # plonepas_interfaces.capabilities.IGroupCapability
     # (plone ui specific)
-
+    #
     @if_groups_not_enabled_return(False)
     def allowGroupAdd(self, principal_id, group_id):
         """
