@@ -1,8 +1,13 @@
-* Tasks                                                   :bda:pas:ldap:osha:
+* Tasks                                       :bda_pasldap:bda:pas:ldap:osha:
 ** DONE implement yet failing code for groups
 CLOSED: [2011-02-28 Mon 02:30]
 ** NEXT test manually via bda.plone.ldap
-DEPS: node.ext.ldap group support
+DEPS: node.ext.ldap: user.groups support
 here we need a link to the actual todo
 ** TODO check security with respect to recent PAS bug in plone
+removing doctext is _not_ a solution
 ** TODO add flags for readonly groups and users with decorators
+** TODO group in group
+DEPS: node.ext.ldap: group.groups support
+** TODO rw users
+** TODO rw groups
