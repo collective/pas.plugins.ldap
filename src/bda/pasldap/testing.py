@@ -101,14 +101,6 @@ class PASLDAPLayer(Layer):
         for p, config in reversed(self.products):
             z2.uninstallProduct(app, p)
 
-        # Clean up Wicked turds
-        # XXX: This may tear down too much state
-        try:
-            from wicked.fieldevent import meta
-            meta.cleanUp()
-        except ImportError:
-            pass
-
     def setUpDefaultContent(self, app):
         """Add the site owner user to the root user folder and log in as that
         user. Create the Plone site, installing the extension profiles listed
