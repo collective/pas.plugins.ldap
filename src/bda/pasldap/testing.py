@@ -102,15 +102,7 @@ class PASLDAPLayer(Layer):
             z2.uninstallProduct(app, p)
 
     def setUpDefaultContent(self, app):
-        """Add the site owner user to the root user folder and log in as that
-        user. Create the Plone site, installing the extension profiles listed
-        in the ``extensionProfiles`` layer class variable. Create the test
-        user inside the site, and disable the default workflow.
-
-        Note: There is no explicit tear-down of this setup operation, because
-        all persistent changes are torn down when the stacked ZODB
-        ``DemoStorage`` is popped.
-        """
+        """Add the site owner user to the root user folder."""
 
         # Create the owner user and "log in" so that the site object gets
         # the right ownership information
