@@ -45,9 +45,7 @@ class PASLDAPLayer(Layer):
 
     def setUpZCML(self):
         """Stack a new global registry and load ZCML configuration of Plone
-        and the core set of add-on products into it. Also set the
-        ``disable-autoinclude`` ZCML feature so that Plone does not attempt to
-        auto-load ZCML using ``z3c.autoinclude``.
+        and the core set of add-on products into it. 
         """
 
         # Create a new global registry
@@ -56,16 +54,7 @@ class PASLDAPLayer(Layer):
         from zope.configuration import xmlconfig
         self['configurationContext'] = context = zca.stackConfigurationContext(self.get('configurationContext'))
 
-        # Turn off z3c.autoinclude
-
-        xmlconfig.string("""\
-<configure xmlns="http://namespaces.zope.org/zope" xmlns:meta="http://namespaces.zope.org/meta">
-    <meta:provides feature="disable-autoinclude" />
-</configure>
-""", context=context)
-
-        # Load dependent products's ZCML - Plone doesn't specify dependencies
-        # on Products.* packages fully
+        # Load dependent products's ZCML
 
         from zope.dottedname.resolve import resolve
 
