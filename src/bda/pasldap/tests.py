@@ -1,17 +1,13 @@
 import unittest
 import doctest
+import pprint
 from interlude import interact
-from Testing import ZopeTestCase as ztc
 from plone.testing import layered
-from node.ext.ldap import testing
+from .testing import PASLDAPLayer
 
 optionflags = doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS
 
-class ZopeLDAPTestcase(ztc.ZopeTestCase):
-
-
-
-TESTFILES = [('_plugin.txt', testing.LDIF_groupOfNames]
+TESTFILES = ['_plugin.txt']
 
 def test_suite():
     suite = unittest.TestSuite()
@@ -19,14 +15,13 @@ def test_suite():
             layered(
                 doctest.DocFileSuite(
                     docfile,
-                    globs={'interact': interlude.interact,
+                    globs={'interact': interact,
                            'pprint': pprint.pprint,
-                           'pp': pprint.pprint,
                            },
                     optionflags=optionflags,
                     ),
-                layer=layer,
+                layer=PASLDAPLayer(),
                 )
-            for docfile, layer in DOCFILES
+            for docfile in TESTFILES
             ])
     return suite

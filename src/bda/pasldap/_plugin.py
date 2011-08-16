@@ -8,8 +8,8 @@ from node.ext.ldap.interfaces import (
     ILDAPProps,
     ILDAPUsersConfig,
     ILDAPGroupsConfig)
-from node.ext.ldap.users import LDAPUsers
-#from node.ext.ldap.groups import LDAPGroups
+from node.ext.ldap.ugm import Users
+from node.ext.ldap.ugm import Groups
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
@@ -84,7 +84,7 @@ class LDAPPlugin(BasePlugin, object):
         props = ILDAPProps(site)
         gcfg = ILDAPGroupsConfig(site)
         try:
-            self._v_groups = LDAPGroups(props, gcfg)
+            self._v_groups = Groups(props, gcfg)
         except Exception, e:
             logger.error('caught: %s.' % str(e))
 
@@ -93,7 +93,7 @@ class LDAPPlugin(BasePlugin, object):
         props = ILDAPProps(site)
         ucfg = ILDAPUsersConfig(site)
         try:
-            self._v_users = LDAPUsers(props, ucfg)
+            self._v_users = Users(props, ucfg)
         except Exception, e:
             logger.error('caught: %s.' % str(e))
 
