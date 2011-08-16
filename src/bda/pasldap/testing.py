@@ -1,13 +1,17 @@
-from plone.testing import Layer
-from plone.testing import Layer, zodb, zca, z2
-from node.ext.ldap import testing
+from plone.testing import (
+    Layer, 
+    zodb, 
+    zca, 
+    z2,
+)
+from node.ext.ldap import testing as ldaptesting
 
 SITE_OWNER_NAME = SITE_OWNER_PASSWORD = 'admin'
 
 class PASLDAPLayer(Layer):
     # big parts copied from p.a.testing!
     
-    defaultBases = (testing.LDIF_groupOfNames, z2.STARTUP)
+    defaultBases = (ldaptesting.LDIF_groupOfNames, z2.STARTUP)
 
     # Products that will be installed, plus options
     products = (
