@@ -21,8 +21,8 @@ class PASLDAPLayer(Layer):
     def setUp(self):
 
         # Stack a new DemoStorage on top of the one from z2.STARTUP.
-        self['zodbDB'] = zodb.stackDemoStorage(self.get('zodbDB'), name='PASLDAPLayer')
-
+        self['zodbDB'] = zodb.stackDemoStorage(self.get('zodbDB'), 
+                                               name='PASLDAPLayer')
         self.setUpZCML()
 
         # Set up products and the default content
@@ -52,7 +52,8 @@ class PASLDAPLayer(Layer):
         zca.pushGlobalRegistry()
 
         from zope.configuration import xmlconfig
-        self['configurationContext'] = context = zca.stackConfigurationContext(self.get('configurationContext'))
+        self['configurationContext'] = context = zca.stackConfigurationContext(
+                                               self.get('configurationContext'))
 
         # Load dependent products's ZCML
 
