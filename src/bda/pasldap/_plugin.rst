@@ -98,8 +98,17 @@ IGroupsPlugin
 IPropertiesPlugin
 -----------------
 
+see PlonePAS, IMutablePropertiesPlugin
+
 IUserEnumerationPlugin
 ----------------------
+
+Signature is ``enumerateUsers( id=None, login=None, exact_match=False,
+sort_by=None, max_results=None, **kw)``
+
+::
+
+    >>> ldap.enumerateUsers(id='uid1')
 
 IDeleteCapability
 -----------------
