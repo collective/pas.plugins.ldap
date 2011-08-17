@@ -188,6 +188,26 @@ Also not for non existent::
 IGroupManagement
 ----------------
 
+See also ``IGroupCapability`` - for now we dont support this::
+
+    >>> ldap.addGroup(id)
+    False
+
+    >>> ldap.addPrincipalToGroup('uid0', 'group0')
+    False
+
+    >>> ldap.updateGroup('group9', {})
+    False
+
+    >>> ldap.setRolesForGroup('uid0', roles=('Manager'))
+    False
+
+    >>> ldap.removeGroup('group0')
+    False
+
+    >>> ldap.removePrincipalFromGroup('uid1', 'group1')
+    False
+
 IMutablePropertiesPlugin
 ------------------------
 

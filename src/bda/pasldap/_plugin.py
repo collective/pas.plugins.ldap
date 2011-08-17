@@ -306,7 +306,9 @@ class LDAPPlugin(BasePlugin, object):
         set roles for group
         return True on success
         """
-        #XXX: should we? can we?
+        # even Products.PlonePAS.plugins.GroupAwareRoleManager does not 
+        # implement this. We're save to ignore it too for now. But at least
+        # we do implement it. 
         return False
 
     @if_groups_not_enabled_return(False)
