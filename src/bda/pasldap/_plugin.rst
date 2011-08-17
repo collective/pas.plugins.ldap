@@ -140,7 +140,8 @@ sort_by=None, max_results=None, **kw)``
 IDeleteCapability
 -----------------
 
-It's not allowed to delete using this plugin!::
+It's not allowed to delete a principal using this plugin. We may change this
+later and make it configurable::
 
     >>> ldap.allowDeletePrincipal('uid0')
     False
@@ -154,8 +155,35 @@ PlonePAS
 IGroupCapability
 ----------------
 
+By now adding groups is not allowed.  We may change this later and make it
+configurable::
+
+    >>> ldap.allowGroupAdd('uid0', 'group0')
+    False
+    
+Same for deletion of groups::
+
+    >>> ldap.allowGroupRemove('uid0', 'group0')
+    False
+
+
 IPasswordSetCapability
 ----------------------
+
+User are able to set the password::
+
+    >>> ldap.allowPasswordSet('uid0')
+    True
+
+Not so for groups::
+
+    >>> ldap.allowPasswordSet('group0')
+    False
+
+Also not for non existent::
+
+    >>> ldap.allowPasswordSet('ghost')
+    False
 
 IGroupManagement
 ----------------
