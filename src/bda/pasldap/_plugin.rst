@@ -140,6 +140,14 @@ sort_by=None, max_results=None, **kw)``
 IDeleteCapability
 -----------------
 
+It's not allowed to delete using this plugin!::
+
+    >>> ldap.allowDeletePrincipal('uid0')
+    False
+
+    >>> ldap.allowDeletePrincipal('unknownuser')
+    False
+
 PlonePAS
 ========
 
