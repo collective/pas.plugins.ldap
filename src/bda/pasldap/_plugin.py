@@ -169,6 +169,8 @@ class LDAPPlugin(BasePlugin, object):
             dict(id=id.encode('ascii', 'replace'), pluginid=pluginid)
             for id in matches
             ]
+        if max_results and len(ret) > max_results:
+            ret = ret[:max_results]
         return ret
 
     ###
@@ -195,7 +197,7 @@ class LDAPPlugin(BasePlugin, object):
                 _principal = self.groups[principal.getId()]
             except KeyError:
                 return tuple()
-        return _principal.groups.keys()
+        return [_.id for _ in _principal.groups]
 
     ###
     # pas_interfaces.IUserEnumerationPlugin

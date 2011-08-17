@@ -63,9 +63,37 @@ max_results=None, **kw)``
     ['group0', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 
     'group7', 'group8', 'group9']
 
+    >>> [_['id'] for _ in ldap.enumerateGroups(id='group*', sort_by='id')]
+    ['group0', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 
+    'group7', 'group8', 'group9']
 
+    >>> ldap.enumerateGroups(id='group*', exact_match=True)
+    ()
+
+    >>> ldap.enumerateGroups(id='group5', exact_match=True)
+    [{'pluginid': 'ldap_bda', 'id': 'group5'}]
+
+    >>> len(ldap.enumerateGroups(id='group*', max_results=3))
+    3
+    
+    
 IGroupsPlugin
 -------------
+
+::
+
+    >>> user = pas.getUserById('uid9')
+    >>> ldap.getGroupsForPrincipal(user)
+    [u'group9']
+
+    >>> user = pas.getUserById('uid1')
+    >>> ldap.getGroupsForPrincipal(user)
+    [u'group1', u'group2', u'group3', u'group4', u'group5', 
+    u'group6', u'group7', u'group8', u'group9']
+
+    >>> user = pas.getUserById('uid0')
+    >>> ldap.getGroupsForPrincipal(user)
+    []
 
 IPropertiesPlugin
 -----------------
