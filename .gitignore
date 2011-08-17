@@ -3,7 +3,8 @@
 /devsrc/
 /parts/
 /var/
-src/bda.pasldap.egg-info
+/src/bda.pasldap.egg-info
 .mrsd
-*eggs/
+/*eggs/
 .*.cfg
+/coverage/
