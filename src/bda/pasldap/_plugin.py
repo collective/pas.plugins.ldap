@@ -8,8 +8,7 @@ from node.ext.ldap.interfaces import (
     ILDAPProps,
     ILDAPUsersConfig,
     ILDAPGroupsConfig)
-from node.ext.ldap.users import LDAPUsers
-#from node.ext.ldap.groups import LDAPGroups
+from node.ext.ldap.ugm import Ugm
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
@@ -60,46 +59,31 @@ class LDAPPlugin(BasePlugin, object):
         return self.users is not None
 
     @property
-    def groups(self):
-        try:
-            return self._v_groups
-        except AttributeError:
-            self._init_groups()
-            if hasattr(self, '_v_groups'):
-                return self._v_groups
-            return None
-
-    @property
-    def users(self):
-        try:
-            return self._v_users
-        except AttributeError:
-            self._init_users()
-            if hasattr(self, '_v_users'):
-                return self._v_users
-            return None
-
-    def _init_groups(self):
-        site = getUtility(ISiteRoot)
-        props = ILDAPProps(site)
-        gcfg = ILDAPGroupsConfig(site)
-        try:
-            self._v_groups = LDAPGroups(props, gcfg)
-        except Exception, e:
-            logger.error('caught: %s.' % str(e))
-
-    def _init_users(self):
+    def ugm(self):
+        if hasattr(self, '_v_ugm'):
+            return self._v_ugm
         site = getUtility(ISiteRoot)
         props = ILDAPProps(site)
         ucfg = ILDAPUsersConfig(site)
+        gcfg = ILDAPGroupsConfig(site)
         try:
-            self._v_users = LDAPUsers(props, ucfg)
+            self._v_ugm = Ugm(props=props, ucfg=ucfg, gcfg=gcfg, rcfg=None)
         except Exception, e:
             logger.error('caught: %s.' % str(e))
+        return self._v_ugm
+    
+    @property
+    def groups(self):
+        if self.ugm:
+            return self.ugm.groups
+
+    @property
+    def users(self):
+        if self.ugm:
+            return self.ugm.users
 
     def reset(self):
-        for name in ('_v_groups', '_v_users'):
-            delattr(self, name)
+        delattr(self, '_v_ugm')
 
     ###
     # pas_interfaces.IAuthenticationPlugin
@@ -460,4 +444,3 @@ class LDAPPlugin(BasePlugin, object):
         return len(self.users.search(criteria={'id': id},
                                      attrlist=(),
                                      exact_match=True)) > 0
-
