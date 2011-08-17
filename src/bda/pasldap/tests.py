@@ -10,7 +10,7 @@ from .testing import PASLDAPLayer
 
 optionflags = doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS
 
-TESTFILES = ['_plugin.txt']
+TESTFILES = ['_plugin.rst']
 
 def test_suite():
     suite = unittest.TestSuite()
