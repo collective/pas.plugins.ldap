@@ -5,6 +5,7 @@ from zope.interface import (
 from zope.component import (
     adapter,
     provideAdapter,
+    provideUtility,
 )
     
 from plone.testing import (
@@ -14,6 +15,7 @@ from plone.testing import (
     z2,
 )
 import Zope2
+from Products.CMFCore.interfaces import ISiteRoot
 from node.ext.ldap.interfaces import (
     ILDAPProps,
     ILDAPUsersConfig,
@@ -57,9 +59,9 @@ class PASLDAPLayer(Layer):
     def setUp(self):
         self['zodbDB'] = zodb.stackDemoStorage(self.get('zodbDB'), 
                                                name='PASLDAPLayer')
-        self.setUpZCML()
         self['app'] = z2.addRequestContainer(Zope2.app(self['zodbDB'].open()), 
                                              environ=None)
+        self.setUpZCML()
         self.setUpProducts(self['app'])
         self.setUpDefaultContent(self['app'])
 
@@ -104,6 +106,7 @@ class PASLDAPLayer(Layer):
         provideAdapter(ldapprops)
         provideAdapter(usersconfig)
         provideAdapter(groupsconfig)
+        provideUtility(self['app'], provides=ISiteRoot)
 
     def tearDownZCML(self):
         """Pop the global component registry stack, effectively unregistering

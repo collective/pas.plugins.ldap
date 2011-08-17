@@ -109,7 +109,7 @@ class LDAPPlugin(BasePlugin, object):
         except KeyError:
             # credentials were not meant for us
             return None
-        uid = self.users.authenticate(login=login, pw=pw)
+        uid = self.users.authenticate(login, pw)
         if uid:
             return (uid, login)
 

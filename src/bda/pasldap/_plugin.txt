@@ -1,5 +1,9 @@
+==================
 Test of the plugin
 ==================
+
+Setup
+=====
 
 Basics
 ------
@@ -26,9 +30,58 @@ Create
     ['chooser', 'credentials_basic_auth', 'credentials_cookie_auth', 'ldap_bda', 
     'plugins', 'roles', 'sniffer', 'users']
     
-    >>> interact(locals())
+    >>> ldap = pas['ldap_bda']
+    
+PAS Plugins
+===========
+    
+IAuthenticationPlugin
+---------------------
+
+    >>> ldap.authenticateCredentials({'login':'cn0', 'password': 'secret0'})
+    (u'uid0', 'cn0')
+
+    >>> ldap.authenticateCredentials({'login':'admin', 'password': 'admin'})
+    
+    >>> ldap.authenticateCredentials({'login':'nonexist', 'password': 'dummy'})
+    
+
+IGroupEnumerationPlugin
+-----------------------
+
+IGroupsPlugin
+-------------
+
+IPropertiesPlugin
+-----------------
+
+IUserEnumerationPlugin
+----------------------
+
+IDeleteCapability
+-----------------
+
+PlonePAS
+========
+
+IGroupCapability
+----------------
+
+IPasswordSetCapability
+----------------------
+
+IGroupManagement
+----------------
+
+IMutablePropertiesPlugin
+------------------------
+
+IUserManagement
+---------------
     
          
+OLD Stuff
+=========         
 
 pas.plugins.listPluginTypeInfo()
 
