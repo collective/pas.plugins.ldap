@@ -109,7 +109,34 @@ sort_by=None, max_results=None, **kw)``
 ::
 
     >>> ldap.enumerateUsers(id='uid1')
+    [{'pluginid': 'ldap_bda', 'login': u'cn1', 'id': 'uid1'}]
 
+    >>> ldap.enumerateUsers(id='uid*')
+        [{'pluginid': 'ldap_bda', 'login': u'cn0', 'id': 'uid0'}, 
+        {'pluginid': 'ldap_bda', 'login': u'cn1', 'id': 'uid1'}, 
+        {'pluginid': 'ldap_bda', 'login': u'cn2', 'id': 'uid2'}, 
+        {'pluginid': 'ldap_bda', 'login': u'cn3', 'id': 'uid3'}, 
+        {'pluginid': 'ldap_bda', 'login': u'cn4', 'id': 'uid4'}, 
+        {'pluginid': 'ldap_bda', 'login': u'cn5', 'id': 'uid5'}, 
+        {'pluginid': 'ldap_bda', 'login': u'cn6', 'id': 'uid6'}, 
+        {'pluginid': 'ldap_bda', 'login': u'cn7', 'id': 'uid7'}, 
+        {'pluginid': 'ldap_bda', 'login': u'cn8', 'id': 'uid8'}, 
+        {'pluginid': 'ldap_bda', 'login': u'cn9', 'id': 'uid9'}]
+        
+    >>> [_['id'] for _ in ldap.enumerateUsers(id='uid*', sort_by='id')]
+    ['uid0', 'uid1', 'uid2', 'uid3', 'uid4', 'uid5', 'uid6', 'uid7', 'uid8', 
+    'uid9']
+        
+    >>> ldap.enumerateUsers(id='uid*', exact_match=True)
+    ()
+
+    >>> ldap.enumerateUsers(id='uid4', exact_match=True)
+    [{'pluginid': 'ldap_bda', 'login': u'cn4', 'id': 'uid4'}]
+
+    >>> len(ldap.enumerateUsers(id='uid*', max_results=3))
+    3
+    
+    
 IDeleteCapability
 -----------------
 

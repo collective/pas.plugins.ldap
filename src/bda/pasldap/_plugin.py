@@ -266,6 +266,8 @@ class LDAPPlugin(BasePlugin, object):
             login=attrs['login'][0], #XXX: see node.ext.ldap.users.Users.search
             pluginid=pluginid,
             ) for id, attrs in matches]
+        if max_results and len(ret) > max_results:
+            ret = ret[:max_results]        
         return ret
 
     ###
