@@ -16,25 +16,4 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
-<!--
-  <adapter
-      factory=".exportimport.LDAPPluginXMLAdapter"
-      provides="Products.GenericSetup.interfaces.IBody"
-      for="._plugin.ILDAPPlugin
-           Products.GenericSetup.interfaces.ISetupEnviron"
-      />
-
-  <adapter
-      factory=".exportimport.LDAPPluginConfigurationExportImport"
-      provides="Products.GenericSetup.interfaces.IFilesystemExporter"
-      for="._plugin.ILDAPPlugin"
-      />
-
-  <adapter
-      factory=".exportimport.LDAPPluginConfigurationExportImport"
-      provides="Products.GenericSetup.interfaces.IFilesystemImporter"
-      for="._plugin.ILDAPPlugin"
-      />
--->
-
 </configure>
