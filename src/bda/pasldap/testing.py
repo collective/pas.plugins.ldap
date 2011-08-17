@@ -1,18 +1,49 @@
-import Zope2
+from zope.interface import (
+    Interface,
+    implementer,
+)
+from zope.component import (
+    adapter,
+    provideAdapter,
+)
+    
 from plone.testing import (
     Layer, 
     zodb, 
     zca, 
     z2,
 )
+import Zope2
+from node.ext.ldap.interfaces import (
+    ILDAPProps,
+    ILDAPUsersConfig,
+    ILDAPGroupsConfig,
+)
 from node.ext.ldap import testing as ldaptesting
 
 SITE_OWNER_NAME = SITE_OWNER_PASSWORD = 'admin'
 
+
+@implementer(ILDAPProps)
+@adapter(Interface)
+def ldapprops(context):
+    return ldaptesting.props
+
+@implementer(ILDAPUsersConfig)
+@adapter(Interface)
+def usersconfig(context):
+    return ldaptesting.LDIF_groupOfNames_10_10.ucfg
+
+@implementer(ILDAPGroupsConfig)
+@adapter(Interface)
+def groupsconfig(context):
+    return ldaptesting.LDIF_groupOfNames_10_10.gcfg
+        
+        
 class PASLDAPLayer(Layer):
     # big parts copied from p.a.testing!
     
-    defaultBases = (ldaptesting.LDIF_groupOfNames, z2.STARTUP)
+    defaultBases = (ldaptesting.LDIF_groupOfNames_10_10, z2.STARTUP)
 
     # Products that will be installed, plus options
     products = (
@@ -70,6 +101,9 @@ class PASLDAPLayer(Layer):
         loadAll('meta.zcml')
         loadAll('configure.zcml')
         loadAll('overrides.zcml')
+        provideAdapter(ldapprops)
+        provideAdapter(usersconfig)
+        provideAdapter(groupsconfig)
 
     def tearDownZCML(self):
         """Pop the global component registry stack, effectively unregistering

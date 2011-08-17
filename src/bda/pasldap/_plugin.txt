@@ -26,7 +26,9 @@ Create
     ['chooser', 'credentials_basic_auth', 'credentials_cookie_auth', 'ldap_bda', 
     'plugins', 'roles', 'sniffer', 'users']
     
-    >> interact(locals())     
+    >>> interact(locals())
+    
+         
 
 pas.plugins.listPluginTypeInfo()
 
