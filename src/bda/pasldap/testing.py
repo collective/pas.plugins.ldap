@@ -1,3 +1,4 @@
+import Zope2
 from plone.testing import (
     Layer, 
     zodb, 
@@ -23,35 +24,26 @@ class PASLDAPLayer(Layer):
         )
     
     def setUp(self):
-
-        # Stack a new DemoStorage on top of the one from z2.STARTUP.
         self['zodbDB'] = zodb.stackDemoStorage(self.get('zodbDB'), 
                                                name='PASLDAPLayer')
         self.setUpZCML()
-
-        # Set up products and the default content
-        with z2.zopeApp() as app:
-            self.setUpProducts(app)
-            self.setUpDefaultContent(app)
+        self['app'] = z2.addRequestContainer(Zope2.app(self['zodbDB'].open()), 
+                                             environ=None)
+        self.setUpProducts(self['app'])
+        self.setUpDefaultContent(self['app'])
 
     def tearDown(self):
-
-        # Tear down products
-        with z2.zopeApp() as app:
-            # note: content tear-down happens by squashing the ZODB
-            self.tearDownProducts(app)
-
+        self.tearDownProducts(self['app'])
         self.tearDownZCML()
-
-        # Zap the stacked ZODB
-        self['zodbDB'].close()
+        del self['app']
+        self['zodbDB'].close()        
         del self['zodbDB']
+        
 
     def setUpZCML(self):
         """Stack a new global registry and load ZCML configuration of Plone
         and the core set of add-on products into it. 
         """
-
         # Create a new global registry
         zca.pushGlobalRegistry()
 
@@ -60,7 +52,6 @@ class PASLDAPLayer(Layer):
                                                self.get('configurationContext'))
 
         # Load dependent products's ZCML
-
         from zope.dottedname.resolve import resolve
 
         def loadAll(filename):
@@ -94,7 +85,6 @@ class PASLDAPLayer(Layer):
         """Install all old-style products listed in the the ``products`` tuple
         of this class.
         """
-
         for p, config in self.products:
             z2.installProduct(app, p)
 
