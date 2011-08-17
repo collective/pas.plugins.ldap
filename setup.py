@@ -27,8 +27,6 @@ setup(name='bda.pasldap',
       zip_safe=False,
       install_requires=[
           'setuptools', 
-          # -*- Extra requirements: -*
-          'Plone', # ? should be required by plone.app.folder but isnt
           'Products.PlonePAS',
           'node.ext.ldap',
       ],
@@ -37,7 +35,7 @@ setup(name='bda.pasldap',
               'interlude',
               'zope.configuration',
               'zope.testing',
-              'PILwoTK',
+              'plone.testing',
           ]
       },
       entry_points="""

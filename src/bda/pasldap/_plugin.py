@@ -7,7 +7,8 @@ from zope.component import getUtility
 from node.ext.ldap.interfaces import (
     ILDAPProps,
     ILDAPUsersConfig,
-    ILDAPGroupsConfig)
+    ILDAPGroupsConfig,
+)
 from node.ext.ldap.ugm import Ugm
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin

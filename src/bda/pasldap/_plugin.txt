@@ -1,3 +1,33 @@
+Test of the plugin
+==================
+
+Basics
+------
+
+::
+    >>> app = layer['app']
+    >>> z2.login(app.acl_users, 'admin')
+  
+Turn into a PAS user folder::
+
+    >>> from Products.PlonePAS.Extensions.Install import migrate_root_uf
+    >>> migrate_root_uf(app)
+    >>> pas = app.acl_users
+    >>> pas
+    <PluggableAuthService at /acl_users>
+    
+Create 
+------
+
+::
+    >>> from bda.pasldap.setuphandlers import _addPlugin
+    >>> _addPlugin(app.acl_users)
+    >>> sorted(pas.objectIds())
+    ['chooser', 'credentials_basic_auth', 'credentials_cookie_auth', 'ldap_bda', 
+    'plugins', 'roles', 'sniffer', 'users']
+    
+    >> interact(locals())     
+
 pas.plugins.listPluginTypeInfo()
 
 the remaining ones we are not yet using and don't see yet why we should
