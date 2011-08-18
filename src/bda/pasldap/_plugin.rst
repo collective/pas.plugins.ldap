@@ -211,5 +211,33 @@ See also ``IGroupCapability`` - for now we dont support this::
 IMutablePropertiesPlugin
 ------------------------
 
+Get works::
+
+    >>> user = pas.getUserById('uid0')
+    >>> sheet = ldap.getPropertiesForUser(user, request=None)
+    >>> sheet
+    <bda.pasldap.sheet.LDAPUserPropertySheet instance at ...>
+
+    >>> sheet.getProperty(None, 'mail')
+    foobar@example.com
+    
+Set does nothing, but the sheet itselfs set immediatly::
+
+    >>> from bda.pasldap.sheet import LDAPUserPropertySheet
+    >>> sheet = LDAPUserPropertySheet(user, ldap)
+    >>> sheet.getProperty(None, 'mail')
+    uid0@groupOfNames_10_10.com
+    
+    >>> sheet.setProperty(None, 'mail', 'foobar@example.com')
+    >>> sheet.getProperty(None, 'mail')
+    foobar@example.com
+
+    >>> sheet2 = LDAPUserPropertySheet(user, ldap)
+    >>> sheet2.getProperty(None, 'mail')
+    foobar@example.com
+
+    >>> ldap.deleteUser('uid0')
+
+
 IUserManagement
 ---------------
