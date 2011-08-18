@@ -46,13 +46,7 @@ def ifnotenabledreturn(default=None, enabled_attr="enabled"):
                 logger.info('disabled; %s defaulting.' % \
                         (method.func_name,))
                 return default
-            try:
-                retval = method(self, *args, **kws)
-            except Exception, e:
-                logger.error('caught: %s; %s defaulting.' % \
-                        (str(e), method.func_name))
-                return default
-            return retval
+            return method(self, *args, **kws)
         return wrapfunc(method, wrapper)
     return decorator
 
