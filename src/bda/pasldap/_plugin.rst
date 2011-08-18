@@ -196,7 +196,7 @@ See also ``IGroupCapability`` - for now we dont support this::
     >>> ldap.addPrincipalToGroup('uid0', 'group0')
     False
 
-    >>> ldap.updateGroup('group9', {})
+    >>> ldap.updateGroup('group9', **{})
     False
 
     >>> ldap.setRolesForGroup('uid0', roles=('Manager'))
@@ -218,23 +218,23 @@ Get works::
     >>> sheet
     <bda.pasldap.sheet.LDAPUserPropertySheet instance at ...>
 
-    >>> sheet.getProperty(None, 'mail')
-    foobar@example.com
+    >>> sheet.getProperty('mail')
+    u'uid0@groupOfNames_10_10.com'
     
 Set does nothing, but the sheet itselfs set immediatly::
 
     >>> from bda.pasldap.sheet import LDAPUserPropertySheet
     >>> sheet = LDAPUserPropertySheet(user, ldap)
-    >>> sheet.getProperty(None, 'mail')
-    uid0@groupOfNames_10_10.com
+    >>> sheet.getProperty('mail')
+    u'uid0@groupOfNames_10_10.com'
     
-    >>> sheet.setProperty(None, 'mail', 'foobar@example.com')
-    >>> sheet.getProperty(None, 'mail')
-    foobar@example.com
+    >>> sheet.setProperty(None, 'mail', u'foobar@example.com')
+    >>> sheet.getProperty('mail')
+    u'foobar@example.com'
 
     >>> sheet2 = LDAPUserPropertySheet(user, ldap)
-    >>> sheet2.getProperty(None, 'mail')
-    foobar@example.com
+    >>> sheet2.getProperty('mail')
+    u'foobar@example.com'
 
     >>> ldap.deleteUser('cn9')
 
@@ -244,7 +244,9 @@ IUserManagement
 
 Password change and attributes at once with ``doChangeUser``::
 
-    >>> ldap.doChangeUser('cn9', 'geheim')
+    >>> ldap.doChangeUser('uid9', 'geheim') is None
+    True
+    
     >>> ldap.authenticateCredentials({'login':'cn9', 'password': 'geheim'})
     (u'uid9', 'cn9')
     

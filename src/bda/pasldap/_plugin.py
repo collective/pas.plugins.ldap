@@ -163,7 +163,10 @@ class LDAPPlugin(BasePlugin, object):
         """
         if id:
             kw['id'] = id
-        matches = self.groups.search(criteria=kw, exact_match=exact_match)
+        try:
+            matches = self.groups.search(criteria=kw, exact_match=exact_match)
+        except ValueError:
+            return ()
         pluginid = self.getId()
         ret = [
             dict(id=id.encode('ascii', 'replace'), pluginid=pluginid)
@@ -255,11 +258,14 @@ class LDAPPlugin(BasePlugin, object):
             kw['id'] = id
         if login:
             kw['login'] = login
-        matches = self.users.search(
-            criteria=kw,
-            attrlist=('login',),
-            exact_match=exact_match
-        )
+        try:
+            matches = self.users.search(
+                criteria=kw,
+                attrlist=('login',),
+                exact_match=exact_match
+            )
+        except ValueError:
+            return ()
         pluginid = self.getId()
         ret = [dict(
             id=id.encode('ascii', 'replace'),
@@ -387,12 +393,12 @@ class LDAPPlugin(BasePlugin, object):
         return False
 
     @if_users_not_enabled_return(False)
-    def doChangeUser(self, login, password, **kw):
+    def doChangeUser(self, user_id, password, **kw):
         """Change a user's password (differs from role) roles are set in
         the pas engine api for the same but are set via a role
         manager)
         """
-        self.users.passwd(login, None, password)
+        self.users.passwd(user_id, None, password)
 
     @if_users_not_enabled_return(False)
     def doDeleteUser(self, login):
@@ -448,6 +454,9 @@ class LDAPPlugin(BasePlugin, object):
         """
         # XXX: should just be bool(self.get('id')), currently not because user
         # might be deleted and we don't know about
-        return len(self.users.search(criteria={'id': id},
-                                     attrlist=(),
-                                     exact_match=True)) > 0
+        try:
+            return len(self.users.search(criteria={'id': id},
+                                         attrlist=(),
+                                         exact_match=True)) > 0
+        except ValueError:
+            return False
