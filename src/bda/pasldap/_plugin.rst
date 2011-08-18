@@ -236,8 +236,26 @@ Set does nothing, but the sheet itselfs set immediatly::
     >>> sheet2.getProperty(None, 'mail')
     foobar@example.com
 
-    >>> ldap.deleteUser('uid0')
+    >>> ldap.deleteUser('cn9')
 
 
 IUserManagement
 ---------------
+
+Password change and attributes at once with ``doChangeUser``::
+
+    >>> ldap.doChangeUser('cn9', 'geheim', mail='geheim@secret.tld')
+    >>> ldap.authenticateCredentials({'login':'cn9', 'password': 'geheim'})
+    (u'uid9', 'cn9')
+
+    >>> user = pas.getUserById('uid9')
+    >>> sheet = ldap.getPropertiesForUser(user, request=None)
+    >>> sheet.getProperty(None, 'mail')
+    geheim@secret.tld
+    
+
+We dont support user deletion for now. We may change this later and make it
+configurable:: 
+
+    >>> ldap.doDeleteUser('uid0')
+    False
