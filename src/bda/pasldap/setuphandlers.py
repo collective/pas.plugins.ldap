@@ -1,19 +1,18 @@
 from StringIO import StringIO
 from bda.pasldap._plugin import LDAPPlugin
 
+TITLE = 'LDAP plugin (bda.pasldap)'
 
 def isNotThisProfile(context):
     return context.readDataFile("bdapasldap_marker.txt") is None
 
 
-def _addPlugin(pas):
+def _addPlugin(pas, pluginid='pasldap'):
     installed = pas.objectIds()
-    ID = 'ldap_bda'
-    TITLE = 'BDA LDAP plugin'
-    if ID in installed:
+    if pluginid in installed:
         return TITLE + " already installed."
-    plugin = LDAPPlugin(ID, title=TITLE)
-    pas._setObject(ID, plugin)
+    plugin = LDAPPlugin(pluginid, title=TITLE)
+    pas._setObject(pluginid, plugin)
     for info in pas.plugins.listPluginTypeInfo():
         interface = info['interface']
         if not interface.providedBy(plugin):

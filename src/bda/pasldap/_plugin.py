@@ -15,11 +15,6 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
 from Products.PlonePAS import interfaces as plonepas_interfaces
 from bda.pasldap.sheet import LDAPUserPropertySheet
-from bda.pasldap.utils import (
-    debug,
-    if_groups_not_enabled_return,
-    if_users_not_enabled_return,
-)
 
 # XXX
 # comments in here are mostly taken from the corresponding interface
@@ -91,8 +86,6 @@ class LDAPPlugin(BasePlugin, object):
     #
     #  Map credentials to a user ID.
     #
-    @if_users_not_enabled_return(None)
-    @debug(['authentication'])
     def authenticateCredentials(self, credentials):
         """credentials -> (userid, login)
 
@@ -119,7 +112,6 @@ class LDAPPlugin(BasePlugin, object):
     #  Allow querying groups by ID, and searching for groups.
     #    o XXX:  can these be done by a single plugin?
     #
-    @if_groups_not_enabled_return(tuple())
     def enumerateGroups(self, id=None, exact_match=False, sort_by=None,
                         max_results=None, **kw):
         """ -> ( group_info_1, ... group_info_N )
@@ -180,7 +172,6 @@ class LDAPPlugin(BasePlugin, object):
     # pas_interfaces.IGroupsPlugin
     #
     #  Determine the groups to which a user belongs.
-    @if_groups_not_enabled_return(tuple())
     def getGroupsForPrincipal(self, principal, request=None):
         """principal -> ( group_1, ... group_N )
 
@@ -208,8 +199,6 @@ class LDAPPlugin(BasePlugin, object):
     #   Allow querying users by ID, and searching for users.
     #    o XXX:  can these be done by a single plugin?
     #
-    @if_users_not_enabled_return(tuple())
-    @debug(['userenumeration'])
     def enumerateUsers(self, id=None, login=None, exact_match=False,
             sort_by=None, max_results=None, **kw):
         """-> ( user_info_1, ... user_info_N )
@@ -279,7 +268,6 @@ class LDAPPlugin(BasePlugin, object):
     ###
     # plonepas_interfaces.group.IGroupManagement
     #
-    @if_groups_not_enabled_return(False)
     def addGroup(self, id, **kw):
         """
         Create a group with the supplied id, roles, and groups.
@@ -288,7 +276,6 @@ class LDAPPlugin(BasePlugin, object):
         #XXX
         return False
 
-    @if_groups_not_enabled_return(False)
     def addPrincipalToGroup(self, principal_id, group_id):
         """
         Add a given principal to the group.
@@ -297,7 +284,6 @@ class LDAPPlugin(BasePlugin, object):
         #XXX
         return False
 
-    @if_groups_not_enabled_return(False)
     def updateGroup(self, id, **kw):
         """
         Edit the given group. plugin specific
@@ -306,7 +292,6 @@ class LDAPPlugin(BasePlugin, object):
         #XXX
         return False
 
-    @if_groups_not_enabled_return(False)
     def setRolesForGroup(self, group_id, roles=()):
         """
         set roles for group
@@ -317,7 +302,6 @@ class LDAPPlugin(BasePlugin, object):
         # we do implement it. 
         return False
 
-    @if_groups_not_enabled_return(False)
     def removeGroup(self, group_id):
         """
         Remove the given group
@@ -326,7 +310,6 @@ class LDAPPlugin(BasePlugin, object):
         #XXX
         return False
 
-    @if_groups_not_enabled_return(False)
     def removePrincipalFromGroup(self, principal_id, group_id):
         """
         remove the given principal from the group
@@ -343,7 +326,6 @@ class LDAPPlugin(BasePlugin, object):
     #  conforming to the IMutable property sheet interface or a dictionary (in
     #  which case the properties are not persistently mutable).
     #
-    @if_users_not_enabled_return(dict())
     def getPropertiesForUser(self, user, request=None):
         """User -> IMutablePropertySheet || {}
 
@@ -358,7 +340,6 @@ class LDAPPlugin(BasePlugin, object):
         # XXX: this seems to be also called for groups - do something about it
         return LDAPUserPropertySheet(user, self)
 
-    @if_users_not_enabled_return(None)
     def setPropertiesForUser(self, user, propertysheet):
         """Set modified properties on the user persistently.
 
@@ -369,7 +350,6 @@ class LDAPPlugin(BasePlugin, object):
         """
         pass
 
-    @if_users_not_enabled_return(None)
     def deleteUser(self, user_id):
         """Remove properties stored for a user.
 
@@ -382,7 +362,6 @@ class LDAPPlugin(BasePlugin, object):
     # plonepas_interfaces.plugins.IUserManagement
     # (including signature of pas_interfaces.IUserAdderPlugin)
     #
-    @if_users_not_enabled_return(False)
     def doAddUser(self, login, password):
         """ Add a user record to a User Manager, with the given login
             and password
@@ -392,7 +371,6 @@ class LDAPPlugin(BasePlugin, object):
         # XXX
         return False
 
-    @if_users_not_enabled_return(False)
     def doChangeUser(self, user_id, password, **kw):
         """Change a user's password (differs from role) roles are set in
         the pas engine api for the same but are set via a role
@@ -400,7 +378,6 @@ class LDAPPlugin(BasePlugin, object):
         """
         self.users.passwd(user_id, None, password)
 
-    @if_users_not_enabled_return(False)
     def doDeleteUser(self, login):
         """Remove a user record from a User Manager, with the given login
         and password
@@ -415,7 +392,6 @@ class LDAPPlugin(BasePlugin, object):
     # plonepas_interfaces.capabilities.IDeleteCapability
     # (plone ui specific)
     #
-    @if_users_not_enabled_return(False)
     def allowDeletePrincipal(self, id):
         """True if this plugin can delete a certain user/group.
         """
@@ -426,7 +402,6 @@ class LDAPPlugin(BasePlugin, object):
     # plonepas_interfaces.capabilities.IGroupCapability
     # (plone ui specific)
     #
-    @if_groups_not_enabled_return(False)
     def allowGroupAdd(self, principal_id, group_id):
         """
         True iff this plugin will allow adding a certain principal to
@@ -435,7 +410,6 @@ class LDAPPlugin(BasePlugin, object):
         # XXX
         return False
 
-    @if_groups_not_enabled_return(False)
     def allowGroupRemove(self, principal_id, group_id):
         """
         True iff this plugin will allow removing a certain principal
@@ -448,7 +422,6 @@ class LDAPPlugin(BasePlugin, object):
     # plonepas_interfaces.capabilities.IPasswordSetCapability
     # (plone ui specific)
     #
-    @if_users_not_enabled_return(False)
     def allowPasswordSet(self, id):
         """True if this plugin can set the password of a certain user.
         """

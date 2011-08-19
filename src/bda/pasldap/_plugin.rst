@@ -27,10 +27,10 @@ Create
     >>> from bda.pasldap.setuphandlers import _addPlugin
     >>> _addPlugin(app.acl_users)
     >>> sorted(pas.objectIds())
-    ['chooser', 'credentials_basic_auth', 'credentials_cookie_auth', 'ldap_bda', 
+    ['chooser', 'credentials_basic_auth', 'credentials_cookie_auth', 'pasldap', 
     'plugins', 'roles', 'sniffer', 'users']
     
-    >>> ldap = pas['ldap_bda']
+    >>> ldap = pas['pasldap']
     
 PAS Plugins
 ===========
@@ -57,7 +57,7 @@ max_results=None, **kw)``
 ::
 
     >>> ldap.enumerateGroups(id='group2')
-    [{'pluginid': 'ldap_bda', 'id': 'group2'}]
+    [{'pluginid': 'pasldap', 'id': 'group2'}]
 
     >>> print sorted([_['id'] for _ in ldap.enumerateGroups(id='group*')])
     ['group0', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 
@@ -71,7 +71,7 @@ max_results=None, **kw)``
     ()
 
     >>> ldap.enumerateGroups(id='group5', exact_match=True)
-    [{'pluginid': 'ldap_bda', 'id': 'group5'}]
+    [{'pluginid': 'pasldap', 'id': 'group5'}]
 
     >>> len(ldap.enumerateGroups(id='group*', max_results=3))
     3
@@ -109,19 +109,19 @@ sort_by=None, max_results=None, **kw)``
 ::
 
     >>> ldap.enumerateUsers(id='uid1')
-    [{'pluginid': 'ldap_bda', 'login': u'cn1', 'id': 'uid1'}]
+    [{'pluginid': 'pasldap', 'login': u'cn1', 'id': 'uid1'}]
 
     >>> ldap.enumerateUsers(id='uid*')
-        [{'pluginid': 'ldap_bda', 'login': u'cn0', 'id': 'uid0'}, 
-        {'pluginid': 'ldap_bda', 'login': u'cn1', 'id': 'uid1'}, 
-        {'pluginid': 'ldap_bda', 'login': u'cn2', 'id': 'uid2'}, 
-        {'pluginid': 'ldap_bda', 'login': u'cn3', 'id': 'uid3'}, 
-        {'pluginid': 'ldap_bda', 'login': u'cn4', 'id': 'uid4'}, 
-        {'pluginid': 'ldap_bda', 'login': u'cn5', 'id': 'uid5'}, 
-        {'pluginid': 'ldap_bda', 'login': u'cn6', 'id': 'uid6'}, 
-        {'pluginid': 'ldap_bda', 'login': u'cn7', 'id': 'uid7'}, 
-        {'pluginid': 'ldap_bda', 'login': u'cn8', 'id': 'uid8'}, 
-        {'pluginid': 'ldap_bda', 'login': u'cn9', 'id': 'uid9'}]
+        [{'pluginid': 'pasldap', 'login': u'cn0', 'id': 'uid0'}, 
+        {'pluginid': 'pasldap', 'login': u'cn1', 'id': 'uid1'}, 
+        {'pluginid': 'pasldap', 'login': u'cn2', 'id': 'uid2'}, 
+        {'pluginid': 'pasldap', 'login': u'cn3', 'id': 'uid3'}, 
+        {'pluginid': 'pasldap', 'login': u'cn4', 'id': 'uid4'}, 
+        {'pluginid': 'pasldap', 'login': u'cn5', 'id': 'uid5'}, 
+        {'pluginid': 'pasldap', 'login': u'cn6', 'id': 'uid6'}, 
+        {'pluginid': 'pasldap', 'login': u'cn7', 'id': 'uid7'}, 
+        {'pluginid': 'pasldap', 'login': u'cn8', 'id': 'uid8'}, 
+        {'pluginid': 'pasldap', 'login': u'cn9', 'id': 'uid9'}]
         
     >>> [_['id'] for _ in ldap.enumerateUsers(id='uid*', sort_by='id')]
     ['uid0', 'uid1', 'uid2', 'uid3', 'uid4', 'uid5', 'uid6', 'uid7', 'uid8', 
@@ -131,7 +131,7 @@ sort_by=None, max_results=None, **kw)``
     ()
 
     >>> ldap.enumerateUsers(id='uid4', exact_match=True)
-    [{'pluginid': 'ldap_bda', 'login': u'cn4', 'id': 'uid4'}]
+    [{'pluginid': 'pasldap', 'login': u'cn4', 'id': 'uid4'}]
 
     >>> len(ldap.enumerateUsers(id='uid*', max_results=3))
     3
