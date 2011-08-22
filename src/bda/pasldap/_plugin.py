@@ -68,16 +68,26 @@ class LDAPPlugin(BasePlugin, object):
     @property
     def groups(self):
         try:
+            self._v_ldaperror = False
             return self.ugm.groups
-        except ldap.LDAP_ERROR, e:
+        except ldap.LDAPError, e:
+            self._v_ldaperror = e.message['desc']
             return None
 
     @property
     def users(self):
         try:
+            self._v_ldaperror = False
             return self.ugm.users
-        except ldap.LDAP_ERROR, e:
+        except ldap.LDAPError, e:
+            self._v_ldaperror = e.message['desc']
             return None
+        
+    @property
+    def ldaperror(self):
+        if hasattr(self, '_v_ldaperror') and self._v_ldaperror:
+            return self._v_ldaperror
+        return False
 
     def reset(self):
         if hasattr(self, '_v_ugm'):
@@ -334,7 +344,7 @@ class LDAPPlugin(BasePlugin, object):
     #  conforming to the IMutable property sheet interface or a dictionary (in
     #  which case the properties are not persistently mutable).
     #
-    def getPropertiesForUser(self, user, request=None):
+    def getPropertiesForUser(self, user_or_group, request=None):
         """User -> IMutablePropertySheet || {}
 
         o User will implement IPropertiedUser. ???
@@ -345,8 +355,12 @@ class LDAPPlugin(BasePlugin, object):
         o May assign properties based on values in the REQUEST object, if
           present
         """
-        # XXX: this seems to be also called for groups - do something about it
-        return LDAPUserPropertySheet(user, self)
+        ugid = user_or_group.getId()
+        if self.enumerateUsers(id=ugid):
+            return LDAPUserPropertySheet(user_or_group, self)
+        if self.enumerateGroups(id=ugid):
+            return LDAPUserPropertySheet(user_or_group, self)
+        return {}
 
     def setPropertiesForUser(self, user, propertysheet):
         """Set modified properties on the user persistently.
