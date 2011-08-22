@@ -56,30 +56,32 @@ class LDAPPlugin(BasePlugin, object):
 
     @property
     def ugm(self):
-        if hasattr(self, '_v_ugm'):
-            return self._v_ugm
+        #if hasattr(self, '_v_ugm'):
+        #    return self._v_ugm
         site = getUtility(ISiteRoot)
         props = ILDAPProps(site)
         ucfg = ILDAPUsersConfig(site)
         gcfg = ILDAPGroupsConfig(site)
-        try:
-            self._v_ugm = Ugm(props=props, ucfg=ucfg, gcfg=gcfg, rcfg=None)
-        except Exception, e:
-            logger.error('caught: %s.' % str(e))
-        return self._v_ugm
+        ugm = Ugm(props=props, ucfg=ucfg, gcfg=gcfg, rcfg=None)
+        return ugm
     
     @property
     def groups(self):
-        if self.ugm:
+        try:
             return self.ugm.groups
+        except ldap.LDAP_ERROR, e:
+            return None
 
     @property
     def users(self):
-        if self.ugm:
+        try:
             return self.ugm.users
+        except ldap.LDAP_ERROR, e:
+            return None
 
     def reset(self):
-        delattr(self, '_v_ugm')
+        if hasattr(self, '_v_ugm'):
+            delattr(self, '_v_ugm')
 
     ###
     # pas_interfaces.IAuthenticationPlugin
@@ -102,9 +104,11 @@ class LDAPPlugin(BasePlugin, object):
         except KeyError:
             # credentials were not meant for us
             return None
-        uid = self.users.authenticate(login, pw)
-        if uid:
-            return (uid, login)
+        users = self.users
+        if users:
+            uid = users.authenticate(login, pw)
+            if uid:
+                return (uid, login)
 
     ###
     # pas_interfaces.IGroupEnumerationPlugin
@@ -155,8 +159,11 @@ class LDAPPlugin(BasePlugin, object):
         """
         if id:
             kw['id'] = id
+        groups = self.groups
+        if not groups:
+            return []
         try:
-            matches = self.groups.search(criteria=kw, exact_match=exact_match)
+            matches = groups.search(criteria=kw, exact_match=exact_match)
         except ValueError:
             return ()
         pluginid = self.getId()
@@ -180,6 +187,9 @@ class LDAPPlugin(BasePlugin, object):
 
         o May assign groups based on values in the REQUEST object, if present
         """
+        users = self.users
+        if not users:
+            return tuple()
         try:
             _principal = self.users[principal.getId()]
         except KeyError:
@@ -187,10 +197,6 @@ class LDAPPlugin(BasePlugin, object):
             # group nodes do not provide membership info so we just
             # return if there is no user
             return tuple()
-            try:
-                _principal = self.groups[principal.getId()]
-            except KeyError:
-                return tuple()
         return [_.id for _ in _principal.groups]
 
     ###
@@ -241,14 +247,16 @@ class LDAPPlugin(BasePlugin, object):
         o Insufficiently-specified criteria may have catastrophic
           scaling issues for some implementations.
         """
-        # TODO: max_results in node.ext.ldap
         # TODO: sort_by in node.ext.ldap
         if id:
             kw['id'] = id
         if login:
             kw['login'] = login
+        users = self.users
+        if not users:
+            return tuple()
         try:
-            matches = self.users.search(
+            matches = users.search(
                 criteria=kw,
                 attrlist=('login',),
                 exact_match=exact_match
@@ -376,7 +384,9 @@ class LDAPPlugin(BasePlugin, object):
         the pas engine api for the same but are set via a role
         manager)
         """
-        self.users.passwd(user_id, None, password)
+        users = self.users
+        if self.users:
+            self.users.passwd(user_id, None, password)
 
     def doDeleteUser(self, login):
         """Remove a user record from a User Manager, with the given login
@@ -404,7 +414,7 @@ class LDAPPlugin(BasePlugin, object):
     #
     def allowGroupAdd(self, principal_id, group_id):
         """
-        True iff this plugin will allow adding a certain principal to
+        True if this plugin will allow adding a certain principal to
         a certain group.
         """
         # XXX
@@ -412,7 +422,7 @@ class LDAPPlugin(BasePlugin, object):
 
     def allowGroupRemove(self, principal_id, group_id):
         """
-        True iff this plugin will allow removing a certain principal
+        True if this plugin will allow removing a certain principal
         from a certain group.
         """
         # XXX
@@ -425,8 +435,9 @@ class LDAPPlugin(BasePlugin, object):
     def allowPasswordSet(self, id):
         """True if this plugin can set the password of a certain user.
         """
-        # XXX: should just be bool(self.get('id')), currently not because user
-        # might be deleted and we don't know about
+        users = self.users
+        if not users:
+            return False
         try:
             return len(self.users.search(criteria={'id': id},
                                          attrlist=(),
