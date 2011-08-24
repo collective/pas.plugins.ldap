@@ -42,9 +42,6 @@ setup(name='pas.plugins.ldap',
           ],
           'plone': [
               'Plone',
-              'yafowil.zope2',
-              'yafowil.widget.dict',
-              'yafowil.yaml',              
           ]
       },
       entry_points="""

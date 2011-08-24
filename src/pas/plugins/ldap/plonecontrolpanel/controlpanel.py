@@ -25,10 +25,7 @@ from zope.component import (
 )
 from zope.i18nmessageid import MessageFactory
 from Products.Five import BrowserView
-from yafowil.base import (
-    factory,
-    UNSET,
-)
+from yafowil.base import UNSET
 from yafowil.controller import Controller
 from yafowil.yaml import parse_from_YAML
 from Products.CMFCore.interfaces import ISiteRoot

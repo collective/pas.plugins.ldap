@@ -9,6 +9,8 @@
 
   <include package="node.ext.ldap" />
   
+  <five:registerPackage package="." initialize=".initialize" />  
+  
   <include package="Products.GenericSetup" file="meta.zcml" />
   
   <genericsetup:registerProfile
@@ -19,6 +21,8 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
       
-  <include zcml:condition="have Plone" package=".plone" />
+  <include 
+      zcml:condition="installed Products.CMFPlone"   
+      package=".plonecontrolpanel" /> -->
 
 </configure>

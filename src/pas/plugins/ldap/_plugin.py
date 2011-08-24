@@ -1,3 +1,4 @@
+import os
 import ldap
 import logging
 logger = logging.getLogger('pas.plugins.ldap')
@@ -10,21 +11,42 @@ from node.ext.ldap.interfaces import (
     ILDAPGroupsConfig,
 )
 from node.ext.ldap.ugm import Ugm
+from App.class_init import InitializeClass
+from AccessControl import ClassSecurityInfo
+from persistent.dict import PersistentDict
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.CMFCore.interfaces import ISiteRoot
+from Products.PluggableAuthService.permissions import ManageUsers
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
 from Products.PlonePAS import interfaces as plonepas_interfaces
-from pas.plugins.ldap.sheet import LDAPUserPropertySheet
+from .sheet import LDAPUserPropertySheet
+from .interfaces import ILDAPPlugin 
 
-# XXX
-# comments in here are mostly taken from the corresponding interface
-# declarations. Once we know what we are and are not going to support
-# we could think about cleaning them up
+zmidir = os.path.join(os.path.dirname( __file__), 'zmi')
 
-class LDAPPlugin(BasePlugin, object):
+def manage_addLDAPPlugin(dispatcher, id, title='',  RESPONSE=None, **kw):
+    """Create an instance of a LDAP Plugin.
+    """
+    ldapplugin = LDAPPlugin(id, title, **kw)
+    dispatcher._setObject(ldapplugin.getId(), ldapplugin)
+    if RESPONSE is not None:
+        RESPONSE.redirect('manage_workspace')
+
+manage_addLDAPPluginForm = PageTemplateFile(
+    os.path.join(zmidir, 'add_plugin.pt'),
+    globals(),
+    __name__='addLDAPPlugin'
+)
+
+class LDAPPlugin(BasePlugin):
     """Glue layer for making node.ext.ldap available to PAS.
     """
+    security = ClassSecurityInfo()
+    meta_type = 'LDAP Plugin'    
+    
     implements(
+        ILDAPPlugin,
         pas_interfaces.IAuthenticationPlugin,
         pas_interfaces.IGroupEnumerationPlugin,
         pas_interfaces.IGroupsPlugin,
@@ -39,21 +61,26 @@ class LDAPPlugin(BasePlugin, object):
         )
 
     #XXX: turn this to False when going productive, just in case
-    _dont_swallow_my_exceptions = True # Tell PAS not to swallow our exceptions
-    meta_type = 'BDALDAPPlugin'
+    _dont_swallow_my_exceptions = True # Tell PAS not to swallow our exceptions    
 
-    def __init__(self, id, title=None):
+    def __init__(self, id, title=None, **kw):
         self.id = id
         self.title = title
+        self.ldapprops = PersistentDict()
+        self.usersprops = PersistentDict()
+        self.groupsprops = PersistentDict()
 
+    security.declarePrivate('groups_enabled')
     @property
     def groups_enabled(self):
         return self.groups is not None
 
+    security.declarePrivate('users_enabled')
     @property
     def users_enabled(self):
         return self.users is not None
 
+    security.declarePrivate('ugm')
     @property
     def ugm(self):
         #if hasattr(self, '_v_ugm'):
@@ -65,6 +92,7 @@ class LDAPPlugin(BasePlugin, object):
         ugm = Ugm(props=props, ucfg=ucfg, gcfg=gcfg, rcfg=None)
         return ugm
     
+    security.declarePrivate('groups')
     @property
     def groups(self):
         try:
@@ -74,6 +102,7 @@ class LDAPPlugin(BasePlugin, object):
             self._v_ldaperror = e.message['desc']
             return None
 
+    security.declarePrivate('users')
     @property
     def users(self):
         try:
@@ -83,15 +112,17 @@ class LDAPPlugin(BasePlugin, object):
             self._v_ldaperror = e.message['desc']
             return None
         
+    security.declareProtected(ManageUsers, 'ldaperror')
     @property
     def ldaperror(self):
         if hasattr(self, '_v_ldaperror') and self._v_ldaperror:
             return self._v_ldaperror
         return False
 
+    security.declarePublic('reset')
     def reset(self):
-        if hasattr(self, '_v_ugm'):
-            delattr(self, '_v_ugm')
+        # XXX flush caches
+        pass
 
     ###
     # pas_interfaces.IAuthenticationPlugin
@@ -461,3 +492,5 @@ class LDAPPlugin(BasePlugin, object):
                                          exact_match=True)) > 0
         except ValueError:
             return False
+        
+InitializeClass(LDAPPlugin)
