@@ -1,7 +1,7 @@
 from StringIO import StringIO
-from bda.pasldap._plugin import LDAPPlugin
+from pas.plugins.ldap._plugin import LDAPPlugin
 
-TITLE = 'LDAP plugin (bda.pasldap)'
+TITLE = 'LDAP plugin (pas.plugins.ldap)'
 
 def isNotThisProfile(context):
     return context.readDataFile("bdapasldap_marker.txt") is None

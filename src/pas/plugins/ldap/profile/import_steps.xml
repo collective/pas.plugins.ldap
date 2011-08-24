@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <import-steps>
  <import-step id="bda" 
-              handler="bda.pasldap.setuphandlers.setupPlugin"
+              handler="pas.plugins.ldap.setuphandlers.setupPlugin"
               title="Setup LDAP Plugin"
               version="20110226">
   <dependency step="plone-final"/>

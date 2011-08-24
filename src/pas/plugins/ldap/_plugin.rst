@@ -24,7 +24,7 @@ Create
 ------
 
 ::
-    >>> from bda.pasldap.setuphandlers import _addPlugin
+    >>> from pas.plugins.ldap.setuphandlers import _addPlugin
     >>> _addPlugin(app.acl_users)
     >>> sorted(pas.objectIds())
     ['chooser', 'credentials_basic_auth', 'credentials_cookie_auth', 'pasldap', 
@@ -216,14 +216,14 @@ Get works::
     >>> user = pas.getUserById('uid0')
     >>> sheet = ldap.getPropertiesForUser(user, request=None)
     >>> sheet
-    <bda.pasldap.sheet.LDAPUserPropertySheet instance at ...>
+    <pas.plugins.ldap.sheet.LDAPUserPropertySheet instance at ...>
 
     >>> sheet.getProperty('mail')
     u'uid0@groupOfNames_10_10.com'
     
 Set does nothing, but the sheet itselfs set immediatly::
 
-    >>> from bda.pasldap.sheet import LDAPUserPropertySheet
+    >>> from pas.plugins.ldap.sheet import LDAPUserPropertySheet
     >>> sheet = LDAPUserPropertySheet(user, ldap)
     >>> sheet.getProperty('mail')
     u'uid0@groupOfNames_10_10.com'

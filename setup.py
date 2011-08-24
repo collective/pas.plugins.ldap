@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.9dev'
+version = '1.0.beta'
 shortdesc ="Zope 2 PAS Plugin providing users and groups from LDAP directory"
-longdesc = open(os.path.join(os.path.dirname(__file__), 'README.txt')).read()
+longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
-setup(name='bda.pasldap',
+setup(name='pas.plugins.ldap',
       version=version,
       description=shortdesc,
       long_description=longdesc,
@@ -22,7 +22,7 @@ setup(name='bda.pasldap',
       license='',
       packages=find_packages('src'),
       package_dir = {'': 'src'},
-      namespace_packages=['bda'],
+      namespace_packages=['pas', 'pas.plugins'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[

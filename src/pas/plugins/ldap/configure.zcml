@@ -3,7 +3,7 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    i18n_domain="bda.pasldap"
+    i18n_domain="pas.plugins.ldap"
     >
 
   <include package="node.ext.ldap" />
@@ -14,7 +14,7 @@
       name="default"
       title="PAS LDAP Plugin"
       directory="profile"
-      description="Extension profile for bda.pasldap"
+      description="Extension profile for pas.plugins.ldap"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 

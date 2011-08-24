@@ -1,6 +1,6 @@
 import ldap
 import logging
-logger = logging.getLogger('bda.pasldap')
+logger = logging.getLogger('pas.plugins.ldap')
 
 from zope.interface import implements
 from zope.component import getUtility
@@ -14,7 +14,7 @@ from Products.CMFCore.interfaces import ISiteRoot
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
 from Products.PlonePAS import interfaces as plonepas_interfaces
-from bda.pasldap.sheet import LDAPUserPropertySheet
+from pas.plugins.ldap.sheet import LDAPUserPropertySheet
 
 # XXX
 # comments in here are mostly taken from the corresponding interface
@@ -115,10 +115,11 @@ class LDAPPlugin(BasePlugin, object):
             # credentials were not meant for us
             return None
         users = self.users
-        if users:
-            uid = users.authenticate(login, pw)
-            if uid:
-                return (uid, login)
+        if not users:
+            return
+        uid = users.authenticate(login, pw)
+        if uid:
+            return (uid, login)
 
     ###
     # pas_interfaces.IGroupEnumerationPlugin
@@ -207,7 +208,9 @@ class LDAPPlugin(BasePlugin, object):
             # group nodes do not provide membership info so we just
             # return if there is no user
             return tuple()
-        return [_.id for _ in _principal.groups]
+        if self.groups: 
+            return [_.id for _ in _principal.groups]
+        return tuple()
 
     ###
     # pas_interfaces.IUserEnumerationPlugin
