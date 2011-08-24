@@ -1,0 +1,24 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/prefs_main_template/macros/master"
+      i18n:domain="plone">
+<body>
+
+<metal:main metal:fill-slot="prefs_configlet_main">
+  <style type="text/css"
+         tal:content="string:#form-ldapsettings label {display:block;}">
+  </style>
+  <h1 i18n:translate="">LDAP Configuration</h1>
+  <h2>Connection Test</h2>
+  <p tal:define="state view/connection_test" 
+     tal:content="python: state[1]">
+  </p>
+  <h2>Settings</h2>
+  <tal:form replace="structure python:view.form()" />
+</metal:main>
+
+</body>
+</html>

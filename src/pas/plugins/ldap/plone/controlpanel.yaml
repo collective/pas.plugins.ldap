@@ -1,0 +1,126 @@
+factory: form
+name: ldapsettings
+props:
+    action: ldap-controlpanel
+widgets:
+- server:
+    factory: fieldset
+    props:
+        legend: Server Settings
+    widgets:
+    - uri:
+        factory: field:label:error:text
+        value: expr:context.props.uri
+        props:
+            label: LDAP URI
+            required: No URI defined
+    - user:
+        factory: field:label:error:text
+        value: expr:context.props.user
+        props:
+            label: LDAP Manager User
+            required: No user defined
+    - password:
+        factory: field:label:error:password
+        value: expr:context.props.password
+        props:
+            label: LDAP Manager Password
+            required: No password defined
+- users:
+    factory: fieldset
+    props:
+        legend: User Settings
+    widgets:
+    - dn:
+        factory: field:label:error:text
+        value: expr:context.users.baseDN
+        props:
+            label: Users container DN
+            required: No Users DN defined
+    - scope:
+        factory: field:label:select
+        value: expr:context.users.scope
+        props:
+            label: Users search scope
+            vocabulary: expr:context.scope_vocab
+    - query:
+        factory: field:label:text
+        value: expr:context.users.queryFilter
+        props:
+            label: Users search query filter
+    - object_classes:
+        factory: field:label:text
+        value: expr:u', '.join(context.users.objectClasses)
+        props:
+            label: Object classes for User creation
+    - aliases_attrmap:
+        factory: field:label:error:dict
+        value: expr:context.users_attrmap
+        props:
+            label: User attribute aliases
+            required: User attribute aliases values are mandatory
+            static: True
+            head:
+                key: Reserved key
+                value: LDAP attr name
+    - propsheet_attrmap:
+        factory: field:label:dict
+        value: expr:context.users_propsheet_attrmap
+        props:
+            label: User form attributes
+            head:
+                key: LDAP attr name
+                value: Form label
+- groups:
+    factory: fieldset
+    props:
+        legend: Group Settings                               
+    widgets:
+    - dn:
+        factory: field:label:error:text
+        value: expr:context.groups.baseDN
+        props:
+            label: Groups container DN
+            required: No Groups DN defined
+    - scope:
+        factory: field:label:select
+        value: expr:context.groups.scope
+        props:
+            label: Groups search scope
+            vocabulary: expr:context.scope_vocab
+    - query:
+        factory: field:label:text
+        value: expr:context.groups.queryFilter
+        props:
+            label: Groups search query filter
+    - object_classes:
+        factory: field:label:text
+        value: expr:u', '.join(context.groups.objectClasses)
+        props:
+            label: Object classes for Group creation
+    - aliases_attrmap:
+        factory: field:label:error:dict
+        value: expr:context.groups_attrmap
+        props:
+            label: Group attribute aliases
+            required: Group attribute aliases values are mandatory
+            static: True
+            head:
+                key: Reserved key
+                value: LDAP attr name
+    - propsheet_attrmap:
+        factory: field:label:dict
+        value: expr:context.groups_propsheet_attrmap
+        props:
+            label: Group form attributes
+            head:
+                key: LDAP attr name
+                value: Form label
+- save:
+    factory: submit
+    props:
+        action: save
+        expression: True
+        handler: context.save
+        next: context.next
+        label: Save                                  

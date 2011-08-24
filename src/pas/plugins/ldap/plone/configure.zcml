@@ -1,0 +1,65 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="bda.plone.ldap">
+
+  <include package="node.ext.ldap" />
+  <include package="bda.pasldap" />
+  <include package="yafowil.widget.dict" />
+  <include package="Products.CMFCore" />
+  
+  <genericsetup:registerProfile
+    name="default"
+    title="bda.plone.ldap"
+    directory="profile"
+    description="Extension profile for bda.plone.ldap."
+    provides="Products.GenericSetup.interfaces.EXTENSION"
+  />
+  
+  <adapter
+    factory=".controlpanel.LDAPProps"
+	provides="node.ext.ldap.interfaces.ILDAPProps"
+  />
+  
+  <adapter
+    factory=".controlpanel.LDAPUsersConfig"
+	provides="node.ext.ldap.interfaces.ILDAPUsersConfig"
+  />
+  
+  <adapter
+    factory=".controlpanel.LDAPGroupsConfig"
+	provides="node.ext.ldap.interfaces.ILDAPGroupsConfig"
+  />  
+
+  <browser:page
+    name="ldap-controlpanel"
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    class=".controlpanel.LDAPControlPanel"
+	template="controlpanel.pt"
+    permission="cmf.ManagePortal"
+  />
+  
+<!--
+  TODO: moved w/o change from bda.pasldap
+  <adapter
+      factory=".exportimport.LDAPPluginXMLAdapter"
+      provides="Products.GenericSetup.interfaces.IBody"
+      for="._plugin.ILDAPPlugin
+           Products.GenericSetup.interfaces.ISetupEnviron"
+      />
+
+  <adapter
+      factory=".exportimport.LDAPPluginConfigurationExportImport"
+      provides="Products.GenericSetup.interfaces.IFilesystemExporter"
+      for="._plugin.ILDAPPlugin"
+      />
+
+  <adapter
+      factory=".exportimport.LDAPPluginConfigurationExportImport"
+      provides="Products.GenericSetup.interfaces.IFilesystemImporter"
+      for="._plugin.ILDAPPlugin"
+      />
+-->
+         
+</configure>

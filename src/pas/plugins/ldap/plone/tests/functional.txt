@@ -1,0 +1,11 @@
+Check if adaptors are registered correctly.
+::
+    >>> from bda.ldap.interfaces import (ILDAPProps, ILDAPGroupsConfig, ILDAPUsersConfig)
+    >>> ILDAPProps(portal)
+    <bda.plone.ldap.controlpanel.LDAPProps object at ...>
+
+    >>> ILDAPGroupsConfig(portal)
+    <bda.plone.ldap.controlpanel.LDAPGroupsConfig object at ...>
+
+    >>> ILDAPUsersConfig(portal)
+    <bda.plone.ldap.controlpanel.LDAPUsersConfig object at ...>

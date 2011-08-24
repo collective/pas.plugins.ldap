@@ -1,0 +1,18 @@
+Investigate what methods are called, by using a mock pas plugin.
+::
+
+    >>> self.browserlogin('wrong', 'creds')
+    False
+    >>> self.browserlogin('Beeblebrox', 'wrong')
+    False
+    >>> self.browserlogin('Beeblebrox', 'foo1')
+    True
+    >>> self.browserlogout()
+
+    >>> self.browserloginAsAdmin()
+    >>> portal_url = self.portal.absolute_url()
+    >>> usergroup_userprefs=portal_url+'/@@usergroup-userprefs'
+    >>> usergroup_userprefs
+    'http://nohost/plone/@@usergroup-userprefs'
+    >>> browser = self.browser
+    >>> browser.open(usergroup_userprefs)
