@@ -19,6 +19,6 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
       
-  <include zcml:condition="installed Plone" package=".plone" />
+  <include zcml:condition="have Plone" package=".plone" />
 
 </configure>

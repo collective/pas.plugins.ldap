@@ -15,10 +15,10 @@ setup(name='pas.plugins.ldap',
             'Operating System :: OS Independent',
             'Programming Language :: Python',           
       ], # Get strings from http://www.python.org/pypi?%3Aaction=list_classifiers
-      keywords='zope2',
+      keywords='zope2 pas plone',
       author='BlueDynamics Alliance',
       author_email='dev@bluedynamics.com',
-      url='https://github.com/bluedynamics/bda.pasldap',
+      url='https://github.com/bluedynamics/pas.plugins.ldap',
       license='',
       packages=find_packages('src'),
       package_dir = {'': 'src'},
@@ -29,6 +29,9 @@ setup(name='pas.plugins.ldap',
           'setuptools', 
           'Products.PlonePAS',
           'node.ext.ldap',
+          'yafowil.zope2',
+          'yafowil.widget.dict',
+          'yafowil.yaml',              
       ],
       extras_require={
           'test': [
@@ -36,10 +39,16 @@ setup(name='pas.plugins.ldap',
               'zope.configuration',
               'zope.testing',
               'plone.testing',
+          ],
+          'plone': [
+              'Plone',
+              'yafowil.zope2',
+              'yafowil.widget.dict',
+              'yafowil.yaml',              
           ]
       },
       entry_points="""
-      # -*- Entry points: -*-
-      """,
+      [z3c.autoinclude.plugin]
+      target = plone
+      """,     
       )
-
