@@ -1,13 +1,10 @@
 import logging
-logger = logging.getLogger('bda.plone.ldap')
-
-from Products.CMFCore.interfaces import ISiteRoot
 from Products.PlonePAS.interfaces.propertysheets import IMutablePropertySheet
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.UserPropertySheet import UserPropertySheet
 from node.ext.ldap.interfaces import ILDAPUsersConfig
-from zope.component import getUtility
 
+logger = logging.getLogger('bda.plone.ldap')
 
 class LDAPUserPropertySheet(UserPropertySheet):
 
@@ -20,7 +17,7 @@ class LDAPUserPropertySheet(UserPropertySheet):
         self._plugin = plugin
         self._properties = dict()
         self._luser = plugin.users[user.getId()]
-        self._ucfg = ILDAPUsersConfig(getUtility(ISiteRoot))
+        self._ucfg = ILDAPUsersConfig(plugin)
         self._attrmap = dict()
         for k, v in self._ucfg.attrmap.items():
             if k in ['rdn', 'id']:
