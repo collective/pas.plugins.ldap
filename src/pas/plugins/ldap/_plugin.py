@@ -145,6 +145,7 @@ class LDAPPlugin(BasePlugin):
     #
     #  Map credentials to a user ID.
     #
+    security.declarePublic('authenticateCredentials')
     def authenticateCredentials(self, credentials):
         """credentials -> (userid, login)
 
@@ -172,8 +173,8 @@ class LDAPPlugin(BasePlugin):
     # pas_interfaces.IGroupEnumerationPlugin
     #
     #  Allow querying groups by ID, and searching for groups.
-    #    o XXX:  can these be done by a single plugin?
     #
+    security.declarePrivate('enumerateUsers')        
     def enumerateGroups(self, id=None, exact_match=False, sort_by=None,
                         max_results=None, **kw):
         """ -> ( group_info_1, ... group_info_N )
@@ -238,6 +239,7 @@ class LDAPPlugin(BasePlugin):
     # pas_interfaces.IGroupsPlugin
     #
     #  Determine the groups to which a user belongs.
+    security.declarePrivate('getGroupsForPrincipal')    
     def getGroupsForPrincipal(self, principal, request=None):
         """principal -> ( group_1, ... group_N )
 
@@ -264,8 +266,8 @@ class LDAPPlugin(BasePlugin):
     # pas_interfaces.IUserEnumerationPlugin
     #
     #   Allow querying users by ID, and searching for users.
-    #    o XXX:  can these be done by a single plugin?
     #
+    security.declarePrivate('enumerateUsers')    
     def enumerateUsers(self, id=None, login=None, exact_match=False,
             sort_by=None, max_results=None, **kw):
         """-> ( user_info_1, ... user_info_N )
@@ -337,6 +339,7 @@ class LDAPPlugin(BasePlugin):
     ###
     # plonepas_interfaces.group.IGroupManagement
     #
+    security.declarePrivate('addGroup')    
     def addGroup(self, id, **kw):
         """
         Create a group with the supplied id, roles, and groups.
@@ -345,6 +348,7 @@ class LDAPPlugin(BasePlugin):
         #XXX
         return False
 
+    security.declareProtected(ManageGroups, 'addPrincipalToGroup')
     def addPrincipalToGroup(self, principal_id, group_id):
         """
         Add a given principal to the group.
@@ -353,6 +357,7 @@ class LDAPPlugin(BasePlugin):
         #XXX
         return False
 
+    security.declarePrivate('updateGroup')
     def updateGroup(self, id, **kw):
         """
         Edit the given group. plugin specific
@@ -361,6 +366,7 @@ class LDAPPlugin(BasePlugin):
         #XXX
         return False
 
+    security.declarePrivate('setRolesForGroup')
     def setRolesForGroup(self, group_id, roles=()):
         """
         set roles for group
@@ -371,6 +377,7 @@ class LDAPPlugin(BasePlugin):
         # we do implement it. 
         return False
 
+    security.declarePrivate('removeGroup')
     def removeGroup(self, group_id):
         """
         Remove the given group
@@ -379,6 +386,7 @@ class LDAPPlugin(BasePlugin):
         #XXX
         return False
 
+    security.declareProtected(ManageGroups, 'removePrincipalFromGroup')
     def removePrincipalFromGroup(self, principal_id, group_id):
         """
         remove the given principal from the group
@@ -395,6 +403,7 @@ class LDAPPlugin(BasePlugin):
     #  conforming to the IMutable property sheet interface or a dictionary (in
     #  which case the properties are not persistently mutable).
     #
+    security.declarePrivate('getPropertiesForUser')    
     def getPropertiesForUser(self, user_or_group, request=None):
         """User -> IMutablePropertySheet || {}
 
@@ -413,6 +422,7 @@ class LDAPPlugin(BasePlugin):
             return LDAPUserPropertySheet(user_or_group, self)
         return {}
 
+    security.declarePrivate('setPropertiesForUser')    
     def setPropertiesForUser(self, user, propertysheet):
         """Set modified properties on the user persistently.
 
@@ -423,6 +433,7 @@ class LDAPPlugin(BasePlugin):
         """
         pass
 
+    security.declarePrivate('deleteUser')
     def deleteUser(self, user_id):
         """Remove properties stored for a user.
 
@@ -435,6 +446,7 @@ class LDAPPlugin(BasePlugin):
     # plonepas_interfaces.plugins.IUserManagement
     # (including signature of pas_interfaces.IUserAdderPlugin)
     #
+    security.declarePrivate('doAddUser')
     def doAddUser(self, login, password):
         """ Add a user record to a User Manager, with the given login
             and password
@@ -444,6 +456,7 @@ class LDAPPlugin(BasePlugin):
         # XXX
         return False
 
+    security.declarePrivate('doChangeUser')
     def doChangeUser(self, user_id, password, **kw):
         """Change a user's password (differs from role) roles are set in
         the pas engine api for the same but are set via a role
@@ -453,6 +466,7 @@ class LDAPPlugin(BasePlugin):
         if self.users:
             self.users.passwd(user_id, None, password)
 
+    security.declarePrivate('doDeleteUser')
     def doDeleteUser(self, login):
         """Remove a user record from a User Manager, with the given login
         and password
@@ -467,6 +481,7 @@ class LDAPPlugin(BasePlugin):
     # plonepas_interfaces.capabilities.IDeleteCapability
     # (plone ui specific)
     #
+    security.declarePublic('allowDeletePrincipal')
     def allowDeletePrincipal(self, id):
         """True if this plugin can delete a certain user/group.
         """
@@ -477,6 +492,7 @@ class LDAPPlugin(BasePlugin):
     # plonepas_interfaces.capabilities.IGroupCapability
     # (plone ui specific)
     #
+    security.declarePublic('allowGroupAdd')
     def allowGroupAdd(self, principal_id, group_id):
         """
         True if this plugin will allow adding a certain principal to
@@ -485,6 +501,7 @@ class LDAPPlugin(BasePlugin):
         # XXX
         return False
 
+    security.declarePublic('allowGroupRemove')
     def allowGroupRemove(self, principal_id, group_id):
         """
         True if this plugin will allow removing a certain principal
@@ -497,6 +514,7 @@ class LDAPPlugin(BasePlugin):
     # plonepas_interfaces.capabilities.IPasswordSetCapability
     # (plone ui specific)
     #
+    security.declarePublic('allowPasswordSet')
     def allowPasswordSet(self, id):
         """True if this plugin can set the password of a certain user.
         """
