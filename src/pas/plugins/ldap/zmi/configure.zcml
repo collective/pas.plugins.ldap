@@ -1,0 +1,18 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="pas.plugins.ldap"
+    >
+
+  <browser:page
+    name="manage_ldapplugin"
+    for="pas.plugins.ldap.interfaces.ILDAPPlugin"
+    class=".manage_plugin.ManageLDAPPlugin"
+    template="manage_plugin.pt"
+    permission="zope2.ManageUsers"
+  />
+  
+</configure>

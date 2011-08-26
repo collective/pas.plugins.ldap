@@ -1,8 +1,5 @@
 import os
 import ldap
-import logging
-logger = logging.getLogger('pas.plugins.ldap')
-
 from zope.interface import implements
 from zope.component import getUtility
 from node.ext.ldap.interfaces import (
@@ -16,7 +13,10 @@ from AccessControl import ClassSecurityInfo
 from persistent.dict import PersistentDict
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.CMFCore.interfaces import ISiteRoot
-from Products.PluggableAuthService.permissions import ManageUsers
+from Products.PluggableAuthService.permissions import (
+    ManageUsers,
+    ManageGroups,
+)
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
 from Products.PlonePAS import interfaces as plonepas_interfaces
@@ -60,15 +60,17 @@ class LDAPPlugin(BasePlugin):
         plonepas_interfaces.plugins.IUserManagement,
         )
 
+    manage_options = ( 
+        { 'label' : 'LDAP Settings',
+          'action' : 'manage_ldapplugin'
+        },) + BasePlugin.manage_options 
+        
     #XXX: turn this to False when going productive, just in case
     _dont_swallow_my_exceptions = True # Tell PAS not to swallow our exceptions    
 
     def __init__(self, id, title=None, **kw):
         self.id = id
         self.title = title
-        self.ldapprops = PersistentDict()
-        self.usersprops = PersistentDict()
-        self.groupsprops = PersistentDict()
 
     security.declarePrivate('groups_enabled')
     @property
@@ -83,12 +85,9 @@ class LDAPPlugin(BasePlugin):
     security.declarePrivate('ugm')
     @property
     def ugm(self):
-        #if hasattr(self, '_v_ugm'):
-        #    return self._v_ugm
-        site = getUtility(ISiteRoot)
-        props = ILDAPProps(site)
-        ucfg = ILDAPUsersConfig(site)
-        gcfg = ILDAPGroupsConfig(site)
+        props = ILDAPProps(self)
+        ucfg = ILDAPUsersConfig(self)
+        gcfg = ILDAPGroupsConfig(self)
         ugm = Ugm(props=props, ucfg=ucfg, gcfg=gcfg, rcfg=None)
         return ugm
     

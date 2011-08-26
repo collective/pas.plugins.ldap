@@ -8,21 +8,30 @@
     >
 
   <include package="node.ext.ldap" />
+  <include package="yafowil.widget.dict" />
   
   <five:registerPackage package="." initialize=".initialize" />  
   
   <include package="Products.GenericSetup" file="meta.zcml" />
   
+  <include package=".zmi" />
+  
   <genericsetup:registerProfile
       name="default"
-      title="PAS LDAP Plugin"
+      title="PAS LDAP Plugin - Zope Base"
       directory="profile"
-      description="Extension profile for pas.plugins.ldap"
+      description="Extension profile for pas.plugins.ldap Zope Base."
       provides="Products.GenericSetup.interfaces.EXTENSION"
-      />
+      />  
+      
+  <adapter factory=".properties.LDAPProps" />
+  
+  <adapter factory=".properties.UsersConfig" />
+  
+  <adapter factory=".properties.GroupsConfig" />
       
   <include 
       zcml:condition="installed Products.CMFPlone"   
-      package=".plonecontrolpanel" /> -->
+      package=".plonecontrolpanel" />
 
 </configure>

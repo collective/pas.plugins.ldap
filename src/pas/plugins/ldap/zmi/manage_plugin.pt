@@ -1,0 +1,13 @@
+<h1 tal:replace="structure here/manage_page_header">Header</h1>
+
+<h2>Manage LDAP plugin properties</h2>
+
+<p class="form-help">
+Set properties for users and groups from LDAP using the pas.plugins.ldap plugin.
+</p>
+
+<p>TODO: connection test</p>
+
+<span tal:replace="structure view/form">form</span>
+
+<h1 tal:replace="structure here/manage_page_footer">Footer</h1>

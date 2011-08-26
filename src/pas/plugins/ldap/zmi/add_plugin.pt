@@ -3,7 +3,7 @@
 <h2> Add LDAP plugin</h2>
 
 <p class="form-help">
-Users and groups from LDAP using the pas.plugins.ldap plugin
+Add users and groups from LDAP using the pas.plugins.ldap plugin.
 </p>
 
 <form action="manage_addLDAPPlugin" method="POST">
