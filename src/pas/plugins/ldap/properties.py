@@ -13,6 +13,7 @@ from node.ext.ldap.interfaces import (
     ILDAPUsersConfig,
     ILDAPGroupsConfig,
 )
+from node.ext.ldap.ugm import Ugm
 from zope.interface import implements
 from zope.component import adapts
 import yafowil.zope2
@@ -43,6 +44,10 @@ class BasePropertiesForm(BrowserView):
         raise NotImplementedError()
 
     def next(self, request):
+        raise NotImplementedError()
+
+    @property
+    def action(self):
         raise NotImplementedError()
 
 
@@ -141,12 +146,16 @@ class BasePropertiesForm(BrowserView):
         except ldap.SERVER_DOWN, e:
             return False, _("Server Down")
         except ldap.LDAPError, e:
-            return False, _('LDAP Error (users): ') + e.message['desc']
+            return False, _('LDAP users; ') + e.message['desc']
+        except Exception, e:
+            return False, _('Other; ') + str(e)
         try:
             ugm.groups
         except ldap.LDAPError, e:
-            return False, _('LDAP Error (groups): ') + e.message['desc']
-        return True, 'OK'         
+            return False, _('LDAP groups; ') + e.message['desc']
+        except Exception, e:
+            return False, _('Other; ') + str(e)
+        return True, 'Connection, users- and groups-access tested successfully.'         
 
 TLDAP = 'ldapprops'
 TUSERS = 'usersconfig'

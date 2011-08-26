@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <metadata>
-  <version>2</version>
+  <version>1</version>
   <dependencies>
-    <dependency>profile-bda.pasldap:default</dependency>
+    <dependency>profile-pas.plugins.ldap:default</dependency>
   </dependencies>
 </metadata>

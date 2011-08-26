@@ -1,7 +1,7 @@
 factory: form
 name: ldapsettings
 props:
-    action: ldap-controlpanel
+    action: expr:context.action
 widgets:
 - server:
     factory: fieldset
