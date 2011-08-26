@@ -27,6 +27,7 @@ from .interfaces import ILDAPPlugin
 
 _ = MessageFactory('pas.plugins.ldap')
 
+
 class BasePropertiesForm(BrowserView):
     
     yaml = os.path.join(os.path.dirname(__file__), 'properties.yaml')
@@ -48,7 +49,7 @@ class BasePropertiesForm(BrowserView):
 
     @property
     def action(self):
-        raise NotImplementedError()
+        return self.next({}) 
 
 
     def form(self):
@@ -98,9 +99,9 @@ class BasePropertiesForm(BrowserView):
         password = fetch('server.password')
         if password is not UNSET:
             props.password = password
+        props.cache = fetch('cache')
+        props.timeout = fetch('timeout')
         # XXX: later
-        #props.cache = fetch('cache')
-        #props.timeout = fetch('timeout')
         #props.start_tls = fetch('start_tls')
         #props.tls_cacertfile = fetch('tls_cacertfile')
         #props.tls_cacertdir = fetch('tls_cacertdir')
@@ -160,7 +161,8 @@ class BasePropertiesForm(BrowserView):
 TLDAP = 'ldapprops'
 TUSERS = 'usersconfig'
 TGROUPS = 'groupsconfig'
-STORAGES = [TLDAP, TUSERS, TGROUPS]                    
+STORAGES = [TLDAP, TUSERS, TGROUPS]
+                    
 
 class PropProxy(object):
     
@@ -179,7 +181,7 @@ class PropProxy(object):
             else:
                 value = props.get(self.key, self.default)
             if self.json:
-                return json.loads(value)
+                value = json.loads(value)
             return value
         def _setter(context, value):
             if self.json:
@@ -192,6 +194,28 @@ class PropProxy(object):
             props[self.key] = value
         return property(_getter, _setter)
 
+DEFAULTS = {
+    'server.uri'          : 'ldap://127.0.0.1:12345',
+    'server.user'         :  'cn=Manager,dc=my-domain,dc=com',
+    'server.password'     :  'secret',
+    'server.cache'        :  'false',
+    'server.timeout'      :  '300',
+            
+    'users.baseDN'        : 'ou=users300,dc=my-domain,dc=com',
+    'users.attrmap'       : '{"rdn": "uid", "id": "uid", "login": "uid",'\
+                            ' "fullname": "cn", "email": "mail"}',
+    'users.scope'         : '1',
+    'users.queryFilter'   : '(objectClass=inetOrgPerson)',
+    'users.objectClasses' : '["inetOrgPerson"]',
+    
+    'groups.baseDN'       : 'ou=groups,dc=my-domain,dc=com',
+    'groups.attrmap'      : '{"rdn": "uid", "id": "uid", "login": "uid",'\
+                            ' "fullname": "cn", "email": "mail"}',
+    'groups.scope'        : '1',
+    'groups.queryFilter'  : '(objectClass=groupOfNames)',
+    'groups.objectClasses': '["groupOfNames"]',
+}
+
 class LDAPProps(object):
 
     implements(ILDAPProps)
@@ -200,9 +224,20 @@ class LDAPProps(object):
     def __init__(self, plugin):
         self.plugin = plugin
 
-    uri = PropProxy(TLDAP, 'uri', '')()
-    user = PropProxy(TLDAP, 'user', '')()
-    password = PropProxy(TLDAP, 'password', '')()
+    uri = PropProxy(TLDAP, 'uri', DEFAULTS['server.uri'])()
+    user = PropProxy(TLDAP, 'user', DEFAULTS['server.user'])()
+    password = PropProxy(TLDAP, 'password', DEFAULTS['server.password'])()
+    cache = PropProxy(TLDAP, 'cache', DEFAULTS['server.cache'], json=True)()
+    timeout = PropProxy(TLDAP, 'cache', DEFAULTS['server.timeout'], json=True)()
+    
+    # XXX: Later
+    start_tls = False
+    tls_cacertfile = ''
+    tls_cacertdir = ''
+    tls_clcertfile = ''
+    tls_clkeyfile = ''
+    retry_max = 3
+    retry_delay = 5    
     
 
 class UsersConfig(object):
@@ -213,11 +248,14 @@ class UsersConfig(object):
     def __init__(self, plugin):
         self.plugin = plugin
 
-    baseDN = PropProxy(TUSERS, 'baseDN', '')()
-    attrmap = PropProxy(TUSERS, 'attrmap', '{}', json=True)()
-    scope = PropProxy(TUSERS, 'scope', '')()
-    queryFilter = PropProxy(TUSERS, 'queryFilter', '')()
-    objectClasses = PropProxy(TUSERS, 'objectClasses', '[]', json=True)()
+    baseDN = PropProxy(TUSERS, 'baseDN', DEFAULTS['users.baseDN'])()
+    attrmap = PropProxy(TUSERS, 'attrmap', DEFAULTS['users.attrmap'], 
+                        json=True)()
+    scope = PropProxy(TUSERS, 'scope', DEFAULTS['users.scope'])()
+    queryFilter = PropProxy(TUSERS, 'queryFilter', 
+                            DEFAULTS['users.queryFilter'])()
+    objectClasses = PropProxy(TUSERS, 'objectClasses', 
+                              DEFAULTS['users.objectClasses'], json=True)()
 
     
 class GroupsConfig(object):
@@ -228,8 +266,11 @@ class GroupsConfig(object):
     def __init__(self, plugin):
         self.plugin = plugin
 
-    baseDN = PropProxy(TGROUPS, 'baseDN', '')()
-    attrmap = PropProxy(TGROUPS, 'attrmap', '{}', json=True)()
-    scope = PropProxy(TGROUPS, 'scope', '')()
-    queryFilter = PropProxy(TGROUPS, 'queryFilter', '')()
-    objectClasses = PropProxy(TGROUPS, 'objectClasses', '[]', json=True)()    
+    baseDN = PropProxy(TGROUPS, 'baseDN', DEFAULTS['groups.baseDN'])()
+    attrmap = PropProxy(TGROUPS, 'attrmap', DEFAULTS['groups.attrmap'], 
+                        json=True)()
+    scope = PropProxy(TGROUPS, 'scope', DEFAULTS['groups.scope'])()
+    queryFilter = PropProxy(TGROUPS, 'queryFilter', 
+                            DEFAULTS['groups.queryFilter'])()
+    objectClasses = PropProxy(TGROUPS, 'objectClasses', 
+                              DEFAULTS['groups.objectClasses'], json=True)()    

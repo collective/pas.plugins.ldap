@@ -100,6 +100,9 @@ class LDAPPlugin(BasePlugin):
         except ldap.LDAPError, e:
             self._v_ldaperror = e.message['desc']
             return None
+        except Exception, e: 
+            self._v_ldaperror = str(e)
+            return None
 
     security.declarePrivate('users')
     @property
@@ -109,6 +112,9 @@ class LDAPPlugin(BasePlugin):
             return self.ugm.users
         except ldap.LDAPError, e:
             self._v_ldaperror = e.message['desc']
+            return None
+        except Exception, e: 
+            self._v_ldaperror = str(e)
             return None
         
     security.declareProtected(ManageUsers, 'ldaperror')

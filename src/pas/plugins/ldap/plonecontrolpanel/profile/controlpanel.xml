@@ -2,11 +2,11 @@
 <object name="portal_controlpanel">
   <configlet title="LDAP Configuration"
              action_id="LDAP_Configuration"
-	  		 appId="bda.plone.ldap"
+	  		 appId="pas.plugins.ldap"
 			 category="Products"
 			 condition_expr=""
-			 url_expr="string:${portal_url}/@@ldap-controlpanel"
+			 url_expr="string:${portal_url}/plone_ldapcontrolpanel"
 			 visible="True">
-    <permission>Manage portal</permission>
+    <permission>Manage Portal</permission>
   </configlet>
 </object>
