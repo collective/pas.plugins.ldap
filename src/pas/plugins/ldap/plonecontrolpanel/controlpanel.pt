@@ -12,12 +12,17 @@
          tal:content="string:#form-ldapsettings label {display:block;}">
   </style>
   <h1 i18n:translate="">LDAP Configuration</h1>
-  <h2>Connection Test</h2>
-  <p tal:define="state view/connection_test" 
-     tal:content="python: state[1]">
-  </p>
-  <h2>Settings</h2>
-  <tal:form replace="structure python:view.form()" />
+    <h2>Connection Test</h2>
+    <tal:block tal:define="state view/connection_test;
+                           state_ok python:state[0];
+                           state_msg python:state[1]">
+        <strong tal:content="python: state_ok and 'OK' or 'ERROR'"
+                tal:attributes="style python: state_ok and 'color:green' or 'color:red'"
+                >state</strong>: <span tal:content="state_msg">msg</span>
+              
+    </tal:block>
+    <h2>Settings</h2>
+    <tal:form replace="structure python:view.form()" />
 </metal:main>
 
 </body>
