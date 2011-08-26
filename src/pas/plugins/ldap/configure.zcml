@@ -7,6 +7,7 @@
     i18n_domain="pas.plugins.ldap"
     >
 
+  <include package="five.globalrequest" />
   <include package="node.ext.ldap" />
   <include package="yafowil.widget.dict" />
   

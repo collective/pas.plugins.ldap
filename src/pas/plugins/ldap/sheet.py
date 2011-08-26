@@ -4,7 +4,7 @@ from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.UserPropertySheet import UserPropertySheet
 from node.ext.ldap.interfaces import ILDAPUsersConfig
 
-logger = logging.getLogger('bda.plone.ldap')
+logger = logging.getLogger('pas.plugins.ldap')
 
 class LDAPUserPropertySheet(UserPropertySheet):
 

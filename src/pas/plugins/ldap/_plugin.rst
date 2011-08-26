@@ -31,6 +31,8 @@ Create
     'plugins', 'roles', 'sniffer', 'users']
     
     >>> ldap = pas['pasldap']
+    >>> ldap
+    <LDAPPlugin at /acl_users/pasldap>
     
 turn off request_caching for testing, because test request has strange
 behaviour::

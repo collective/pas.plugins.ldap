@@ -154,7 +154,8 @@ class BasePropertiesForm(BrowserView):
         try:
             ugm.groups
         except ldap.LDAPError, e:
-            return False, _('LDAP groups; ') + e.message['desc']
+            return False, _('LDAP Users ok, but groups not; ') + \
+                   e.message['desc']
         except Exception, e:
             return False, _('Other; ') + str(e)
         return True, 'Connection, users- and groups-access tested successfully.'         
@@ -254,7 +255,7 @@ class UsersConfig(object):
     baseDN = PropProxy(TUSERS, 'baseDN', DEFAULTS['users.baseDN'])()
     attrmap = PropProxy(TUSERS, 'attrmap', DEFAULTS['users.attrmap'], 
                         json=True)()
-    scope = PropProxy(TUSERS, 'scope', DEFAULTS['users.scope'])()
+    scope = PropProxy(TUSERS, 'scope', DEFAULTS['users.scope'], json=True)()
     queryFilter = PropProxy(TUSERS, 'queryFilter', 
                             DEFAULTS['users.queryFilter'])()
     objectClasses = PropProxy(TUSERS, 'objectClasses', 
@@ -274,7 +275,7 @@ class GroupsConfig(object):
     baseDN = PropProxy(TGROUPS, 'baseDN', DEFAULTS['groups.baseDN'])()
     attrmap = PropProxy(TGROUPS, 'attrmap', DEFAULTS['groups.attrmap'], 
                         json=True)()
-    scope = PropProxy(TGROUPS, 'scope', DEFAULTS['groups.scope'])()
+    scope = PropProxy(TGROUPS, 'scope', DEFAULTS['groups.scope'], json=True)()
     queryFilter = PropProxy(TGROUPS, 'queryFilter', 
                             DEFAULTS['groups.queryFilter'])()
     objectClasses = PropProxy(TGROUPS, 'objectClasses', 

@@ -13,6 +13,7 @@ def _addPlugin(pas, pluginid='pasldap'):
         return TITLE + " already installed."
     plugin = LDAPPlugin(pluginid, title=TITLE)
     pas._setObject(pluginid, plugin)
+    plugin = pas[plugin.getId()] # get plugin acquisition wrapped!
     for info in pas.plugins.listPluginTypeInfo():
         interface = info['interface']
         if not interface.providedBy(plugin):
@@ -22,7 +23,6 @@ def _addPlugin(pas, pluginid='pasldap'):
             interface,
             [x[0] for x in pas.plugins.listPlugins(interface)[:-1]],
         )
-
 
 def setupPlugin(context):
     if isNotThisProfile(context):

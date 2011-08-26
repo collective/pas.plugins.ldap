@@ -1,7 +1,9 @@
 import os
 import ldap
+import logging
 from zope.interface import implements
 from zope.component import getUtility
+from zope.globalrequest import getRequest
 from node.ext.ldap.interfaces import (
     ILDAPProps,
     ILDAPUsersConfig,
@@ -21,6 +23,8 @@ from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
 from Products.PlonePAS import interfaces as plonepas_interfaces
 from .sheet import LDAPUserPropertySheet
 from .interfaces import ILDAPPlugin 
+
+logger = logging.getLogger('pas.plugins.ldap')
 
 zmidir = os.path.join(os.path.dirname( __file__), 'zmi')
 
@@ -68,9 +72,8 @@ class LDAPPlugin(BasePlugin):
     _dont_swallow_my_exceptions = True # Tell PAS not to swallow our exceptions    
 
     def __init__(self, id, title=None, **kw):
-        self.id = id
+        self._setId(id)
         self.title = title
-        self.request_caching = True
 
     security.declarePrivate('groups_enabled')
     @property
@@ -82,18 +85,19 @@ class LDAPPlugin(BasePlugin):
     def users_enabled(self):
         return self.users is not None
 
-    security.declarePrivate('ugm')
-    @property
-    def ugm(self):
+    def _ugm(self):
+        request = getRequest()
+        if not request:
+            print "request is None !?"
         rcachekey = '_ldap_ugm_%s_' % self.getId()
-        if self.request_caching and rcachekey in self.REQUEST.keys():
-            return self.REQUEST[rcachekey]
+        if request and rcachekey in request.keys():
+            return request[rcachekey]
         props = ILDAPProps(self)
         ucfg = ILDAPUsersConfig(self)
         gcfg = ILDAPGroupsConfig(self)
         ugm = Ugm(props=props, ucfg=ucfg, gcfg=gcfg, rcfg=None)
-        if self.request_caching:
-            self.REQUEST[rcachekey] = ugm
+        if request:
+            request[rcachekey] = ugm
         return ugm
     
     security.declarePrivate('groups')
@@ -101,12 +105,14 @@ class LDAPPlugin(BasePlugin):
     def groups(self):
         try:
             self._v_ldaperror = False
-            return self.ugm.groups
+            return self._ugm().groups
         except ldap.LDAPError, e:
-            self._v_ldaperror = e.message['desc']
+            self._v_ldaperror = str(e)
+            logger.warn('groups -> %s' % self._v_ldaperror)
             return None
         except Exception, e: 
             self._v_ldaperror = str(e)
+            logger.exception('groups -> %s' % self._v_ldaperror)
             return None
 
     security.declarePrivate('users')
@@ -114,12 +120,14 @@ class LDAPPlugin(BasePlugin):
     def users(self):
         try:
             self._v_ldaperror = False
-            return self.ugm.users
+            return self._ugm().users
         except ldap.LDAPError, e:
-            self._v_ldaperror = e.message['desc']
+            self._v_ldaperror = str(e)
+            logger.warn('groups -> %s' % self._v_ldaperror)
             return None
         except Exception, e: 
             self._v_ldaperror = str(e)
+            logger.exception('groups -> %s' % self._v_ldaperror)
             return None
         
     security.declareProtected(ManageUsers, 'ldaperror')
@@ -149,18 +157,18 @@ class LDAPPlugin(BasePlugin):
 
         o If the credentials cannot be authenticated, return None.
         """
-        try:
-            login = credentials['login']
-            pw = credentials['password']
-        except KeyError:
-            # credentials were not meant for us
+        login = credentials.get('login')
+        pw = credentials.get('password')
+        if not (login and pw):
             return None
+        logger.debug('credentials: %s' % credentials)
         users = self.users
         if not users:
             return
-        uid = users.authenticate(login, pw)
-        if uid:
-            return (uid, login)
+        userid = users.authenticate(login, pw)
+        if userid:
+            logger.info('logged in %s' % userid)
+            return (userid, login)
 
     ###
     # pas_interfaces.IGroupEnumerationPlugin
@@ -213,6 +221,7 @@ class LDAPPlugin(BasePlugin):
             kw['id'] = id
         groups = self.groups
         if not groups:
+            logger.warn(self._v_ldaperror)
             return []
         try:
             matches = groups.search(criteria=kw, exact_match=exact_match)
@@ -324,7 +333,7 @@ class LDAPPlugin(BasePlugin):
             pluginid=pluginid,
             ) for id, attrs in matches]
         if max_results and len(ret) > max_results:
-            ret = ret[:max_results]        
+            ret = ret[:max_results] 
         return ret
 
     ###
