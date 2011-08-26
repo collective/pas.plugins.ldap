@@ -87,8 +87,6 @@ class LDAPPlugin(BasePlugin):
 
     def _ugm(self):
         request = getRequest()
-        if not request:
-            print "request is None !?"
         rcachekey = '_ldap_ugm_%s_' % self.getId()
         if request and rcachekey in request.keys():
             return request[rcachekey]
