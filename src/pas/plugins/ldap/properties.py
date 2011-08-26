@@ -21,6 +21,7 @@ from yafowil.base import UNSET
 from yafowil.controller import Controller
 from yafowil.yaml import parse_from_YAML
 from zope.i18nmessageid import MessageFactory
+from persistent.dict import PersistentDict
 from zExceptions import Redirect
 from Products.Five import BrowserView
 from .interfaces import ILDAPPlugin
@@ -247,6 +248,8 @@ class UsersConfig(object):
     
     def __init__(self, plugin):
         self.plugin = plugin
+        
+    strict = False
 
     baseDN = PropProxy(TUSERS, 'baseDN', DEFAULTS['users.baseDN'])()
     attrmap = PropProxy(TUSERS, 'attrmap', DEFAULTS['users.attrmap'], 
@@ -265,6 +268,8 @@ class GroupsConfig(object):
     
     def __init__(self, plugin):
         self.plugin = plugin
+
+    strict = False
 
     baseDN = PropProxy(TGROUPS, 'baseDN', DEFAULTS['groups.baseDN'])()
     attrmap = PropProxy(TGROUPS, 'attrmap', DEFAULTS['groups.attrmap'], 
