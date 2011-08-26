@@ -32,6 +32,11 @@ Create
     
     >>> ldap = pas['pasldap']
     
+turn off request_caching for testing, because test request has strange
+behaviour::
+
+    >>> ldap.request_caching = False
+    
 PAS Plugins
 ===========
 

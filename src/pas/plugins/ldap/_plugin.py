@@ -10,7 +10,6 @@ from node.ext.ldap.interfaces import (
 from node.ext.ldap.ugm import Ugm
 from App.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
-from persistent.dict import PersistentDict
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.PluggableAuthService.permissions import (
@@ -71,6 +70,7 @@ class LDAPPlugin(BasePlugin):
     def __init__(self, id, title=None, **kw):
         self.id = id
         self.title = title
+        self.request_caching = True
 
     security.declarePrivate('groups_enabled')
     @property
@@ -85,10 +85,15 @@ class LDAPPlugin(BasePlugin):
     security.declarePrivate('ugm')
     @property
     def ugm(self):
+        rcachekey = '_ldap_ugm_%s_' % self.getId()
+        if self.request_caching and rcachekey in self.REQUEST.keys():
+            return self.REQUEST[rcachekey]
         props = ILDAPProps(self)
         ucfg = ILDAPUsersConfig(self)
         gcfg = ILDAPGroupsConfig(self)
         ugm = Ugm(props=props, ucfg=ucfg, gcfg=gcfg, rcfg=None)
+        if self.request_caching:
+            self.REQUEST[rcachekey] = ugm
         return ugm
     
     security.declarePrivate('groups')
