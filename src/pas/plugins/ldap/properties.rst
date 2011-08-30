@@ -3,14 +3,17 @@ PropProxy
 ::
     >>> class SomePlugin(object):
     ...     def __init__(self):
-    ...         self.ldapprops = dict()
+    ...         self.settings = dict()
 
-    >>> from pas.plugins.ldap.properties import PropProxy
+    >>> from pas.plugins.ldap.properties import propproxy
+    >>> from pas.plugins.ldap.properties import DEFAULTS
     >>> class SomeAdapter(object):
     ...     def __init__(self, plugin):
     ...         self.plugin = plugin
-    ...     someprop = PropProxy('ldapprops', 'prop', 'default')()
-    ...     somejson = PropProxy('ldapprops', 'jprop', '[1, 2]', json=True)()
+    ...     someprop = propproxy('ldapprops.prop')
+    ...     somejson = propproxy('ldapprops.jprop', True)
+    >>> DEFAULTS['ldapprops.prop'] = 'default'
+    >>> DEFAULTS['ldapprops.jprop'] = '[1, 2]'
 
     >>> plugin = SomePlugin()
     >>> adapter = SomeAdapter(plugin)

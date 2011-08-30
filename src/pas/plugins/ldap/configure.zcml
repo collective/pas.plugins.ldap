@@ -8,7 +8,6 @@
     >
 
   <include package="five.globalrequest" />
-  <include package="node.ext.ldap" />
   <include package="yafowil.widget.dict" />
   
   <five:registerPackage package="." initialize=".initialize" />  

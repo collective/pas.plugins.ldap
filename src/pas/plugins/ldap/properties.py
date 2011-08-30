@@ -1,7 +1,7 @@
 import os
-import copy
 import json
 import ldap
+import logging
 from odict import odict
 from node.ext.ldap.scope import (
     BASE,
@@ -16,6 +16,7 @@ from node.ext.ldap.interfaces import (
 from node.ext.ldap.ugm import Ugm
 from zope.interface import implements
 from zope.component import adapts
+import transaction
 import yafowil.zope2
 from yafowil.base import UNSET
 from yafowil.controller import Controller
@@ -25,6 +26,8 @@ from persistent.dict import PersistentDict
 from zExceptions import Redirect
 from Products.Five import BrowserView
 from .interfaces import ILDAPPlugin
+
+logger = logging.getLogger('pas.plugins.ldap')
 
 _ = MessageFactory('pas.plugins.ldap')
 
@@ -94,22 +97,24 @@ class BasePropertiesForm(BrowserView):
         groups = ILDAPGroupsConfig(self.plugin)
         def fetch(name):
             name = 'ldapsettings.%s' % name
+            __traceback_info__ = name
             return data.fetch(name).extracted
         props.uri = fetch('server.uri')
         props.user = fetch('server.user')
         password = fetch('server.password')
         if password is not UNSET:
             props.password = password
-        props.cache = fetch('cache')
-        props.timeout = fetch('timeout')
+        props.cache = fetch('server.cache')
+        props.memcached = fetch('server.memcached')
+        props.timeout = fetch('server.timeout')
         # XXX: later
-        #props.start_tls = fetch('start_tls')
-        #props.tls_cacertfile = fetch('tls_cacertfile')
-        #props.tls_cacertdir = fetch('tls_cacertdir')
-        #props.tls_clcertfile = fetch('tls_clcertfile')
-        #props.tls_clkeyfile = fetch('tls_clkeyfile')
-        #props.retry_max = fetch(at('retry_max')
-        #props.retry_delay = fetch('retry_delay')
+        #props.start_tls = fetch('server.start_tls')
+        #props.tls_cacertfile = fetch('server.tls_cacertfile')
+        #props.tls_cacertdir = fetch('server.tls_cacertdir')
+        #props.tls_clcertfile = fetch('server.tls_clcertfile')
+        #props.tls_clkeyfile = fetch('server.tls_clkeyfile')
+        #props.retry_max = fetch(at('server.retry_max')
+        #props.retry_delay = fetch('server.retry_delay')
         users.baseDN = fetch('users.dn')
         map = odict()
         map.update(fetch('users.aliases_attrmap'))
@@ -117,7 +122,7 @@ class BasePropertiesForm(BrowserView):
         if users_propsheet_attrmap is not UNSET:
             map.update(users_propsheet_attrmap)
         users.attrmap = map
-        users.scope = fetch(at('users.scope')).extracted
+        users.scope = fetch('users.scope')
         users.queryFilter = fetch('users.query')
         objectClasses = fetch('users.object_classes')
         objectClasses = \
@@ -148,8 +153,9 @@ class BasePropertiesForm(BrowserView):
         except ldap.SERVER_DOWN, e:
             return False, _("Server Down")
         except ldap.LDAPError, e:
-            return False, _('LDAP users; ') + e.message['desc']
+            return False, _('LDAP users; ') + str(e)
         except Exception, e:
+            logger.exception('Non-LDAP error while connection test!')
             return False, _('Other; ') + str(e)
         try:
             ugm.groups
@@ -157,51 +163,18 @@ class BasePropertiesForm(BrowserView):
             return False, _('LDAP Users ok, but groups not; ') + \
                    e.message['desc']
         except Exception, e:
+            logger.exception('Non-LDAP error while connection test!')
             return False, _('Other; ') + str(e)
         return True, 'Connection, users- and groups-access tested successfully.'         
-
-TLDAP = 'ldapprops'
-TUSERS = 'usersconfig'
-TGROUPS = 'groupsconfig'
-STORAGES = [TLDAP, TUSERS, TGROUPS]
                     
-
-class PropProxy(object):
-    
-    def __init__(self, proptype, key, default=None, json=False):
-        self.proptype = proptype
-        self.key = key
-        self.default = copy.copy(default)
-        self.json = json
-        
-
-    def __call__(self):
-        def _getter(context):
-            props = getattr(context.plugin, self.proptype, None)
-            if not props:
-                value = self.default
-            else:
-                value = props.get(self.key, self.default)
-            if self.json:
-                value = json.loads(value)
-            return value
-        def _setter(context, value):
-            if self.json:
-                value = json.dumps(value)
-            plugin = context.plugin
-            for storage in STORAGES: 
-                if not hasattr(plugin, storage):
-                    setattr(plugin, storage, PersistentDict())
-            props = getattr(plugin, self.proptype)
-            props[self.key] = value
-        return property(_getter, _setter)
-
 DEFAULTS = {
     'server.uri'          : 'ldap://127.0.0.1:12345',
     'server.user'         :  'cn=Manager,dc=my-domain,dc=com',
     'server.password'     :  'secret',
-    'server.cache'        :  'false',
-    'server.timeout'      :  '300',
+    'server.cache'        :  False,
+    'server.memcached'    :  '127.0.0.1:11211',
+    'server.timeout'      :  300,
+    'server.start_tls'    :  False,
             
     'users.baseDN'        : 'ou=users300,dc=my-domain,dc=com',
     'users.attrmap'       : '{"rdn": "uid", "id": "uid", "login": "uid",'\
@@ -218,6 +191,20 @@ DEFAULTS = {
     'groups.objectClasses': '["groupOfNames"]',
 }
 
+def propproxy(ckey, usejson=False):
+    def _getter(context):
+        value = context.plugin.settings.get(ckey, DEFAULTS[ckey])
+        if usejson:
+            value = json.loads(value)
+        return value
+    def _setter(context, value):
+        if usejson:
+            value = json.dumps(value)
+        context.plugin.settings[ckey] = value
+        transaction.commit() # XXX: needed here, why? otherwise no persistence        
+    return property(_getter, _setter)
+
+
 class LDAPProps(object):
 
     implements(ILDAPProps)
@@ -226,14 +213,15 @@ class LDAPProps(object):
     def __init__(self, plugin):
         self.plugin = plugin
 
-    uri = PropProxy(TLDAP, 'uri', DEFAULTS['server.uri'])()
-    user = PropProxy(TLDAP, 'user', DEFAULTS['server.user'])()
-    password = PropProxy(TLDAP, 'password', DEFAULTS['server.password'])()
-    cache = PropProxy(TLDAP, 'cache', DEFAULTS['server.cache'], json=True)()
-    timeout = PropProxy(TLDAP, 'cache', DEFAULTS['server.timeout'], json=True)()
+    uri = propproxy('server.uri')
+    user = propproxy('server.user')
+    password = propproxy('server.password')
+    cache = propproxy('server.cache')
+    memcached = propproxy('server.memcached')
+    timeout = propproxy('server.timeout')
     
     # XXX: Later
-    start_tls = False
+    start_tls = propproxy('server.start_tls')
     tls_cacertfile = ''
     tls_cacertdir = ''
     tls_clcertfile = ''
@@ -252,14 +240,11 @@ class UsersConfig(object):
         
     strict = False
 
-    baseDN = PropProxy(TUSERS, 'baseDN', DEFAULTS['users.baseDN'])()
-    attrmap = PropProxy(TUSERS, 'attrmap', DEFAULTS['users.attrmap'], 
-                        json=True)()
-    scope = PropProxy(TUSERS, 'scope', DEFAULTS['users.scope'], json=True)()
-    queryFilter = PropProxy(TUSERS, 'queryFilter', 
-                            DEFAULTS['users.queryFilter'])()
-    objectClasses = PropProxy(TUSERS, 'objectClasses', 
-                              DEFAULTS['users.objectClasses'], json=True)()
+    baseDN = propproxy('users.baseDN')
+    attrmap = propproxy('users.attrmap', True)
+    scope = propproxy('users.scope', True)
+    queryFilter = propproxy('users.queryFilter') 
+    objectClasses = propproxy('users.objectClasses', True)
 
     
 class GroupsConfig(object):
@@ -272,11 +257,8 @@ class GroupsConfig(object):
 
     strict = False
 
-    baseDN = PropProxy(TGROUPS, 'baseDN', DEFAULTS['groups.baseDN'])()
-    attrmap = PropProxy(TGROUPS, 'attrmap', DEFAULTS['groups.attrmap'], 
-                        json=True)()
-    scope = PropProxy(TGROUPS, 'scope', DEFAULTS['groups.scope'], json=True)()
-    queryFilter = PropProxy(TGROUPS, 'queryFilter', 
-                            DEFAULTS['groups.queryFilter'])()
-    objectClasses = PropProxy(TGROUPS, 'objectClasses', 
-                              DEFAULTS['groups.objectClasses'], json=True)()    
+    baseDN = propproxy('groups.baseDN')
+    attrmap = propproxy('groups.attrmap', True)
+    scope = propproxy('groups.scope', True)
+    queryFilter = propproxy('groups.queryFilter') 
+    objectClasses = propproxy('groups.objectClasses', True)

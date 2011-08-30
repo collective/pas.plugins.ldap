@@ -26,6 +26,22 @@ widgets:
         props:
             label: LDAP Manager Password
             required: No password defined
+    - cache:
+        factory: field:label:error:checkbox
+        value: expr:context.props.cache
+        props:
+            label: Cache LDAP queries
+    - memcached:
+        factory: field:label:error:text
+        value: expr:context.props.memcached
+        props:
+            label: Memcached Server to use
+    - timeout:
+        factory: field:label:error:number
+        value: expr:context.props.timeout
+        props:
+            label: Cache timeout in seconds
+            datatype: integer
 - users:
     factory: fieldset
     props:

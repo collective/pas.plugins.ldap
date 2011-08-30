@@ -10,6 +10,7 @@ from node.ext.ldap.interfaces import (
     ILDAPGroupsConfig,
 )
 from node.ext.ldap.ugm import Ugm
+from BTrees import OOBTree
 from App.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -74,6 +75,7 @@ class LDAPPlugin(BasePlugin):
     def __init__(self, id, title=None, **kw):
         self._setId(id)
         self.title = title
+        self.settings = OOBTree.OOBTree()
 
     security.declarePrivate('groups_enabled')
     @property
