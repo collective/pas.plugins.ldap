@@ -8,6 +8,14 @@ If `Plone <http://plone.org>`_ is installed an
 integration layer with a setup-profile and a plone-controlpanel page is
 available.
 
+``pas.plugins.ldap`` is **not** releated to the old LDAPUserFolder/
+LDAPMultiPlugins and the packages stacked on top of it in any way.
+
+It is based on **node.ext.ldap**, an almost framework independent ldap stack.
+
+For now users and groups can't be added or deleted. But properties on both are
+read/write. See section *TODO*.
+
 Installation
 ============
 
