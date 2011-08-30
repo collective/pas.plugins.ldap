@@ -48,9 +48,25 @@ Add to the instance section of your buildout::
 
 Let buildout run. Restart Plone.
 
-The go to the Plone control-panel, select ``extensions`` and install the LDAP
+Then go to the Plone control-panel, select ``extensions`` and install the LDAP
 Plugin. A new LDAP Settings icon appear on the left. Click it and configure the
 plugin there.
+
+To use an own integration-profile, just add to the profiles
+``metadata.xml`` file::
+
+    ...
+    <dependencies>
+        ...
+        <dependency>profile-pas.plugins.ldap.plonecontrolpanel:default</dependency>
+    </dependencies>
+    ...
+
+Additionally ldap settings can be exported and imported with ``portal_setup``.
+You can place the exported ``ldapsettings.xml`` in your integration profile, so
+it will be imported with your next install again. Attention: The ldap-password
+is in there in plain text.
+
 
 Source Code
 ===========

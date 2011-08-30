@@ -7,7 +7,7 @@
   <include package="Products.CMFCore" />
   
   <genericsetup:registerProfile
-    name="plone"
+    name="default"
     title="PAS LDAP Plugin - Plone Integration"
     directory="profile"
     description="Extension profile for pas.plugins.ldap Plone Integration."

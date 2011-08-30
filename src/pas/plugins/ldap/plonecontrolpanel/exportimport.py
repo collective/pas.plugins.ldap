@@ -26,15 +26,15 @@ def _get_import_export_handler(context):
     
 
 def import_settings(context):
+    logger = context.getLogger('pas.plugins.ldap')    
     handler = _get_import_export_handler(context)
     if not handler: 
         return
     body = context.readDataFile(handler.filename)
     if body is None:
-        logger = context.getLogger('pas.plugins.ldap')    
-        logger.info("No settings file found: %s" % handler.filename)
         return
     handler.body = body
+    logger.info("Imported ldap settings.")    
     
 def export_settings(context):
     handler = _get_import_export_handler(context)
@@ -45,7 +45,7 @@ def export_settings(context):
         logger = context.getLogger('pas.plugins.ldap')    
         logger.warn("Problem to get ldap settings.")
         return
-    context.writeDataFile(handler.filename, body, handler.mime_type)    
+    context.writeDataFile(handler.filename, body, handler.mime_type)
         
 
 class LDAPPluginXMLAdapter(XMLAdapterBase):
@@ -61,8 +61,11 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
         return node
                 
     def _importNode(self, node):
-        node = self._getObjectNode('object')        
-        data = self._getDataFromNode(node)
+        #node = self._getObjectNode('object')        
+        data = self._getDataByType(node)
+        if not data:
+            self._logger.error('data is empty')
+            return
         for key in data:
             self.context.settings[key] = data[key]
             
@@ -101,26 +104,24 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
         node.appendChild(child)
         
     def _getDataByType(self, node):
-        vtype = node.getAttribute('type', None)
-        if vtype is None:
-            return None
+        vtype = node.getAttribute('type')
         if vtype == 'list':
             data = list()
             for element in node.childNodes:
-                if child.nodeName != 'element':
+                if element.nodeName != 'element':
                     continue    
                 data.append(self._getDataByType(element))
             return data
         if vtype == 'dict':
             data = dict()
             for element in node.childNodes:
-                if child.nodeName != 'element':
+                if element.nodeName != 'element':
                     continue 
-                key =  element.getAttribute('key', None)  
+                key =  element.getAttribute('key')  
                 if key is None:
                     self._logger.warning('No key found for dict on import, '\
                                          'skipped.')
-                    return None
+                    continue
                 data.update({key: self._getDataByType(element)})
                 return data
         data = self._getNodeText(node)
@@ -135,4 +136,5 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
         else:
             self._logger.warning('Invalid type %s found on import, skipped.' %\
                                  vtype)
-            return None
+            data = None
+        return data
