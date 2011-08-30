@@ -4,7 +4,6 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="bda.plone.ldap">
 
-  <include package="node.ext.ldap" />
   <include package="Products.CMFCore" />
   
   <genericsetup:registerProfile
@@ -22,6 +21,26 @@
 	template="controlpanel.pt"
     permission="cmf.ManagePortal"
   />
- 
-         
+  
+  <adapter
+    factory=".exportimport.LDAPPluginXMLAdapter"
+    for="..interfaces.ILDAPPlugin
+         Products.GenericSetup.interfaces.ISetupEnviron"
+  />
+
+  <genericsetup:importStep
+      name="pas.plugins.ldap.settings"
+      title="LDAP Settings"
+      description="Imports LDAP Settings"
+      handler=".exportimport.import_settings">
+      <depends name="pas.plugins.ldap.setup" />
+  </genericsetup:importStep>
+
+  <genericsetup:exportStep
+      name="pas.plugins.ldap"
+      title="LDAP Settings"
+      description="Exports LDAP Settings"
+    handler=".exportimport.export_settings"
+  />  
+  
 </configure>

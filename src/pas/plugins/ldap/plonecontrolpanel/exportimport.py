@@ -1,8 +1,8 @@
-# XXX TODO: moved w/o change from bda.pasldap
 import types
 import os.path
-from zope.app import zapi
 from zope.interface import implements
+from zope.component import queryMultiAdapter
+from BTrees.OOBTree import OOBTree
 from Acquisition import Implicit
 from Products.CMFCore.utils import getToolByName
 from Products.GenericSetup.utils import XMLAdapterBase
@@ -10,55 +10,61 @@ from Products.GenericSetup.interfaces import IBody
 from Products.GenericSetup.interfaces import IFilesystemExporter
 from Products.GenericSetup.interfaces import IFilesystemImporter
 
+def _get_import_export_handler(context):
+    aclu = context.getSite().acl_users
+    logger = context.getLogger('pas.plugins.ldap')    
+    if 'pasldap' not in aclu.objectIds():
+        logger.warn("Can't handle ldap settings, no ldap plugin named "\
+                    "'pasldap' found.")
+        return
+    pasldap = aclu.pasldap
+    handler = queryMultiAdapter((pasldap, context), IBody)
+    if handler is not None:
+        handler.filename = '%s%s' % (handler.name, handler.suffix)
+        return handler
+    logger.warn("Can't find handler for ldap settings")
+    
 
-class LDAPPluginConfigurationExportImport(Implicit):
-
-    implements(IFilesystemExporter, IFilesystemImporter)
-
-    def __init__(self, context):
-        self.context = context
-
-    def export(self, export_context, subdir, root=False):
-        """ See IFilesystemExporter. """
-        filename = os.path.join(subdir, '%s.xml' % self.context.getId())
-        logger = export_context.getLogger('LDAPPlugin')
-
-        exporter = zapi.queryMultiAdapter((self.context, export_context), IBody)
-        if exporter is None:
-            logger.warning('XML Export adapter missing.')
-            return
-
-        export_context.writeDataFile(filename, exporter.body, exporter.mime_type)
+def import_settings(context):
+    handler = _get_import_export_handler(context)
+    if not handler: 
+        return
+    body = context.readDataFile(handler.filename)
+    if body is None:
+        logger = context.getLogger('pas.plugins.ldap')    
+        logger.info("No settings file found: %s" % handler.filename)
+        return
+    handler.body = body
+    
+def export_settings(context):
+    handler = _get_import_export_handler(context)
+    if not handler: 
+        return
+    body = handler.body
+    if body is None:
+        logger = context.getLogger('pas.plugins.ldap')    
+        logger.warn("Problem to get ldap settings.")
+        return
+    context.writeDataFile(handler.filename, body, handler.mime_type)    
         
-        
-    def import_(self, import_context, subdir, root=False):
-        """ See IFilesystemImporter. """        
-        logger = import_context.getLogger('LDAPPlugin')
-        filename = os.path.join(subdir, '%s.xml' % self.context.getId())
-        body = import_context.readDataFile(filename, import_context.getEncoding())        
-        importer = zapi.queryMultiAdapter((self.context, import_context), IBody)
-        if importer is None:
-            logger.warning('Import adapter missing.')
-            return
-        logger.info('LDAPPlugin plugin imported')
-
 
 class LDAPPluginXMLAdapter(XMLAdapterBase):
     """import pas groups from ldap config"""
     
     implements(IBody)
+    
+    name = 'ldapsettings'
 
     def _exportNode(self):
         node = self._getObjectNode('object')
-        self._setDataAndType(self.context.config, node)
+        self._setDataAndType(self.context.settings, node)
         return node
                 
     def _importNode(self, node):
         node = self._getObjectNode('object')        
         data = self._getDataFromNode(node)
         for key in data:
-            if key in self.context.config:
-               self.context.config[key] = data[key]
+            self.context.settings[key] = data[key]
             
     def _setDataAndType(self, data, node):
         if isinstance(data, (tuple, list)):
@@ -68,16 +74,14 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
                 self._setDataAndType(value, element)
                 node.appendChild(element)
             return 
-            
-        if isinstance(data, (dict,)):
-            node.setAttribute('type', 'dict')                
-            for key in data.keys():                    
+        if isinstance(data, (dict, OOBTree)):
+            node.setAttribute('type', 'dict')        
+            for key in sorted(data.keys()):                    
                 element = self._doc.createElement('element')
                 element.setAttribute('key', key)                
                 self._setDataAndType(data[key], element)
                 node.appendChild(element)
             return
-            
         if type(data) is types.BooleanType:
             node.setAttribute('type', 'bool')                
             data = str(data)
@@ -90,9 +94,9 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
         elif type(data) in types.StringTypes:
             node.setAttribute('type', 'string')
         else:
-            self._logger.warning('Invalid type %s found for key %s on export, skipped.' % (type(data), key))
+            self._logger.warning('Invalid type %s found for key %s on export, '\
+                                 'skipped.' % (type(data), data))
             return
-            
         child = self._doc.createTextNode(data)
         node.appendChild(child)
         
@@ -114,7 +118,8 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
                     continue 
                 key =  element.getAttribute('key', None)  
                 if key is None:
-                    self._logger.warning('No key found for dict on import, skipped.')
+                    self._logger.warning('No key found for dict on import, '\
+                                         'skipped.')
                     return None
                 data.update({key: self._getDataByType(element)})
                 return data
@@ -128,5 +133,6 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
         elif vtype == 'string':
             data = str(data)
         else:
-            self._logger.warning('Invalid type %s found on import, skipped.' % vtype)
+            self._logger.warning('Invalid type %s found on import, skipped.' %\
+                                 vtype)
             return None

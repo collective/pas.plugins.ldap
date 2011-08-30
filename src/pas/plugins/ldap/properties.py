@@ -177,15 +177,20 @@ DEFAULTS = {
     'server.start_tls'    :  False,
             
     'users.baseDN'        : 'ou=users300,dc=my-domain,dc=com',
-    'users.attrmap'       : '{"rdn": "uid", "id": "uid", "login": "uid",'\
-                            ' "fullname": "cn", "email": "mail"}',
+    'users.attrmap'       : {"rdn": "uid", 
+                             "id": "uid", 
+                             "login": "uid",
+                             "fullname": "cn", 
+                             "email": "mail"},
     'users.scope'         : '1',
     'users.queryFilter'   : '(objectClass=inetOrgPerson)',
     'users.objectClasses' : '["inetOrgPerson"]',
     
     'groups.baseDN'       : 'ou=groups,dc=my-domain,dc=com',
-    'groups.attrmap'      : '{"rdn": "uid", "id": "uid", "login": "uid",'\
-                            ' "fullname": "cn", "email": "mail"}',
+    'groups.attrmap'      : {"rdn": "uid", 
+                             "id": "uid", 
+                             "fullname": "cn", 
+                             "email": "mail"},
     'groups.scope'        : '1',
     'groups.queryFilter'  : '(objectClass=groupOfNames)',
     'groups.objectClasses': '["groupOfNames"]',
@@ -241,7 +246,7 @@ class UsersConfig(object):
     strict = False
 
     baseDN = propproxy('users.baseDN')
-    attrmap = propproxy('users.attrmap', True)
+    attrmap = propproxy('users.attrmap')
     scope = propproxy('users.scope', True)
     queryFilter = propproxy('users.queryFilter') 
     objectClasses = propproxy('users.objectClasses', True)
@@ -258,7 +263,7 @@ class GroupsConfig(object):
     strict = False
 
     baseDN = propproxy('groups.baseDN')
-    attrmap = propproxy('groups.attrmap', True)
+    attrmap = propproxy('groups.attrmap')
     scope = propproxy('groups.scope', True)
     queryFilter = propproxy('groups.queryFilter') 
     objectClasses = propproxy('groups.objectClasses', True)
