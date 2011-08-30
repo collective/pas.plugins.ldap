@@ -50,7 +50,7 @@ widgets:
             label: Users search query filter
     - object_classes:
         factory: field:label:text
-        value: expr:u', '.join(context.users.objectClasses)
+        value: "expr:u', '.join(context.users.objectClasses)"
         props:
             label: Object classes for User creation
     - aliases_attrmap:

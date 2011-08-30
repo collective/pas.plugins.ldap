@@ -2,8 +2,10 @@ from setuptools import setup, find_packages
 import sys, os
 
 version = '1.0-beta'
-shortdesc ="Zope 2 PAS Plugin providing users and groups from LDAP directory"
+shortdesc ="LDAP Plugin for Zope2 PluggableAuthService (users and groups)"
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
+longdesc += open(os.path.join(os.path.dirname(__file__), 'TODO.rst')).read()
+longdesc += open(os.path.join(os.path.dirname(__file__), 'LICENSE.rst')).read()
 
 setup(name='pas.plugins.ldap',
       version=version,
