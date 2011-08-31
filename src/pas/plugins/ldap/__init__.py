@@ -1,7 +1,7 @@
 import os
 from AccessControl.Permissions import add_user_folders
 from Products.PluggableAuthService import registerMultiPlugin
-from _plugin import (
+from .plugin import (
     LDAPPlugin,
     manage_addLDAPPlugin,
     manage_addLDAPPluginForm,

@@ -13,7 +13,7 @@ optionflags |= doctest.REPORT_ONLY_FIRST_FAILURE
 
 TESTFILES = [
     ('properties.rst', PASLDAPLayer),
-    ('_plugin.rst',    PASLDAPLayer)
+    ('plugin.rst',    PASLDAPLayer)
 ]
 
 def test_suite():

@@ -1,5 +1,5 @@
 from StringIO import StringIO
-from pas.plugins.ldap._plugin import LDAPPlugin
+from pas.plugins.ldap.plugin import LDAPPlugin
 
 TITLE = 'LDAP plugin (pas.plugins.ldap)'
 
