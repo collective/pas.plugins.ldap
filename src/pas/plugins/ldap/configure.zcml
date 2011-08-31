@@ -18,7 +18,7 @@
   
   <genericsetup:registerProfile
       name="default"
-      title="PAS LDAP Plugin - Zope Base"
+      title="LDAP Plugin for PAS - Zope 2 Base Installation"
       directory="profile"
       description="Extension profile for pas.plugins.ldap Zope Base."
       provides="Products.GenericSetup.interfaces.EXTENSION"
@@ -29,6 +29,8 @@
   <adapter factory=".properties.UsersConfig" />
   
   <adapter factory=".properties.GroupsConfig" />
+  
+  <utility factory=".cache.cacheProviderFactory"/>    
       
   <include 
       zcml:condition="installed Products.CMFPlone"   

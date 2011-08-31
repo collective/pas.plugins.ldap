@@ -36,6 +36,7 @@ widgets:
         value: expr:context.props.memcached
         props:
             label: Memcached Server to use
+            description: Global settings, same for all plugins.
     - timeout:
         factory: field:label:error:number
         value: expr:context.props.timeout

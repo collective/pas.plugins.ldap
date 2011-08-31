@@ -14,15 +14,13 @@ def _get_import_export_handler(context):
     aclu = context.getSite().acl_users
     logger = context.getLogger('pas.plugins.ldap')    
     if 'pasldap' not in aclu.objectIds():
-        logger.warn("Can't handle ldap settings, no ldap plugin named "\
-                    "'pasldap' found.")
         return
     pasldap = aclu.pasldap
     handler = queryMultiAdapter((pasldap, context), IBody)
     if handler is not None:
         handler.filename = '%s%s' % (handler.name, handler.suffix)
         return handler
-    logger.warn("Can't find handler for ldap settings")
+    logger.warning("Can't find handler for ldap settings")
     
 
 def import_settings(context):
@@ -43,7 +41,7 @@ def export_settings(context):
     body = handler.body
     if body is None:
         logger = context.getLogger('pas.plugins.ldap')    
-        logger.warn("Problem to get ldap settings.")
+        logger.warning("Problem to get ldap settings.")
         return
     context.writeDataFile(handler.filename, body, handler.mime_type)
         

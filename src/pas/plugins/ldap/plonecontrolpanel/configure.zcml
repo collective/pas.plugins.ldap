@@ -8,7 +8,7 @@
   
   <genericsetup:registerProfile
     name="default"
-    title="PAS LDAP Plugin - Plone Integration"
+    title="LDAP Plugin for PAS - Plone Integration"
     directory="profile"
     description="Extension profile for pas.plugins.ldap Plone Integration."
     provides="Products.GenericSetup.interfaces.EXTENSION"
@@ -27,13 +27,14 @@
     for="..interfaces.ILDAPPlugin
          Products.GenericSetup.interfaces.ISetupEnviron"
   />
-
+  
   <genericsetup:importStep
       name="pas.plugins.ldap.settings"
       title="LDAP Settings"
       description="Imports LDAP Settings"
       handler=".exportimport.import_settings">
-      <depends name="pas.plugins.ldap.setup" />
+      <depends name="componentregistry" />
+      <depends name="plonepas" />
   </genericsetup:importStep>
 
   <genericsetup:exportStep

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<componentregistry>
+  <utilities>
+    <utility
+      interface="pas.plugins.ldap.interfaces.ICacheSettingsRecordProvider"
+      factory="pas.plugins.ldap.plonecontrolpanel.cache.CacheSettingsRecordProvider"
+    />
+  </utilities>
+</componentregistry>

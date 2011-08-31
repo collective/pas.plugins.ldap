@@ -1,4 +1,3 @@
-import os
 import json
 import ldap
 import logging
@@ -15,7 +14,10 @@ from node.ext.ldap.interfaces import (
 )
 from node.ext.ldap.ugm import Ugm
 from zope.interface import implements
-from zope.component import adapts
+from zope.component import (
+    adapts,
+    queryUtility,
+)
 import transaction
 import yafowil.zope2
 from yafowil.base import UNSET
@@ -25,7 +27,10 @@ from zope.i18nmessageid import MessageFactory
 from persistent.dict import PersistentDict
 from zExceptions import Redirect
 from Products.Five import BrowserView
-from .interfaces import ILDAPPlugin
+from .interfaces import (
+    ILDAPPlugin,
+    ICacheSettingsRecordProvider,
+)
 
 logger = logging.getLogger('pas.plugins.ldap')
 
@@ -34,8 +39,6 @@ _ = MessageFactory('pas.plugins.ldap')
 
 class BasePropertiesForm(BrowserView):
     
-    yaml = os.path.join(os.path.dirname(__file__), 'properties.yaml')
-
     scope_vocab = [
         (str(BASE), 'BASE'),
         (str(ONELEVEL), 'ONELEVEL'),
@@ -84,7 +87,7 @@ class BasePropertiesForm(BrowserView):
             self.groups_propsheet_attrmap[key] = value
 
         # handle form
-        form = parse_from_YAML(self.yaml, self,  _)
+        form = parse_from_YAML('pas.plugins.ldap:properties.yaml', self,  _)
         controller = Controller(form, self.request)
         if not controller.next:
             return controller.rendered
@@ -206,6 +209,7 @@ def propproxy(ckey, usejson=False):
         if usejson:
             value = json.dumps(value)
         context.plugin.settings[ckey] = value
+        import pdb;pdb.set_trace()
         transaction.commit() # XXX: needed here, why? otherwise no persistence        
     return property(_getter, _setter)
 
@@ -222,7 +226,20 @@ class LDAPProps(object):
     user = propproxy('server.user')
     password = propproxy('server.password')
     cache = propproxy('server.cache')
-    memcached = propproxy('server.memcached')
+    
+    def _memcached_get(self):
+        recordProvider = queryUtility(ICacheSettingsRecordProvider)
+        if recordProvider is not None:
+            record = recordProvider()
+            return record.value
+        return u'feature not available'
+    def _memcached_set(self, value):
+        recordProvider = queryUtility(ICacheSettingsRecordProvider)
+        if recordProvider is not None:
+            record = recordProvider()
+            record.value = value
+    memcached = property(_memcached_get, _memcached_set)
+    
     timeout = propproxy('server.timeout')
     
     # XXX: Later
