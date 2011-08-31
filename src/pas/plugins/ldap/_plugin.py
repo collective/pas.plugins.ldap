@@ -123,11 +123,11 @@ class LDAPPlugin(BasePlugin):
             return self._ugm().users
         except ldap.LDAPError, e:
             self._v_ldaperror = str(e)
-            logger.warn('groups -> %s' % self._v_ldaperror)
+            logger.warn('users -> %s' % self._v_ldaperror)
             return None
         except Exception, e: 
             self._v_ldaperror = str(e)
-            logger.exception('groups -> %s' % self._v_ldaperror)
+            logger.exception('users -> %s' % self._v_ldaperror)
             return None
         
     security.declareProtected(ManageUsers, 'ldaperror')
