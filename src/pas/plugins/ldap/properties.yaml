@@ -2,11 +2,13 @@ factory: form
 name: ldapsettings
 props:
     action: expr:context.action
+    class: edit-form enableFormTabbing enableUnloadProtection
 widgets:
 - server:
     factory: fieldset
     props:
         legend: LDAP Server Settings
+        class: formPanel
     widgets:
     - uri:
         factory: field:label:error:text
@@ -30,6 +32,7 @@ widgets:
     factory: fieldset
     props:
         legend: Users Settings
+        class: formPanel
     widgets:
     - dn:
         factory: field:label:error:text
@@ -75,6 +78,7 @@ widgets:
     factory: fieldset
     props:
         legend: Groups Settings                               
+        class: formPanel
     widgets:
     - dn:
         factory: field:label:error:text
@@ -120,6 +124,7 @@ widgets:
     factory: fieldset
     props:
         legend: Cache Settings
+        class: formPanel
     widgets:
     - cache:
         factory: field:label:error:checkbox
