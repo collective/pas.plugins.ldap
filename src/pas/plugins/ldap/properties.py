@@ -45,7 +45,8 @@ class BasePropertiesForm(BrowserView):
         (str(SUBTREE), 'SUBTREE'),
     ]
     
-    static_attrs = ['rdn', 'id', 'login']
+    static_attrs_users  = ['rdn', 'id', 'login']
+    static_attrs_groups = ['rdn', 'id']
 
     @property
     def plugin(self):
@@ -58,7 +59,6 @@ class BasePropertiesForm(BrowserView):
     def action(self):
         return self.next({}) 
 
-
     def form(self):
         # make configuration data available on form context
         self.props =  ILDAPProps(self.plugin)
@@ -67,22 +67,22 @@ class BasePropertiesForm(BrowserView):
 
         # prepare users data on form context
         self.users_attrmap = odict()
-        for key in self.static_attrs:
+        for key in self.static_attrs_users:
             self.users_attrmap[key] = self.users.attrmap.get(key)
         
         self.users_propsheet_attrmap = odict()
         for key, value in self.users.attrmap.items():
-            if key in self.static_attrs:
+            if key in self.static_attrs_users:
                 continue
             self.users_propsheet_attrmap[key] = value
 
         # prepare groups data on form context
         self.groups_attrmap = odict()
-        for key in self.static_attrs:
+        for key in self.static_attrs_groups:
             self.groups_attrmap[key] = self.groups.attrmap.get(key)
         self.groups_propsheet_attrmap = odict()
         for key, value in self.groups.attrmap.items():
-            if key in self.static_attrs:
+            if key in self.static_attrs_groups:
                 continue
             self.groups_propsheet_attrmap[key] = value
 
@@ -144,7 +144,7 @@ class BasePropertiesForm(BrowserView):
         objectClasses = fetch('groups.object_classes')
         objectClasses = \
             [v.strip() for v in objectClasses.split(',') if v.strip()]
-        groups.objectClasses = objectClasses       
+        groups.objectClasses = objectClasses
         
     def connection_test(self):
         props =  ILDAPProps(self.plugin)
@@ -209,7 +209,6 @@ def propproxy(ckey, usejson=False):
         if usejson:
             value = json.dumps(value)
         context.plugin.settings[ckey] = value
-        import pdb;pdb.set_trace()
         transaction.commit() # XXX: needed here, why? otherwise no persistence        
     return property(_getter, _setter)
 
@@ -237,7 +236,7 @@ class LDAPProps(object):
         recordProvider = queryUtility(ICacheSettingsRecordProvider)
         if recordProvider is not None:
             record = recordProvider()
-            record.value = value
+            record.value = value.decode('utf8')
     memcached = property(_memcached_get, _memcached_set)
     
     timeout = propproxy('server.timeout')

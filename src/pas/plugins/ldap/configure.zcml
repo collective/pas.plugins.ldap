@@ -30,7 +30,8 @@
   
   <adapter factory=".properties.GroupsConfig" />
   
-  <utility factory=".cache.cacheProviderFactory"/>    
+  <utility component=".cache.cacheProviderFactory"
+      provides="node.ext.ldap.interfaces.ICacheProviderFactory" />    
       
   <include 
       zcml:condition="installed Products.CMFPlone"   

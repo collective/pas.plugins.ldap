@@ -55,18 +55,18 @@ widgets:
             label: Users container DN
             required: No Users DN defined
     - scope:
-        factory: field:label:select
+        factory: field:label:error:select
         value: expr:context.users.scope
         props:
             label: Users search scope
             vocabulary: expr:context.scope_vocab
     - query:
-        factory: field:label:text
+        factory: field:label:error:text
         value: expr:context.users.queryFilter
         props:
             label: Users search query filter
     - object_classes:
-        factory: field:label:text
+        factory: field:label:error:text
         value: "expr:u', '.join(context.users.objectClasses)"
         props:
             label: Object classes for User creation
@@ -81,7 +81,7 @@ widgets:
                 key: Reserved key
                 value: LDAP attr name
     - propsheet_attrmap:
-        factory: field:label:dict
+        factory: field:label:error:dict
         value: expr:context.users_propsheet_attrmap
         props:
             label: User form attributes
@@ -100,18 +100,18 @@ widgets:
             label: Groups container DN
             required: No Groups DN defined
     - scope:
-        factory: field:label:select
+        factory: field:label:error:select
         value: expr:context.groups.scope
         props:
             label: Groups search scope
             vocabulary: expr:context.scope_vocab
     - query:
-        factory: field:label:text
+        factory: field:label:error:text
         value: expr:context.groups.queryFilter
         props:
             label: Groups search query filter
     - object_classes:
-        factory: field:label:text
+        factory: field:label:error:text
         value: expr:u', '.join(context.groups.objectClasses)
         props:
             label: Object classes for Group creation
@@ -126,7 +126,7 @@ widgets:
                 key: Reserved key
                 value: LDAP attr name
     - propsheet_attrmap:
-        factory: field:label:dict
+        factory: field:label:error:dict
         value: expr:context.groups_propsheet_attrmap
         props:
             label: Group form attributes
