@@ -5,6 +5,31 @@
     <link rel="stylesheet" type="text/css" href="/++resource++yafowil.widget.dict/widget.css" />
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.js"></script>
     <script type="text/javascript" src="++resource++yafowil.widget.dict/widget.js"></script>
+    <style>
+.ldap-manage-form {
+    font-family: Verdana, Helvetica, sans-serif;
+    font-size: 10pt;
+    color: #333333;
+} 
+.ldap-manage-form .field {
+    margin-bottom: 0.5em;
+}
+.ldap-manage-form label {
+    width: 250px;
+    display: block;
+    clear: left;
+    float: left;
+    padding-right: 10px;
+    text-align: right;
+}
+.ldap-manage-form .error input {
+    background-color: #ffbbbb;
+}
+.ldap-manage-form .errormessage {
+    color: red;    
+    float: right;
+}
+    </style>
     <h2>Connection Test</h2>
     <p tal:define="state view/connection_test;
                            state_ok python:state[0];
