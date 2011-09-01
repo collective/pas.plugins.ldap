@@ -107,9 +107,6 @@ class BasePropertiesForm(BrowserView):
         password = fetch('server.password')
         if password is not UNSET:
             props.password = password
-        props.cache = fetch('server.cache')
-        props.memcached = fetch('server.memcached')
-        props.timeout = fetch('server.timeout')
         # XXX: later
         #props.start_tls = fetch('server.start_tls')
         #props.tls_cacertfile = fetch('server.tls_cacertfile')
@@ -118,6 +115,9 @@ class BasePropertiesForm(BrowserView):
         #props.tls_clkeyfile = fetch('server.tls_clkeyfile')
         #props.retry_max = fetch(at('server.retry_max')
         #props.retry_delay = fetch('server.retry_delay')
+        props.cache = fetch('cache.cache')
+        props.memcached = fetch('cache.memcached')
+        props.timeout = fetch('cache.timeout')
         users.baseDN = fetch('users.dn')
         map = odict()
         map.update(fetch('users.aliases_attrmap'))
@@ -172,12 +172,13 @@ class BasePropertiesForm(BrowserView):
                     
 DEFAULTS = {
     'server.uri'          : 'ldap://127.0.0.1:12345',
-    'server.user'         :  'cn=Manager,dc=my-domain,dc=com',
-    'server.password'     :  'secret',
-    'server.cache'        :  False,
-    'server.memcached'    :  '127.0.0.1:11211',
-    'server.timeout'      :  300,
-    'server.start_tls'    :  False,
+    'server.user'         : 'cn=Manager,dc=my-domain,dc=com',
+    'server.password'     : 'secret',
+    'server.start_tls'    : False,
+
+    'cache.cache'         : False,
+    'cache.memcached'     : '127.0.0.1:11211',
+    'cache.timeout'       : 300,
             
     'users.baseDN'        : 'ou=users300,dc=my-domain,dc=com',
     'users.attrmap'       : {"rdn": "uid", 
@@ -224,7 +225,16 @@ class LDAPProps(object):
     uri = propproxy('server.uri')
     user = propproxy('server.user')
     password = propproxy('server.password')
-    cache = propproxy('server.cache')
+    # XXX: Later
+    start_tls = propproxy('server.start_tls')
+    tls_cacertfile = ''
+    tls_cacertdir = ''
+    tls_clcertfile = ''
+    tls_clkeyfile = ''
+    retry_max = 3
+    retry_delay = 5    
+
+    cache = propproxy('cache.cache')
     
     def _memcached_get(self):
         recordProvider = queryUtility(ICacheSettingsRecordProvider)
@@ -237,18 +247,10 @@ class LDAPProps(object):
         if recordProvider is not None:
             record = recordProvider()
             record.value = value.decode('utf8')
-    memcached = property(_memcached_get, _memcached_set)
+    memcached = property(_memcached_get, _memcached_set)    
     
-    timeout = propproxy('server.timeout')
+    timeout = propproxy('cache.timeout')
     
-    # XXX: Later
-    start_tls = propproxy('server.start_tls')
-    tls_cacertfile = ''
-    tls_cacertdir = ''
-    tls_clcertfile = ''
-    tls_clkeyfile = ''
-    retry_max = 3
-    retry_delay = 5    
     
 
 class UsersConfig(object):

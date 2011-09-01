@@ -6,7 +6,7 @@ widgets:
 - server:
     factory: fieldset
     props:
-        legend: Server Settings
+        legend: LDAP Server Settings
     widgets:
     - uri:
         factory: field:label:error:text
@@ -26,27 +26,10 @@ widgets:
         props:
             label: LDAP Manager Password
             required: No password defined
-    - cache:
-        factory: field:label:error:checkbox
-        value: expr:context.props.cache
-        props:
-            label: Cache LDAP queries
-    - memcached:
-        factory: field:label:error:text
-        value: expr:context.props.memcached
-        props:
-            label: Memcached Server to use
-            description: Global settings, same for all plugins.
-    - timeout:
-        factory: field:label:error:number
-        value: expr:context.props.timeout
-        props:
-            label: Cache timeout in seconds
-            datatype: integer
 - users:
     factory: fieldset
     props:
-        legend: User Settings
+        legend: Users Settings
     widgets:
     - dn:
         factory: field:label:error:text
@@ -91,7 +74,7 @@ widgets:
 - groups:
     factory: fieldset
     props:
-        legend: Group Settings                               
+        legend: Groups Settings                               
     widgets:
     - dn:
         factory: field:label:error:text
@@ -133,6 +116,29 @@ widgets:
             head:
                 key: LDAP attr name
                 value: Form label
+- cache:
+    factory: fieldset
+    props:
+        legend: Cache Settings
+    widgets:
+    - cache:
+        factory: field:label:error:checkbox
+        value: expr:context.props.cache
+        props:
+            label: Cache LDAP queries
+    - memcached:
+        factory: field:label:error:text
+        value: expr:context.props.memcached
+        props:
+            label: Memcached Server to use
+            help: global - same server for all ldap plugins
+            field.class: memcached field
+    - timeout:
+        factory: field:label:error:number
+        value: expr:context.props.timeout
+        props:         
+            label: Cache timeout in seconds
+            datatype: integer                
 - save:
     factory: submit
     props:

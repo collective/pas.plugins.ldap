@@ -12,7 +12,10 @@
     color: #333333;
 } 
 .ldap-manage-form .field {
-    margin-bottom: 0.5em;
+    padding-bottom: 0.6em;
+}
+.ldap-manage-form .memcached.field {
+    padding-bottom: 1em;
 }
 .ldap-manage-form label {
     width: 250px;
@@ -21,6 +24,10 @@
     float: left;
     padding-right: 10px;
     text-align: right;
+}
+.ldap-manage-form label .help {
+    font-size: 8pt;
+    color: grey;
 }
 .ldap-manage-form .error input {
     background-color: #ffbbbb;
