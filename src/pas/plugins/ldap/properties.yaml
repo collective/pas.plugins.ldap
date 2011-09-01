@@ -70,10 +70,10 @@ widgets:
         factory: field:label:error:dict
         value: expr:context.users_propsheet_attrmap
         props:
-            label: User form attributes
+            label: User Property-Sheet Attributes
             head:
-                key: LDAP attr name
-                value: Form label
+                key: Name on Sheet
+                value: LDAP Attribute
 - groups:
     factory: fieldset
     props:
@@ -116,10 +116,10 @@ widgets:
         factory: field:label:error:dict
         value: expr:context.groups_propsheet_attrmap
         props:
-            label: Group form attributes
+            label: Group Property-Sheet Attributes
             head:
-                key: LDAP attr name
-                value: Form label
+                key: Name on Sheet
+                value: LDAP Attribute
 - cache:
     factory: fieldset
     props:
