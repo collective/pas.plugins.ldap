@@ -25,7 +25,6 @@ from yafowil.controller import Controller
 from yafowil.yaml import parse_from_YAML
 from zope.i18nmessageid import MessageFactory
 from persistent.dict import PersistentDict
-from zExceptions import Redirect
 from Products.Five import BrowserView
 from .interfaces import (
     ILDAPPlugin,
@@ -91,8 +90,8 @@ class BasePropertiesForm(BrowserView):
         controller = Controller(form, self.request)
         if not controller.next:
             return controller.rendered
-        raise Redirect(controller.next)    
-
+        self.request.RESPONSE.redirect(controller.next)
+        return u''
     
     def save(self, widget, data):
         props =  ILDAPProps(self.plugin)

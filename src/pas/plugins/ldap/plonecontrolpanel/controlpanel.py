@@ -26,7 +26,7 @@ class LDAPControlPanel(BasePropertiesForm):
         plugin = aclu.pasldap
         return plugin
     
-    def save(self):
-        BasePropertiesForm.save(self)
+    def save(self, widget, data):
+        BasePropertiesForm.save(self, widget, data)
         messages = IStatusMessage(self.request)
         messages.addStatusMessage(_(u'LDAP Settings saved.'), type="info")       
