@@ -179,7 +179,7 @@ DEFAULTS = {
     'cache.memcached'     : '127.0.0.1:11211',
     'cache.timeout'       : 300,
             
-    'users.baseDN'        : 'ou=users300,dc=my-domain,dc=com',
+    'users.baseDN'        : 'ou=users,dc=my-domain,dc=com',
     'users.attrmap'       : {"rdn": "uid", 
                              "id": "uid", 
                              "login": "uid",
@@ -193,7 +193,8 @@ DEFAULTS = {
     'groups.baseDN'       : 'ou=groups,dc=my-domain,dc=com',
     'groups.attrmap'      : {"rdn": "cn", 
                              "id": "cn", 
-                             "title": "o"},
+                             "title": "o",
+                             "description": "description"},
     'groups.scope'        : '1',
     'groups.queryFilter'  : '(objectClass=groupOfNames)',
     'groups.objectClasses': '["groupOfNames"]',

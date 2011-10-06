@@ -61,6 +61,7 @@ class LDAPPlugin(BasePlugin):
         plonepas_interfaces.capabilities.IGroupCapability,
         plonepas_interfaces.capabilities.IPasswordSetCapability,
         plonepas_interfaces.group.IGroupManagement,
+        plonepas_interfaces.group.IGroupIntrospection,
         plonepas_interfaces.plugins.IMutablePropertiesPlugin,
         plonepas_interfaces.plugins.IUserManagement,
         )
@@ -219,16 +220,21 @@ class LDAPPlugin(BasePlugin):
         o Insufficiently-specified criteria may have catastrophic
           scaling issues for some implementations.
         """
-        if id:
-            kw['id'] = id
         groups = self.groups
         if not groups:
             logger.warn(self._v_ldaperror)
-            return []
-        try:
-            matches = groups.search(criteria=kw, exact_match=exact_match)
-        except ValueError:
             return ()
+        if id:
+            kw['id'] = id
+        if not kw: # show all
+            matches = groups.ids
+        else:
+            try:
+                matches = groups.search(criteria=kw, exact_match=exact_match)
+            except ValueError:
+                return ()
+        if sort_by == 'id':
+            matches = sorted(matches)
         pluginid = self.getId()
         ret = [
             dict(id=id.encode('ascii', 'replace'), pluginid=pluginid)
@@ -560,7 +566,7 @@ class LDAPPlugin(BasePlugin):
 
     def getGroupIds(self):
         """
-        Returns a list of the available groups
+        Returns a list of the available groups (ids)
         """
         return self.groups.ids
 
