@@ -183,9 +183,26 @@ getGroupById returns the portal_groupdata-ish object for a group corresponding
 to this id::
 
     >>> ldap.getGroupById('group0')
-
+    <PloneGroup u'group0'>
     
+list all groups ids::
 
+    >>> ldap.getGroupIds()
+    [u'group0', u'group1', u'group2', u'group3', u'group4', u'group5', 
+    u'group6', u'group7', u'group8', u'group9']
+    
+list all groups::
+
+    >>> ldap.getGroups()
+    [<PloneGroup u'group0'>, <PloneGroup u'group1'>, <PloneGroup u'group2'>,     
+    <PloneGroup u'group3'>, <PloneGroup u'group4'>, <PloneGroup u'group5'>, 
+    <PloneGroup u'group6'>, <PloneGroup u'group7'>, <PloneGroup u'group8'>, 
+    <PloneGroup u'group9'>]
+
+list all members of a group::
+    
+    >>> ldap.getGroupMembers('group3')
+    (u'uid1', u'uid2', u'uid3')
 
 IPasswordSetCapability
 ----------------------

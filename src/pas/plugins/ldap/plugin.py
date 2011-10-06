@@ -318,7 +318,7 @@ class LDAPPlugin(BasePlugin):
             if not isinstance(login, basestring):
                 # XXX TODO
                 raise NotImplementedError('sequence is not supported yet.')
-            kw['login'] = id
+            kw['login'] = login
         if id:
             if not isinstance(id, basestring):
                 # XXX TODO
@@ -425,9 +425,7 @@ class LDAPPlugin(BasePlugin):
           present
         """
         ugid = user_or_group.getId()
-        if self.enumerateUsers(id=ugid):
-            return LDAPUserPropertySheet(user_or_group, self)
-        if self.enumerateGroups(id=ugid):
+        if self.enumerateUsers(id=ugid) or self.enumerateGroups(id=ugid):
             return LDAPUserPropertySheet(user_or_group, self)
         return {}
 
@@ -530,23 +528,25 @@ class LDAPPlugin(BasePlugin):
         """
         matches = self.groups.search(criteria=dict(id=group_id), 
                                      exact_match=True)
-        groupid, groupattrs = matches[0]
-        group = PloneGroup(group_id, name).__of__(self)
-        propfinders = plugins.listPlugins(IPropertiesPlugin)
+        ugmgroup = self.groups[matches[0]]
+        title = ugmgroup.attrs.get('title', None)
+        group = PloneGroup(ugmgroup.id, title).__of__(self)
+        pas = self._getPAS()
+        plugins = pas.plugins 
         # add properties
-        for propfinder_id, propfinder in propfinders:
+        for propfinder_id, propfinder in \
+                          plugins.listPlugins(pas_interfaces.IPropertiesPlugin):
             data = propfinder.getPropertiesForUser(group, None)
             if not data:
                 continue
             group.addPropertysheet(propfinder_id, data)
         # add subgroups
-        pas = self._getPAS() 
-        groups = pas.getGroupsForPrincipal(group, None, 
-                                           plugins=pas.plugins)
-        group._addGroups(groups)
+        group._addGroups(pas._getGroupsForPrincipal(group, None, 
+                                                    plugins=plugins))
         # add roles
-        for rolemaker_id, rolemaker in rolemakers:
-            roles = rolemaker.getRolesForPrincipal(group, request)
+        for rolemaker_id, rolemaker in \
+                               plugins.listPlugins(pas_interfaces.IRolesPlugin):
+            roles = rolemaker.getRolesForPrincipal(group, None)
             if not roles:
                 continue
             group._addRoles(roles)        
@@ -562,12 +562,13 @@ class LDAPPlugin(BasePlugin):
         """
         Returns a list of the available groups
         """
-        groups = self.groups.ids
+        return self.groups.ids
 
     def getGroupMembers(self, group_id):
         """
         return the members of the given group
         """    
+        return tuple(self.groups[group_id].member_ids)        
 
     ###
     # plonepas_interfaces.capabilities.IPasswordSetCapability
