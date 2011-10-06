@@ -22,6 +22,7 @@ from Products.PluggableAuthService.permissions import (
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
 from Products.PlonePAS import interfaces as plonepas_interfaces
+from Products.PlonePAS.plugins.group import PloneGroup
 from .sheet import LDAPUserPropertySheet
 from .interfaces import ILDAPPlugin 
 
@@ -312,11 +313,17 @@ class LDAPPlugin(BasePlugin):
         o Insufficiently-specified criteria may have catastrophic
           scaling issues for some implementations.
         """
-        # TODO: sort_by in node.ext.ldap
-        if id:
-            kw['id'] = id
+        # TODO: sort_by in node.ext.ldap  
         if login:
-            kw['login'] = login
+            if not isinstance(login, basestring):
+                # XXX TODO
+                raise NotImplementedError('sequence is not supported yet.')
+            kw['login'] = id
+        if id:
+            if not isinstance(id, basestring):
+                # XXX TODO
+                raise NotImplementedError('sequence is not supported yet.')
+            kw['id'] = id
         users = self.users
         if not users:
             return tuple()
@@ -327,7 +334,7 @@ class LDAPPlugin(BasePlugin):
                 exact_match=exact_match
             )
         except ValueError:
-            return ()
+            return tuple()
         pluginid = self.getId()
         ret = [dict(
             id=id.encode('ascii', 'replace'),
@@ -511,6 +518,56 @@ class LDAPPlugin(BasePlugin):
         """
         # XXX
         return False
+    
+    ###
+    # plonepas_interfaces.capabilities.IGroupIntrospection
+    # (plone ui specific)
+    
+    def getGroupById(self, group_id):
+        """
+        Returns the portal_groupdata-ish object for a group
+        corresponding to this id.
+        """
+        matches = self.groups.search(criteria=dict(id=group_id), 
+                                     exact_match=True)
+        groupid, groupattrs = matches[0]
+        group = PloneGroup(group_id, name).__of__(self)
+        propfinders = plugins.listPlugins(IPropertiesPlugin)
+        # add properties
+        for propfinder_id, propfinder in propfinders:
+            data = propfinder.getPropertiesForUser(group, None)
+            if not data:
+                continue
+            group.addPropertysheet(propfinder_id, data)
+        # add subgroups
+        pas = self._getPAS() 
+        groups = pas.getGroupsForPrincipal(group, None, 
+                                           plugins=pas.plugins)
+        group._addGroups(groups)
+        # add roles
+        for rolemaker_id, rolemaker in rolemakers:
+            roles = rolemaker.getRolesForPrincipal(group, request)
+            if not roles:
+                continue
+            group._addRoles(roles)        
+        return group
+
+    def getGroups(self):
+        """
+        Returns an iteration of the available groups
+        """
+        return map(self.getGroupById, self.getGroupIds())
+
+    def getGroupIds(self):
+        """
+        Returns a list of the available groups
+        """
+        groups = self.groups.ids
+
+    def getGroupMembers(self, group_id):
+        """
+        return the members of the given group
+        """    
 
     ###
     # plonepas_interfaces.capabilities.IPasswordSetCapability

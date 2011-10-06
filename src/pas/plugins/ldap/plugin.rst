@@ -142,6 +142,9 @@ sort_by=None, max_results=None, **kw)``
 
     >>> len(ldap.enumerateUsers(id='uid*', max_results=3))
     3
+
+    >>> ldap.enumerateUsers(login='cn1')
+    [{'pluginid': 'pasldap', 'login': u'cn1', 'id': 'uid1'}]
     
     
 IDeleteCapability
@@ -172,6 +175,16 @@ Same for deletion of groups::
 
     >>> ldap.allowGroupRemove('uid0', 'group0')
     False
+    
+IGroupIntrospection
+-------------------
+
+getGroupById returns the portal_groupdata-ish object for a group corresponding
+to this id::
+
+    >>> ldap.getGroupById('group0')
+
+    
 
 
 IPasswordSetCapability
