@@ -184,6 +184,9 @@ to this id::
 
     >>> ldap.getGroupById('group0')
     <PloneGroup u'group0'>
+
+    >>> print ldap.getGroupById('non-existent')
+    None
     
 list all groups ids::
 

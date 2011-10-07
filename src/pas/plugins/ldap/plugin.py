@@ -530,11 +530,12 @@ class LDAPPlugin(BasePlugin):
     def getGroupById(self, group_id):
         """
         Returns the portal_groupdata-ish object for a group
-        corresponding to this id.
+        corresponding to this id. None if group does not exist here!
         """
-        matches = self.groups.search(criteria=dict(id=group_id), 
-                                     exact_match=True)
-        ugmgroup = self.groups[matches[0]]
+        groups = self.groups
+        if not groups or group_id not in groups.keys():
+            return None
+        ugmgroup = self.groups[group_id]
         title = ugmgroup.attrs.get('title', None)
         group = PloneGroup(ugmgroup.id, title).__of__(self)
         pas = self._getPAS()
