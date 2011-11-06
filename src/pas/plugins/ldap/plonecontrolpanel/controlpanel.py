@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-from zope.component import (
-    getUtility,
-)
+from zope.component import getUtility
 from zope.i18nmessageid import MessageFactory
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.statusmessages.interfaces import IStatusMessage

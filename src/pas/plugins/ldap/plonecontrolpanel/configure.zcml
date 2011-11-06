@@ -22,6 +22,38 @@
     permission="cmf.ManagePortal"
   />
   
+  <browser:page
+    name="plone_ldapinspector"
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    class=".inspector.LDAPInspector"
+    template="inspector.pt"
+    permission="cmf.ManagePortal"
+  />
+  
+  <browser:page
+    name="plone_ldapusers"
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    class=".inspector.LDAPInspector"
+    attribute="users_children"
+    permission="cmf.ManagePortal"
+  />
+  
+  <browser:page
+    name="plone_ldapgroups"
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    class=".inspector.LDAPInspector"
+    attribute="groups_children"
+    permission="cmf.ManagePortal"
+  />
+  
+  <browser:page
+    name="plone_ldapnodeattributes"
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    class=".inspector.LDAPInspector"
+    attribute="node_attributes"
+    permission="cmf.ManagePortal"
+  />
+  
   <adapter
     factory=".exportimport.LDAPPluginXMLAdapter"
     for="..interfaces.ILDAPPlugin

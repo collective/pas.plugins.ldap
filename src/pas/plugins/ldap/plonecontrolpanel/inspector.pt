@@ -1,0 +1,173 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/prefs_main_template/macros/master"
+      i18n:domain="plone">
+<body>
+
+<metal:main metal:fill-slot="prefs_configlet_main">
+  <h1 i18n:translate="">LDAP Child Inspector</h1>
+  
+  <label i18n:translate="">Select search base</label>
+  <br />
+  <select name="ldap_base_container">
+    <option>-</option>
+    <option>Users</option>
+    <option>Groups</option>
+  </select>
+  
+  <div>
+    <ul id="ldap_child_listing">
+    </ul>
+  </div>
+  
+  <style>
+    #ldap_child_listing {
+        margin-top:1em;
+        margin-left:0 !important;
+    }
+    #ldap_child_listing li {
+        list-style-type:none;
+    }
+    #ldap_child_listing li a {
+        cursor:pointer;
+    }
+    #ldap_child_listing li a:hover {
+        text-decoration:underline;
+    }
+    #ldap_child_listing li a.current {
+        text-decoration:underline;
+        font-weight:bold;
+    }
+    .ldap_node_attributes {
+        border:#ccc 1px solid;
+        border-spacing:0;
+        border-collapse:collapse;
+    }
+    .ldap_node_attributes td {
+        vertical-align:top;
+        padding:0.3em;
+        border-bottom:#ccc 1px solid;
+    }
+    .ldap_node_attributes td.label_col {
+        text-align:right;
+        border-right:#ccc 1px solid;
+    }
+  </style>
+  
+  <script type="text/javascript">
+    (function($) {
+        $("select[name=ldap_base_container]").bind('change', function(evt) {
+            evt.preventDefault();
+            var val = $(this).attr('value');
+            if (val == 'Users') {
+                ldap_inspector.query_users();
+            } else if (val == 'Groups') {
+                ldap_inspector.query_groups();
+            }
+        });
+        
+        ldap_inspector = {
+            
+            listing: function() {
+                return $('#ldap_child_listing');
+            },
+            
+            query_users: function() {
+                ldap_inspector.listing().data('base', 'users');
+                ldap_inspector.query_children('@@plone_ldapusers');
+            },
+            
+            query_groups: function() {
+                ldap_inspector.listing().data('base', 'groups');
+                ldap_inspector.query_children('@@plone_ldapgroups');
+            },
+            
+            query_children: function(view) {
+                $.ajax({
+                    url: view,
+                    dataType: 'json',
+                    success: ldap_inspector.list_children,
+                    cache: false
+                });
+            },
+            
+            list_children: function(data) {
+                var listing = ldap_inspector.listing();
+                listing.empty();
+                $(data).each(function() {
+                    var li = $(document.createElement('li'));
+                    li.attr('class', 'ldap_child');
+                    var a = $(document.createElement('a'));
+                    a.text(this.rdn);
+                    li.append(a);
+                    listing.append(li);
+                });
+                $('li a', listing).bind('click',
+                                        ldap_inspector.node_attributes);
+            },
+            
+            node_attributes: function(evt) {
+                evt.preventDefault();
+                var listing = ldap_inspector.listing();
+                $('li a', listing).removeClass('current');
+                $('li table', listing).remove();
+                var elem = $(this);
+                elem.addClass('current');
+                var rdn = elem.text();
+                $.ajax({
+                    url: '@@plone_ldapnodeattributes',
+                    data: {
+                        rdn: rdn,
+                        base: ldap_inspector.listing().data('base')
+                    },
+                    dataType: 'json',
+                    success: ldap_inspector.display_node_attributes,
+                    cache: false
+                });
+            },
+            
+            display_node_attributes: function(data) {
+                var listing = ldap_inspector.listing();
+                var elem = $('li a.current', listing).parent();
+                var table = $(document.createElement('table'));
+                table.attr('class', 'ldap_node_attributes')
+                var chk_arr = function(val) {
+                    var str = Object.prototype.toString.call(val)
+                    return str === '[object Array]';
+                };
+                var key, val, m_val, row, key_td, val_td, key_wrap;
+                for (key in data) {
+                    row = $(document.createElement('tr'));
+                    table.append(row);
+                    key_td = $(document.createElement('td'));
+                    key_td.attr('class', 'label_col');
+                    row.append(key_td);
+                    key_wrap = $(document.createElement('strong'));
+                    key_td.append(key_wrap);
+                    key_wrap.text(key);
+                    val_td = $(document.createElement('td'));
+                    row.append(val_td);
+                    val = data[key];
+                    if (chk_arr(val)) {
+                        for (var idx in val) {
+                            m_val = $(document.createElement('div'));
+                            m_val.text(val[idx]);
+                            val_td.append(m_val);
+                        }
+                    } else {
+                        val_td.text(val);
+                    }
+                }
+                elem.append(table);
+            }
+        }
+    })(jQuery);
+  </script>
+  
+</metal:main>
+
+</body>
+</html>
