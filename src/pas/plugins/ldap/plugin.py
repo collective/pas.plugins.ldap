@@ -574,7 +574,7 @@ class LDAPPlugin(BasePlugin):
     def getGroupMembers(self, group_id):
         """
         return the members of the given group
-        """    
+        """
         return tuple(self.groups[group_id].member_ids)        
 
     ###

@@ -106,6 +106,7 @@ class BasePropertiesForm(BrowserView):
         password = fetch('server.password')
         if password is not UNSET:
             props.password = password
+        props.escape_queries = fetch('server.escape_queries')
         # XXX: later
         #props.start_tls = fetch('server.start_tls')
         #props.tls_cacertfile = fetch('server.tls_cacertfile')
@@ -130,6 +131,7 @@ class BasePropertiesForm(BrowserView):
         objectClasses = \
             [v.strip() for v in objectClasses.split(',') if v.strip()]
         users.objectClasses = objectClasses
+        users.memberOfSupport = fetch('users.memberOfSupport')
         groups = self.groups
         groups.baseDN = fetch('groups.dn')
         map = odict()
@@ -144,6 +146,7 @@ class BasePropertiesForm(BrowserView):
         objectClasses = \
             [v.strip() for v in objectClasses.split(',') if v.strip()]
         groups.objectClasses = objectClasses
+        groups.memberOfSupport = fetch('groups.memberOfSupport')
         
     def connection_test(self):
         props =  ILDAPProps(self.plugin)
@@ -170,34 +173,37 @@ class BasePropertiesForm(BrowserView):
         return True, 'Connection, users- and groups-access tested successfully.'         
                     
 DEFAULTS = {
-    'server.uri'          : 'ldap://127.0.0.1:12345',
-    'server.user'         : 'cn=Manager,dc=my-domain,dc=com',
-    'server.password'     : 'secret',
-    'server.start_tls'    : False,
+    'server.uri'              : 'ldap://127.0.0.1:12345',
+    'server.user'             : 'cn=Manager,dc=my-domain,dc=com',
+    'server.password'         : 'secret',
+    'server.escape_queries'   : False,
+    'server.start_tls'        : False,
 
-    'cache.cache'         : False,
-    'cache.memcached'     : '127.0.0.1:11211',
-    'cache.timeout'       : 300,
-            
-    'users.baseDN'        : 'ou=users,dc=my-domain,dc=com',
-    'users.attrmap'       : {"rdn": "uid", 
-                             "id": "uid", 
-                             "login": "uid",
-                             "fullname": "cn", 
-                             "email": "mail",
-                             'location': 'l'},
-    'users.scope'         : '1',
-    'users.queryFilter'   : '(objectClass=inetOrgPerson)',
-    'users.objectClasses' : '["inetOrgPerson"]',
-    
-    'groups.baseDN'       : 'ou=groups,dc=my-domain,dc=com',
-    'groups.attrmap'      : {"rdn": "cn", 
-                             "id": "cn", 
-                             "title": "o",
-                             "description": "description"},
-    'groups.scope'        : '1',
-    'groups.queryFilter'  : '(objectClass=groupOfNames)',
-    'groups.objectClasses': '["groupOfNames"]',
+    'cache.cache'             : False,
+    'cache.memcached'         : '127.0.0.1:11211',
+    'cache.timeout'           : 300,
+
+    'users.baseDN'            : 'ou=users,dc=my-domain,dc=com',
+    'users.attrmap'           : {"rdn": "uid", 
+                                 "id": "uid", 
+                                 "login": "uid",
+                                 "fullname": "cn", 
+                                 "email": "mail",
+                                 'location': 'l'},
+    'users.scope'             : '1',
+    'users.queryFilter'       : '(objectClass=inetOrgPerson)',
+    'users.objectClasses'     : '["inetOrgPerson"]',
+    'users.memberOfSupport'   : False,
+
+    'groups.baseDN'           : 'ou=groups,dc=my-domain,dc=com',
+    'groups.attrmap'          : {"rdn": "cn", 
+                                 "id": "cn", 
+                                 "title": "o",
+                                 "description": "description"},
+    'groups.scope'            : '1',
+    'groups.queryFilter'      : '(objectClass=groupOfNames)',
+    'groups.objectClasses'    : '["groupOfNames"]',
+    'groups.memberOfSupport'  : False,
 }
 
 def propproxy(ckey, usejson=False):
@@ -225,6 +231,8 @@ class LDAPProps(object):
     uri = propproxy('server.uri')
     user = propproxy('server.user')
     password = propproxy('server.password')
+    escape_queries = propproxy('server.escape_queries')
+    
     # XXX: Later
     start_tls = propproxy('server.start_tls')
     tls_cacertfile = ''
@@ -232,7 +240,7 @@ class LDAPProps(object):
     tls_clcertfile = ''
     tls_clkeyfile = ''
     retry_max = 3
-    retry_delay = 5    
+    retry_delay = 5
 
     cache = propproxy('cache.cache')
     
@@ -268,6 +276,7 @@ class UsersConfig(object):
     scope = propproxy('users.scope', True)
     queryFilter = propproxy('users.queryFilter') 
     objectClasses = propproxy('users.objectClasses', True)
+    memberOfSupport = propproxy('users.memberOfSupport', False)
 
     
 class GroupsConfig(object):
@@ -285,3 +294,4 @@ class GroupsConfig(object):
     scope = propproxy('groups.scope', True)
     queryFilter = propproxy('groups.queryFilter') 
     objectClasses = propproxy('groups.objectClasses', True)
+    memberOfSupport = propproxy('groups.memberOfSupport', False)
