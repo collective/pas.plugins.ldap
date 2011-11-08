@@ -10,6 +10,7 @@ from Products.GenericSetup.interfaces import IBody
 from Products.GenericSetup.interfaces import IFilesystemExporter
 from Products.GenericSetup.interfaces import IFilesystemImporter
 
+
 def _get_import_export_handler(context):
     aclu = context.getSite().acl_users
     logger = context.getLogger('pas.plugins.ldap')    
@@ -21,7 +22,7 @@ def _get_import_export_handler(context):
         handler.filename = '%s%s' % (handler.name, handler.suffix)
         return handler
     logger.warning("Can't find handler for ldap settings")
-    
+
 
 def import_settings(context):
     logger = context.getLogger('pas.plugins.ldap')    
@@ -33,7 +34,8 @@ def import_settings(context):
         return
     handler.body = body
     logger.info("Imported ldap settings.")    
-    
+
+
 def export_settings(context):
     handler = _get_import_export_handler(context)
     if not handler: 
@@ -59,7 +61,6 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
         return node
                 
     def _importNode(self, node):
-        #node = self._getObjectNode('object')        
         data = self._getDataByType(node)
         if not data:
             self._logger.error('data is empty')
@@ -69,28 +70,28 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
             
     def _setDataAndType(self, data, node):
         if isinstance(data, (tuple, list)):
-            node.setAttribute('type', 'list')                
-            for value in data:                    
+            node.setAttribute('type', 'list')
+            for value in data:
                 element = self._doc.createElement('element')
                 self._setDataAndType(value, element)
                 node.appendChild(element)
-            return 
+            return
         if isinstance(data, (dict, OOBTree)):
-            node.setAttribute('type', 'dict')        
-            for key in sorted(data.keys()):                    
+            node.setAttribute('type', 'dict')
+            for key in sorted(data.keys()):
                 element = self._doc.createElement('element')
-                element.setAttribute('key', key)                
+                element.setAttribute('key', key)
                 self._setDataAndType(data[key], element)
                 node.appendChild(element)
             return
         if type(data) is types.BooleanType:
-            node.setAttribute('type', 'bool')                
+            node.setAttribute('type', 'bool')
             data = str(data)
         elif type(data) is types.IntType:
-            node.setAttribute('type', 'int')                                    
+            node.setAttribute('type', 'int')
             data = str(data)
         elif type(data) is types.FloatType:
-            node.setAttribute('type', 'float')                                    
+            node.setAttribute('type', 'float')
             data = str(data)
         elif type(data) in types.StringTypes:
             node.setAttribute('type', 'string')
@@ -107,7 +108,7 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
             data = list()
             for element in node.childNodes:
                 if element.nodeName != 'element':
-                    continue    
+                    continue
                 data.append(self._getDataByType(element))
             return data
         if vtype == 'dict':
@@ -115,16 +116,16 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
             for element in node.childNodes:
                 if element.nodeName != 'element':
                     continue 
-                key =  element.getAttribute('key')  
+                key = element.getAttribute('key')  
                 if key is None:
                     self._logger.warning('No key found for dict on import, '\
                                          'skipped.')
                     continue
                 data.update({key: self._getDataByType(element)})
-                return data
+            return data
         data = self._getNodeText(node)
         if vtype == 'bool':
-            data = boolean(data)
+            data = bool(data)
         elif vtype == 'int':
             data = int(data)
         elif vtype == 'float':

@@ -276,7 +276,7 @@ class UsersConfig(object):
     scope = propproxy('users.scope', True)
     queryFilter = propproxy('users.queryFilter') 
     objectClasses = propproxy('users.objectClasses', True)
-    memberOfSupport = propproxy('users.memberOfSupport', False)
+    memberOfSupport = propproxy('users.memberOfSupport')
 
     
 class GroupsConfig(object):
@@ -294,4 +294,4 @@ class GroupsConfig(object):
     scope = propproxy('groups.scope', True)
     queryFilter = propproxy('groups.queryFilter') 
     objectClasses = propproxy('groups.objectClasses', True)
-    memberOfSupport = propproxy('groups.memberOfSupport', False)
+    memberOfSupport = propproxy('groups.memberOfSupport')
