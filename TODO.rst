@@ -7,8 +7,8 @@ TODOS
 Milestone 1.0
 -------------
 
-- make it work with read only groups and users, only properties can me 
-  modified.
+- make it work with read only groups and users, only properties 
+  writeable.
 
 Milestone 1.1
 -------------

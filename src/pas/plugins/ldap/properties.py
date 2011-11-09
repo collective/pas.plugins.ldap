@@ -30,6 +30,7 @@ from .interfaces import (
     ILDAPPlugin,
     ICacheSettingsRecordProvider,
 )
+from .defaults import DEFAULTS
 
 logger = logging.getLogger('pas.plugins.ldap')
 
@@ -170,41 +171,7 @@ class BasePropertiesForm(BrowserView):
         except Exception, e:
             logger.exception('Non-LDAP error while connection test!')
             return False, _('Other; ') + str(e)
-        return True, 'Connection, users- and groups-access tested successfully.'         
-                    
-DEFAULTS = {
-    'server.uri'              : 'ldap://127.0.0.1:12345',
-    'server.user'             : 'cn=Manager,dc=my-domain,dc=com',
-    'server.password'         : 'secret',
-    'server.escape_queries'   : False,
-    'server.start_tls'        : False,
-
-    'cache.cache'             : False,
-    'cache.memcached'         : '127.0.0.1:11211',
-    'cache.timeout'           : 300,
-
-    'users.baseDN'            : 'ou=users,dc=my-domain,dc=com',
-    'users.attrmap'           : {"rdn": "uid", 
-                                 "id": "uid", 
-                                 "login": "uid",
-                                 "fullname": "cn", 
-                                 "email": "mail",
-                                 'location': 'l'},
-    'users.scope'             : '1',
-    'users.queryFilter'       : '(objectClass=inetOrgPerson)',
-    'users.objectClasses'     : '["inetOrgPerson"]',
-    'users.memberOfSupport'   : False,
-
-    'groups.baseDN'           : 'ou=groups,dc=my-domain,dc=com',
-    'groups.attrmap'          : {"rdn": "cn", 
-                                 "id": "cn", 
-                                 "title": "o",
-                                 "description": "description"},
-    'groups.scope'            : '1',
-    'groups.queryFilter'      : '(objectClass=groupOfNames)',
-    'groups.objectClasses'    : '["groupOfNames"]',
-    'groups.memberOfSupport'  : False,
-}
+        return True, 'Connection, users- and groups-access tested successfully.'                             
 
 def propproxy(ckey, usejson=False):
     def _getter(context):
@@ -216,7 +183,9 @@ def propproxy(ckey, usejson=False):
         if usejson:
             value = json.dumps(value)
         context.plugin.settings[ckey] = value
-        transaction.commit() # XXX: needed here, why? otherwise no persistence        
+        transaction.commit() # XXX: needed here, why? otherwise no persistence
+                             # not used if raise Redirect wont happen, so save 
+                             # to remove afaict        
     return property(_getter, _setter)
 
 
