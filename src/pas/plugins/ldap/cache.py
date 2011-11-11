@@ -9,8 +9,8 @@ def cacheProviderFactory():
     recordProvider = queryUtility(ICacheSettingsRecordProvider)
     if not recordProvider:
         return NullCache()
-    record = recordProvider() or ''
-    servers = record.value.split()
+    value = recordProvider().value or ''
+    servers = value.split()
     if servers:
         return Memcached(servers)
     return NullCache()
