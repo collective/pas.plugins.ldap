@@ -8,3 +8,6 @@
 /*eggs/
 .*.cfg
 /coverage/
+/.project
+/.pydevproject
+/.settings/
