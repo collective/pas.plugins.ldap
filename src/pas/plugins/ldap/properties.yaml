@@ -57,10 +57,13 @@ widgets:
         props:
             label: Users search query filter
     - object_classes:
-        factory: field:label:error:text
-        value: "expr:u', '.join(context.users.objectClasses)"
+        factory: field:error:array
+        value: "expr:not isinstance(context.users.objectClasses, basestring) and context.users.objectClasses or [context.users.objectClasses]"
         props:
             label: Object classes for User creation
+        widgets: 
+            - oc:
+                factory: field:text                         
     - memberOfSupport:
         factory: field:label:checkbox
         value: expr:context.users.memberOfSupport
@@ -108,10 +111,13 @@ widgets:
         props:
             label: Groups search query filter
     - object_classes:
-        factory: field:label:error:text
-        value: expr:u', '.join(context.groups.objectClasses)
+        factory: field:error:array
+        value: "expr:not isinstance(context.groups.objectClasses, basestring) and context.groups.objectClasses or [context.groups.objectClasses]"
         props:
             label: Object classes for Group creation
+        widgets: 
+            - oc:
+                factory: field:text                         
     - memberOfSupport:
         factory: field:label:checkbox
         value: expr:context.groups.memberOfSupport

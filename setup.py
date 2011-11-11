@@ -35,7 +35,8 @@ setup(name='pas.plugins.ldap',
           'node.ext.ldap',          
           'yafowil.zope2',
           'yafowil.widget.dict',
-          'yafowil.yaml',              
+          'yafowil.widget.array',
+          'yafowil.yaml',
       ],
       extras_require={
           'test': [

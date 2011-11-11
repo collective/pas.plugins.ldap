@@ -19,6 +19,7 @@ from zope.component import (
 )
 import transaction
 import yafowil.zope2
+import yafowil.widget.array
 from yafowil.base import UNSET
 from yafowil.controller import Controller
 from yafowil.yaml import parse_from_YAML
@@ -126,10 +127,10 @@ class BasePropertiesForm(BrowserView):
             map.update(users_propsheet_attrmap)
         users.attrmap = map
         users.scope = fetch('users.scope')
+        if users.scope is not UNSET:
+            users.scope = int(users.scope.strip('"'))
         users.queryFilter = fetch('users.query')
         objectClasses = fetch('users.object_classes')
-        objectClasses = \
-            [v.strip() for v in objectClasses.split(',') if v.strip()]
         users.objectClasses = objectClasses
         users.memberOfSupport = fetch('users.memberOfSupport')
         groups = self.groups
@@ -141,10 +142,10 @@ class BasePropertiesForm(BrowserView):
             map.update(groups_propsheet_attrmap)
         groups.attrmap = map
         groups.scope = fetch('groups.scope')
+        if groups.scope is not UNSET:
+            groups.scope = int(groups.scope.strip('"'))
         groups.queryFilter = fetch('groups.query')
         objectClasses = fetch('groups.object_classes')
-        objectClasses = \
-            [v.strip() for v in objectClasses.split(',') if v.strip()]
         groups.objectClasses = objectClasses
         groups.memberOfSupport = fetch('groups.memberOfSupport')
         

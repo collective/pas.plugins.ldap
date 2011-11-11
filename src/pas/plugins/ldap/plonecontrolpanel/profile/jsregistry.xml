@@ -10,5 +10,14 @@
    id="++resource++yafowil.widget.dict/widget.js"
    inline="False"
  />
+ <javascript
+   cacheable="True"
+   compression="safe"
+   cookable="True"
+   enabled="True"
+   expression="not:portal/portal_membership/isAnonymousUser"
+   id="++resource++yafowil.widget.array/widget.js"
+   inline="False"
+ />
  
 </object>

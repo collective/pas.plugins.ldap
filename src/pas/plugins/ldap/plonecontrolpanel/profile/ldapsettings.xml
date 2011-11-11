@@ -12,10 +12,12 @@
  <element key="groups.baseDN"
     type="string">ou=groups,dc=my-domain,dc=com</element>
  <element key="groups.memberOfSupport" type="bool">False</element>
- <element key="groups.objectClasses" type="string">["groupOfNames"]</element>
+ <element key="groups.objectClasses" type="list">
+   <element type="string">groupOfNames</element>
+ </element>
  <element key="groups.queryFilter"
     type="string">(objectClass=groupOfNames)</element>
- <element key="groups.scope" type="string">"1"</element>
+ <element key="groups.scope" type="int">1</element>
  <element key="server.escape_queries" type="bool">False</element>
  <element key="server.uri" type="string">ldap://127.0.0.1:12345</element>
  <element key="server.user"
@@ -31,8 +33,10 @@
  <element key="users.baseDN"
     type="string">ou=users,dc=my-domain,dc=com</element>
  <element key="users.memberOfSupport" type="bool">False</element>
- <element key="users.objectClasses" type="string">["inetOrgPerson"]</element>
+ <element key="users.objectClasses" type="list">
+   <element type="string">inetOrgPerson</element>
+ </element>
  <element key="users.queryFilter"
     type="string">(objectClass=inetOrgPerson)</element>
- <element key="users.scope" type="string">"1"</element>
+ <element key="users.scope" type="int">1</element>
 </object>

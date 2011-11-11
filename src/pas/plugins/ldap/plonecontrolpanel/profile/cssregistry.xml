@@ -13,5 +13,17 @@
     enabled="1"
     expression="not:portal/portal_membership/isAnonymousUser"
   />
+  <stylesheet
+    title=""
+    id="++resource++yafowil.widget.array/widget.css"
+    media="screen"
+    rel="stylesheet"
+    rendering="import"
+    cacheable="True"
+    compression="safe"
+    cookable="True"
+    enabled="1"
+    expression="not:portal/portal_membership/isAnonymousUser"
+  />
 
 </object>
