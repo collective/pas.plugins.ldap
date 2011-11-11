@@ -11,9 +11,7 @@ PropProxy
     ...     def __init__(self, plugin):
     ...         self.plugin = plugin
     ...     someprop = propproxy('ldapprops.prop')
-    ...     somejson = propproxy('ldapprops.jprop', True)
     >>> DEFAULTS['ldapprops.prop'] = 'default'
-    >>> DEFAULTS['ldapprops.jprop'] = '[1, 2]'
 
     >>> plugin = SomePlugin()
     >>> adapter = SomeAdapter(plugin)
@@ -25,12 +23,6 @@ PropProxy
     >>> adapter.someprop 
     'othervalue'
     
-    >>> adapter.somejson 
-    [1, 2]
-    
-    >>> adapter.somejson = ['foo', 'bar'] 
-    >>> adapter.somejson 
-    [u'foo', u'bar']
     
 Properties
 ==========

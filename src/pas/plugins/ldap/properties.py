@@ -1,4 +1,3 @@
-import json
 import ldap
 import logging
 from odict import odict
@@ -173,19 +172,12 @@ class BasePropertiesForm(BrowserView):
             return False, _('Other; ') + str(e)
         return True, 'Connection, users- and groups-access tested successfully.'                             
 
-def propproxy(ckey, usejson=False):
+def propproxy(ckey):
     def _getter(context):
         value = context.plugin.settings.get(ckey, DEFAULTS[ckey])
-        if usejson:
-            value = json.loads(value)
         return value
     def _setter(context, value):
-        if usejson:
-            value = json.dumps(value)
         context.plugin.settings[ckey] = value
-        transaction.commit() # XXX: needed here, why? otherwise no persistence
-                             # not used if raise Redirect wont happen, so save 
-                             # to remove afaict        
     return property(_getter, _setter)
 
 
@@ -224,6 +216,8 @@ class LDAPProps(object):
         if recordProvider is not None:
             record = recordProvider()
             record.value = value.decode('utf8')
+        else:
+            return u'feature not available'
     memcached = property(_memcached_get, _memcached_set)    
     
     timeout = propproxy('cache.timeout')
@@ -242,9 +236,9 @@ class UsersConfig(object):
 
     baseDN = propproxy('users.baseDN')
     attrmap = propproxy('users.attrmap')
-    scope = propproxy('users.scope', True)
+    scope = propproxy('users.scope')
     queryFilter = propproxy('users.queryFilter') 
-    objectClasses = propproxy('users.objectClasses', True)
+    objectClasses = propproxy('users.objectClasses')
     memberOfSupport = propproxy('users.memberOfSupport')
 
     
@@ -260,7 +254,7 @@ class GroupsConfig(object):
 
     baseDN = propproxy('groups.baseDN')
     attrmap = propproxy('groups.attrmap')
-    scope = propproxy('groups.scope', True)
+    scope = propproxy('groups.scope')
     queryFilter = propproxy('groups.queryFilter') 
-    objectClasses = propproxy('groups.objectClasses', True)
+    objectClasses = propproxy('groups.objectClasses')
     memberOfSupport = propproxy('groups.memberOfSupport')

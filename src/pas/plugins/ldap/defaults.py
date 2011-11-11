@@ -1,3 +1,5 @@
+from node.ext.ldap.scope import ONELEVEL
+
 DEFAULTS = {
     'server.uri'              : 'ldap://127.0.0.1:12345',
     'server.user'             : 'cn=Manager,dc=my-domain,dc=com',
@@ -7,7 +9,7 @@ DEFAULTS = {
 
     'cache.cache'             : False,
     'cache.memcached'         : '127.0.0.1:11211',
-    'cache.timeout'           : 300,
+    'cache.timeout'           : 300, # seconds
 
     'users.baseDN'            : 'ou=users,dc=my-domain,dc=com',
     'users.attrmap'           : {"rdn": "uid", 
@@ -16,9 +18,9 @@ DEFAULTS = {
                                  "fullname": "cn", 
                                  "email": "mail",
                                  'location': 'l'},
-    'users.scope'             : '1',
+    'users.scope'             : ONELEVEL,
     'users.queryFilter'       : '(objectClass=inetOrgPerson)',
-    'users.objectClasses'     : '["inetOrgPerson"]',
+    'users.objectClasses'     : ["inetOrgPerson"],
     'users.memberOfSupport'   : False,
 
     'groups.baseDN'           : 'ou=groups,dc=my-domain,dc=com',
@@ -26,8 +28,8 @@ DEFAULTS = {
                                  "id": "cn", 
                                  "title": "o",
                                  "description": "description"},
-    'groups.scope'            : '1',
+    'groups.scope'            : ONELEVEL,
     'groups.queryFilter'      : '(objectClass=groupOfNames)',
-    'groups.objectClasses'    : '["groupOfNames"]',
+    'groups.objectClasses'    : ["groupOfNames"],
     'groups.memberOfSupport'  : False,
 }
