@@ -47,7 +47,7 @@ widgets:
             required: No Users DN defined
     - scope:
         factory: field:label:error:select
-        value: expr:context.users.scope
+        value: expr:str(context.users.scope)
         props:
             label: Users search scope
             vocabulary: expr:context.scope_vocab
@@ -101,7 +101,7 @@ widgets:
             required: No Groups DN defined
     - scope:
         factory: field:label:error:select
-        value: expr:context.groups.scope
+        value: expr:str(context.groups.scope)
         props:
             label: Groups search scope
             vocabulary: expr:context.scope_vocab
