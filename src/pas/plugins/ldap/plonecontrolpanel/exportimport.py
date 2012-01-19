@@ -125,7 +125,7 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
             return data
         data = self._getNodeText(node)
         if vtype == 'bool':
-            data = bool(data)
+            data = data.lower() == 'true'
         elif vtype == 'int':
             data = int(data)
         elif vtype == 'float':

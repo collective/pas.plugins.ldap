@@ -9,7 +9,7 @@
   <element key="title" type="string">o</element>
  </element>
  <element key="groups.baseDN"
-    type="string">ou=groups,dc=my-domain,dc=com</element>
+    type="string">ou=groups,ou=groupOfNames_10_10,dc=my-domain,dc=com</element>
  <element key="groups.memberOfSupport" type="bool">False</element>
  <element key="groups.objectClasses" type="list">
    <element type="string">groupOfNames</element>
@@ -30,7 +30,7 @@
   <element key="rdn" type="string">uid</element>
  </element>
  <element key="users.baseDN"
-    type="string">ou=users,dc=my-domain,dc=com</element>
+    type="string">ou=users,ou=groupOfNames_10_10,dc=my-domain,dc=com</element>
  <element key="users.memberOfSupport" type="bool">False</element>
  <element key="users.objectClasses" type="list">
    <element type="string">inetOrgPerson</element>
