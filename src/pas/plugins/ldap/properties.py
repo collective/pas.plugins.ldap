@@ -212,6 +212,7 @@ class LDAPProps(object):
             record = recordProvider()
             return record.value
         return u'feature not available'
+    
     def _memcached_set(self, value):
         recordProvider = queryUtility(ICacheSettingsRecordProvider)
         if recordProvider is not None:
@@ -219,6 +220,7 @@ class LDAPProps(object):
             record.value = value.decode('utf8')
         else:
             return u'feature not available'
+    
     memcached = property(_memcached_get, _memcached_set)    
     
     timeout = propproxy('cache.timeout')

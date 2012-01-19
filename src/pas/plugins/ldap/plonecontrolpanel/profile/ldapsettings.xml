@@ -2,7 +2,6 @@
 <object name="pasldap" meta_type="LDAP Plugin" type="dict">
  <element key="cache.cache" type="bool">False</element>
  <element key="cache.timeout" type="int">300</element>
- <element key="cache.memcached" type="string">127.0.0.1:11211</element>
  <element key="groups.attrmap" type="dict">
   <element key="description" type="string">description</element>
   <element key="id" type="string">cn</element>
