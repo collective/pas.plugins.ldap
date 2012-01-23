@@ -237,7 +237,7 @@ class LDAPPlugin(BasePlugin):
             matches = sorted(matches)
         pluginid = self.getId()
         ret = [
-            dict(id=id.encode('ascii', 'replace'), pluginid=pluginid)
+            dict(id=id, pluginid=pluginid)
             for id in matches
             ]
         if max_results and len(ret) > max_results:
@@ -343,7 +343,7 @@ class LDAPPlugin(BasePlugin):
             return tuple()
         pluginid = self.getId()
         ret = [dict(
-            id=id.encode('ascii', 'replace'),
+            id=id,
             login=attrs['login'][0], #XXX: see node.ext.ldap.users.Users.search
             pluginid=pluginid,
             ) for id, attrs in matches]
