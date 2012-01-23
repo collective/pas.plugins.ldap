@@ -1,3 +1,4 @@
+import patches
 import os
 from AccessControl.Permissions import add_user_folders
 from Products.PluggableAuthService import registerMultiPlugin
