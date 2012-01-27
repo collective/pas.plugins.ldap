@@ -30,6 +30,8 @@
   
   <adapter factory=".properties.GroupsConfig" />
   
+  <adapter factory=".properties.RolesConfig" />
+  
   <utility component=".cache.cacheProviderFactory"
       provides="node.ext.ldap.interfaces.ICacheProviderFactory" />    
       

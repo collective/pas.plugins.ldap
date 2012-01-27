@@ -10,6 +10,7 @@ from node.ext.ldap.interfaces import (
     ILDAPProps,
     ILDAPUsersConfig,
     ILDAPGroupsConfig,
+    ILDAPRolesConfig,
 )
 from node.ext.ldap.ugm import Ugm
 from zope.interface import implements
@@ -47,6 +48,7 @@ class BasePropertiesForm(BrowserView):
     
     static_attrs_users  = ['rdn', 'id', 'login']
     static_attrs_groups = ['rdn', 'id']
+    static_attrs_roles = ['rdn', 'id']
 
     @property
     def plugin(self):
@@ -64,6 +66,7 @@ class BasePropertiesForm(BrowserView):
         self.props =  ILDAPProps(self.plugin)
         self.users =  ILDAPUsersConfig(self.plugin)
         self.groups = ILDAPGroupsConfig(self.plugin)
+        self.roles = ILDAPRolesConfig(self.plugin)
 
         # prepare users data on form context
         self.users_attrmap = odict()
@@ -85,6 +88,16 @@ class BasePropertiesForm(BrowserView):
             if key in self.static_attrs_groups:
                 continue
             self.groups_propsheet_attrmap[key] = value
+
+        # prepare roles data on form context
+        self.roles_attrmap = odict()
+        for key in self.static_attrs_roles:
+            self.roles_attrmap[key] = self.roles.attrmap.get(key)
+        self.roles_propsheet_attrmap = odict()
+        for key, value in self.roles.attrmap.items():
+            if key in self.static_attrs_roles:
+                continue
+            self.roles_propsheet_attrmap[key] = value
 
         # handle form
         form = parse_from_YAML('pas.plugins.ldap:properties.yaml', self,  _)
@@ -177,6 +190,7 @@ def propproxy(ckey):
     def _getter(context):
         value = context.plugin.settings.get(ckey, DEFAULTS[ckey])
         return value
+            
     def _setter(context, value):
         context.plugin.settings[ckey] = value
     return property(_getter, _setter)
@@ -261,3 +275,21 @@ class GroupsConfig(object):
     queryFilter = propproxy('groups.queryFilter') 
     objectClasses = propproxy('groups.objectClasses')
     memberOfSupport = propproxy('groups.memberOfSupport')
+    
+class RolesConfig(object):
+
+    implements(ILDAPRolesConfig)
+    adapts(ILDAPPlugin)
+    
+    def __init__(self, plugin):
+        self.plugin = plugin
+
+    strict = False
+
+    baseDN = propproxy('roles.baseDN')
+    attrmap = propproxy('roles.attrmap')
+    scope = propproxy('roles.scope')
+    queryFilter = propproxy('roles.queryFilter') 
+    objectClasses = propproxy('roles.objectClasses')
+    memberOfSupport = propproxy('roles.memberOfSupport')
+    

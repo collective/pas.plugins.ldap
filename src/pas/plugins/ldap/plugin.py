@@ -9,6 +9,7 @@ from node.ext.ldap.interfaces import (
     ILDAPProps,
     ILDAPUsersConfig,
     ILDAPGroupsConfig,
+    ILDAPRolesConfig,
 )
 from node.ext.ldap.base import (
     encode_utf8,
@@ -60,6 +61,7 @@ class LDAPPlugin(BasePlugin):
         pas_interfaces.IAuthenticationPlugin,
         pas_interfaces.IGroupEnumerationPlugin,
         pas_interfaces.IGroupsPlugin,
+        pas_interfaces.IRolesPlugin,
         pas_interfaces.IPropertiesPlugin,
         pas_interfaces.IUserEnumerationPlugin,
         plonepas_interfaces.capabilities.IDeleteCapability,
@@ -102,7 +104,8 @@ class LDAPPlugin(BasePlugin):
         props = ILDAPProps(self)
         ucfg = ILDAPUsersConfig(self)
         gcfg = ILDAPGroupsConfig(self)
-        ugm = Ugm(props=props, ucfg=ucfg, gcfg=gcfg, rcfg=None)
+        rcfg = ILDAPRolesConfig(self)
+        ugm = Ugm(props=props, ucfg=ucfg, gcfg=gcfg, rcfg=rcfg)
         if request:
             request[rcachekey] = ugm
         return ugm
@@ -276,6 +279,16 @@ class LDAPPlugin(BasePlugin):
             return [_.id for _ in _principal.groups]
         return tuple()
 
+    def getRolesForPrincipal(self, principal, request=None):
+
+        """ principal -> ( role_1, ... role_N )
+
+        o Return a sequence of role names which the principal has.
+
+        o May assign roles based on values in the REQUEST object, if present.
+        """
+        return self.users[principal.getId()].roles
+    
     ###
     # pas_interfaces.IUserEnumerationPlugin
     #
@@ -581,11 +594,7 @@ class LDAPPlugin(BasePlugin):
         """
         return the members of the given group
         """
-        try:
-            group = self.groups[group_id]
-        except KeyError:
-            return ()
-        return tuple(group.member_ids)
+        return tuple(self.groups[group_id].member_ids)        
 
     ###
     # plonepas_interfaces.capabilities.IPasswordSetCapability
@@ -604,5 +613,5 @@ class LDAPPlugin(BasePlugin):
                                          exact_match=True)) > 0
         except ValueError:
             return False
-        
+
 InitializeClass(LDAPPlugin)

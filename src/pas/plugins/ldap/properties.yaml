@@ -141,6 +141,62 @@ widgets:
             head:
                 key: Name on Sheet
                 value: LDAP Attribute
+
+- roles:
+    factory: fieldset
+    props:
+        legend: Roles Settings                               
+        class: formPanel
+    widgets:
+    - dn:
+        factory: field:label:error:text
+        value: expr:context.groups.baseDN
+        props:
+            label: Groups container DN
+            required: No Groups DN defined
+    - scope:
+        factory: field:label:error:select
+        value: expr:str(context.roles.scope)
+        props:
+            label: Roles search scope
+            vocabulary: expr:context.scope_vocab
+    - query:
+        factory: field:label:error:text
+        value: expr:context.roles.queryFilter
+        props:
+            label: Roles search query filter
+    - object_classes:
+        factory: field:error:array
+        value: "expr:not isinstance(context.roles.objectClasses, basestring) and context.roles.objectClasses or [context.roles.objectClasses]"
+        props:
+            label: Object classes for Roles creation
+        widgets: 
+            - oc:
+                factory: field:text                         
+    - memberOfSupport:
+        factory: field:label:checkbox
+        value: expr:context.roles.memberOfSupport
+        props:
+            label: memberOf attribute supported?
+    - aliases_attrmap:
+        factory: field:label:error:dict
+        value: expr:context.roles_attrmap
+        props:
+            label: Roles attribute aliases
+            required: Roles attribute aliases values are mandatory
+            static: True
+            head:
+                key: Reserved key
+                value: LDAP attr name
+    - propsheet_attrmap:
+        factory: field:label:error:dict
+        value: expr:context.roles_propsheet_attrmap
+        props:
+            label: Roles Property-Sheet Attributes
+            head:
+                key: Name on Sheet
+                value: LDAP Attribute
+
 - cache:
     factory: fieldset
     props:

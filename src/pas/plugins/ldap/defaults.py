@@ -29,7 +29,20 @@ DEFAULTS = {
                                  "title": "o",
                                  "description": "description"},
     'groups.scope'            : ONELEVEL,
-    'groups.queryFilter'      : '(objectClass=groupOfNames)',
-    'groups.objectClasses'    : ["groupOfNames"],
+    'groups.queryFilter'      : '(objectClass=groupOfUniqueNames)',
+    'groups.objectClasses'    : ["groupOfUniqueNames"],
     'groups.memberOfSupport'  : False,
+
+    'roles.baseDN'           : 'ou=roles,dc=my-domain,dc=com',
+    'roles.attrmap'          : {"rdn": "cn", 
+                                 "id": "cn", 
+                                 "title": "o",
+                                 "description": "description"},
+    'roles.scope'            : ONELEVEL,
+    'roles.queryFilter'      : '(objectClass=groupOfUniqueNames)',
+    'roles.objectClasses'    : ["groupOfUniqueNames"],
+    'roles.memberOfSupport'  : False,
+
+
+
 }
