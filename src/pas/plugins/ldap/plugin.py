@@ -594,8 +594,11 @@ class LDAPPlugin(BasePlugin):
         """
         return the members of the given group
         """
-        return tuple(self.groups[group_id].member_ids)        
-
+        try:
+            group = self.groups[group_id]
+        except KeyError:
+            return ()
+        return tuple(group.member_ids)
     ###
     # plonepas_interfaces.capabilities.IPasswordSetCapability
     # (plone ui specific)
