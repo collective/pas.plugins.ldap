@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import ldap
+import time
 import logging
 from zope.interface import implements
 from zope.component import getUtility
@@ -30,6 +31,7 @@ from Products.PlonePAS import interfaces as plonepas_interfaces
 from Products.PlonePAS.plugins.group import PloneGroup
 from .sheet import LDAPUserPropertySheet
 from .interfaces import ILDAPPlugin 
+from zope.globalrequest import getRequest
 
 logger = logging.getLogger('pas.plugins.ldap')
 
@@ -48,6 +50,29 @@ manage_addLDAPPluginForm = PageTemplateFile(
     globals(),
     __name__='addLDAPPlugin'
 )
+
+def measure(func):
+    def wrapped(*args, **kws):
+        start = time.time()
+        f_result = func(*args, **kws)
+        end = time.time()
+        duration = end - start
+        request = getRequest()
+        m_key = 'measure_count_' + func.func_name
+        d_key = 'measure_time_' + func.func_name
+        if not request.has_key(m_key):
+            request[m_key] = 0
+        if not request.has_key(d_key):
+            request[d_key] = 0
+        request[m_key] += 1
+        request[d_key] += duration
+        c_total = request[m_key]
+        d_total = request[d_key]
+        print '%s: %s calls; %s seconds' % (
+            func.func_name, str(c_total), str(d_total))
+        return f_result
+    wrapped.__doc__ = func.__doc__
+    return wrapped
 
 class LDAPPlugin(BasePlugin):
     """Glue layer for making node.ext.ldap available to PAS.
@@ -155,6 +180,7 @@ class LDAPPlugin(BasePlugin):
     #  Map credentials to a user ID.
     #
     security.declarePublic('authenticateCredentials')
+    @measure
     def authenticateCredentials(self, credentials):
         """credentials -> (userid, login)
 
@@ -183,7 +209,8 @@ class LDAPPlugin(BasePlugin):
     #
     #  Allow querying groups by ID, and searching for groups.
     #
-    security.declarePrivate('enumerateUsers')        
+    security.declarePrivate('enumerateUsers')   
+    @measure
     def enumerateGroups(self, id=None, exact_match=False, sort_by=None,
                         max_results=None, **kw):
         """ -> ( group_info_1, ... group_info_N )
@@ -253,7 +280,8 @@ class LDAPPlugin(BasePlugin):
     # pas_interfaces.IGroupsPlugin
     #
     #  Determine the groups to which a user belongs.
-    security.declarePrivate('getGroupsForPrincipal')    
+    security.declarePrivate('getGroupsForPrincipal')  
+    @measure
     def getGroupsForPrincipal(self, principal, request=None):
         """principal -> ( group_1, ... group_N )
 
@@ -281,7 +309,8 @@ class LDAPPlugin(BasePlugin):
     #
     #   Allow querying users by ID, and searching for users.
     #
-    security.declarePrivate('enumerateUsers')    
+    security.declarePrivate('enumerateUsers')
+    @measure
     def enumerateUsers(self, id=None, login=None, exact_match=False,
             sort_by=None, max_results=None, **kw):
         """-> ( user_info_1, ... user_info_N )
@@ -359,7 +388,7 @@ class LDAPPlugin(BasePlugin):
     ###
     # plonepas_interfaces.group.IGroupManagement
     #
-    security.declarePrivate('addGroup')    
+    security.declarePrivate('addGroup') 
     def addGroup(self, id, **kw):
         """
         Create a group with the supplied id, roles, and groups.
@@ -423,7 +452,8 @@ class LDAPPlugin(BasePlugin):
     #  conforming to the IMutable property sheet interface or a dictionary (in
     #  which case the properties are not persistently mutable).
     #
-    security.declarePrivate('getPropertiesForUser')    
+    security.declarePrivate('getPropertiesForUser')
+    @measure
     def getPropertiesForUser(self, user_or_group, request=None):
         """User -> IMutablePropertySheet || {}
 
@@ -531,7 +561,8 @@ class LDAPPlugin(BasePlugin):
     ###
     # plonepas_interfaces.capabilities.IGroupIntrospection
     # (plone ui specific)
-    
+    security.declarePublic('getGroupById')
+    @measure
     def getGroupById(self, group_id):
         """
         Returns the portal_groupdata-ish object for a group
@@ -565,18 +596,21 @@ class LDAPPlugin(BasePlugin):
             group._addRoles(roles)        
         return group
 
+    @measure
     def getGroups(self):
         """
         Returns an iteration of the available groups
         """
         return map(self.getGroupById, self.getGroupIds())
-
+    
+    @measure
     def getGroupIds(self):
         """
         Returns a list of the available groups (ids)
         """
         return self.groups.ids
-
+    
+    @measure
     def getGroupMembers(self, group_id):
         """
         return the members of the given group
@@ -588,6 +622,7 @@ class LDAPPlugin(BasePlugin):
     # (plone ui specific)
     #
     security.declarePublic('allowPasswordSet')
+    @measure
     def allowPasswordSet(self, id):
         """True if this plugin can set the password of a certain user.
         """
