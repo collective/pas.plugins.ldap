@@ -272,7 +272,9 @@ class LDAPPlugin(BasePlugin):
             # group nodes do not provide membership info so we just
             # return if there is no user
             return tuple()
-        if self.groups: 
+        if self.groups:
+            # XXX: provide group_ids function in UGM! Way too calculation-heavy
+            #      now 
             return [_.id for _ in _principal.groups]
         return tuple()
 
