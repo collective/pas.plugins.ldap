@@ -17,7 +17,7 @@
  <element key="groups.queryFilter"
     type="string">(objectClass=groupOfNames)</element>
  <element key="groups.scope" type="int">1</element>
- <element key="server.escape_queries" type="bool">False</element>
+ <!-- <element key="server.escape_queries" type="bool">False</element> -->
  <element key="server.uri" type="string">ldap://127.0.0.1:12345</element>
  <element key="server.user"
     type="string">cn=Manager,dc=my-domain,dc=com</element>
@@ -32,6 +32,9 @@
  <element key="users.baseDN"
     type="string">ou=users,ou=groupOfNames_10_10,dc=my-domain,dc=com</element>
  <element key="users.memberOfSupport" type="bool">False</element>
+ <element key="users.account_expiration" type="bool">False</element>
+ <element key="users.expires_attr" type="string">shadowExpire</element>
+ <element key="users.expires_unit" type="int">0</element>
  <element key="users.objectClasses" type="list">
    <element type="string">inetOrgPerson</element>
  </element>

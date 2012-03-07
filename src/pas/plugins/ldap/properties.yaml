@@ -28,11 +28,11 @@ widgets:
         props:
             label: LDAP Manager Password
             required: No password defined
-    - escape_queries:
-        factory: field:label:checkbox
-        value: expr:context.props.escape_queries
-        props:
-            label: Escape Queries for ActiveDirectory
+#    - escape_queries:
+#        factory: field:label:checkbox
+#        value: expr:context.props.escape_queries
+#        props:
+#            label: Escape Queries for ActiveDirectory
 - users:
     factory: fieldset
     props:
@@ -69,6 +69,22 @@ widgets:
         value: expr:context.users.memberOfSupport
         props:
             label: memberOf attribute supported?
+    - account_expiration:
+        factory: field:label:checkbox
+        value: expr:context.users.account_expiration
+        props:
+            label: User Accounts expires?
+    - expires_attr:
+        factory: field:label:text
+        value: expr:context.users.expires_attr
+        props:
+            label: Attribute containing expiration Time
+    - expires_unit:
+        factory: field:label:select
+        value: expr:context.users.expires_unit
+        props:
+            label: Account expiration unit
+            vocabulary: expr:((0, 'Days since Epoch'), (1, 'Seconds since epoch'))
     - aliases_attrmap:
         factory: field:label:error:dict
         value: expr:context.users_attrmap

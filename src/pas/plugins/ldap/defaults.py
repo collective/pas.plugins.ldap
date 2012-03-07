@@ -22,6 +22,9 @@ DEFAULTS = {
     'users.queryFilter'       : '(objectClass=inetOrgPerson)',
     'users.objectClasses'     : ["inetOrgPerson"],
     'users.memberOfSupport'   : False,
+    'users.account_expiration': False,
+    'users.expires_attr'      : 'shadowExpire',
+    'users.expires_unit'      : 0,
 
     'groups.baseDN'           : 'ou=groups,dc=my-domain,dc=com',
     'groups.attrmap'          : {"rdn": "cn", 
