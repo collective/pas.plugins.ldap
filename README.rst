@@ -66,15 +66,26 @@ To use an own integration-profile, just add to the profiles
 
 Additionally ldap settings can be exported and imported with ``portal_setup``.
 You can place the exported ``ldapsettings.xml`` in your integration profile, so
-it will be imported with your next install again. Attention: The ldap-password
-is in there in plain text.
+it will be imported with your next install again. Attention: The **ldap-password
+is in there in plain text!**
 
 
 Source Code
 ===========
 
-The sources are in a GIT DVCS with its main branches at
-`github <http://github.com/bluedynamics/pas.plugins.ldap>`_.
+If you want to help with the development (improvement, update, bug-fixing, ...)
+of ``pas.plugins.ldap`` this is a great idea!
+
+The code is located in the
+`github collective <http://github.com/bluedynamics/pas.plugins.ldap>`_.
+
+You can clone it or `get access to the github-collective
+<http://collective.github.com/>`_ and work directly on the project.
+
+Maintainers are Robert Niederreiter, Jens Klein and the BlueDynamics Alliance
+developer team. We appreciate any contribution and if a release is needed
+to be done on pypi, please just contact one of us
+`dev@bluedynamics dot com <mailto:dev@bluedynamics.com>`_
 
 
 Contributors
