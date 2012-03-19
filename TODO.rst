@@ -23,3 +23,11 @@ Nice-to-Have
 
 - group in group (depends on: node.ext.ldap: group.groups support)
 - roles from ldap
+
+
+
+
+node.ext.ldap/src/node/ext/ldap/session.py:51: 
+UnicodeWarning: Unicode equal comparison failed to convert both arguments to 
+Unicode - interpreting them as being unequal
+    if queryFilter in ('', u'', None):

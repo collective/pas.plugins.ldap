@@ -2,7 +2,6 @@
 <object name="pasldap" meta_type="LDAP Plugin" type="dict">
  <element key="cache.cache" type="bool">False</element>
  <element key="cache.timeout" type="int">300</element>
- <element key="cache.memcached" type="string">127.0.0.1:11211</element>
  <element key="groups.attrmap" type="dict">
   <element key="description" type="string">description</element>
   <element key="id" type="string">cn</element>
@@ -10,7 +9,7 @@
   <element key="title" type="string">o</element>
  </element>
  <element key="groups.baseDN"
-    type="string">ou=groups,dc=my-domain,dc=com</element>
+    type="string">ou=groups,ou=groupOfNames_10_10,dc=my-domain,dc=com</element>
  <element key="groups.memberOfSupport" type="bool">False</element>
  <element key="groups.objectClasses" type="list">
    <element type="string">groupOfNames</element>
@@ -18,7 +17,7 @@
  <element key="groups.queryFilter"
     type="string">(objectClass=groupOfNames)</element>
  <element key="groups.scope" type="int">1</element>
- <element key="server.escape_queries" type="bool">False</element>
+ <!-- <element key="server.escape_queries" type="bool">False</element> -->
  <element key="server.uri" type="string">ldap://127.0.0.1:12345</element>
  <element key="server.user"
     type="string">cn=Manager,dc=my-domain,dc=com</element>
@@ -31,8 +30,11 @@
   <element key="rdn" type="string">uid</element>
  </element>
  <element key="users.baseDN"
-    type="string">ou=users,dc=my-domain,dc=com</element>
+    type="string">ou=users,ou=groupOfNames_10_10,dc=my-domain,dc=com</element>
  <element key="users.memberOfSupport" type="bool">False</element>
+ <element key="users.account_expiration" type="bool">False</element>
+ <element key="users.expires_attr" type="string">shadowExpire</element>
+ <element key="users.expires_unit" type="int">0</element>
  <element key="users.objectClasses" type="list">
    <element type="string">inetOrgPerson</element>
  </element>

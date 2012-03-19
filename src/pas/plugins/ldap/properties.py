@@ -26,11 +26,11 @@ from yafowil.yaml import parse_from_YAML
 from zope.i18nmessageid import MessageFactory
 from persistent.dict import PersistentDict
 from Products.Five import BrowserView
-from .interfaces import (
+from pas.plugins.ldap.interfaces import (
     ILDAPPlugin,
     ICacheSettingsRecordProvider,
 )
-from .defaults import DEFAULTS
+from pas.plugins.ldap.defaults import DEFAULTS
 
 logger = logging.getLogger('pas.plugins.ldap')
 
@@ -107,7 +107,10 @@ class BasePropertiesForm(BrowserView):
         password = fetch('server.password')
         if password is not UNSET:
             props.password = password
-        props.escape_queries = fetch('server.escape_queries')
+        
+        # XXX: probably not needed
+        #props.escape_queries = fetch('server.escape_queries')
+        
         # XXX: later
         #props.start_tls = fetch('server.start_tls')
         #props.tls_cacertfile = fetch('server.tls_cacertfile')
@@ -133,6 +136,9 @@ class BasePropertiesForm(BrowserView):
         objectClasses = fetch('users.object_classes')
         users.objectClasses = objectClasses
         users.memberOfSupport = fetch('users.memberOfSupport')
+        users.account_expiration = fetch('users.account_expiration')
+        users.expires_attr = fetch('users.expires_attr')
+        users.expires_unit = int(fetch('users.expires_unit'))
         groups = self.groups
         groups.baseDN = fetch('groups.dn')
         map = odict()
@@ -193,7 +199,9 @@ class LDAPProps(object):
     uri = propproxy('server.uri')
     user = propproxy('server.user')
     password = propproxy('server.password')
-    escape_queries = propproxy('server.escape_queries')
+    
+    # XXX: propably not needed
+    #escape_queries = propproxy('server.escape_queries')
     
     # XXX: Later
     start_tls = propproxy('server.start_tls')
@@ -212,6 +220,7 @@ class LDAPProps(object):
             record = recordProvider()
             return record.value
         return u'feature not available'
+    
     def _memcached_set(self, value):
         recordProvider = queryUtility(ICacheSettingsRecordProvider)
         if recordProvider is not None:
@@ -219,6 +228,7 @@ class LDAPProps(object):
             record.value = value.decode('utf8')
         else:
             return u'feature not available'
+    
     memcached = property(_memcached_get, _memcached_set)    
     
     timeout = propproxy('cache.timeout')
@@ -241,8 +251,20 @@ class UsersConfig(object):
     queryFilter = propproxy('users.queryFilter') 
     objectClasses = propproxy('users.objectClasses')
     memberOfSupport = propproxy('users.memberOfSupport')
-
     
+    account_expiration = propproxy('users.account_expiration')
+    expires_attr = propproxy('users.expires_attr')
+    expires_unit = propproxy('users.expires_unit')
+    
+    @property
+    def expiresAttr(self):
+        return self.account_expiration and self.expires_attr or None
+    
+    @property
+    def expiresUnit(self):
+        return self.account_expiration and self.expires_unit or 0
+
+
 class GroupsConfig(object):
 
     implements(ILDAPGroupsConfig)

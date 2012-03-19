@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import ldap
 import logging
@@ -8,6 +9,10 @@ from node.ext.ldap.interfaces import (
     ILDAPProps,
     ILDAPUsersConfig,
     ILDAPGroupsConfig,
+)
+from node.ext.ldap.base import (
+    encode_utf8,
+    decode_utf8,
 )
 from node.ext.ldap.ugm import Ugm
 from BTrees import OOBTree
@@ -237,7 +242,7 @@ class LDAPPlugin(BasePlugin):
             matches = sorted(matches)
         pluginid = self.getId()
         ret = [
-            dict(id=id.encode('ascii', 'replace'), pluginid=pluginid)
+            dict(id=encode_utf8(id), pluginid=pluginid)
             for id in matches
             ]
         if max_results and len(ret) > max_results:
@@ -267,7 +272,9 @@ class LDAPPlugin(BasePlugin):
             # group nodes do not provide membership info so we just
             # return if there is no user
             return tuple()
-        if self.groups: 
+        if self.groups:
+            # XXX: provide group_ids function in UGM! Way too calculation-heavy
+            #      now 
             return [_.id for _ in _principal.groups]
         return tuple()
 
@@ -343,7 +350,7 @@ class LDAPPlugin(BasePlugin):
             return tuple()
         pluginid = self.getId()
         ret = [dict(
-            id=id.encode('ascii', 'replace'),
+            id=encode_utf8(id),
             login=attrs['login'][0], #XXX: see node.ext.ldap.users.Users.search
             pluginid=pluginid,
             ) for id, attrs in matches]
@@ -532,6 +539,7 @@ class LDAPPlugin(BasePlugin):
         Returns the portal_groupdata-ish object for a group
         corresponding to this id. None if group does not exist here!
         """
+        group_id = decode_utf8(group_id)
         groups = self.groups
         if not groups or group_id not in groups.keys():
             return None
@@ -575,7 +583,11 @@ class LDAPPlugin(BasePlugin):
         """
         return the members of the given group
         """
-        return tuple(self.groups[group_id].member_ids)        
+        try:
+            group = self.groups[group_id]
+        except KeyError:
+            return ()
+        return tuple(group.member_ids)
 
     ###
     # plonepas_interfaces.capabilities.IPasswordSetCapability

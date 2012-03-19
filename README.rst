@@ -19,6 +19,7 @@ read/write. See section *TODO*.
 Installation
 ============
 
+
 Zope2
 -----
 
@@ -32,10 +33,11 @@ Add to the instance section of your buildout::
         ...
         pas.plugins.ldap
         
-Let buildout run. Restart Zope.
+Run buildout. Restart Zope.
 
 Then got to your acl_users folder and add an LDAP-Plugin. Configure it using the
 settings form and activate its features with the ``activate`` tab.
+
 
 Plone
 -----
@@ -46,7 +48,7 @@ Add to the instance section of your buildout::
         ...
         pas.plugins.ldap
 
-Let buildout run. Restart Plone.
+Run buildout. Restart Plone.
 
 Then go to the Plone control-panel, select ``extensions`` and install the LDAP
 Plugin. A new LDAP Settings icon appear on the left. Click it and configure the
@@ -74,14 +76,12 @@ Source Code
 The sources are in a GIT DVCS with its main branches at
 `github <http://github.com/bluedynamics/pas.plugins.ldap>`_.
 
-We'd be happy to see many forks and pull-requests to make pas.plugins.ldap even
-better.
 
 Contributors
 ============
 
-- Jens W. Klein <jens@bluedynamics.com>
+- Jens W. Klein <jens [at] bluedynamics [dot] com>
 
-- Robert Niederrreiter <rnix@squarewave.at>
+- Robert Niederrreiter <rnix [at] squarewave [dot] at>
 
-- Florian Friesdorf <flo@chaoflow.net>
+- Florian Friesdorf <flo [at] chaoflow [dot] net>

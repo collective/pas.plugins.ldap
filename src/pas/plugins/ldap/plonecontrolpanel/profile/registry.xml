@@ -1,0 +1,8 @@
+<registry>
+  <record name="pas.plugins.ldap.memcached">
+    <field type="plone.registry.field.TextLine">
+      <title>servers, delimited by space</title>
+    </field>
+    <value>127.0.0.1:11211</value>
+  </record>
+</registry>
