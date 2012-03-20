@@ -12,6 +12,10 @@ from node.ext.ldap.interfaces import (
     ILDAPGroupsConfig,
 )
 from node.ext.ldap.ugm import Ugm
+from node.ext.ldap.properties import (
+     MULTIVALUED_DEFAULTS,
+     BINARY_DEFAULTS,
+)
 from zope.interface import implements
 from zope.component import (
     adapts,
@@ -233,6 +237,8 @@ class LDAPProps(object):
     
     timeout = propproxy('cache.timeout')
     
+    binary_attributes = BINARY_DEFAULTS
+    multivalued_attributes = MULTIVALUED_DEFAULTS
     
 
 class UsersConfig(object):
