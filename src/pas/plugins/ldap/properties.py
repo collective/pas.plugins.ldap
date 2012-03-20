@@ -12,13 +12,16 @@ from node.ext.ldap.interfaces import (
     ILDAPGroupsConfig,
 )
 from node.ext.ldap.ugm import Ugm
+from node.ext.ldap.properties import (
+     MULTIVALUED_DEFAULTS,
+     BINARY_DEFAULTS,
+)
 from zope.interface import implements
 from zope.component import (
     adapts,
     queryUtility,
 )
-import transaction
-import yafowil.plone
+import yafowil.loader
 from yafowil.base import UNSET
 from yafowil.controller import Controller
 from yafowil.yaml import parse_from_YAML
@@ -136,8 +139,8 @@ class BasePropertiesForm(BrowserView):
         users.objectClasses = objectClasses
         users.memberOfSupport = fetch('users.memberOfSupport')
         users.account_expiration = fetch('users.account_expiration')
-        users.expires_attr = fetch('users.expires_attr')
-        users.expires_unit = int(fetch('users.expires_unit'))
+        users._expiresAttr = fetch('users.expires_attr')
+        users._expiresUnit = int(fetch('users.expires_unit'))
         groups = self.groups
         groups.baseDN = fetch('groups.dn')
         map = odict()
@@ -232,6 +235,8 @@ class LDAPProps(object):
     
     timeout = propproxy('cache.timeout')
     
+    binary_attributes = BINARY_DEFAULTS
+    multivalued_attributes = MULTIVALUED_DEFAULTS
     
 
 class UsersConfig(object):
@@ -252,16 +257,16 @@ class UsersConfig(object):
     memberOfSupport = propproxy('users.memberOfSupport')
     
     account_expiration = propproxy('users.account_expiration')
-    expires_attr = propproxy('users.expires_attr')
-    expires_unit = propproxy('users.expires_unit')
+    _expiresAttr = propproxy('users.expires_attr')
+    _expiresUnit = propproxy('users.expires_unit')
     
     @property
     def expiresAttr(self):
-        return self.account_expiration and self.expires_attr or None
+        return self.account_expiration and self._expiresAttr or None
     
     @property
     def expiresUnit(self):
-        return self.account_expiration and self.expires_unit or 0
+        return self.account_expiration and self._expiresUnit or 0
 
 
 class GroupsConfig(object):
@@ -280,3 +285,5 @@ class GroupsConfig(object):
     queryFilter = propproxy('groups.queryFilter') 
     objectClasses = propproxy('groups.objectClasses')
     memberOfSupport = propproxy('groups.memberOfSupport')
+    expiresAttr = propproxy('groups.expires_attr')
+    expiresUnit = propproxy('groups.expires_unit')

@@ -76,12 +76,12 @@ widgets:
             label: User Accounts expires?
     - expires_attr:
         factory: field:label:text
-        value: expr:context.users.expires_attr
+        value: expr:context.users.expiresAttr
         props:
             label: Attribute containing expiration Time
     - expires_unit:
         factory: field:label:select
-        value: expr:context.users.expires_unit
+        value: expr:context.users.expiresUnit
         props:
             label: Account expiration unit
             vocabulary: expr:((0, 'Days since Epoch'), (1, 'Seconds since epoch'))
