@@ -139,8 +139,8 @@ class BasePropertiesForm(BrowserView):
         users.objectClasses = objectClasses
         users.memberOfSupport = fetch('users.memberOfSupport')
         users.account_expiration = fetch('users.account_expiration')
-        users.expires_attr = fetch('users.expires_attr')
-        users.expires_unit = int(fetch('users.expires_unit'))
+        users._expiresAttr = fetch('users.expires_attr')
+        users._expiresUnit = int(fetch('users.expires_unit'))
         groups = self.groups
         groups.baseDN = fetch('groups.dn')
         map = odict()
@@ -257,16 +257,16 @@ class UsersConfig(object):
     memberOfSupport = propproxy('users.memberOfSupport')
     
     account_expiration = propproxy('users.account_expiration')
-    expiresAttr = propproxy('users.expires_attr')
-    expiresUnit = propproxy('users.expires_unit')
+    _expiresAttr = propproxy('users.expires_attr')
+    _expiresUnit = propproxy('users.expires_unit')
     
     @property
     def expiresAttr(self):
-        return self.account_expiration and self.expires_attr or None
+        return self.account_expiration and self._expiresAttr or None
     
     @property
     def expiresUnit(self):
-        return self.account_expiration and self.expires_unit or 0
+        return self.account_expiration and self._expiresUnit or 0
 
 
 class GroupsConfig(object):
