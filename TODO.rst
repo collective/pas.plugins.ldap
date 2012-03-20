@@ -10,6 +10,8 @@ Milestone 1.0
 - make it work with read only groups and users, only properties 
   writeable.
 
+- make binary data work (esp. jpegPhoto)
+
 Milestone 1.1
 -------------
 

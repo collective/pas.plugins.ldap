@@ -18,8 +18,7 @@ from zope.component import (
     queryUtility,
 )
 import transaction
-import yafowil.zope2
-import yafowil.widget.array
+import yafowil.plone
 from yafowil.base import UNSET
 from yafowil.controller import Controller
 from yafowil.yaml import parse_from_YAML
