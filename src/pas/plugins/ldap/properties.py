@@ -21,9 +21,7 @@ from zope.component import (
     adapts,
     queryUtility,
 )
-import transaction
-import yafowil.zope2
-import yafowil.widget.array
+import yafowil.loader
 from yafowil.base import UNSET
 from yafowil.controller import Controller
 from yafowil.yaml import parse_from_YAML
@@ -259,8 +257,8 @@ class UsersConfig(object):
     memberOfSupport = propproxy('users.memberOfSupport')
     
     account_expiration = propproxy('users.account_expiration')
-    expires_attr = propproxy('users.expires_attr')
-    expires_unit = propproxy('users.expires_unit')
+    expiresAttr = propproxy('users.expires_attr')
+    expiresUnit = propproxy('users.expires_unit')
     
     @property
     def expiresAttr(self):
@@ -287,3 +285,5 @@ class GroupsConfig(object):
     queryFilter = propproxy('groups.queryFilter') 
     objectClasses = propproxy('groups.objectClasses')
     memberOfSupport = propproxy('groups.memberOfSupport')
+    expiresAttr = propproxy('groups.expires_attr')
+    expiresUnit = propproxy('groups.expires_unit')
