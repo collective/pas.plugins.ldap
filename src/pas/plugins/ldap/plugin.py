@@ -29,13 +29,13 @@ from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
 from Products.PlonePAS import interfaces as plonepas_interfaces
 from Products.PlonePAS.plugins.group import PloneGroup
 from .sheet import LDAPUserPropertySheet
-from .interfaces import ILDAPPlugin 
+from .interfaces import ILDAPPlugin
 
 logger = logging.getLogger('pas.plugins.ldap')
 
-zmidir = os.path.join(os.path.dirname( __file__), 'zmi')
+zmidir = os.path.join(os.path.dirname(__file__), 'zmi')
 
-def manage_addLDAPPlugin(dispatcher, id, title='',  RESPONSE=None, **kw):
+def manage_addLDAPPlugin(dispatcher, id, title='', RESPONSE=None, **kw):
     """Create an instance of a LDAP Plugin.
     """
     ldapplugin = LDAPPlugin(id, title, **kw)
@@ -53,8 +53,8 @@ class LDAPPlugin(BasePlugin):
     """Glue layer for making node.ext.ldap available to PAS.
     """
     security = ClassSecurityInfo()
-    meta_type = 'LDAP Plugin'    
-    
+    meta_type = 'LDAP Plugin'
+
     implements(
         ILDAPPlugin,
         pas_interfaces.IAuthenticationPlugin,
@@ -71,11 +71,11 @@ class LDAPPlugin(BasePlugin):
         plonepas_interfaces.plugins.IUserManagement,
         )
 
-    manage_options = ( 
+    manage_options = (
         { 'label' : 'LDAP Settings',
           'action' : 'manage_ldapplugin'
-        },) + BasePlugin.manage_options 
-        
+        },) + BasePlugin.manage_options
+
     #XXX: turn this to False when going productive, just in case
     _dont_swallow_my_exceptions = True # Tell PAS not to swallow our exceptions    
 
@@ -106,7 +106,7 @@ class LDAPPlugin(BasePlugin):
         if request:
             request[rcachekey] = ugm
         return ugm
-    
+
     security.declarePrivate('groups')
     @property
     def groups(self):
@@ -117,7 +117,7 @@ class LDAPPlugin(BasePlugin):
             self._v_ldaperror = str(e)
             logger.warn('groups -> %s' % self._v_ldaperror)
             return None
-        except Exception, e: 
+        except Exception, e:
             self._v_ldaperror = str(e)
             logger.exception('groups -> %s' % self._v_ldaperror)
             return None
@@ -125,18 +125,25 @@ class LDAPPlugin(BasePlugin):
     security.declarePrivate('users')
     @property
     def users(self):
+        request = getRequest()
+        rcachekey = '_ldap_ugm_users_%s_' % self.getId()
+        if request and rcachekey in request.keys():
+            return request[rcachekey]
         try:
             self._v_ldaperror = False
-            return self._ugm().users
+            users = self._ugm().users
+            if request:
+                request[rcachekey] = users
+            return users
         except ldap.LDAPError, e:
             self._v_ldaperror = str(e)
             logger.warn('users -> %s' % self._v_ldaperror)
             return None
-        except Exception, e: 
+        except Exception, e:
             self._v_ldaperror = str(e)
             logger.exception('users -> %s' % self._v_ldaperror)
             return None
-        
+
     security.declareProtected(ManageUsers, 'ldaperror')
     @property
     def ldaperror(self):
@@ -183,7 +190,7 @@ class LDAPPlugin(BasePlugin):
     #
     #  Allow querying groups by ID, and searching for groups.
     #
-    security.declarePrivate('enumerateUsers')        
+    security.declarePrivate('enumerateUsers')
     def enumerateGroups(self, id=None, exact_match=False, sort_by=None,
                         max_results=None, **kw):
         """ -> ( group_info_1, ... group_info_N )
@@ -253,7 +260,7 @@ class LDAPPlugin(BasePlugin):
     # pas_interfaces.IGroupsPlugin
     #
     #  Determine the groups to which a user belongs.
-    security.declarePrivate('getGroupsForPrincipal')    
+    security.declarePrivate('getGroupsForPrincipal')
     def getGroupsForPrincipal(self, principal, request=None):
         """principal -> ( group_1, ... group_N )
 
@@ -283,7 +290,7 @@ class LDAPPlugin(BasePlugin):
     #
     #   Allow querying users by ID, and searching for users.
     #
-    security.declarePrivate('enumerateUsers')    
+    security.declarePrivate('enumerateUsers')
     def enumerateUsers(self, id=None, login=None, exact_match=False,
             sort_by=None, max_results=None, **kw):
         """-> ( user_info_1, ... user_info_N )
@@ -355,13 +362,13 @@ class LDAPPlugin(BasePlugin):
             pluginid=pluginid,
             ) for id, attrs in matches]
         if max_results and len(ret) > max_results:
-            ret = ret[:max_results] 
+            ret = ret[:max_results]
         return ret
 
     ###
     # plonepas_interfaces.group.IGroupManagement
     #
-    security.declarePrivate('addGroup')    
+    security.declarePrivate('addGroup')
     def addGroup(self, id, **kw):
         """
         Create a group with the supplied id, roles, and groups.
@@ -425,7 +432,7 @@ class LDAPPlugin(BasePlugin):
     #  conforming to the IMutable property sheet interface or a dictionary (in
     #  which case the properties are not persistently mutable).
     #
-    security.declarePrivate('getPropertiesForUser')    
+    security.declarePrivate('getPropertiesForUser')
     def getPropertiesForUser(self, user_or_group, request=None):
         """User -> IMutablePropertySheet || {}
 
@@ -442,7 +449,7 @@ class LDAPPlugin(BasePlugin):
             return LDAPUserPropertySheet(user_or_group, self)
         return {}
 
-    security.declarePrivate('setPropertiesForUser')    
+    security.declarePrivate('setPropertiesForUser')
     def setPropertiesForUser(self, user, propertysheet):
         """Set modified properties on the user persistently.
 
@@ -529,11 +536,11 @@ class LDAPPlugin(BasePlugin):
         """
         # XXX
         return False
-    
+
     ###
     # plonepas_interfaces.capabilities.IGroupIntrospection
     # (plone ui specific)
-    
+
     def getGroupById(self, group_id):
         """
         Returns the portal_groupdata-ish object for a group
@@ -547,7 +554,7 @@ class LDAPPlugin(BasePlugin):
         title = ugmgroup.attrs.get('title', None)
         group = PloneGroup(ugmgroup.id, title).__of__(self)
         pas = self._getPAS()
-        plugins = pas.plugins 
+        plugins = pas.plugins
         # add properties
         for propfinder_id, propfinder in \
                           plugins.listPlugins(pas_interfaces.IPropertiesPlugin):
@@ -556,7 +563,7 @@ class LDAPPlugin(BasePlugin):
                 continue
             group.addPropertysheet(propfinder_id, data)
         # add subgroups
-        group._addGroups(pas._getGroupsForPrincipal(group, None, 
+        group._addGroups(pas._getGroupsForPrincipal(group, None,
                                                     plugins=plugins))
         # add roles
         for rolemaker_id, rolemaker in \
@@ -564,7 +571,7 @@ class LDAPPlugin(BasePlugin):
             roles = rolemaker.getRolesForPrincipal(group, None)
             if not roles:
                 continue
-            group._addRoles(roles)        
+            group._addRoles(roles)
         return group
 
     def getGroups(self):
@@ -606,5 +613,5 @@ class LDAPPlugin(BasePlugin):
                                          exact_match=True)) > 0
         except ValueError:
             return False
-        
+
 InitializeClass(LDAPPlugin)
