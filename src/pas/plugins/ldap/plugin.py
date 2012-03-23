@@ -110,9 +110,16 @@ class LDAPPlugin(BasePlugin):
     security.declarePrivate('groups')
     @property
     def groups(self):
+        request = getRequest()
+        rcachekey = '_ldap_ugm_groups_%s_' % self.getId()
+        if request and rcachekey in request.keys():
+            return request[rcachekey]
         try:
             self._v_ldaperror = False
-            return self._ugm().groups
+            groups = self._ugm().groups
+            if request:
+                request[rcachekey] = groups
+            return groups
         except ldap.LDAPError, e:
             self._v_ldaperror = str(e)
             logger.warn('groups -> %s' % self._v_ldaperror)
