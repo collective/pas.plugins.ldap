@@ -591,7 +591,7 @@ class LDAPPlugin(BasePlugin):
         """
         Returns a list of the available groups (ids)
         """
-        return self.groups.ids
+        return self.groups and self.groups.ids or []
 
     def getGroupMembers(self, group_id):
         """
