@@ -100,10 +100,15 @@ class BasePropertiesForm(BrowserView):
         props =  ILDAPProps(self.plugin)
         users =  ILDAPUsersConfig(self.plugin)
         groups = ILDAPGroupsConfig(self.plugin)
-        def fetch(name):
+        def fetch(name, default=UNSET):
             name = 'ldapsettings.%s' % name
             __traceback_info__ = name
-            return data.fetch(name).extracted
+            val = data.fetch(name).extracted
+            if default is UNSET:
+                return val
+            if val is UNSET:
+                return default
+            return val
         props.uri = fetch('server.uri')
         props.user = fetch('server.user')
         password = fetch('server.password')
@@ -140,7 +145,7 @@ class BasePropertiesForm(BrowserView):
         users.memberOfSupport = fetch('users.memberOfSupport')
         users.account_expiration = fetch('users.account_expiration')
         users._expiresAttr = fetch('users.expires_attr')
-        users._expiresUnit = int(fetch('users.expires_unit'))
+        users._expiresUnit = int(fetch('users.expires_unit', 0))
         groups = self.groups
         groups.baseDN = fetch('groups.dn')
         map = odict()
