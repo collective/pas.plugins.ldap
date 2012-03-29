@@ -77,7 +77,7 @@ class LDAPPlugin(BasePlugin):
         },) + BasePlugin.manage_options
 
     #XXX: turn this to False when going productive, just in case
-    _dont_swallow_my_exceptions = True # Tell PAS not to swallow our exceptions    
+    _dont_swallow_my_exceptions = False # Tell PAS not to swallow our exceptions    
 
     def __init__(self, id, title=None, **kw):
         self._setId(id)
@@ -452,8 +452,11 @@ class LDAPPlugin(BasePlugin):
           present
         """
         ugid = user_or_group.getId()
-        if self.enumerateUsers(id=ugid) or self.enumerateGroups(id=ugid):
-            return LDAPUserPropertySheet(user_or_group, self)
+        try:
+            if self.enumerateUsers(id=ugid) or self.enumerateGroups(id=ugid):
+                return LDAPUserPropertySheet(user_or_group, self)
+        except KeyError:
+            pass
         return {}
 
     security.declarePrivate('setPropertiesForUser')
