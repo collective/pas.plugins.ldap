@@ -1,7 +1,9 @@
 # TEMPORARY MONKEY PATCH
 # until this is changed upstream!
 
+from StringIO import StringIO
 from zope.component import getUtility
+from OFS.Image import Image
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.CMFCore.utils import getToolByName
 from Products.PlonePAS.tools.membership import (
@@ -28,6 +30,11 @@ def patched_getPersonalPortrait(self, id=None, verifyPermission=0):
                portrait = sheet['portrait']
             break
         if portrait is not None:
+            # turn into OFS.Image
+            sio = StringIO()
+            sio.write(portrait)
+            content_type = 'image/jpeg' # XXX sniff it
+            portrait = Image(id=userid, file=sio, content_type)
             return portrait
 
     # fallback to memberdata
