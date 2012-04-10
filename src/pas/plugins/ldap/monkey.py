@@ -11,7 +11,7 @@ from Products.PlonePAS.tools.membership import (
     default_portrait,
 )
 
-def PortraitImage(Image):
+class PortraitImage(Image):
 
     def getPhysicalPath(self):
         parent = aq_parent(aq_inner(self))
