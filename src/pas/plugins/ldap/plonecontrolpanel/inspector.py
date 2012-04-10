@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import types
+from node.utils import encode
 from node.ext.ldap import LDAPNode
 from node.ext.ldap.interfaces import (
     ILDAPProps,
@@ -13,26 +14,26 @@ from Products.CMFCore.interfaces import ISiteRoot
 
 
 class LDAPInspector(BrowserView):
-    
+
     @property
     def plugin(self):
         portal = getUtility(ISiteRoot)
         aclu = portal.acl_users
         plugin = aclu.pasldap
         return plugin
-    
+
     @property
     def props(self):
         return ILDAPProps(self.plugin)
-    
+
     def users_children(self):
         users = ILDAPUsersConfig(self.plugin)
         return self.children(users.baseDN)
-    
+
     def groups_children(self):
         groups = ILDAPGroupsConfig(self.plugin)
         return self.children(groups.baseDN)
-    
+
     def node_attributes(self):
         rdn = self.request['rdn']
         base = self.request['base']
@@ -45,18 +46,18 @@ class LDAPInspector(BrowserView):
         root = LDAPNode(baseDN, self.props)
         node = root[rdn]
         ret = dict()
-        for key in node.attrs:
+        for key, val in node.attrs.items():
             try:
-                val = node.attrs[key]
-                if type(val) is types.ListType:
-                    val = [v.encode('utf-8') for v in val]
-                elif not node.attrs.is_binary(key):
-                    val = val.encode('utf-8')
-                ret[key.encode('utf-8')] = val
-            except UnicodeDecodeError:
-                ret[key.encode('utf-8')] = 'Unknown Data'
+                if not node.attrs.is_binary(key):
+                    ret[encode(key)] = encode(val)
+                else:
+                    ret[encode(key)] = "(Binary Data with %d Bytes)" % len(val)
+            except UnicodeDecodeError, e:
+                ret[key.encode('utf-8')] = '! (UnicodeDecodeError)'
+            except Exception, e:
+                ret[key.encode('utf-8')] = '! (Unknown Exception)'
         return json.dumps(ret)
-    
+
     def children(self, baseDN):
         node = LDAPNode(baseDN, self.props)
         ret = list()
