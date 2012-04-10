@@ -32,7 +32,7 @@ def patched_getPersonalPortrait(self, id=None, verifyPermission=0):
             sio = StringIO()
             sio.write(portrait)
             content_type = 'image/jpeg' # XXX sniff it
-            portrait = Image(id=userid, file=sio, content_type)
+            portrait = Image(userid, user.getProperty('fullname'), sio, content_type)
             return portrait
 
     # fallback to memberdata
