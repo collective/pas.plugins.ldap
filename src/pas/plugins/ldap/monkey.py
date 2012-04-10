@@ -1,13 +1,59 @@
 # TEMPORARY MONKEY PATCH
 # until this is changed upstream!
-
 from StringIO import StringIO
+from zope.interface import implements
+from zope.traversing.interfaces import ITraversable
+from Acquisition import aq_parent, aq_inner
 from OFS.Image import Image
 from Products.CMFCore.utils import getToolByName
 from Products.PlonePAS.tools.membership import (
     MembershipTool,
     default_portrait,
 )
+
+def PortraitImage(Image):
+
+    def getPhysicalPath(self):
+        parent = aq_parent(aq_inner(self))
+        trav = '++portrait++%s' % self.id
+        if not hasattr(parent, 'getPhysicalPath'):
+            return ('', trav)
+        return tuple(list(parent.getPhysicalPath()) + [trav])
+
+def getPortraitFromSheet(context, userid):
+    mtool = getToolByName(context, 'portal_membership')
+    member = mtool.getMemberById(userid)
+    if not member:
+        return None
+    user = member.getUser()
+    portrait = None
+    for sheetname in user.listPropertysheets():
+        sheet = user.getPropertysheet(sheetname)
+        if 'portrait' in sheet.propertyIds():
+           portrait = sheet.getProperty('portrait')
+           break
+    if portrait is None:
+        # nothing found on sheet
+        return None
+    # turn into OFS.Image
+    sio = StringIO()
+    sio.write(portrait)
+    content_type = 'image/jpeg' # XXX sniff it
+    portrait = PortraitImage(userid, user.getProperty('fullname'), sio,
+                             content_type)
+    return portrait
+
+class PortraitTraverser(object):
+
+    implements(ITraversable)
+
+    def __init__(self, context, request=None):
+        self.context = context
+        self.request = request
+
+    def traverse(self, userid, subpath):
+        return getPortraitFromSheet(self.context, userid).__of__(self.context)
+
 
 def patched_getPersonalPortrait(self, id=None, verifyPermission=0):
     """Return a members personal portait.
@@ -18,22 +64,10 @@ def patched_getPersonalPortrait(self, id=None, verifyPermission=0):
     userid = id
     if not userid:
         userid = self.getAuthenticatedMember().getId()
-    portrait = None
-    member = self.getMemberById(userid)
-    if member:
-        user = member.getUser()
-        for sheetname in user.listPropertysheets():
-            sheet = user.getPropertysheet(sheetname)
-            if 'portrait' in sheet.propertyIds():
-               portrait = sheet.getProperty('portrait')
-               break
-        if portrait is not None:
-            # turn into OFS.Image
-            sio = StringIO()
-            sio.write(portrait)
-            content_type = 'image/jpeg' # XXX sniff it
-            portrait = Image(userid, user.getProperty('fullname'), sio, content_type)
-            return portrait
+
+    portrait = getPortraitFromSheet(self, userid)
+    if portrait:
+        return portrait
 
     # fallback to memberdata
     safe_id = self._getSafeMemberId(userid)

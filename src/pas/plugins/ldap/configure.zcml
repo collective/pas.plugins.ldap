@@ -35,5 +35,10 @@
   <include 
       zcml:condition="installed Products.CMFPlone"   
       package=".plonecontrolpanel" />
+      
+  <adapter    
+      for="* ZPublisher.HTTPRequest.HTTPRequest"
+      factory=".monkey.PortraitTraverser"
+      name="portrait" />
 
 </configure>
