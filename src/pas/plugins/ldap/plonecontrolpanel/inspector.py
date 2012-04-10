@@ -50,7 +50,7 @@ class LDAPInspector(BrowserView):
                 val = node.attrs[key]
                 if type(val) is types.ListType:
                     val = [v.encode('utf-8') for v in val]
-                else:
+                elif not node.attrs.is_binary(key):
                     val = val.encode('utf-8')
                 ret[key.encode('utf-8')] = val
             except UnicodeDecodeError:
