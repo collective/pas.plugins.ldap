@@ -15,7 +15,7 @@ class PortraitImage(Image):
 
     def getPhysicalPath(self):
         parent = aq_parent(aq_inner(self))
-        trav = '++portrait++%s' % self.id
+        trav = '++portrait++%s' % self.id()
         if not hasattr(parent, 'getPhysicalPath'):
             return ('', trav)
         return tuple(list(parent.getPhysicalPath()) + [trav])
