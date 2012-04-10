@@ -1,8 +1,6 @@
 # TEMPORARY MONKEY PATCH
 # until this is changed upstream!
 
-from zope.component import getUtility
-from Products.CMFCore.interfaces import ISiteRoot
 from Products.CMFCore.utils import getToolByName
 from Products.PlonePAS.tools.membership import (
     MembershipTool,
@@ -19,14 +17,14 @@ def patched_getPersonalPortrait(self, id=None, verifyPermission=0):
     if not userid:
         userid = self.getAuthenticatedMember().getId()
     portrait = None
-    site = getUtility(ISiteRoot)
-    user = site.acl_users.getUser(userid)
-    if user:
+    member = self.getMemberById(userid)
+    if member:
+        user = member.getUser()
         for sheetname in user.listPropertysheets():
-            sheet = user.getPropertySheet(sheetname)
-            if 'portrait' in sheet:
-               portrait = sheet['portrait']
-            break
+            sheet = user.getPropertysheet(sheetname)
+            if 'portrait' in sheet.propertyIds():
+               portrait = sheet.getProperty('portrait')
+               break
         if portrait is not None:
             return portrait
 
