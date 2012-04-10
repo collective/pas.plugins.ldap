@@ -34,9 +34,13 @@ class LDAPUserPropertySheet(UserPropertySheet):
             self._attrmap[k] = v
 
         # XXX: tmp - load props each time they are accessed.
-        if not self._plugin.REQUEST.get('_ldap_props_reloaded'):
+        # XXX 2: when called from a service such as zc.async,
+        # the plugin might not have a REQUEST. Check for its existence first!
+        request = getattr(self._plugin, 'REQUEST', None)
+        if not request or not self._plugin.REQUEST.get('_ldap_props_reloaded'):
             self._lprincipal.attrs.context.load()
-            self._plugin.REQUEST['_ldap_props_reloaded'] = 1
+            if request:
+                self._plugin.REQUEST['_ldap_props_reloaded'] = 1
 
         for key in self._attrmap:
             self._properties[key] = self._lprincipal.attrs.get(key, '')
