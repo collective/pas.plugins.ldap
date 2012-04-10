@@ -41,7 +41,6 @@ class LDAPUserPropertySheet(UserPropertySheet):
             self._lprincipal.attrs.context.load()
             if request:
                 self._plugin.REQUEST['_ldap_props_reloaded'] = 1
-
         for key in self._attrmap:
             self._properties[key] = self._lprincipal.attrs.get(key, '')
         UserPropertySheet.__init__(self, principal, schema=None, 
