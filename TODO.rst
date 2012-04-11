@@ -2,15 +2,17 @@
 TODOS
 =====
 
-'Issue-Tracker <https://github.com/bluedynamics/pas.plugins.ldap/issues>`_
+'Issue-Tracker <https://github.com/collective/pas.plugins.ldap/issues>`_
 
 Milestone 1.0
 -------------
 
 - make it work with read only groups and users, only properties 
-  writeable.
+  writeable. [done]
 
-- make binary data work (esp. jpegPhoto)
+- make binary data work (esp. jpegPhoto) [done]
+
+- remove portrait monkey patch 
 
 Milestone 1.1
 -------------
