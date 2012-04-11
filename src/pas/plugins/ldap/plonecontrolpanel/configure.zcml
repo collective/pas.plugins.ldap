@@ -13,6 +13,11 @@
     description="Extension profile for pas.plugins.ldap Plone Integration."
     provides="Products.GenericSetup.interfaces.EXTENSION"
   />
+  
+  <utility
+    factory=".HiddenProfiles"
+    name="pas.plugins.ldap"
+  />  
 
   <browser:page
     name="plone_ldapcontrolpanel"
