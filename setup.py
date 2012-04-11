@@ -33,10 +33,9 @@ setup(name='pas.plugins.ldap',
           'Products.PlonePAS',
           'five.globalrequest',
           'node.ext.ldap',
-          'yafowil.plone',         
+          'yafowil.plone>=1.3',         
           'yafowil.widget.dict',
           'yafowil.widget.array',
-          'yafowil.yaml',
       ],
       extras_require={
           'test': [
