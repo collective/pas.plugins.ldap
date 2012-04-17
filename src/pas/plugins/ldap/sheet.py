@@ -1,5 +1,6 @@
 import logging
 from Acquisition import aq_base
+from zope.globalrequest import getRequest
 from Products.PlonePAS.interfaces.propertysheets import IMutablePropertySheet
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.UserPropertySheet import UserPropertySheet
@@ -35,14 +36,12 @@ class LDAPUserPropertySheet(UserPropertySheet):
                 continue
             self._attrmap[k] = v
         lprincipal = self._get_ldap_principal()
-        request = getattr(self._plugin, 'REQUEST', None)
+        request = getRequest()
         # XXX: tmp - load props each time they are accessed.
-        if not request or not self._plugin.REQUEST.get('_ldap_props_reloaded'):
+        if not request or not request.get('_ldap_props_reloaded'):
             lprincipal.attrs.context.load()
             if request:
-                # when called from a service such as zc.async, the plugin might 
-                # not have a REQUEST. Check for its existence first !
-                self._plugin.REQUEST['_ldap_props_reloaded'] = 1
+                request['_ldap_props_reloaded'] = 1
         for key in self._attrmap:
             self._properties[key] = lprincipal.attrs.get(key, '')
         UserPropertySheet.__init__(self, lprincipal, schema=None,
@@ -51,7 +50,7 @@ class LDAPUserPropertySheet(UserPropertySheet):
     def _get_ldap_principal(self):
         """returns ldap principal
 
-        this need to be a property, so it does not try to persist any ldap-node
+        this need to be a on demand, so it does not try to persist any ldap-node
         related data in i.e. some RamCacheManager 
         """
         if hasattr(self, '_v_lprincipal'):
