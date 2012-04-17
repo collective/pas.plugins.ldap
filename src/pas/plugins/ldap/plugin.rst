@@ -159,6 +159,18 @@ later and make it configurable::
     >>> ldap.allowDeletePrincipal('unknownuser')
     False
 
+
+Picklable
+---------
+
+In order to cache propertysheets it must be picklable::
+
+    >>> from Acquisition import aq_base
+    >>> import pickle
+    >>> len(pickle.dumps(aq_base(ldap)))  
+    239  
+
+
 PlonePAS
 ========
 
@@ -277,6 +289,12 @@ Set does nothing, but the sheet itselfs set immediatly::
     u'foobar@example.com'
 
     >>> ldap.deleteUser('cn9')
+
+
+In order to cache propertysheets it must be picklable::
+
+    >>> len(pickle.dumps(sheet2))
+    676    
 
 
 IUserManagement
