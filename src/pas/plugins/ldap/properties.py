@@ -115,9 +115,6 @@ class BasePropertiesForm(BrowserView):
         if password is not UNSET:
             props.password = password
         
-        # XXX: probably not needed
-        #props.escape_queries = fetch('server.escape_queries')
-        
         # XXX: later
         #props.start_tls = fetch('server.start_tls')
         #props.tls_cacertfile = fetch('server.tls_cacertfile')
@@ -206,9 +203,6 @@ class LDAPProps(object):
     uri = propproxy('server.uri')
     user = propproxy('server.user')
     password = propproxy('server.password')
-    
-    # XXX: propably not needed
-    #escape_queries = propproxy('server.escape_queries')
     
     # XXX: Later
     start_tls = propproxy('server.start_tls')

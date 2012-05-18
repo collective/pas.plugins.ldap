@@ -28,11 +28,6 @@ widgets:
         props:
             label: LDAP Manager Password
             required: No password defined
-#    - escape_queries:
-#        factory: field:label:checkbox
-#        value: expr:context.props.escape_queries
-#        props:
-#            label: Escape Queries for ActiveDirectory
 - users:
     factory: fieldset
     props:
