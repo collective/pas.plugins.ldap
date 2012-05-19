@@ -602,7 +602,7 @@ class LDAPPlugin(BasePlugin):
         """
         try:
             group = self.groups[group_id]
-        except KeyError:
+        except (KeyError, TypeError):
             return ()
         return tuple(group.member_ids)
 
