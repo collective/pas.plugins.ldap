@@ -9,14 +9,14 @@
   <genericsetup:registerProfile
     name="yafowil"
     title="LDAP Plugin for PAS - Configure YAFOWIL resource groups."
-    directory="yafowil"
+    directory="profiles/yafowil"
     description="Extension profile for pas.plugins.ldap YAFOWIL Integration."
     provides="Products.GenericSetup.interfaces.EXTENSION" />
 
   <genericsetup:registerProfile
     name="default"
     title="LDAP Plugin for PAS - Plone Integration"
-    directory="profile"
+    directory="profiles/default"
     description="Extension profile for pas.plugins.ldap Plone Integration."
     provides="Products.GenericSetup.interfaces.EXTENSION" />
 
