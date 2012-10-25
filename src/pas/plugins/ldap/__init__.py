@@ -7,8 +7,11 @@ from .plugin import (
     manage_addLDAPPluginForm,
     zmidir,
 )
+
+
 # XXX temp
 import monkey
+
 
 def initialize(context):
     registerMultiPlugin(LDAPPlugin.meta_type)

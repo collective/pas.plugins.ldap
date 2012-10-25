@@ -5,13 +5,16 @@ from Products.CMFCore.interfaces import ISiteRoot
 from Products.statusmessages.interfaces import IStatusMessage
 from pas.plugins.ldap.properties import BasePropertiesForm 
 
+
 _ = MessageFactory('pas.plugins.ldap')
+
 
 def getPortal():
     return getUtility(ISiteRoot)
 
+
 class LDAPControlPanel(BasePropertiesForm):
-            
+
     def next(self, request):
         return '%s/plone_ldapcontrolpanel' % self.context.absolute_url()
 
@@ -23,8 +26,8 @@ class LDAPControlPanel(BasePropertiesForm):
         aclu = portal.acl_users
         plugin = aclu.pasldap
         return plugin
-    
+
     def save(self, widget, data):
         BasePropertiesForm.save(self, widget, data)
         messages = IStatusMessage(self.request)
-        messages.addStatusMessage(_(u'LDAP Settings saved.'), type="info")       
+        messages.addStatusMessage(_(u'LDAP Settings saved.'), type="info")

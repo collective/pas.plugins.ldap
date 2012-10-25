@@ -5,6 +5,7 @@ from bda.cache import (
 )
 from .interfaces import ICacheSettingsRecordProvider
 
+
 def cacheProviderFactory():
     recordProvider = queryUtility(ICacheSettingsRecordProvider)
     if not recordProvider:

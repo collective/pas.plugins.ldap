@@ -8,13 +8,16 @@ from plone.testing import (
 )
 from .testing import PASLDAPLayer
 
+
 optionflags = doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS
 optionflags |= doctest.REPORT_ONLY_FIRST_FAILURE
+
 
 TESTFILES = [
     ('properties.rst', PASLDAPLayer),
     ('plugin.rst',    PASLDAPLayer)
 ]
+
 
 def test_suite():
     suite = unittest.TestSuite()

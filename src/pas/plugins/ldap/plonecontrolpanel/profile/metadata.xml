@@ -3,5 +3,7 @@
   <version>1</version>
   <dependencies>
     <dependency>profile-pas.plugins.ldap:default</dependency>
+    <dependency>profile-pas.plugins.ldap.plonecontrolpanel:yafowil</dependency>
+    <dependency>profile-yafowil.plone:default</dependency>
   </dependencies>
 </metadata>

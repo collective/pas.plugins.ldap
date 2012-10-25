@@ -1,6 +1,8 @@
 PropProxy
 =========
+
 ::
+
     >>> class SomePlugin(object):
     ...     def __init__(self):
     ...         self.settings = dict()
@@ -26,7 +28,9 @@ PropProxy
     
 Properties
 ==========
+
 ::
+
     >>> from pas.plugins.ldap.properties import LDAPProps
     >>> from pas.plugins.ldap.properties import UsersConfig
     >>> from pas.plugins.ldap.properties import GroupsConfig

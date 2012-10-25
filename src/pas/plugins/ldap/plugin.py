@@ -2,7 +2,7 @@
 import os
 import ldap
 import logging
-from zope.interface import implements
+from zope.interface import implementer
 from zope.component import getUtility
 from zope.globalrequest import getRequest
 from node.ext.ldap.interfaces import (
@@ -31,9 +31,10 @@ from Products.PlonePAS.plugins.group import PloneGroup
 from .sheet import LDAPUserPropertySheet
 from .interfaces import ILDAPPlugin
 
-logger = logging.getLogger('pas.plugins.ldap')
 
+logger = logging.getLogger('pas.plugins.ldap')
 zmidir = os.path.join(os.path.dirname(__file__), 'zmi')
+
 
 def manage_addLDAPPlugin(dispatcher, id, title='', RESPONSE=None, **kw):
     """Create an instance of a LDAP Plugin.
@@ -43,34 +44,33 @@ def manage_addLDAPPlugin(dispatcher, id, title='', RESPONSE=None, **kw):
     if RESPONSE is not None:
         RESPONSE.redirect('manage_workspace')
 
+
 manage_addLDAPPluginForm = PageTemplateFile(
     os.path.join(zmidir, 'add_plugin.pt'),
     globals(),
     __name__='addLDAPPlugin'
 )
 
+
+@implementer(
+    ILDAPPlugin,
+    pas_interfaces.IAuthenticationPlugin,
+    pas_interfaces.IGroupEnumerationPlugin,
+    pas_interfaces.IGroupsPlugin,
+    pas_interfaces.IPropertiesPlugin,
+    pas_interfaces.IUserEnumerationPlugin,
+    plonepas_interfaces.capabilities.IDeleteCapability,
+    plonepas_interfaces.capabilities.IGroupCapability,
+    plonepas_interfaces.capabilities.IPasswordSetCapability,
+    plonepas_interfaces.group.IGroupManagement,
+    plonepas_interfaces.group.IGroupIntrospection,
+    plonepas_interfaces.plugins.IMutablePropertiesPlugin,
+    plonepas_interfaces.plugins.IUserManagement)
 class LDAPPlugin(BasePlugin):
     """Glue layer for making node.ext.ldap available to PAS.
     """
     security = ClassSecurityInfo()
     meta_type = 'LDAP Plugin'
-
-    implements(
-        ILDAPPlugin,
-        pas_interfaces.IAuthenticationPlugin,
-        pas_interfaces.IGroupEnumerationPlugin,
-        pas_interfaces.IGroupsPlugin,
-        pas_interfaces.IPropertiesPlugin,
-        pas_interfaces.IUserEnumerationPlugin,
-        plonepas_interfaces.capabilities.IDeleteCapability,
-        plonepas_interfaces.capabilities.IGroupCapability,
-        plonepas_interfaces.capabilities.IPasswordSetCapability,
-        plonepas_interfaces.group.IGroupManagement,
-        plonepas_interfaces.group.IGroupIntrospection,
-        plonepas_interfaces.plugins.IMutablePropertiesPlugin,
-        plonepas_interfaces.plugins.IUserManagement,
-        )
-
     manage_options = (
         { 'label' : 'LDAP Settings',
           'action' : 'manage_ldapplugin'

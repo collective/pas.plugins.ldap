@@ -1,6 +1,6 @@
 import types
 import os.path
-from zope.interface import implements
+from zope.interface import implementer
 from zope.component import queryMultiAdapter
 from BTrees.OOBTree import OOBTree
 from Acquisition import Implicit
@@ -13,7 +13,7 @@ from Products.GenericSetup.interfaces import IFilesystemImporter
 
 def _get_import_export_handler(context):
     aclu = context.getSite().acl_users
-    logger = context.getLogger('pas.plugins.ldap')    
+    logger = context.getLogger('pas.plugins.ldap')
     if 'pasldap' not in aclu.objectIds():
         return
     pasldap = aclu.pasldap
@@ -25,41 +25,40 @@ def _get_import_export_handler(context):
 
 
 def import_settings(context):
-    logger = context.getLogger('pas.plugins.ldap')    
+    logger = context.getLogger('pas.plugins.ldap')
     handler = _get_import_export_handler(context)
-    if not handler: 
+    if not handler:
         return
     body = context.readDataFile(handler.filename)
     if body is None:
         return
     handler.body = body
-    logger.info("Imported ldap settings.")    
+    logger.info("Imported ldap settings.")
 
 
 def export_settings(context):
     handler = _get_import_export_handler(context)
-    if not handler: 
+    if not handler:
         return
     body = handler.body
     if body is None:
-        logger = context.getLogger('pas.plugins.ldap')    
+        logger = context.getLogger('pas.plugins.ldap')
         logger.warning("Problem to get ldap settings.")
         return
     context.writeDataFile(handler.filename, body, handler.mime_type)
-        
 
+
+@implementer(IBody)
 class LDAPPluginXMLAdapter(XMLAdapterBase):
-    """import pas groups from ldap config"""
-    
-    implements(IBody)
-    
+    """import pas groups from ldap config.
+    """
     name = 'ldapsettings'
 
     def _exportNode(self):
         node = self._getObjectNode('object')
         self._setDataAndType(self.context.settings, node)
         return node
-                
+
     def _importNode(self, node):
         data = self._getDataByType(node)
         if not data:
@@ -67,7 +66,7 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
             return
         for key in data:
             self.context.settings[key] = data[key]
-            
+
     def _setDataAndType(self, data, node):
         if isinstance(data, (tuple, list)):
             node.setAttribute('type', 'list')
@@ -101,7 +100,7 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
             return
         child = self._doc.createTextNode(data)
         node.appendChild(child)
-        
+
     def _getDataByType(self, node):
         vtype = node.getAttribute('type')
         if vtype == 'list':
@@ -115,8 +114,8 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
             data = dict()
             for element in node.childNodes:
                 if element.nodeName != 'element':
-                    continue 
-                key = element.getAttribute('key')  
+                    continue
+                key = element.getAttribute('key')
                 if key is None:
                     self._logger.warning('No key found for dict on import, '\
                                          'skipped.')

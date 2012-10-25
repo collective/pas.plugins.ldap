@@ -7,7 +7,6 @@ from zope.component import (
     provideAdapter,
     provideUtility,
 )
-    
 from plone.testing import (
     Layer, 
     zodb, 
@@ -23,6 +22,7 @@ from node.ext.ldap.interfaces import (
 )
 from node.ext.ldap import testing as ldaptesting
 
+
 SITE_OWNER_NAME = SITE_OWNER_PASSWORD = 'admin'
 
 
@@ -31,17 +31,19 @@ SITE_OWNER_NAME = SITE_OWNER_PASSWORD = 'admin'
 def ldapprops(context):
     return ldaptesting.props
 
+
 @implementer(ILDAPUsersConfig)
 @adapter(Interface)
 def usersconfig(context):
     return ldaptesting.LDIF_groupOfNames_10_10.ucfg
 
+
 @implementer(ILDAPGroupsConfig)
 @adapter(Interface)
 def groupsconfig(context):
     return ldaptesting.LDIF_groupOfNames_10_10.gcfg
-        
-        
+
+
 class PASLDAPLayer(Layer):
     # big parts copied from p.a.testing!
     

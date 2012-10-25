@@ -5,80 +5,78 @@
     i18n_domain="bda.plone.ldap">
 
   <include package="Products.CMFCore" />
-  
+
+  <genericsetup:registerProfile
+    name="yafowil"
+    title="LDAP Plugin for PAS - Configure YAFOWIL resource groups."
+    directory="yafowil"
+    description="Extension profile for pas.plugins.ldap YAFOWIL Integration."
+    provides="Products.GenericSetup.interfaces.EXTENSION" />
+
   <genericsetup:registerProfile
     name="default"
     title="LDAP Plugin for PAS - Plone Integration"
     directory="profile"
     description="Extension profile for pas.plugins.ldap Plone Integration."
-    provides="Products.GenericSetup.interfaces.EXTENSION"
-  />
-  
+    provides="Products.GenericSetup.interfaces.EXTENSION" />
+
   <utility
     factory=".HiddenProfiles"
-    name="pas.plugins.ldap"
-  />  
+    name="pas.plugins.ldap" />
 
   <browser:page
     name="plone_ldapcontrolpanel"
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     class=".controlpanel.LDAPControlPanel"
 	template="controlpanel.pt"
-    permission="cmf.ManagePortal"
-  />
-  
+    permission="cmf.ManagePortal" />
+
   <browser:page
     name="plone_ldapinspector"
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     class=".inspector.LDAPInspector"
     template="inspector.pt"
-    permission="cmf.ManagePortal"
-  />
-  
+    permission="cmf.ManagePortal" />
+
   <browser:page
     name="plone_ldapusers"
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     class=".inspector.LDAPInspector"
     attribute="users_children"
-    permission="cmf.ManagePortal"
-  />
-  
+    permission="cmf.ManagePortal" />
+
   <browser:page
     name="plone_ldapgroups"
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     class=".inspector.LDAPInspector"
     attribute="groups_children"
-    permission="cmf.ManagePortal"
-  />
-  
+    permission="cmf.ManagePortal" />
+
   <browser:page
     name="plone_ldapnodeattributes"
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     class=".inspector.LDAPInspector"
     attribute="node_attributes"
-    permission="cmf.ManagePortal"
-  />
-  
+    permission="cmf.ManagePortal" />
+
   <adapter
     factory=".exportimport.LDAPPluginXMLAdapter"
     for="..interfaces.ILDAPPlugin
-         Products.GenericSetup.interfaces.ISetupEnviron"
-  />
-  
+         Products.GenericSetup.interfaces.ISetupEnviron" />
+
   <genericsetup:importStep
-      name="pas.plugins.ldap.settings"
-      title="LDAP Settings"
-      description="Imports LDAP Settings"
-      handler=".exportimport.import_settings">
+    name="pas.plugins.ldap.settings"
+    title="LDAP Settings"
+    description="Imports LDAP Settings"
+    handler=".exportimport.import_settings">
       <depends name="componentregistry" />
       <depends name="plonepas" />
   </genericsetup:importStep>
 
   <genericsetup:exportStep
-      name="pas.plugins.ldap"
-      title="LDAP Settings"
-      description="Exports LDAP Settings"
-    handler=".exportimport.export_settings"
-  />  
-  
+    name="pas.plugins.ldap"
+    title="LDAP Settings"
+    description="Exports LDAP Settings"
+    handler=".exportimport.export_settings" />  
+
 </configure>

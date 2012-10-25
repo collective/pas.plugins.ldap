@@ -9,7 +9,9 @@ from node.ext.ldap.interfaces import (
     ILDAPGroupsConfig,
 )
 
+
 logger = logging.getLogger('pas.plugins.ldap')
+
 
 class LDAPUserPropertySheet(UserPropertySheet):
 

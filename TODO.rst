@@ -1,6 +1,6 @@
 
-TODOS
-=====
+TODO
+====
 
 'Issue-Tracker <https://github.com/collective/pas.plugins.ldap/issues>`_
 
@@ -28,8 +28,8 @@ Nice-to-Have
 - group in group (depends on: node.ext.ldap: group.groups support)
 - roles from ldap
 
-
-
+Misc
+----
 
 node.ext.ldap/src/node/ext/ldap/session.py:51: 
 UnicodeWarning: Unicode equal comparison failed to convert both arguments to 

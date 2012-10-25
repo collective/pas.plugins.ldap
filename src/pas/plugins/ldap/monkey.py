@@ -1,7 +1,7 @@
 # TEMPORARY MONKEY PATCH
 # until this is changed upstream!
 from StringIO import StringIO
-from zope.interface import implements
+from zope.interface import implementer
 from zope.traversing.interfaces import ITraversable
 from Acquisition import aq_parent, aq_inner
 from OFS.Image import Image
@@ -11,6 +11,7 @@ from Products.PlonePAS.tools.membership import (
     default_portrait,
 )
 
+
 class PortraitImage(Image):
 
     def getPhysicalPath(self):
@@ -19,6 +20,7 @@ class PortraitImage(Image):
         if not hasattr(parent, 'getPhysicalPath'):
             return ('', trav)
         return tuple(list(parent.getPhysicalPath()) + [trav])
+
 
 def getPortraitFromSheet(context, userid):
     mtool = getToolByName(context, 'portal_membership')
@@ -43,9 +45,9 @@ def getPortraitFromSheet(context, userid):
                              content_type)
     return portrait
 
-class PortraitTraverser(object):
 
-    implements(ITraversable)
+@implementer(ITraversable)
+class PortraitTraverser(object):
 
     def __init__(self, context, request=None):
         self.context = context

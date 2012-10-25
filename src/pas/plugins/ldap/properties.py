@@ -16,9 +16,9 @@ from node.ext.ldap.properties import (
      MULTIVALUED_DEFAULTS,
      BINARY_DEFAULTS,
 )
-from zope.interface import implements
+from zope.interface import implementer
 from zope.component import (
-    adapts,
+    adapter,
     queryUtility,
 )
 import yafowil.loader
@@ -34,8 +34,8 @@ from pas.plugins.ldap.interfaces import (
 )
 from pas.plugins.ldap.defaults import DEFAULTS
 
-logger = logging.getLogger('pas.plugins.ldap')
 
+logger = logging.getLogger('pas.plugins.ldap')
 _ = MessageFactory('pas.plugins.ldap')
 
 
@@ -183,6 +183,7 @@ class BasePropertiesForm(BrowserView):
             return False, _('Other; ') + str(e)
         return True, 'Connection, users- and groups-access tested successfully.'                             
 
+
 def propproxy(ckey):
     def _getter(context):
         value = context.plugin.settings.get(ckey, DEFAULTS[ckey])
@@ -192,18 +193,17 @@ def propproxy(ckey):
     return property(_getter, _setter)
 
 
+@implementer(ILDAPProps)
+@adapter(ILDAPPlugin)
 class LDAPProps(object):
 
-    implements(ILDAPProps)
-    adapts(ILDAPPlugin)
-    
     def __init__(self, plugin):
         self.plugin = plugin
 
     uri = propproxy('server.uri')
     user = propproxy('server.user')
     password = propproxy('server.password')
-    
+
     # XXX: Later
     start_tls = propproxy('server.start_tls')
     tls_cacertfile = ''
@@ -214,14 +214,14 @@ class LDAPProps(object):
     retry_delay = 5
 
     cache = propproxy('cache.cache')
-    
+
     def _memcached_get(self):
         recordProvider = queryUtility(ICacheSettingsRecordProvider)
         if recordProvider is not None:
             record = recordProvider()
             return record.value
         return u'feature not available'
-    
+
     def _memcached_set(self, value):
         recordProvider = queryUtility(ICacheSettingsRecordProvider)
         if recordProvider is not None:
@@ -229,55 +229,49 @@ class LDAPProps(object):
             record.value = value.decode('utf8')
         else:
             return u'feature not available'
-    
+
     memcached = property(_memcached_get, _memcached_set)    
-    
+
     timeout = propproxy('cache.timeout')
-    
+
     binary_attributes = BINARY_DEFAULTS
     multivalued_attributes = MULTIVALUED_DEFAULTS
-    
 
+
+@implementer(ILDAPUsersConfig)
+@adapter(ILDAPPlugin)
 class UsersConfig(object):
 
-    implements(ILDAPUsersConfig)
-    adapts(ILDAPPlugin)
-    
     def __init__(self, plugin):
         self.plugin = plugin
-        
-    strict = False
 
+    strict = False
     baseDN = propproxy('users.baseDN')
     attrmap = propproxy('users.attrmap')
     scope = propproxy('users.scope')
     queryFilter = propproxy('users.queryFilter') 
     objectClasses = propproxy('users.objectClasses')
     memberOfSupport = propproxy('users.memberOfSupport')
-    
     account_expiration = propproxy('users.account_expiration')
     _expiresAttr = propproxy('users.expires_attr')
     _expiresUnit = propproxy('users.expires_unit')
-    
+
     @property
     def expiresAttr(self):
         return self.account_expiration and self._expiresAttr or None
-    
+
     @property
     def expiresUnit(self):
         return self.account_expiration and self._expiresUnit or 0
 
-
+@implementer(ILDAPGroupsConfig)
+@adapter(ILDAPPlugin)
 class GroupsConfig(object):
-
-    implements(ILDAPGroupsConfig)
-    adapts(ILDAPPlugin)
     
     def __init__(self, plugin):
         self.plugin = plugin
 
     strict = False
-
     baseDN = propproxy('groups.baseDN')
     attrmap = propproxy('groups.attrmap')
     scope = propproxy('groups.scope')
