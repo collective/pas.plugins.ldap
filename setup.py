@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '1.0htug4'
+version = '1.0dev'
 shortdesc ="LDAP Plugin for Zope2 PluggableAuthService (users and groups)"
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'TODO.rst')).read()
