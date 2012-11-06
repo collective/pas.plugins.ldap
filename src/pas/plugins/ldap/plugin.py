@@ -255,10 +255,7 @@ class LDAPPlugin(BasePlugin):
         if sort_by == 'id':
             matches = sorted(matches)
         pluginid = self.getId()
-        ret = [
-            dict(id=encode_utf8(id), pluginid=pluginid)
-            for id in matches
-            ]
+        ret = [dict(id=encode_utf8(id), pluginid=pluginid) for id in matches]
         if max_results and len(ret) > max_results:
             ret = ret[:max_results]
         return ret
@@ -358,16 +355,16 @@ class LDAPPlugin(BasePlugin):
             matches = users.search(
                 criteria=kw,
                 attrlist=('login',),
-                exact_match=exact_match
-            )
+                exact_match=exact_match)
         except ValueError:
             return tuple()
         pluginid = self.getId()
-        ret = [dict(
-            id=encode_utf8(id),
-            login=attrs['login'][0], #XXX: see node.ext.ldap.users.Users.search
-            pluginid=pluginid,
-            ) for id, attrs in matches]
+        ret = list()
+        for id, attrs in matches:
+            ret.append({
+                'id': encode_utf8(id),
+                'login': attrs['login'][0],
+                'pluginid': pluginid})
         if max_results and len(ret) > max_results:
             ret = ret[:max_results]
         return ret
