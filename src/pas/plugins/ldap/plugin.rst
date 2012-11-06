@@ -116,19 +116,19 @@ sort_by=None, max_results=None, **kw)``
 ::
 
     >>> ldap.enumerateUsers(id='uid1')
-    [{'pluginid': 'pasldap', 'login': u'cn1', 'id': 'uid1'}]
+    [{'login': u'cn1', 'pluginid': 'pasldap', 'id': 'uid1'}]
 
     >>> ldap.enumerateUsers(id='uid*')
-        [{'pluginid': 'pasldap', 'login': u'cn0', 'id': 'uid0'}, 
-        {'pluginid': 'pasldap', 'login': u'cn1', 'id': 'uid1'}, 
-        {'pluginid': 'pasldap', 'login': u'cn2', 'id': 'uid2'}, 
-        {'pluginid': 'pasldap', 'login': u'cn3', 'id': 'uid3'}, 
-        {'pluginid': 'pasldap', 'login': u'cn4', 'id': 'uid4'}, 
-        {'pluginid': 'pasldap', 'login': u'cn5', 'id': 'uid5'}, 
-        {'pluginid': 'pasldap', 'login': u'cn6', 'id': 'uid6'}, 
-        {'pluginid': 'pasldap', 'login': u'cn7', 'id': 'uid7'}, 
-        {'pluginid': 'pasldap', 'login': u'cn8', 'id': 'uid8'}, 
-        {'pluginid': 'pasldap', 'login': u'cn9', 'id': 'uid9'}]
+    [{'login': u'cn0', 'pluginid': 'pasldap', 'id': 'uid0'}, 
+    {'login': u'cn1', 'pluginid': 'pasldap', 'id': 'uid1'}, 
+    {'login': u'cn2', 'pluginid': 'pasldap', 'id': 'uid2'}, 
+    {'login': u'cn3', 'pluginid': 'pasldap', 'id': 'uid3'}, 
+    {'login': u'cn4', 'pluginid': 'pasldap', 'id': 'uid4'}, 
+    {'login': u'cn5', 'pluginid': 'pasldap', 'id': 'uid5'}, 
+    {'login': u'cn6', 'pluginid': 'pasldap', 'id': 'uid6'}, 
+    {'login': u'cn7', 'pluginid': 'pasldap', 'id': 'uid7'}, 
+    {'login': u'cn8', 'pluginid': 'pasldap', 'id': 'uid8'}, 
+    {'login': u'cn9', 'pluginid': 'pasldap', 'id': 'uid9'}]
         
     >>> [_['id'] for _ in ldap.enumerateUsers(id='uid*', sort_by='id')]
     ['uid0', 'uid1', 'uid2', 'uid3', 'uid4', 'uid5', 'uid6', 'uid7', 'uid8', 
@@ -138,13 +138,13 @@ sort_by=None, max_results=None, **kw)``
     ()
 
     >>> ldap.enumerateUsers(id='uid4', exact_match=True)
-    [{'pluginid': 'pasldap', 'login': u'cn4', 'id': 'uid4'}]
+    [{'login': u'cn4', 'pluginid': 'pasldap', 'id': 'uid4'}]
 
     >>> len(ldap.enumerateUsers(id='uid*', max_results=3))
     3
 
     >>> ldap.enumerateUsers(login='cn1')
-    [{'pluginid': 'pasldap', 'login': u'cn1', 'id': 'uid1'}]
+    [{'login': u'cn1', 'pluginid': 'pasldap', 'id': 'uid1'}]
     
     
 IDeleteCapability
