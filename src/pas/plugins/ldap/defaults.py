@@ -35,6 +35,6 @@ DEFAULTS = {
     'groups.queryFilter'      : '(objectClass=groupOfNames)',
     'groups.objectClasses'    : ["groupOfNames"],
     'groups.memberOfSupport'  : False,
-    'groups.expires_attr'      : 'unused',
-    'groups.expires_unit'      : 0,
+    'groups.expires_attr'     : 'unused',
+    'groups.expires_unit'     : 0,
 }

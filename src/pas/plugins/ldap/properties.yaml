@@ -128,7 +128,7 @@ widgets:
             label: Object classes for Group creation
         widgets: 
             - oc:
-                factory: field:text                         
+                factory: field:text
     - memberOfSupport:
         factory: field:label:checkbox
         value: expr:context.groups.memberOfSupport
