@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-import sys, os
+import os
 
 version = '1.0dev'
 shortdesc ="LDAP Plugin for Zope2 PluggableAuthService (users and groups)"
