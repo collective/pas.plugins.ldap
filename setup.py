@@ -16,7 +16,7 @@ setup(name='pas.plugins.ldap',
             'Environment :: Web Environment',
             'Framework :: Zope2',
             'Operating System :: OS Independent',
-            'Programming Language :: Python',           
+            'Programming Language :: Python',
       ], # Get strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       keywords='zope2 pas plone ldap',
       author='BlueDynamics Alliance',
@@ -29,19 +29,41 @@ setup(name='pas.plugins.ldap',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'setuptools', 
+          'AccessControl',
+          'Acquisition',
+          'Products.CMFCore',
           'Products.PlonePAS',
+          'Products.PluggableAuthService',
+          'Zope2', # App, Products.Five, Products.PageTemplates
+          'bda.cache',
           'five.globalrequest',
+          'python-ldap',
+          'node',
           'node.ext.ldap',
-          'yafowil.plone>=1.3',         
-          'yafowil.widget.dict',
+          'odict',
+          'setuptools',
+          'yafowil.plone>=1.3',
           'yafowil.widget.array',
+          'yafowil.widget.dict',
+          'yafowil.yaml',
+          'zope.component',
+          'zope.globalrequest',
+          'zope.i18nmessageid',
+          'zope.interface',
+          'zope.traversing',
+          # for controlpanel
+          'ZODB3', # BTrees
+          'Products.CMFQuickInstallerTool',
+          'Products.GenericSetup',
+          'Products.statusmessages',
+          'persistent',
+          'plone.registry',
+          'yafowil',
       ],
       extras_require={
           'test': [
               'interlude',
               'zope.configuration',
-              'zope.testing',
               'plone.testing',
           ],
           'plone': [
@@ -51,5 +73,5 @@ setup(name='pas.plugins.ldap',
       entry_points="""
       [z3c.autoinclude.plugin]
       target = plone
-      """,     
+      """,
       )
