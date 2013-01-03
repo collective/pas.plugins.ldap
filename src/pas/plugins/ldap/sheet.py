@@ -53,7 +53,7 @@ class LDAPUserPropertySheet(UserPropertySheet):
         """returns ldap principal
 
         this need to be a on demand, so it does not try to persist any ldap-node
-        related data in i.e. some RamCacheManager 
+        related data in i.e. some RamCacheManager
         """
         ldap_principals = getattr(self._plugin, self._ldapprincipal_type)
         return ldap_principals[self._ldapprincipal_id]

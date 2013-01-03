@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import json
-import types
 from node.utils import encode
 from node.ext.ldap import LDAPNode
 from node.ext.ldap.interfaces import (

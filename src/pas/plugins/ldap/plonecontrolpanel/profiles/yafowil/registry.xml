@@ -7,7 +7,7 @@
     </field>
     <value>True</value>
   </record>
-  
+
   <!-- yafowil.widget.dict -->
   <record name="yafowil.widget.dict.common">
     <field type="plone.registry.field.Bool">

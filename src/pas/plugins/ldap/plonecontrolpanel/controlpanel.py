@@ -3,7 +3,7 @@ from zope.component import getUtility
 from zope.i18nmessageid import MessageFactory
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.statusmessages.interfaces import IStatusMessage
-from pas.plugins.ldap.properties import BasePropertiesForm 
+from pas.plugins.ldap.properties import BasePropertiesForm
 
 
 _ = MessageFactory('pas.plugins.ldap')

@@ -11,7 +11,7 @@ Basics
 ::
     >>> app = layer['app']
     >>> z2.login(app.acl_users, 'admin')
-  
+
 Turn into a PAS user folder::
 
     >>> from Products.PlonePAS.Extensions.Install import migrate_root_uf
@@ -19,7 +19,7 @@ Turn into a PAS user folder::
     >>> pas = app.acl_users
     >>> pas
     <PluggableAuthService at /acl_users>
-    
+
 Create
 ------
 
@@ -27,18 +27,18 @@ Create
     >>> from pas.plugins.ldap.setuphandlers import _addPlugin
     >>> _addPlugin(app.acl_users)
     >>> sorted(pas.objectIds())
-    ['chooser', 'credentials_basic_auth', 'credentials_cookie_auth', 'pasldap', 
+    ['chooser', 'credentials_basic_auth', 'credentials_cookie_auth', 'pasldap',
     'plugins', 'roles', 'sniffer', 'users']
-    
+
     >>> ldap = pas['pasldap']
     >>> ldap
     <LDAPPlugin at /acl_users/pasldap>
-    
+
 turn off request_caching for testing, because test request has strange
 behaviour::
 
     >>> ldap.request_caching = False
-    
+
 PAS Plugins
 ===========
 
@@ -51,9 +51,9 @@ IAuthenticationPlugin
     (u'uid0', 'cn0')
 
     >>> ldap.authenticateCredentials({'login':'admin', 'password': 'admin'})
-    
+
     >>> ldap.authenticateCredentials({'login':'nonexist', 'password': 'dummy'})
-    
+
 
 IGroupEnumerationPlugin
 -----------------------
@@ -67,11 +67,11 @@ max_results=None, **kw)``
     [{'pluginid': 'pasldap', 'id': 'group2'}]
 
     >>> print sorted([_['id'] for _ in ldap.enumerateGroups(id='group*')])
-    ['group0', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 
+    ['group0', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6',
     'group7', 'group8', 'group9']
 
     >>> [_['id'] for _ in ldap.enumerateGroups(id='group*', sort_by='id')]
-    ['group0', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 
+    ['group0', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6',
     'group7', 'group8', 'group9']
 
     >>> ldap.enumerateGroups(id='group*', exact_match=True)
@@ -82,8 +82,8 @@ max_results=None, **kw)``
 
     >>> len(ldap.enumerateGroups(id='group*', max_results=3))
     3
-    
-    
+
+
 IGroupsPlugin
 -------------
 
@@ -95,7 +95,7 @@ IGroupsPlugin
 
     >>> user = pas.getUserById('uid1')
     >>> ldap.getGroupsForPrincipal(user)
-    [u'group1', u'group2', u'group3', u'group4', u'group5', 
+    [u'group1', u'group2', u'group3', u'group4', u'group5',
     u'group6', u'group7', u'group8', u'group9']
 
     >>> user = pas.getUserById('uid0')
@@ -119,21 +119,21 @@ sort_by=None, max_results=None, **kw)``
     [{'login': u'cn1', 'pluginid': 'pasldap', 'id': 'uid1'}]
 
     >>> ldap.enumerateUsers(id='uid*')
-    [{'login': u'cn0', 'pluginid': 'pasldap', 'id': 'uid0'}, 
-    {'login': u'cn1', 'pluginid': 'pasldap', 'id': 'uid1'}, 
-    {'login': u'cn2', 'pluginid': 'pasldap', 'id': 'uid2'}, 
-    {'login': u'cn3', 'pluginid': 'pasldap', 'id': 'uid3'}, 
-    {'login': u'cn4', 'pluginid': 'pasldap', 'id': 'uid4'}, 
-    {'login': u'cn5', 'pluginid': 'pasldap', 'id': 'uid5'}, 
-    {'login': u'cn6', 'pluginid': 'pasldap', 'id': 'uid6'}, 
-    {'login': u'cn7', 'pluginid': 'pasldap', 'id': 'uid7'}, 
-    {'login': u'cn8', 'pluginid': 'pasldap', 'id': 'uid8'}, 
+    [{'login': u'cn0', 'pluginid': 'pasldap', 'id': 'uid0'},
+    {'login': u'cn1', 'pluginid': 'pasldap', 'id': 'uid1'},
+    {'login': u'cn2', 'pluginid': 'pasldap', 'id': 'uid2'},
+    {'login': u'cn3', 'pluginid': 'pasldap', 'id': 'uid3'},
+    {'login': u'cn4', 'pluginid': 'pasldap', 'id': 'uid4'},
+    {'login': u'cn5', 'pluginid': 'pasldap', 'id': 'uid5'},
+    {'login': u'cn6', 'pluginid': 'pasldap', 'id': 'uid6'},
+    {'login': u'cn7', 'pluginid': 'pasldap', 'id': 'uid7'},
+    {'login': u'cn8', 'pluginid': 'pasldap', 'id': 'uid8'},
     {'login': u'cn9', 'pluginid': 'pasldap', 'id': 'uid9'}]
-        
+
     >>> [_['id'] for _ in ldap.enumerateUsers(id='uid*', sort_by='id')]
-    ['uid0', 'uid1', 'uid2', 'uid3', 'uid4', 'uid5', 'uid6', 'uid7', 'uid8', 
+    ['uid0', 'uid1', 'uid2', 'uid3', 'uid4', 'uid5', 'uid6', 'uid7', 'uid8',
     'uid9']
-        
+
     >>> ldap.enumerateUsers(id='uid*', exact_match=True)
     ()
 
@@ -145,8 +145,8 @@ sort_by=None, max_results=None, **kw)``
 
     >>> ldap.enumerateUsers(login='cn1')
     [{'login': u'cn1', 'pluginid': 'pasldap', 'id': 'uid1'}]
-    
-    
+
+
 IDeleteCapability
 -----------------
 
@@ -167,8 +167,8 @@ In order to cache propertysheets it must be picklable::
 
     >>> from Acquisition import aq_base
     >>> import pickle
-    >>> len(pickle.dumps(aq_base(ldap)))  
-    239  
+    >>> len(pickle.dumps(aq_base(ldap)))
+    239
 
 
 PlonePAS
@@ -182,12 +182,12 @@ configurable::
 
     >>> ldap.allowGroupAdd('uid0', 'group0')
     False
-    
+
 Same for deletion of groups::
 
     >>> ldap.allowGroupRemove('uid0', 'group0')
     False
-    
+
 IGroupIntrospection
 -------------------
 
@@ -199,23 +199,23 @@ to this id::
 
     >>> print ldap.getGroupById('non-existent')
     None
-    
+
 list all groups ids::
 
     >>> ldap.getGroupIds()
-    [u'group0', u'group1', u'group2', u'group3', u'group4', u'group5', 
+    [u'group0', u'group1', u'group2', u'group3', u'group4', u'group5',
     u'group6', u'group7', u'group8', u'group9']
-    
+
 list all groups::
 
     >>> ldap.getGroups()
-    [<PloneGroup u'group0'>, <PloneGroup u'group1'>, <PloneGroup u'group2'>,     
-    <PloneGroup u'group3'>, <PloneGroup u'group4'>, <PloneGroup u'group5'>, 
-    <PloneGroup u'group6'>, <PloneGroup u'group7'>, <PloneGroup u'group8'>, 
+    [<PloneGroup u'group0'>, <PloneGroup u'group1'>, <PloneGroup u'group2'>,
+    <PloneGroup u'group3'>, <PloneGroup u'group4'>, <PloneGroup u'group5'>,
+    <PloneGroup u'group6'>, <PloneGroup u'group7'>, <PloneGroup u'group8'>,
     <PloneGroup u'group9'>]
 
 list all members of a group::
-    
+
     >>> ldap.getGroupMembers('group3')
     (u'uid1', u'uid2', u'uid3')
 
@@ -272,14 +272,14 @@ Get works::
 
     >>> sheet.getProperty('mail')
     u'uid0@groupOfNames_10_10.com'
-    
+
 Set does nothing, but the sheet itselfs set immediatly::
 
     >>> from pas.plugins.ldap.sheet import LDAPUserPropertySheet
     >>> sheet = LDAPUserPropertySheet(user, ldap)
     >>> sheet.getProperty('mail')
     u'uid0@groupOfNames_10_10.com'
-    
+
     >>> sheet.setProperty(None, 'mail', u'foobar@example.com')
     >>> sheet.getProperty('mail')
     u'foobar@example.com'
@@ -294,7 +294,7 @@ Set does nothing, but the sheet itselfs set immediatly::
 In order to cache propertysheets it must be picklable::
 
     >>> len(pickle.dumps(sheet2))
-    676    
+    676
 
 
 IUserManagement
@@ -304,13 +304,13 @@ Password change and attributes at once with ``doChangeUser``::
 
     >>> ldap.doChangeUser('uid9', 'geheim') is None
     True
-    
+
     >>> ldap.authenticateCredentials({'login':'cn9', 'password': 'geheim'})
     (u'uid9', 'cn9')
-    
+
 
 We dont support user deletion for now. We may change this later and make it
-configurable:: 
+configurable::
 
     >>> ldap.doDeleteUser('uid0')
     False

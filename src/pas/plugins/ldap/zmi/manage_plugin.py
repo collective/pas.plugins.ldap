@@ -1,7 +1,7 @@
-from pas.plugins.ldap.properties import BasePropertiesForm   
+from pas.plugins.ldap.properties import BasePropertiesForm
 
 class ManageLDAPPlugin(BasePropertiesForm):
-    
+
     @property
     def plugin(self):
         return self.context

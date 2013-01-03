@@ -18,14 +18,14 @@ PropProxy
     >>> plugin = SomePlugin()
     >>> adapter = SomeAdapter(plugin)
 
-    >>> adapter.someprop 
+    >>> adapter.someprop
     'default'
 
-    >>> adapter.someprop = 'othervalue' 
-    >>> adapter.someprop 
+    >>> adapter.someprop = 'othervalue'
+    >>> adapter.someprop
     'othervalue'
-    
-    
+
+
 Properties
 ==========
 
@@ -37,4 +37,3 @@ Properties
     >>> ldapprops = LDAPProps(plugin)
     >>> usersprops = UsersConfig(plugin)
     >>> groupsprops = GroupsConfig(plugin)
-    

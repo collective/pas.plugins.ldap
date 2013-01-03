@@ -1,4 +1,3 @@
-from StringIO import StringIO
 from pas.plugins.ldap.plugin import LDAPPlugin
 
 
@@ -29,7 +28,7 @@ def _addPlugin(pas, pluginid='pasldap'):
 
 def setupPlugin(context):
     if isNotThisProfile(context):
-        return 
+        return
     site = context.getSite()
     pas = site.acl_users
     _addPlugin(pas)

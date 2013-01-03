@@ -21,12 +21,10 @@ from zope.component import (
     adapter,
     queryUtility,
 )
-import yafowil.loader
 from yafowil.base import UNSET
 from yafowil.controller import Controller
 from yafowil.yaml import parse_from_YAML
 from zope.i18nmessageid import MessageFactory
-from persistent.dict import PersistentDict
 from Products.Five import BrowserView
 from pas.plugins.ldap.interfaces import (
     ILDAPPlugin,
@@ -40,13 +38,13 @@ _ = MessageFactory('pas.plugins.ldap')
 
 
 class BasePropertiesForm(BrowserView):
-    
+
     scope_vocab = [
         (str(BASE), 'BASE'),
         (str(ONELEVEL), 'ONELEVEL'),
         (str(SUBTREE), 'SUBTREE'),
     ]
-    
+
     static_attrs_users  = ['rdn', 'id', 'login']
     static_attrs_groups = ['rdn', 'id']
 
@@ -59,7 +57,7 @@ class BasePropertiesForm(BrowserView):
 
     @property
     def action(self):
-        return self.next({}) 
+        return self.next({})
 
     def form(self):
         # make configuration data available on form context
@@ -71,7 +69,7 @@ class BasePropertiesForm(BrowserView):
         self.users_attrmap = odict()
         for key in self.static_attrs_users:
             self.users_attrmap[key] = self.users.attrmap.get(key)
-        
+
         self.users_propsheet_attrmap = odict()
         for key, value in self.users.attrmap.items():
             if key in self.static_attrs_users:
@@ -95,7 +93,7 @@ class BasePropertiesForm(BrowserView):
             return controller.rendered
         self.request.RESPONSE.redirect(controller.next)
         return u''
-    
+
     def save(self, widget, data):
         props =  ILDAPProps(self.plugin)
         users =  ILDAPUsersConfig(self.plugin)
@@ -114,7 +112,7 @@ class BasePropertiesForm(BrowserView):
         password = fetch('server.password')
         if password is not UNSET:
             props.password = password
-        
+
         # XXX: later
         #props.start_tls = fetch('server.start_tls')
         #props.tls_cacertfile = fetch('server.tls_cacertfile')
@@ -158,7 +156,7 @@ class BasePropertiesForm(BrowserView):
         objectClasses = fetch('groups.object_classes')
         groups.objectClasses = objectClasses
         groups.memberOfSupport = fetch('groups.memberOfSupport')
-        
+
     def connection_test(self):
         props =  ILDAPProps(self.plugin)
         users =  ILDAPUsersConfig(self.plugin)
@@ -181,7 +179,7 @@ class BasePropertiesForm(BrowserView):
         except Exception, e:
             logger.exception('Non-LDAP error while connection test!')
             return False, _('Other; ') + str(e)
-        return True, 'Connection, users- and groups-access tested successfully.'                             
+        return True, 'Connection, users- and groups-access tested successfully.'
 
 
 def propproxy(ckey):
@@ -230,7 +228,7 @@ class LDAPProps(object):
         else:
             return u'feature not available'
 
-    memcached = property(_memcached_get, _memcached_set)    
+    memcached = property(_memcached_get, _memcached_set)
 
     timeout = propproxy('cache.timeout')
 
@@ -249,7 +247,7 @@ class UsersConfig(object):
     baseDN = propproxy('users.baseDN')
     attrmap = propproxy('users.attrmap')
     scope = propproxy('users.scope')
-    queryFilter = propproxy('users.queryFilter') 
+    queryFilter = propproxy('users.queryFilter')
     objectClasses = propproxy('users.objectClasses')
     memberOfSupport = propproxy('users.memberOfSupport')
     account_expiration = propproxy('users.account_expiration')
@@ -267,7 +265,7 @@ class UsersConfig(object):
 @implementer(ILDAPGroupsConfig)
 @adapter(ILDAPPlugin)
 class GroupsConfig(object):
-    
+
     def __init__(self, plugin):
         self.plugin = plugin
 
@@ -275,7 +273,7 @@ class GroupsConfig(object):
     baseDN = propproxy('groups.baseDN')
     attrmap = propproxy('groups.attrmap')
     scope = propproxy('groups.scope')
-    queryFilter = propproxy('groups.queryFilter') 
+    queryFilter = propproxy('groups.queryFilter')
     objectClasses = propproxy('groups.objectClasses')
     memberOfSupport = propproxy('groups.memberOfSupport')
     expiresAttr = propproxy('groups.expires_attr')

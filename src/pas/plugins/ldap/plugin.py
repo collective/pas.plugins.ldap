@@ -3,7 +3,6 @@ import os
 import ldap
 import logging
 from zope.interface import implementer
-from zope.component import getUtility
 from zope.globalrequest import getRequest
 from node.ext.ldap.interfaces import (
     ILDAPProps,
@@ -19,7 +18,6 @@ from BTrees import OOBTree
 from App.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.CMFCore.interfaces import ISiteRoot
 from Products.PluggableAuthService.permissions import (
     ManageUsers,
     ManageGroups,
@@ -77,7 +75,7 @@ class LDAPPlugin(BasePlugin):
         },) + BasePlugin.manage_options
 
     #XXX: turn this to False when going productive, just in case
-    _dont_swallow_my_exceptions = False # Tell PAS not to swallow our exceptions    
+    _dont_swallow_my_exceptions = False # Tell PAS not to swallow our exceptions
 
     def __init__(self, id, title=None, **kw):
         self._setId(id)
@@ -285,7 +283,7 @@ class LDAPPlugin(BasePlugin):
             return tuple()
         if self.groups:
             # XXX: provide group_ids function in UGM! Way too calculation-heavy
-            #      now 
+            #      now
             return [_.id for _ in _principal.groups]
         return tuple()
 
@@ -337,7 +335,7 @@ class LDAPPlugin(BasePlugin):
         o Insufficiently-specified criteria may have catastrophic
           scaling issues for some implementations.
         """
-        # TODO: sort_by in node.ext.ldap  
+        # TODO: sort_by in node.ext.ldap
         if login:
             if not isinstance(login, basestring):
                 # XXX TODO
@@ -405,9 +403,9 @@ class LDAPPlugin(BasePlugin):
         set roles for group
         return True on success
         """
-        # even Products.PlonePAS.plugins.GroupAwareRoleManager does not 
+        # even Products.PlonePAS.plugins.GroupAwareRoleManager does not
         # implement this. We're save to ignore it too for now. But at least
-        # we do implement it. 
+        # we do implement it.
         return False
 
     security.declarePrivate('removeGroup')

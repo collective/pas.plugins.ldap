@@ -8,7 +8,7 @@
 
   <include package="five.globalrequest" />
 
-  <five:registerPackage package="." initialize=".initialize" />  
+  <five:registerPackage package="." initialize=".initialize" />
 
   <include package="Products.GenericSetup" file="meta.zcml" />
 
@@ -19,7 +19,7 @@
     title="LDAP Plugin for PAS - Zope 2 Base Installation"
     directory="profile"
     description="Extension profile for pas.plugins.ldap Zope Base."
-    provides="Products.GenericSetup.interfaces.EXTENSION" />  
+    provides="Products.GenericSetup.interfaces.EXTENSION" />
 
   <adapter factory=".properties.LDAPProps" />
 
@@ -29,13 +29,13 @@
 
   <utility
     component=".cache.cacheProviderFactory"
-    provides="node.ext.ldap.interfaces.ICacheProviderFactory" />    
+    provides="node.ext.ldap.interfaces.ICacheProviderFactory" />
 
-  <include 
-    zcml:condition="installed Products.CMFPlone"   
+  <include
+    zcml:condition="installed Products.CMFPlone"
     package=".plonecontrolpanel" />
 
-  <adapter    
+  <adapter
     for="* ZPublisher.HTTPRequest.HTTPRequest"
     factory=".monkey.PortraitTraverser"
     name="portrait" />

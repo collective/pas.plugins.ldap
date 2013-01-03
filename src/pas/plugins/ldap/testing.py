@@ -8,9 +8,9 @@ from zope.component import (
     provideUtility,
 )
 from plone.testing import (
-    Layer, 
-    zodb, 
-    zca, 
+    Layer,
+    zodb,
+    zca,
     z2,
 )
 import Zope2
@@ -46,7 +46,7 @@ def groupsconfig(context):
 
 class PASLDAPLayer(Layer):
     # big parts copied from p.a.testing!
-    
+
     defaultBases = (ldaptesting.LDIF_groupOfNames_10_10, z2.STARTUP)
 
     # Products that will be installed, plus options
@@ -57,11 +57,11 @@ class PASLDAPLayer(Layer):
             ('Products.PluginRegistry'              , {'loadZCML': True}, ),
             ('Products.PlonePAS'                    , {'loadZCML': True}, ),
         )
-    
+
     def setUp(self):
-        self['zodbDB'] = zodb.stackDemoStorage(self.get('zodbDB'), 
+        self['zodbDB'] = zodb.stackDemoStorage(self.get('zodbDB'),
                                                name='PASLDAPLayer')
-        self['app'] = z2.addRequestContainer(Zope2.app(self['zodbDB'].open()), 
+        self['app'] = z2.addRequestContainer(Zope2.app(self['zodbDB'].open()),
                                              environ=None)
         self.setUpZCML()
         self.setUpProducts(self['app'])
@@ -71,13 +71,13 @@ class PASLDAPLayer(Layer):
         self.tearDownProducts(self['app'])
         self.tearDownZCML()
         del self['app']
-        self['zodbDB'].close()        
+        self['zodbDB'].close()
         del self['zodbDB']
-        
+
 
     def setUpZCML(self):
         """Stack a new global registry and load ZCML configuration of Plone
-        and the core set of add-on products into it. 
+        and the core set of add-on products into it.
         """
         # Create a new global registry
         zca.pushGlobalRegistry()

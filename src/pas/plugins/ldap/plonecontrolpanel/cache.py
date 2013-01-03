@@ -30,4 +30,3 @@ class CacheSettingsRecordProvider(Persistent):
             value = field.TextLine(title=u'servers, delimited by space')
             records[REGKEY] = Record(value)
         return records[REGKEY]
-     

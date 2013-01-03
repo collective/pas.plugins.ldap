@@ -56,9 +56,9 @@ widgets:
         value: "expr:not isinstance(context.users.objectClasses, basestring) and context.users.objectClasses or [context.users.objectClasses]"
         props:
             label: Object classes for User creation
-        widgets: 
+        widgets:
             - oc:
-                factory: field:text                         
+                factory: field:text
     - memberOfSupport:
         factory: field:label:checkbox
         value: expr:context.users.memberOfSupport
@@ -101,7 +101,7 @@ widgets:
 - groups:
     factory: fieldset
     props:
-        legend: Groups Settings                               
+        legend: Groups Settings
         class: formPanel
     widgets:
     - dn:
@@ -126,7 +126,7 @@ widgets:
         value: "expr:not isinstance(context.groups.objectClasses, basestring) and context.groups.objectClasses or [context.groups.objectClasses]"
         props:
             label: Object classes for Group creation
-        widgets: 
+        widgets:
             - oc:
                 factory: field:text
     - memberOfSupport:
@@ -173,9 +173,9 @@ widgets:
     - timeout:
         factory: field:label:error:number
         value: expr:context.props.timeout
-        props:         
+        props:
             label: Cache timeout in seconds
-            datatype: integer                
+            datatype: integer
 - save:
     factory: submit
     props:
@@ -183,4 +183,4 @@ widgets:
         expression: True
         handler: context.save
         next: context.next
-        label: Save                                  
+        label: Save

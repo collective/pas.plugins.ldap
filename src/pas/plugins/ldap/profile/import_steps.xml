@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <import-steps>
- <import-step id="pas.plugins.ldap.setup" 
+ <import-step id="pas.plugins.ldap.setup"
               handler="pas.plugins.ldap.setuphandlers.setupPlugin"
               title="Setup LDAP Plugin"
               version="20110226">
@@ -8,4 +8,3 @@
   Setup LDAP Plugin
  </import-step>
 </import-steps>
- 

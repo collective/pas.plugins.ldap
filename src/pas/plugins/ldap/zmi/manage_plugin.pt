@@ -10,7 +10,7 @@
     font-family: Verdana, Helvetica, sans-serif;
     font-size: 10pt;
     color: #333333;
-} 
+}
 .ldap-manage-form .field {
     padding-bottom: 0.6em;
 }
@@ -33,7 +33,7 @@
     background-color: #ffbbbb;
 }
 .ldap-manage-form .errormessage {
-    color: red;    
+    color: red;
     float: right;
 }
     </style>
@@ -44,7 +44,7 @@
         <strong tal:content="python: state_ok and 'OK' or 'ERROR'"
                 tal:attributes="style python: state_ok and 'color:green' or 'color:red'"
                 >state</strong>: <span tal:content="state_msg">msg</span>
-              
+
     </p>
 
     <h2>Manage LDAP plugin properties for id <i tal:content="context/getId">id</i></h2>

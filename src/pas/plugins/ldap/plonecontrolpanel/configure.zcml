@@ -77,6 +77,6 @@
     name="pas.plugins.ldap"
     title="LDAP Settings"
     description="Exports LDAP Settings"
-    handler=".exportimport.export_settings" />  
+    handler=".exportimport.export_settings" />
 
 </configure>

@@ -12,10 +12,10 @@ DEFAULTS = {
     'cache.timeout'           : 300, # seconds
 
     'users.baseDN'            : 'ou=users,dc=my-domain,dc=com',
-    'users.attrmap'           : {"rdn": "uid", 
-                                 "id": "uid", 
+    'users.attrmap'           : {"rdn": "uid",
+                                 "id": "uid",
                                  "login": "uid",
-                                 "fullname": "cn", 
+                                 "fullname": "cn",
                                  "email": "mail",
                                  'location': 'l'},
     'users.scope'             : ONELEVEL,
@@ -27,8 +27,8 @@ DEFAULTS = {
     'users.expires_unit'      : 0,
 
     'groups.baseDN'           : 'ou=groups,dc=my-domain,dc=com',
-    'groups.attrmap'          : {"rdn": "cn", 
-                                 "id": "cn", 
+    'groups.attrmap'          : {"rdn": "cn",
+                                 "id": "cn",
                                  "title": "o",
                                  "description": "description"},
     'groups.scope'            : ONELEVEL,

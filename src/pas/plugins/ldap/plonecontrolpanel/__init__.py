@@ -1,4 +1,3 @@
-import yafowil.loader
 from zope.interface import implementer
 from Products.CMFQuickInstallerTool.interfaces import INonInstallable
 

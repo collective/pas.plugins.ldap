@@ -1,7 +1,7 @@
-from zope.interface import Interface 
+from zope.interface import Interface
 
 
-class ILDAPPlugin(Interface):    
+class ILDAPPlugin(Interface):
     """Marker Interface for the LDAP Plugin
     """
 

@@ -1,14 +1,9 @@
 import types
-import os.path
 from zope.interface import implementer
 from zope.component import queryMultiAdapter
 from BTrees.OOBTree import OOBTree
-from Acquisition import Implicit
-from Products.CMFCore.utils import getToolByName
 from Products.GenericSetup.utils import XMLAdapterBase
 from Products.GenericSetup.interfaces import IBody
-from Products.GenericSetup.interfaces import IFilesystemExporter
-from Products.GenericSetup.interfaces import IFilesystemImporter
 
 
 def _get_import_export_handler(context):
