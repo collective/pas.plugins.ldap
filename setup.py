@@ -1,30 +1,35 @@
-from setuptools import setup, find_packages
 import os
+from setuptools import (
+    setup,
+    find_packages,
+)
+
 
 version = '1.0dev'
-shortdesc ="LDAP Plugin for Zope2 PluggableAuthService (users and groups)"
+shortdesc = "LDAP Plugin for Zope2 PluggableAuthService (users and groups)"
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'TODO.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'HISTORY.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'LICENSE.rst')).read()
+
 
 setup(name='pas.plugins.ldap',
       version=version,
       description=shortdesc,
       long_description=longdesc,
       classifiers=[
-            'Environment :: Web Environment',
-            'Framework :: Zope2',
-            'Operating System :: OS Independent',
-            'Programming Language :: Python',
-      ], # Get strings from http://www.python.org/pypi?%3Aaction=list_classifiers
+          'Environment :: Web Environment',
+          'Framework :: Zope2',
+          'Operating System :: OS Independent',
+          'Programming Language :: Python',
+      ],
       keywords='zope2 pas plone ldap',
       author='BlueDynamics Alliance',
       author_email='dev@bluedynamics.com',
       url='https://github.com/collective/pas.plugins.ldap',
       license='BSD like',
       packages=find_packages('src'),
-      package_dir = {'': 'src'},
+      package_dir={'': 'src'},
       namespace_packages=['pas', 'pas.plugins'],
       include_package_data=True,
       zip_safe=False,
@@ -34,7 +39,7 @@ setup(name='pas.plugins.ldap',
           'Products.CMFCore',
           'Products.PlonePAS',
           'Products.PluggableAuthService',
-          'Zope2', # App, Products.Five, Products.PageTemplates
+          'Zope2',
           'bda.cache',
           'five.globalrequest',
           'python-ldap',
@@ -52,7 +57,7 @@ setup(name='pas.plugins.ldap',
           'zope.interface',
           'zope.traversing',
           # for controlpanel
-          'ZODB3', # BTrees
+          'ZODB3',
           'Products.CMFQuickInstallerTool',
           'Products.GenericSetup',
           'Products.statusmessages',
