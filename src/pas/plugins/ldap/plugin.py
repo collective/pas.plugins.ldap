@@ -341,6 +341,11 @@ class LDAPPlugin(BasePlugin):
                 # XXX TODO
                 raise NotImplementedError('sequence is not supported yet.')
             kw['login'] = login
+        
+        # pas search users gives both login and name if login is meant    
+        if "login" in kw and "name" in kw:
+            del kw["name"]
+            
         if id:
             if not isinstance(id, basestring):
                 # XXX TODO
