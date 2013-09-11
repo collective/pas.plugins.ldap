@@ -2,6 +2,12 @@
 History
 =======
 
+1.0.2
+-----
+
+- sometimes ldap returns an empty string as portrait. take this as no portrait.
+  [jensens, 2013-09-11]
+
 1.0.1
 -----
 

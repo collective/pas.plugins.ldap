@@ -34,7 +34,7 @@ def getPortraitFromSheet(context, userid):
         if 'portrait' in sheet.propertyIds():
            portrait = sheet.getProperty('portrait')
            break
-    if portrait is None:
+    if not portrait:
         # nothing found on sheet
         return None
     # turn into OFS.Image
