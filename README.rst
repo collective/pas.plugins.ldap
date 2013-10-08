@@ -78,7 +78,7 @@ If you want to help with the development (improvement, update, bug-fixing, ...)
 of ``pas.plugins.ldap`` this is a great idea!
 
 The code is located in the
-`github collective <http://github.com/bluedynamics/pas.plugins.ldap>`_.
+`github collective <http://github.com/collective/pas.plugins.ldap>`_.
 
 You can clone it or `get access to the github-collective
 <http://collective.github.com/>`_ and work directly on the project.
