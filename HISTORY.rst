@@ -2,6 +2,13 @@
 History
 =======
 
+1.0.3 (unreleased)
+------------------
+
+- Add new bootstrap v1
+  [saily]
+
+
 1.0.2
 -----
 
