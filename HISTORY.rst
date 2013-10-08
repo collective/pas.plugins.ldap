@@ -5,6 +5,9 @@ History
 1.0.3 (unreleased)
 ------------------
 
+- Add URL example to widget help information how to specify an ldap uri.
+  [saily]
+
 - Add new bootstrap v1
   [saily]
 

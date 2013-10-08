@@ -11,10 +11,11 @@ widgets:
         class: formPanel
     widgets:
     - uri:
-        factory: field:label:error:text
+        factory: field:label:help:error:text
         value: expr:context.props.uri
         props:
             label: LDAP URI
+            help: "Example: ldap://127.0.0.1:12345"
             required: No URI defined
     - user:
         factory: field:label:error:text
