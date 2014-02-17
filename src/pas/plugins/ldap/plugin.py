@@ -28,7 +28,7 @@ import time
 logger = logging.getLogger('pas.plugins.ldap')
 zmidir = os.path.join(os.path.dirname(__file__), 'zmi')
 
-LDAP_ERROR_TIMEOUT = 15.0
+LDAP_ERROR_TIMEOUT = 300.0
 
 
 def manage_addLDAPPlugin(dispatcher, id, title='', RESPONSE=None, **kw):
