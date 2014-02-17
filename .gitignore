@@ -11,3 +11,6 @@
 /.project
 /.pydevproject
 /.settings/
+/local/
+/lib/
+/include/

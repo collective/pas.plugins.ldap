@@ -5,7 +5,7 @@ from setuptools import (
 )
 
 
-version = '1.0.2'
+version = '1.1.0'
 shortdesc = "LDAP Plugin for Zope2 PluggableAuthService (users and groups)"
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'TODO.rst')).read()
@@ -26,7 +26,7 @@ setup(name='pas.plugins.ldap',
       keywords='zope2 pas plone ldap',
       author='BlueDynamics Alliance',
       author_email='dev@bluedynamics.com',
-      url='https://github.com/collective/pas.plugins.ldap',
+      url='https://pypi.python.org/pypi/pas.plugins.ldap',
       license='BSD like',
       packages=find_packages('src'),
       package_dir={'': 'src'},
@@ -36,17 +36,22 @@ setup(name='pas.plugins.ldap',
       install_requires=[
           'AccessControl',
           'Acquisition',
-          'Products.CMFCore',
-          'Products.PlonePAS',
-          'Products.PluggableAuthService',
-          'Zope2',
           'bda.cache',
           'five.globalrequest',
-          'python-ldap',
           'node',
           'node.ext.ldap',
           'odict',
+          'persistent',
+          'plone.registry',
+          'Products.CMFCore',
+          'Products.CMFQuickInstallerTool',
+          'Products.GenericSetup',
+          'Products.PlonePAS',
+          'Products.PluggableAuthService',
+          'Products.statusmessages',
+          'python-ldap',
           'setuptools',
+          'yafowil',
           'yafowil.plone>=1.3',
           'yafowil.widget.array',
           'yafowil.widget.dict',
@@ -56,20 +61,13 @@ setup(name='pas.plugins.ldap',
           'zope.i18nmessageid',
           'zope.interface',
           'zope.traversing',
-          # for controlpanel
-          'ZODB3',
-          'Products.CMFQuickInstallerTool',
-          'Products.GenericSetup',
-          'Products.statusmessages',
-          'persistent',
-          'plone.registry',
-          'yafowil',
+          'Zope2',
       ],
       extras_require={
           'test': [
-              'interlude',
-              'zope.configuration',
+              'interlude[ipython]>=1.3.1',
               'plone.testing',
+              'zope.configuration',
           ],
           'plone': [
               'Plone',
