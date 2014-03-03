@@ -26,14 +26,14 @@ Zope2
 
 Add to the instance section of your buildout::
 
-    eggs = 
+    eggs =
         ...
         pas.plugins.ldap
-        
-    zcml = 
+
+    zcml =
         ...
         pas.plugins.ldap
-        
+
 Run buildout. Restart Zope.
 
 Then got to your acl_users folder and add an LDAP-Plugin. Configure it using the
@@ -45,7 +45,7 @@ Plone
 
 Add to the instance section of your buildout::
 
-    eggs = 
+    eggs =
         ...
         pas.plugins.ldap
 
@@ -97,3 +97,5 @@ Contributors
 - Robert Niederrreiter <rnix [at] squarewave [dot] at>
 
 - Florian Friesdorf <flo [at] chaoflow [dot] net>
+
+- Daniel Widerin <daniel@widerin.net>
