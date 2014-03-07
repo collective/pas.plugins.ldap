@@ -170,7 +170,7 @@ class BasePropertiesForm(BrowserView):
             return False, _('LDAP users; ') + str(e)
         except Exception, e:
             logger.exception('Non-LDAP error while connection test!')
-            return False, _('Other; ') + str(e)
+            return False, _('Exception in Users; ') + str(e)
         try:
             ugm.groups
         except ldap.LDAPError, e:
@@ -178,7 +178,7 @@ class BasePropertiesForm(BrowserView):
                    e.message['desc']
         except Exception, e:
             logger.exception('Non-LDAP error while connection test!')
-            return False, _('Other; ') + str(e)
+            return False, _('Exception in Groups; ') + str(e)
         return True, 'Connection, users- and groups-access tested successfully.'
 
 
@@ -201,6 +201,7 @@ class LDAPProps(object):
     uri = propproxy('server.uri')
     user = propproxy('server.user')
     password = propproxy('server.password')
+    check_duplicates = propproxy('server.check_duplicates')
 
     # XXX: Later
     start_tls = propproxy('server.start_tls')
