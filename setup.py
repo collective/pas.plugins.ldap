@@ -5,7 +5,7 @@ from setuptools import (
 )
 
 
-version = '1.1.1.dev0'
+version = '1.2.0.dev0'
 shortdesc = "LDAP Plugin for Zope2 PluggableAuthService (users and groups)"
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'TODO.rst')).read()
@@ -39,7 +39,7 @@ setup(name='pas.plugins.ldap',
           'bda.cache',
           'five.globalrequest',
           'node',
-          'node.ext.ldap',
+          'node.ext.ldap>=0.9.6.dev0',
           'odict',
           'persistent',
           'plone.registry',

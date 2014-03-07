@@ -2,10 +2,16 @@
 History
 =======
 
-1.1.1 (unreleased)
+1.2.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add new property to disable duplicate primary/secondary key checking
+  in LDAP trees. This allows pas.plugins.ldap to read LDAP tree and ignore
+  duplicated items instead of raising::
+
+    Traceback (most recent call last):
+    ...
+    RuntimeError: Key not unique: <key>='<value>'.
 
 
 1.1.0 (2014-03-03)
