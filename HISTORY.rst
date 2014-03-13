@@ -2,7 +2,7 @@
 History
 =======
 
-1.2.0 (unreleased)
+1.2.0 (2014-03-13)
 ------------------
 
 - add property ``check_duplicates``. Adds ability to disable duplicates check
