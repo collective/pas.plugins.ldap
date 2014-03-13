@@ -5,6 +5,10 @@ History
 1.0.3 (unreleased)
 ------------------
 
+- add property ``check_duplicates``. Adds ability to disable duplicates check
+  for keys in ldap in order to avoid failure if ldap strcuture is not perfect.
+  [jensens]
+
 - Add URL example to widget help information how to specify an ldap uri.
   [saily]
 

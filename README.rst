@@ -97,3 +97,5 @@ Contributors
 - Robert Niederrreiter <rnix [at] squarewave [dot] at>
 
 - Florian Friesdorf <flo [at] chaoflow [dot] net>
+
+- Daniel Widerin

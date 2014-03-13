@@ -1,36 +1,26 @@
-import ldap
-import logging
-from odict import odict
-from node.ext.ldap.scope import (
-    BASE,
-    ONELEVEL,
-    SUBTREE,
-)
-from node.ext.ldap.interfaces import (
-    ILDAPProps,
-    ILDAPUsersConfig,
-    ILDAPGroupsConfig,
-)
+from Products.Five import BrowserView
+from node.ext.ldap.interfaces import ILDAPGroupsConfig
+from node.ext.ldap.interfaces import ILDAPProps
+from node.ext.ldap.interfaces import ILDAPUsersConfig
+from node.ext.ldap.properties import BINARY_DEFAULTS
+from node.ext.ldap.properties import MULTIVALUED_DEFAULTS
+from node.ext.ldap.scope import BASE
+from node.ext.ldap.scope import ONELEVEL
+from node.ext.ldap.scope import SUBTREE
 from node.ext.ldap.ugm import Ugm
-from node.ext.ldap.properties import (
-     MULTIVALUED_DEFAULTS,
-     BINARY_DEFAULTS,
-)
-from zope.interface import implementer
-from zope.component import (
-    adapter,
-    queryUtility,
-)
+from odict import odict
+from pas.plugins.ldap.defaults import DEFAULTS
+from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
+from pas.plugins.ldap.interfaces import ILDAPPlugin
 from yafowil.base import UNSET
 from yafowil.controller import Controller
 from yafowil.yaml import parse_from_YAML
+from zope.component import adapter
+from zope.component import queryUtility
 from zope.i18nmessageid import MessageFactory
-from Products.Five import BrowserView
-from pas.plugins.ldap.interfaces import (
-    ILDAPPlugin,
-    ICacheSettingsRecordProvider,
-)
-from pas.plugins.ldap.defaults import DEFAULTS
+from zope.interface import implementer
+import ldap
+import logging
 
 
 logger = logging.getLogger('pas.plugins.ldap')
@@ -112,8 +102,9 @@ class BasePropertiesForm(BrowserView):
         password = fetch('server.password')
         if password is not UNSET:
             props.password = password
+        props.check_duplicates = fetch('server.check_duplicates')
 
-        # XXX: later
+        # TODO: later
         #props.start_tls = fetch('server.start_tls')
         #props.tls_cacertfile = fetch('server.tls_cacertfile')
         #props.tls_cacertdir = fetch('server.tls_cacertdir')
@@ -201,6 +192,7 @@ class LDAPProps(object):
     uri = propproxy('server.uri')
     user = propproxy('server.user')
     password = propproxy('server.password')
+    check_duplicates = propproxy('server.check_duplicates')
 
     # XXX: Later
     start_tls = propproxy('server.start_tls')

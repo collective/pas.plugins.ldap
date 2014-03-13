@@ -10,7 +10,7 @@ from .testing import PASLDAPLayer
 
 
 optionflags = doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS
-optionflags |= doctest.REPORT_ONLY_FIRST_FAILURE
+optionflags = optionflags | doctest.REPORT_ONLY_FIRST_FAILURE
 
 
 TESTFILES = [

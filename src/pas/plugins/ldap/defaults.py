@@ -5,6 +5,7 @@ DEFAULTS = {
     'server.uri'              : 'ldap://127.0.0.1:12345',
     'server.user'             : 'cn=Manager,dc=my-domain,dc=com',
     'server.password'         : 'secret',
+    'server.check_duplicates' : True,
     'server.start_tls'        : False,
 
     'cache.cache'             : False,
