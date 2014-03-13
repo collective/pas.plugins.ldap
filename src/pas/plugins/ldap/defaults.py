@@ -7,6 +7,7 @@ DEFAULTS = {
     'server.password'         : 'secret',
     'server.check_duplicates' : True,
     'server.start_tls'        : False,
+    'server.check_duplicates' : False,
 
     'cache.cache'             : False,
     'cache.memcached'         : '127.0.0.1:11211',
@@ -26,6 +27,7 @@ DEFAULTS = {
     'users.account_expiration': False,
     'users.expires_attr'      : 'shadowExpire',
     'users.expires_unit'      : 0,
+    'users.check_duplicates'  : 1,
 
     'groups.baseDN'           : 'ou=groups,dc=my-domain,dc=com',
     'groups.attrmap'          : {"rdn": "cn",
