@@ -512,7 +512,12 @@ class LDAPPlugin(BasePlugin):
         """
         users = self.users
         if self.users:
-            self.users.passwd(user_id, None, password)
+            try:
+                self.users.passwd(user_id, None, password)
+            except KeyError:
+                msg = '{0:s} is not an LDAP user.'.format(user_id)
+                logger.warn(msg)
+                raise RuntimeError(msg)
 
     @security.private
     def doDeleteUser(self, login):

@@ -2,10 +2,14 @@
 History
 =======
 
-1.2.1 (unreleased)
+1.3.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Raise ``RuntimeError`` instead of ``KeyError`` when password change method
+  couldn't locate the user in LDAP tree. Maybe it's a local user and
+  ``Products.PlonePAS.pas.userSetPassword`` expects a ``RuntimeError`` to be
+  raised in this case.
+  [saily]
 
 
 1.2.0 (2014-03-13)
