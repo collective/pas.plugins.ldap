@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from .interfaces import ILDAPPlugin
-from .sheet import LDAPUserPropertySheet
 from AccessControl import ClassSecurityInfo
 from App.class_init import InitializeClass
 from BTrees import OOBTree
@@ -17,6 +15,8 @@ from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
 from node.ext.ldap.ugm import Ugm
+from pas.plugins.ldap.interfaces import ILDAPPlugin
+from pas.plugins.ldap.sheet import LDAPUserPropertySheet
 from zope.globalrequest import getRequest
 from zope.interface import implementer
 
@@ -45,6 +45,7 @@ manage_addLDAPPluginForm = PageTemplateFile(
     globals(),
     __name__='addLDAPPlugin'
 )
+
 
 def ldap_error_and_cache_handler(prefix):
     """decorator, deals with non-working LDAP"""
@@ -111,13 +112,13 @@ class LDAPPlugin(BasePlugin):
     """
     security = ClassSecurityInfo()
     meta_type = 'LDAP Plugin'
-    manage_options = (
-        { 'label' : 'LDAP Settings',
-          'action' : 'manage_ldapplugin'
-        },) + BasePlugin.manage_options
+    manage_options = ({
+        'label': 'LDAP Settings',
+        'action': 'manage_ldapplugin',
+    }, ) + BasePlugin.manage_options
 
-    # XXX: turn this to False when going productive, just in case
-    _dont_swallow_my_exceptions = False  # Tell PAS not to swallow our exceptions
+    # Tell PAS not to swallow our exceptions
+    _dont_swallow_my_exceptions = False
 
     def __init__(self, id, title=None, **kw):
         self._setId(id)
@@ -157,7 +158,7 @@ class LDAPPlugin(BasePlugin):
     @ldap_error_and_cache_handler('users')
     @security.private
     def users(self):
-        return  self._ugm().users
+        return self._ugm().users
 
     @property
     @security.protected(ManageUsers)
@@ -264,7 +265,7 @@ class LDAPPlugin(BasePlugin):
         if sort_by == 'id':
             matches = sorted(matches)
         pluginid = self.getId()
-        ret = [dict(id=encode_utf8(id), pluginid=pluginid) for id in matches]
+        ret = [dict(id=encode_utf8(_id), pluginid=pluginid) for _id in matches]
         if max_results and len(ret) > max_results:
             ret = ret[:max_results]
         return ret
@@ -305,7 +306,7 @@ class LDAPPlugin(BasePlugin):
     #
     @security.private
     def enumerateUsers(self, id=None, login=None, exact_match=False,
-            sort_by=None, max_results=None, **kw):
+                       sort_by=None, max_results=None, **kw):
         """-> ( user_info_1, ... user_info_N )
 
         o Return mappings for users matching the given criteria.
@@ -510,7 +511,6 @@ class LDAPPlugin(BasePlugin):
         the pas engine api for the same but are set via a role
         manager)
         """
-        users = self.users
         if self.users:
             try:
                 self.users.passwd(user_id, None, password)
@@ -585,7 +585,8 @@ class LDAPPlugin(BasePlugin):
         plugins = pas.plugins
         # add properties
         for propfinder_id, propfinder in \
-                          plugins.listPlugins(pas_interfaces.IPropertiesPlugin):
+                plugins.listPlugins(pas_interfaces.IPropertiesPlugin):
+
             data = propfinder.getPropertiesForUser(group, None)
             if not data:
                 continue
@@ -595,7 +596,8 @@ class LDAPPlugin(BasePlugin):
                                                     plugins=plugins))
         # add roles
         for rolemaker_id, rolemaker in \
-                               plugins.listPlugins(pas_interfaces.IRolesPlugin):
+                plugins.listPlugins(pas_interfaces.IRolesPlugin):
+
             roles = rolemaker.getRolesForPrincipal(group, None)
             if not roles:
                 continue

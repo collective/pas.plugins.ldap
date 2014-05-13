@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Products.Five import BrowserView
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
@@ -19,6 +20,7 @@ from zope.component import adapter
 from zope.component import queryUtility
 from zope.i18nmessageid import MessageFactory
 from zope.interface import implementer
+
 import ldap
 import logging
 
@@ -35,7 +37,7 @@ class BasePropertiesForm(BrowserView):
         (str(SUBTREE), 'SUBTREE'),
     ]
 
-    static_attrs_users  = ['rdn', 'id', 'login']
+    static_attrs_users = ['rdn', 'id', 'login']
     static_attrs_groups = ['rdn', 'id']
 
     @property
@@ -51,8 +53,8 @@ class BasePropertiesForm(BrowserView):
 
     def form(self):
         # make configuration data available on form context
-        self.props =  ILDAPProps(self.plugin)
-        self.users =  ILDAPUsersConfig(self.plugin)
+        self.props = ILDAPProps(self.plugin)
+        self.users = ILDAPUsersConfig(self.plugin)
         self.groups = ILDAPGroupsConfig(self.plugin)
 
         # prepare users data on form context
@@ -85,9 +87,10 @@ class BasePropertiesForm(BrowserView):
         return u''
 
     def save(self, widget, data):
-        props =  ILDAPProps(self.plugin)
-        users =  ILDAPUsersConfig(self.plugin)
+        props = ILDAPProps(self.plugin)
+        users = ILDAPUsersConfig(self.plugin)
         groups = ILDAPGroupsConfig(self.plugin)
+
         def fetch(name, default=UNSET):
             name = 'ldapsettings.%s' % name
             __traceback_info__ = name
@@ -105,13 +108,13 @@ class BasePropertiesForm(BrowserView):
         props.check_duplicates = fetch('server.check_duplicates')
 
         # TODO: later
-        #props.start_tls = fetch('server.start_tls')
-        #props.tls_cacertfile = fetch('server.tls_cacertfile')
-        #props.tls_cacertdir = fetch('server.tls_cacertdir')
-        #props.tls_clcertfile = fetch('server.tls_clcertfile')
-        #props.tls_clkeyfile = fetch('server.tls_clkeyfile')
-        #props.retry_max = fetch(at('server.retry_max')
-        #props.retry_delay = fetch('server.retry_delay')
+        # props.start_tls = fetch('server.start_tls')
+        # props.tls_cacertfile = fetch('server.tls_cacertfile')
+        # props.tls_cacertdir = fetch('server.tls_cacertdir')
+        # props.tls_clcertfile = fetch('server.tls_clcertfile')
+        # props.tls_clkeyfile = fetch('server.tls_clkeyfile')
+        # props.retry_max = fetch(at('server.retry_max')
+        # props.retry_delay = fetch('server.retry_delay')
         props.cache = fetch('cache.cache')
         props.memcached = fetch('cache.memcached')
         props.timeout = fetch('cache.timeout')
@@ -149,8 +152,8 @@ class BasePropertiesForm(BrowserView):
         groups.memberOfSupport = fetch('groups.memberOfSupport')
 
     def connection_test(self):
-        props =  ILDAPProps(self.plugin)
-        users =  ILDAPUsersConfig(self.plugin)
+        props = ILDAPProps(self.plugin)
+        users = ILDAPUsersConfig(self.plugin)
         groups = ILDAPGroupsConfig(self.plugin)
         ugm = Ugm('test', props=props, ucfg=users, gcfg=groups)
         try:
@@ -166,17 +169,20 @@ class BasePropertiesForm(BrowserView):
             ugm.groups
         except ldap.LDAPError, e:
             return False, _('LDAP Users ok, but groups not; ') + \
-                   e.message['desc']
+                e.message['desc']
         except Exception, e:
             logger.exception('Non-LDAP error while connection test!')
             return False, _('Exception in Groups; ') + str(e)
-        return True, 'Connection, users- and groups-access tested successfully.'
+        return True, \
+            'Connection, users- and groups-access tested successfully.'
 
 
 def propproxy(ckey):
+
     def _getter(context):
         value = context.plugin.settings.get(ckey, DEFAULTS[ckey])
         return value
+
     def _setter(context, value):
         context.plugin.settings[ckey] = value
     return property(_getter, _setter)
@@ -253,6 +259,7 @@ class UsersConfig(object):
     @property
     def expiresUnit(self):
         return self.account_expiration and self._expiresUnit or 0
+
 
 @implementer(ILDAPGroupsConfig)
 @adapter(ILDAPPlugin)

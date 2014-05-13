@@ -28,7 +28,7 @@
     name="plone_ldapcontrolpanel"
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     class=".controlpanel.LDAPControlPanel"
-	template="controlpanel.pt"
+    template="controlpanel.pt"
     permission="cmf.ManagePortal" />
 
   <browser:page

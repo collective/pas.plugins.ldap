@@ -1,16 +1,16 @@
-import os
+# -*- coding: utf-8 -*-
 from AccessControl.Permissions import add_user_folders
 from Products.PluggableAuthService import registerMultiPlugin
-from .plugin import (
-    LDAPPlugin,
-    manage_addLDAPPlugin,
-    manage_addLDAPPluginForm,
-    zmidir,
-)
+from pas.plugins.ldap.plugin import LDAPPlugin
+from pas.plugins.ldap.plugin import manage_addLDAPPlugin
+from pas.plugins.ldap.plugin import manage_addLDAPPluginForm
+from pas.plugins.ldap.plugin import zmidir
 
-
-# XXX temp
+import os
 import monkey
+
+# make Flake 8 happy
+monkey
 
 
 def initialize(context):
@@ -18,7 +18,7 @@ def initialize(context):
     context.registerClass(
         LDAPPlugin,
         permission=add_user_folders,
-        icon=os.path.join(zmidir, "ldap.png"),
+        icon=os.path.join(zmidir, 'ldap.png'),
         constructors=(manage_addLDAPPluginForm, manage_addLDAPPlugin),
         visibility=None
     )

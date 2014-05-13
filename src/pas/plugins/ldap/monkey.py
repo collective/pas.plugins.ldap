@@ -1,15 +1,16 @@
+# -*- coding: utf-8 -*-
 # TEMPORARY MONKEY PATCH
 # until this is changed upstream!
+from Acquisition import aq_inner
+from Acquisition import aq_parent
+from OFS.Image import Image
+from Products.CMFCore.utils import getToolByName
+from Products.PlonePAS.tools.membership import MembershipTool
+from Products.PlonePAS.tools.membership import _checkPermission
+from Products.PlonePAS.tools.membership import default_portrait
 from StringIO import StringIO
 from zope.interface import implementer
 from zope.traversing.interfaces import ITraversable
-from Acquisition import aq_parent, aq_inner
-from OFS.Image import Image
-from Products.CMFCore.utils import getToolByName
-from Products.PlonePAS.tools.membership import (
-    MembershipTool,
-    default_portrait,
-)
 
 
 class PortraitImage(Image):
@@ -32,15 +33,15 @@ def getPortraitFromSheet(context, userid):
     for sheetname in user.listPropertysheets():
         sheet = user.getPropertysheet(sheetname)
         if 'portrait' in sheet.propertyIds():
-           portrait = sheet.getProperty('portrait')
-           break
+            portrait = sheet.getProperty('portrait')
+            break
     if not portrait:
         # nothing found on sheet
         return None
     # turn into OFS.Image
     sio = StringIO()
     sio.write(portrait)
-    content_type = 'image/jpeg' # XXX sniff it
+    content_type = 'image/jpeg'  # XXX sniff it
     portrait = PortraitImage(userid, user.getProperty('fullname'), sio,
                              content_type)
     return portrait

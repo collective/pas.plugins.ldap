@@ -7,22 +7,22 @@ Add users and groups from LDAP using the pas.plugins.ldap plugin.
 </p>
 
 <form action="manage_addLDAPPlugin" method="POST">
-	<table>
-		<tr>
-		   <td class="form-label"> Id </td>
-		   <td> <input type="text" name="id" /> </td>
-		</tr>
-		<tr>
-		   <td class="form-label"> Title </td>
-		   <td> <input type="text" name="title" /> </td>
-		</tr>
-		<tr>
-		   <td colspan="2">
-		    <div class="form-element">
-		     <input type="submit" value="submit"/>
-		     </div>
-		   </td>
-		</tr>
-	</table>
+    <table>
+        <tr>
+           <td class="form-label"> Id </td>
+           <td> <input type="text" name="id" /> </td>
+        </tr>
+        <tr>
+           <td class="form-label"> Title </td>
+           <td> <input type="text" name="title" /> </td>
+        </tr>
+        <tr>
+           <td colspan="2">
+            <div class="form-element">
+             <input type="submit" value="submit"/>
+             </div>
+           </td>
+        </tr>
+    </table>
 </form>
 <h1 tal:replace="structure here/manage_page_footer">Footer</h1>
