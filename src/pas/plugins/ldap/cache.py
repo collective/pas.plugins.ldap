@@ -1,9 +1,8 @@
+# -*- coding: utf-8 -*-
+from bda.cache import Memcached
+from bda.cache import NullCache
+from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
 from zope.component import queryUtility
-from bda.cache import (
-    Memcached,
-    NullCache,
-)
-from .interfaces import ICacheSettingsRecordProvider
 
 
 def cacheProviderFactory():

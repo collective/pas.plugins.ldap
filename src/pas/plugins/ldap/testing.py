@@ -1,27 +1,20 @@
-from zope.interface import (
-    Interface,
-    implementer,
-)
-from zope.component import (
-    adapter,
-    provideAdapter,
-    provideUtility,
-)
-from plone.testing import (
-    Layer,
-    zodb,
-    zca,
-    z2,
-)
-import Zope2
+# -*- coding: utf-8 -*-
 from Products.CMFCore.interfaces import ISiteRoot
-from node.ext.ldap.interfaces import (
-    ILDAPProps,
-    ILDAPUsersConfig,
-    ILDAPGroupsConfig,
-)
 from node.ext.ldap import testing as ldaptesting
+from node.ext.ldap.interfaces import ILDAPGroupsConfig
+from node.ext.ldap.interfaces import ILDAPProps
+from node.ext.ldap.interfaces import ILDAPUsersConfig
+from plone.testing import Layer
+from plone.testing import z2
+from plone.testing import zca
+from plone.testing import zodb
+from zope.component import adapter
+from zope.component import provideAdapter
+from zope.component import provideUtility
+from zope.interface import Interface
+from zope.interface import implementer
 
+import Zope2
 
 SITE_OWNER_NAME = SITE_OWNER_PASSWORD = 'admin'
 
@@ -51,12 +44,12 @@ class PASLDAPLayer(Layer):
 
     # Products that will be installed, plus options
     products = (
-            ('Products.GenericSetup'                , {'loadZCML': True}, ),
-            ('Products.CMFCore'                     , {'loadZCML': True}, ),
-            ('Products.PluggableAuthService'        , {'loadZCML': True}, ),
-            ('Products.PluginRegistry'              , {'loadZCML': True}, ),
-            ('Products.PlonePAS'                    , {'loadZCML': True}, ),
-        )
+        ('Products.GenericSetup',           {'loadZCML': True}, ),  # noqa
+        ('Products.CMFCore',                {'loadZCML': True}, ),  # noqa
+        ('Products.PluggableAuthService',   {'loadZCML': True}, ),  # noqa
+        ('Products.PluginRegistry',         {'loadZCML': True}, ),  # noqa
+        ('Products.PlonePAS',               {'loadZCML': True}, ),  # noqa
+    )
 
     def setUp(self):
         self['zodbDB'] = zodb.stackDemoStorage(self.get('zodbDB'),
@@ -74,7 +67,6 @@ class PASLDAPLayer(Layer):
         self['zodbDB'].close()
         del self['zodbDB']
 
-
     def setUpZCML(self):
         """Stack a new global registry and load ZCML configuration of Plone
         and the core set of add-on products into it.
@@ -83,8 +75,8 @@ class PASLDAPLayer(Layer):
         zca.pushGlobalRegistry()
 
         from zope.configuration import xmlconfig
-        self['configurationContext'] = context = zca.stackConfigurationContext(
-                                               self.get('configurationContext'))
+        self['configurationContext'] = context = \
+            zca.stackConfigurationContext(self.get('configurationContext'))
 
         # Load dependent products's ZCML
         from zope.dottedname.resolve import resolve
@@ -140,8 +132,8 @@ class PASLDAPLayer(Layer):
         # Create the owner user and "log in" so that the site object gets
         # the right ownership information
         app['acl_users'].userFolderAddUser(
-                SITE_OWNER_NAME,
-                SITE_OWNER_PASSWORD,
-                ['Manager'],
-                []
-            )
+            SITE_OWNER_NAME,
+            SITE_OWNER_PASSWORD,
+            ['Manager'],
+            []
+        )

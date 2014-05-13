@@ -1,13 +1,11 @@
-from zope.interface import implementer
-from zope.component import queryUtility
-from persistent import Persistent
-from plone.registry import (
-    field,
-    Record,
-)
-from plone.registry.interfaces import IRegistry
+# -*- coding: utf-8 -*-
 from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
-
+from persistent import Persistent
+from plone.registry import Record
+from plone.registry import field
+from plone.registry.interfaces import IRegistry
+from zope.component import queryUtility
+from zope.interface import implementer
 
 REGKEY = 'pas.plugins.ldap.memcached'
 

@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
-import json
-from node.utils import encode
-from node.ext.ldap import LDAPNode
-from node.ext.ldap.interfaces import (
-    ILDAPProps,
-    ILDAPUsersConfig,
-    ILDAPGroupsConfig,
-)
-from zope.component import getUtility
-from Products.Five import BrowserView
 from Products.CMFCore.interfaces import ISiteRoot
+from Products.Five import BrowserView
+from node.ext.ldap import LDAPNode
+from node.ext.ldap.interfaces import ILDAPGroupsConfig
+from node.ext.ldap.interfaces import ILDAPProps
+from node.ext.ldap.interfaces import ILDAPUsersConfig
+from node.utils import encode
+from zope.component import getUtility
+
+import json
 
 
 class LDAPInspector(BrowserView):
@@ -51,9 +50,9 @@ class LDAPInspector(BrowserView):
                     ret[encode(key)] = encode(val)
                 else:
                     ret[encode(key)] = "(Binary Data with %d Bytes)" % len(val)
-            except UnicodeDecodeError, e:
+            except UnicodeDecodeError:
                 ret[key.encode('utf-8')] = '! (UnicodeDecodeError)'
-            except Exception, e:
+            except Exception:
                 ret[key.encode('utf-8')] = '! (Unknown Exception)'
         return json.dumps(ret)
 

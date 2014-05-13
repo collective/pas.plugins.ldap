@@ -1,13 +1,13 @@
-import logging
+# -*- coding: utf-8 -*-
 from Acquisition import aq_base
-from zope.globalrequest import getRequest
 from Products.PlonePAS.interfaces.propertysheets import IMutablePropertySheet
-from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.UserPropertySheet import UserPropertySheet
-from node.ext.ldap.interfaces import (
-    ILDAPUsersConfig,
-    ILDAPGroupsConfig,
-)
+from Products.PluggableAuthService.utils import classImplements
+from node.ext.ldap.interfaces import ILDAPGroupsConfig
+from node.ext.ldap.interfaces import ILDAPUsersConfig
+from zope.globalrequest import getRequest
+
+import logging
 
 
 logger = logging.getLogger('pas.plugins.ldap')
@@ -52,8 +52,8 @@ class LDAPUserPropertySheet(UserPropertySheet):
     def _get_ldap_principal(self):
         """returns ldap principal
 
-        this need to be a on demand, so it does not try to persist any ldap-node
-        related data in i.e. some RamCacheManager
+        this need to be a on demand, so it does not try to persist any
+        ldap-node related data in i.e. some RamCacheManager
         """
         ldap_principals = getattr(self._plugin, self._ldapprincipal_type)
         return ldap_principals[self._ldapprincipal_id]

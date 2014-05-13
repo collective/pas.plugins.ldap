@@ -1,9 +1,11 @@
-import types
-from zope.interface import implementer
-from zope.component import queryMultiAdapter
+# -*- coding: utf-8 -*-
 from BTrees.OOBTree import OOBTree
-from Products.GenericSetup.utils import XMLAdapterBase
 from Products.GenericSetup.interfaces import IBody
+from Products.GenericSetup.utils import XMLAdapterBase
+from zope.component import queryMultiAdapter
+from zope.interface import implementer
+
+import types
 
 
 def _get_import_export_handler(context):
@@ -78,20 +80,22 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
                 self._setDataAndType(data[key], element)
                 node.appendChild(element)
             return
-        if type(data) is types.BooleanType:
+        if isinstance(data, types.BooleanType):
             node.setAttribute('type', 'bool')
             data = str(data)
-        elif type(data) is types.IntType:
+        elif isinstance(data, types.IntType):
             node.setAttribute('type', 'int')
             data = str(data)
-        elif type(data) is types.FloatType:
+        elif isinstance(data, types.FloatType):
             node.setAttribute('type', 'float')
             data = str(data)
-        elif type(data) in types.StringTypes:
+        elif isinstance(data, types.StringTypes):
             node.setAttribute('type', 'string')
         else:
-            self._logger.warning('Invalid type %s found for key %s on export, '\
-                                 'skipped.' % (type(data), data))
+            self._logger.warning(
+                'Invalid type {0:s} found for key {1:s} on export, skipped.'
+                .format(type(data), data)
+            )
             return
         child = self._doc.createTextNode(data)
         node.appendChild(child)
@@ -112,7 +116,7 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
                     continue
                 key = element.getAttribute('key')
                 if key is None:
-                    self._logger.warning('No key found for dict on import, '\
+                    self._logger.warning('No key found for dict on import, '
                                          'skipped.')
                     continue
                 data.update({key: self._getDataByType(element)})
@@ -127,7 +131,7 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
         elif vtype == 'string':
             data = str(data)
         else:
-            self._logger.warning('Invalid type %s found on import, skipped.' %\
-                                 vtype)
+            self._logger.warning(
+                'Invalid type {0:s} found on import, skipped.'.format(vtype))
             data = None
         return data

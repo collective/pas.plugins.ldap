@@ -1,5 +1,6 @@
-from zope.interface import implementer
+# -*- coding: utf-8 -*-
 from Products.CMFQuickInstallerTool.interfaces import INonInstallable
+from zope.interface import implementer
 
 
 @implementer(INonInstallable)
