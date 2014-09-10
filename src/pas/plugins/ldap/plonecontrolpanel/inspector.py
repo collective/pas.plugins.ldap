@@ -11,6 +11,12 @@ from zope.component import getUtility
 import json
 
 
+def safe_encode(val):
+    if isinstance(val, unicode):
+        return val.encode('utf-8')
+    return val
+
+
 class LDAPInspector(BrowserView):
 
     @property
@@ -47,13 +53,14 @@ class LDAPInspector(BrowserView):
         for key, val in node.attrs.items():
             try:
                 if not node.attrs.is_binary(key):
-                    ret[encode(key)] = encode(val)
+                    ret[safe_encode(key)] = safe_encode(val)
                 else:
-                    ret[encode(key)] = "(Binary Data with %d Bytes)" % len(val)
+                    ret[safe_encode(key)] = \
+                        '(Binary Data with {0} Bytes)'.format(len(val))
             except UnicodeDecodeError:
-                ret[key.encode('utf-8')] = '! (UnicodeDecodeError)'
+                ret[safe_encode(key)] = '! (UnicodeDecodeError)'
             except Exception:
-                ret[key.encode('utf-8')] = '! (Unknown Exception)'
+                ret[safe_encode(key)] = '! (Unknown Exception)'
         return json.dumps(ret)
 
     def children(self, baseDN):

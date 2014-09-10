@@ -2,10 +2,11 @@
 History
 =======
 
-1.3.2 (unreleased)
+1.3.2 (2014-09-10)
 ------------------
 
-- No changes yet.
+- Small fixes in inspector.
+  [rnix]
 
 
 1.3.1 (2014-08-05)
