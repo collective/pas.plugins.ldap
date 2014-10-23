@@ -1,3 +1,6 @@
+.. image:: https://secure.travis-ci.org/collective/pas.plugins.ldap.png
+    :target: http://travis-ci.org/#!/collective/pas.plugins.ldap
+
 This is a LDAP Plugin for the `Zope2 <http://zope2.zope.org>`_
 `Pluggable Authentication Service (PAS) <http://pypi.python.org/pypi/Products.PluggableAuthService>`_.
 
