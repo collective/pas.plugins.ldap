@@ -10,12 +10,6 @@ Basics
 
 ::
     >>> app = layer['app']
-    >>> z2.login(app.acl_users, 'admin')
-
-Turn into a PAS user folder::
-
-    >>> from Products.PlonePAS.Extensions.Install import migrate_root_uf
-    >>> migrate_root_uf(app)
     >>> pas = app.acl_users
     >>> pas
     <PluggableAuthService at /acl_users>
@@ -34,10 +28,10 @@ Create
     >>> ldap
     <LDAPPlugin at /acl_users/pasldap>
 
-turn off request_caching for testing, because test request has strange
+turn off plugin_caching for testing, because test request has strange
 behaviour::
 
-    >>> ldap.request_caching = False
+    >>> ldap.plugin_caching = False
 
 PAS Plugins
 ===========
@@ -167,8 +161,8 @@ In order to cache propertysheets it must be picklable::
 
     >>> from Acquisition import aq_base
     >>> import pickle
-    >>> len(pickle.dumps(aq_base(ldap)))
-    239
+    >>> len(pickle.dumps(aq_base(ldap))) > 200
+    True
 
 
 PlonePAS
@@ -293,8 +287,8 @@ Set does nothing, but the sheet itselfs set immediatly::
 
 In order to cache propertysheets it must be picklable::
 
-    >>> len(pickle.dumps(sheet2))
-    676
+    >>> len(pickle.dumps(sheet2)) > 600
+    True
 
 
 IUserManagement

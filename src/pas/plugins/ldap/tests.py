@@ -4,9 +4,9 @@ from pas.plugins.ldap.testing import PASLDAPLayer
 from plone.testing import layered
 from plone.testing import z2
 
-import unittest
 import doctest
 import pprint
+import unittest
 
 optionflags = doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS
 optionflags = optionflags | doctest.REPORT_ONLY_FIRST_FAILURE
@@ -14,6 +14,7 @@ optionflags = optionflags | doctest.REPORT_ONLY_FIRST_FAILURE
 TESTFILES = [
     ('properties.rst', PASLDAPLayer),
     ('plugin.rst',     PASLDAPLayer),
+    ('cache.rst',      PASLDAPLayer),
 ]
 
 

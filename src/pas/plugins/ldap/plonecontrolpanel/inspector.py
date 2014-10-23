@@ -5,7 +5,6 @@ from node.ext.ldap import LDAPNode
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
-from node.utils import encode
 from zope.component import getUtility
 
 import json

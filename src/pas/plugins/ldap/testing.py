@@ -1,20 +1,17 @@
 # -*- coding: utf-8 -*-
 from Products.CMFCore.interfaces import ISiteRoot
+from Products.PlonePAS.Extensions.Install import migrate_root_uf
 from node.ext.ldap import testing as ldaptesting
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
 from plone.testing import Layer
 from plone.testing import z2
-from plone.testing import zca
-from plone.testing import zodb
 from zope.component import adapter
 from zope.component import provideAdapter
 from zope.component import provideUtility
 from zope.interface import Interface
 from zope.interface import implementer
-
-import Zope2
 
 SITE_OWNER_NAME = SITE_OWNER_PASSWORD = 'admin'
 
@@ -38,9 +35,11 @@ def groupsconfig(context):
 
 
 class PASLDAPLayer(Layer):
-    # big parts copied from p.a.testing!
 
-    defaultBases = (ldaptesting.LDIF_groupOfNames_10_10, z2.STARTUP)
+    defaultBases = (
+        ldaptesting.LDIF_groupOfNames_10_10,
+        z2.INTEGRATION_TESTING,
+    )
 
     # Products that will be installed, plus options
     products = (
@@ -52,33 +51,20 @@ class PASLDAPLayer(Layer):
     )
 
     def setUp(self):
-        self['zodbDB'] = zodb.stackDemoStorage(self.get('zodbDB'),
-                                               name='PASLDAPLayer')
-        self['app'] = z2.addRequestContainer(Zope2.app(self['zodbDB'].open()),
-                                             environ=None)
         self.setUpZCML()
-        self.setUpProducts(self['app'])
-        self.setUpDefaultContent(self['app'])
 
-    def tearDown(self):
-        self.tearDownProducts(self['app'])
-        self.tearDownZCML()
-        del self['app']
-        self['zodbDB'].close()
-        del self['zodbDB']
+    def testSetUp(self):
+        self.setUpProducts()
+        provideUtility(self['app'], provides=ISiteRoot)
+        migrate_root_uf(self['app'])
 
     def setUpZCML(self):
         """Stack a new global registry and load ZCML configuration of Plone
         and the core set of add-on products into it.
         """
-        # Create a new global registry
-        zca.pushGlobalRegistry()
-
-        from zope.configuration import xmlconfig
-        self['configurationContext'] = context = \
-            zca.stackConfigurationContext(self.get('configurationContext'))
 
         # Load dependent products's ZCML
+        from zope.configuration import xmlconfig
         from zope.dottedname.resolve import resolve
 
         def loadAll(filename):
@@ -90,7 +76,11 @@ class PASLDAPLayer(Layer):
                 except ImportError:
                     continue
                 try:
-                    xmlconfig.file(filename, package, context=context)
+                    xmlconfig.file(
+                        filename,
+                        package,
+                        context=self['configurationContext']
+                    )
                 except IOError:
                     pass
 
@@ -100,40 +90,10 @@ class PASLDAPLayer(Layer):
         provideAdapter(ldapprops)
         provideAdapter(usersconfig)
         provideAdapter(groupsconfig)
-        provideUtility(self['app'], provides=ISiteRoot)
 
-    def tearDownZCML(self):
-        """Pop the global component registry stack, effectively unregistering
-        all global components registered during layer setup.
-        """
-        # Pop the global registry
-        zca.popGlobalRegistry()
-
-        # Zap the stacked configuration context
-        del self['configurationContext']
-
-    def setUpProducts(self, app):
+    def setUpProducts(self):
         """Install all old-style products listed in the the ``products`` tuple
         of this class.
         """
-        for p, config in self.products:
-            z2.installProduct(app, p)
-
-    def tearDownProducts(self, app):
-        """Uninstall all old-style products listed in the the ``products``
-        tuple of this class.
-        """
-        for p, config in reversed(self.products):
-            z2.uninstallProduct(app, p)
-
-    def setUpDefaultContent(self, app):
-        """Add the site owner user to the root user folder."""
-
-        # Create the owner user and "log in" so that the site object gets
-        # the right ownership information
-        app['acl_users'].userFolderAddUser(
-            SITE_OWNER_NAME,
-            SITE_OWNER_PASSWORD,
-            ['Manager'],
-            []
-        )
+        for prd, config in self.products:
+            z2.installProduct(self['app'], prd)

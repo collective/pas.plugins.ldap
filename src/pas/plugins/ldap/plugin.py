@@ -15,11 +15,11 @@ from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
 from node.ext.ldap.ugm import Ugm
+from pas.plugins.ldap.cache import get_plugin_cache
 from pas.plugins.ldap.interfaces import ILDAPPlugin
+from pas.plugins.ldap.interfaces import VALUE_NOT_CACHED
 from pas.plugins.ldap.sheet import LDAPUserPropertySheet
-from zope.globalrequest import getRequest
 from zope.interface import implementer
-
 import ldap
 import logging
 import os
@@ -47,24 +47,18 @@ manage_addLDAPPluginForm = PageTemplateFile(
 )
 
 
-def ldap_error_and_cache_handler(prefix):
+def ldap_error_handler(prefix):
     """decorator, deals with non-working LDAP"""
 
     def _decorator(original_method):
 
         def _wrapper(self):
-            # caching
-            request = getRequest()
-            rcachekey = '_ldap_ugm_%s_%s_' % (prefix, self.getId())
-            if request and rcachekey in request.keys():
-                return request[rcachekey]
-
             # look if error is in timeout phase
             if hasattr(self, '_v_ldaperror_timeout'):
                 waiting = time.time() - self._v_ldaperror_timeout
                 if waiting < LDAP_ERROR_TIMEOUT:
                     logger.debug(
-                        '%s: retry wait %0.5f of %0.0fs -> %s' % (
+                        '{0}: retry wait {1:0.5f} of {2:0.0f}s -> {3}'.format(
                             prefix,
                             waiting,
                             LDAP_ERROR_TIMEOUT,
@@ -73,19 +67,28 @@ def ldap_error_and_cache_handler(prefix):
                     )
                     return None
             try:
-                # call original method
-                return original_method(self)
+                # call original method - get metrics
+                start = time.clock()
+                result = original_method(self)
+                end = time.clock()
+                logger.debug(
+                    'call of {0!r} took {1:0.5f}s'.format(
+                        original_method,
+                        end - start
+                    )
+                )
+                return result
 
             # handle errors
             except ldap.LDAPError, e:
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
-                logger.warn('LDAPError in %s -> %s' % (prefix, str(e)))
+                logger.warn('LDAPError in {0} -> {1}'.format(prefix, str(e)))
                 return None
             except Exception, e:
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
-                logger.warn('Error in %s -> %s' % (prefix, str(e)))
+                logger.warn('Error in {0} -> {1}'.format(prefix, str(e)))
                 return None
 
         return _wrapper
@@ -124,6 +127,7 @@ class LDAPPlugin(BasePlugin):
         self._setId(id)
         self.title = title
         self.settings = OOBTree.OOBTree()
+        self.plugin_caching = True
 
     @property
     @security.private
@@ -136,26 +140,25 @@ class LDAPPlugin(BasePlugin):
         return self.users is not None
 
     def _ugm(self):
-        request = getRequest()
-        rcachekey = '_ldap_ugm_%s_' % self.getId()
-        if request and rcachekey in request.keys():
-            return request[rcachekey]
+        plugin_cache = get_plugin_cache(self)
+        ugm = plugin_cache.get()
+        if ugm is not VALUE_NOT_CACHED:
+            return ugm
         props = ILDAPProps(self)
         ucfg = ILDAPUsersConfig(self)
         gcfg = ILDAPGroupsConfig(self)
         ugm = Ugm(props=props, ucfg=ucfg, gcfg=gcfg, rcfg=None)
-        if request:
-            request[rcachekey] = ugm
+        plugin_cache.set(ugm)
         return ugm
 
     @property
-    @ldap_error_and_cache_handler('groups')
+    @ldap_error_handler('groups')
     @security.private
     def groups(self):
         return self._ugm().groups
 
     @property
-    @ldap_error_and_cache_handler('users')
+    @ldap_error_handler('users')
     @security.private
     def users(self):
         return self._ugm().users

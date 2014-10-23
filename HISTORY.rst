@@ -2,6 +2,20 @@
 History
 =======
 
+1.4.0 (unreleased)
+------------------
+
+- overhaul test setup
+  [jensens]
+
+- introduce pluggable caching mechanism on ugm-tree level, defaults to
+  caching on request. Can be overruled by providing an adapter implementing
+  ``pas.plugins.ldap.interfaces.IPluginCacheHandler``.
+  [jensens]
+
+- log how long it takes to build up a users or groups tree.
+  [jensens]
+
 1.3.2 (2014-09-10)
 ------------------
 
