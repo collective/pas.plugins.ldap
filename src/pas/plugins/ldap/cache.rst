@@ -51,3 +51,20 @@ After invalidating the cache a new tree is returned::
 
     >>> from zope.globalrequest import clearRequest
     >>> clearRequest()
+
+The volatile Plugin Cache::
+
+    >>> from zope.component import provideAdapter
+    >>> from pas.plugins.ldap.cache import VolatilePluginCache
+    >>> provideAdapter(VolatilePluginCache)
+    >>> cache = get_plugin_cache(ldap)
+    >>> isinstance(cache, VolatilePluginCache)
+    True
+
+    >>> tree = ldap._ugm()
+    >>> tree is ldap._ugm()
+    True
+
+    >>> cache.invalidate()
+    >>> tree is ldap._ugm
+    False

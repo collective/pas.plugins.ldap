@@ -2,8 +2,10 @@
 from bda.cache import Memcached
 from bda.cache import NullCache
 from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
+from pas.plugins.ldap.interfaces import ILDAPPlugin
 from pas.plugins.ldap.interfaces import IPluginCacheHandler
 from pas.plugins.ldap.interfaces import VALUE_NOT_CACHED
+from zope.component import adapter
 from zope.component import queryUtility
 from zope.globalrequest import getRequest
 from zope.interface import implementer
@@ -75,6 +77,7 @@ class RequestPluginCache(object):
 VOLATILE_CACHE_MAXAGE = 10  # 10s default maxage on volatile
 
 
+@adapter(ILDAPPlugin)
 class VolatilePluginCache(RequestPluginCache):
 
     def get(self):

@@ -1,0 +1,11 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope">
+
+  <!--
+  include this file if you want to cache the ugm tree longer than
+  one request. default is 10s as volatile attribute on the plugin.
+   -->
+
+  <adapter factory=".cache.VolatilePluginCache" />
+
+</configure>

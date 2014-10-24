@@ -5,6 +5,9 @@ History
 1.4.0 (unreleased)
 ------------------
 
+- Feature: Alternative volatile cache for UGM tree on plugin.
+  [jensens]
+
 - overhaul test setup
   [jensens]
 
