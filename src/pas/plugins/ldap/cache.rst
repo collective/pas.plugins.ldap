@@ -66,5 +66,5 @@ The volatile Plugin Cache::
     True
 
     >>> cache.invalidate()
-    >>> tree is ldap._ugm
+    >>> tree is ldap._ugm()
     False
