@@ -2,7 +2,7 @@
 History
 =======
 
-1.4.0 (unreleased)
+1.4.0 (2014-10-24)
 ------------------
 
 - Feature: Alternative volatile cache for UGM tree on plugin.
