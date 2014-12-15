@@ -5,6 +5,9 @@ History
 1.4.1 (unreleased)
 ------------------
 
+- use implementer decorator for better readability
+  [jensens]
+
 - Fix setuptools to v7.0
   [jensens]
 

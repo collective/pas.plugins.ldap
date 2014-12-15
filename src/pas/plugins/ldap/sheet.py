@@ -2,17 +2,17 @@
 from Acquisition import aq_base
 from Products.PlonePAS.interfaces.propertysheets import IMutablePropertySheet
 from Products.PluggableAuthService.UserPropertySheet import UserPropertySheet
-from Products.PluggableAuthService.utils import classImplements
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPUsersConfig
 from zope.globalrequest import getRequest
-
+from zope.interface import implementer
 import logging
 
 
 logger = logging.getLogger('pas.plugins.ldap')
 
 
+@implementer(IMutablePropertySheet)
 class LDAPUserPropertySheet(UserPropertySheet):
 
     def __init__(self, principal, plugin):
@@ -82,5 +82,3 @@ class LDAPUserPropertySheet(UserPropertySheet):
         except Exception, e:
             # XXX: specific exception(s)
             logger.error('LDAPUserPropertySheet.setProperties: %s' % str(e))
-
-classImplements(LDAPUserPropertySheet, IMutablePropertySheet)
