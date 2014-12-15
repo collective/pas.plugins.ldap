@@ -5,7 +5,8 @@ History
 1.4.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix setuptools to v7.0
+  [jensens]
 
 
 1.4.0 (2014-10-24)

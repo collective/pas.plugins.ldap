@@ -6,6 +6,6 @@ before_install:
 install:
 - virtualenv test-env --no-setuptools
 - mkdir -p buildout-cache/downloads
-- test-env/bin/python bootstrap.py -c travis.cfg
+- test-env/bin/python bootstrap.py -c travis.cfg --setuptools-version=7.0 --version=2.2.5
 - bin/buildout -N -t 3 -c travis.cfg
 script: bin/test
