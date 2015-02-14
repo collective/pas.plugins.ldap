@@ -22,13 +22,11 @@ widgets:
         value: expr:context.props.user
         props:
             label: LDAP Manager User
-            required: No user defined
     - password:
         factory: '#field:password'
         value: expr:context.props.password
         props:
             label: LDAP Manager Password
-            required: No password defined
     - ignore_cert:
         factory: '#field:checkbox'
         value: expr:context.props.ignore_cert

@@ -8,6 +8,9 @@ History
 - Fix #51: plone_ldapinspector broken with UnicodeDecodeError
   [dmunico]
 
+- Make bind user and password optional.
+  [thet]
+
 
 1.5.3 (2017-12-15)
 ------------------
