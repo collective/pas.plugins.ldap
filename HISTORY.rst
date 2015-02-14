@@ -5,6 +5,9 @@ History
 1.4.1 (unreleased)
 ------------------
 
+- Make bind user and password optional.
+  [thet]
+
 - use implementer decorator for better readability
   [jensens]
 
