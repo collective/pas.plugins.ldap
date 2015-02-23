@@ -66,6 +66,12 @@ Additionally ldap settings can be exported and imported with ``portal_setup``.
 You can place the exported ``ldapsettings.xml`` in your integration profile, so it will be imported with your next install again.
 Attention: The **ldap-password is in there in plain text!**
 
+.. note::
+
+    If you want to use a local user, define it in Plone's acl_users folder.
+    That way, it can be found earlier and access might be faster, especially on
+    uncached LDAP connections.
+
 
 Caching, Limitations and Future Optimizations
 =============================================
@@ -88,7 +94,7 @@ The UGM tree is cached by default on the request, that means its built up every 
 There is an alternative adapter available which will cache the ugm tree as volatile attribute on the persistent plugin.
 Volatile attributes are not persisted in the ZODB.
 If the plugin object vanishes from ZODB cache the atrribute is gone.
-The volatile plugin cache can be activated by loading its zcml with ``<include package="pas.plugins.ldap" file="cache_volatile.zcml"``.
+The volatile plugin cache can be activated by loading its zcml with ``<include package="pas.plugins.ldap" file="cache_volatile.zcml"/>``.
 The caching time can be influenced by overriding the value in ``pas.plugins.ldap.cache.VOLATILE_CACHE_MAXAGE``.
 It defaults to 10 and its unit is seconds.
 
