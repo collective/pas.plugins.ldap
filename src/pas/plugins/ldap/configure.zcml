@@ -27,10 +27,6 @@
 
   <adapter factory=".properties.GroupsConfig" />
 
-  <utility
-    component=".cache.cacheProviderFactory"
-    provides="node.ext.ldap.interfaces.ICacheProviderFactory" />
-
   <include
     zcml:condition="installed Products.CMFPlone"
     package=".plonecontrolpanel" />
