@@ -14,7 +14,6 @@ optionflags = optionflags | doctest.REPORT_ONLY_FIRST_FAILURE
 TESTFILES = [
     ('properties.rst', PASLDAPLayer),
     ('plugin.rst',     PASLDAPLayer),
-    ('cache.rst',      PASLDAPLayer),
 ]
 
 

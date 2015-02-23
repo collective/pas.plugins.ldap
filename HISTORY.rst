@@ -5,6 +5,11 @@ History
 1.4.1 (unreleased)
 ------------------
 
+- Cache the expensive calls to ugm().users and ugm().groups, but drop caching
+  on ugm() itself. Use ``plone.memoize`` as caching infrastructure, because of
+  it's convenient caching decorators.
+  [thet]
+
 - Make bind user and password optional.
   [thet]
 

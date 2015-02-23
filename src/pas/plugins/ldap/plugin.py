@@ -15,20 +15,30 @@ from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
 from node.ext.ldap.ugm import Ugm
-from pas.plugins.ldap.cache import get_plugin_cache
 from pas.plugins.ldap.interfaces import ILDAPPlugin
-from pas.plugins.ldap.interfaces import VALUE_NOT_CACHED
 from pas.plugins.ldap.sheet import LDAPUserPropertySheet
+from plone.memoize import ram
 from zope.interface import implementer
 import ldap
 import logging
 import os
 import time
 
+
 logger = logging.getLogger('pas.plugins.ldap')
 zmidir = os.path.join(os.path.dirname(__file__), 'zmi')
 
 LDAP_ERROR_TIMEOUT = 300.0
+
+
+def _ugm_cachekey(method, self):
+    # TODO: settings seem not to work
+    if not self.settings['cache.cache'] or not self.plugin_caching:
+        # Return a always changing value to avoid caching
+        return time.time()
+    # Caching timeout in seconds, default is one hour.
+    timeout = self.settings['cache.timeout'] or 60 * 60
+    return (time.time() // timeout)
 
 
 def manage_addLDAPPlugin(dispatcher, id, title='', RESPONSE=None, **kw):
@@ -140,26 +150,23 @@ class LDAPPlugin(BasePlugin):
         return self.users is not None
 
     def _ugm(self):
-        plugin_cache = get_plugin_cache(self)
-        ugm = plugin_cache.get()
-        if ugm is not VALUE_NOT_CACHED:
-            return ugm
         props = ILDAPProps(self)
         ucfg = ILDAPUsersConfig(self)
         gcfg = ILDAPGroupsConfig(self)
         ugm = Ugm(props=props, ucfg=ucfg, gcfg=gcfg, rcfg=None)
-        plugin_cache.set(ugm)
         return ugm
 
     @property
     @ldap_error_handler('groups')
     @security.private
+    @ram.cache(_ugm_cachekey)
     def groups(self):
         return self._ugm().groups
 
     @property
     @ldap_error_handler('users')
     @security.private
+    @ram.cache(_ugm_cachekey)
     def users(self):
         return self._ugm().users
 
