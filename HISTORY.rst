@@ -5,6 +5,11 @@ History
 1.4.1 (unreleased)
 ------------------
 
+- Add ``ignore_cert`` option to ignore TLS/SSL certificate errors for self
+  signed certificates when using the ``ldaps`` uri schema. See:
+  http://stackoverflow.com/a/7810308/1337474
+  [thet]
+
 - use implementer decorator for better readability
   [jensens]
 

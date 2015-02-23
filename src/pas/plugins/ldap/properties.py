@@ -106,6 +106,7 @@ class BasePropertiesForm(BrowserView):
         if password is not UNSET:
             props.password = password
         props.check_duplicates = fetch('server.check_duplicates')
+        props.ignore_cert = fetch('server.ignore_cert')
 
         # TODO: later
         # props.start_tls = fetch('server.start_tls')
@@ -202,6 +203,7 @@ class LDAPProps(object):
 
     # XXX: Later
     start_tls = propproxy('server.start_tls')
+    ignore_cert = propproxy('server.ignore_cert')
     tls_cacertfile = ''
     tls_cacertdir = ''
     tls_clcertfile = ''
