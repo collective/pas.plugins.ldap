@@ -200,11 +200,12 @@ class LDAPPlugin(BasePlugin):
         logger.debug('credentials: %s' % credentials)
         users = self.users
         if not users:
-            return
+            return None
         userid = users.authenticate(login, pw)
         if userid:
             logger.info('logged in %s' % userid)
             return (userid, login)
+        return None
 
     # ##
     # pas_interfaces.IGroupEnumerationPlugin
