@@ -101,10 +101,8 @@ class BasePropertiesForm(BrowserView):
                 return default
             return val
         props.uri = fetch('server.uri')
-        props.user = fetch('server.user')
-        password = fetch('server.password')
-        if password is not UNSET:
-            props.password = password
+        props.user = fetch('server.user', '')
+        props.password = fetch('server.password', '')
         props.check_duplicates = fetch('server.check_duplicates')
         props.ignore_cert = fetch('server.ignore_cert')
 
