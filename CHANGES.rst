@@ -2,10 +2,12 @@
 History
 =======
 
-1.4.1 (unreleased)
+1.5 (unreleased)
 ------------------
 
 - fix tests for Plone 5
+
+- major speedup expected by using node.ext.ldap >=1.0a1
   [jensens]
 
 - use implementer decorator for better readability

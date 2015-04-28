@@ -106,6 +106,7 @@ class BasePropertiesForm(BrowserView):
         if password is not UNSET:
             props.password = password
         props.check_duplicates = fetch('server.check_duplicates')
+        props.ignore_cert = fetch('server.ignore_cert')
 
         # TODO: later
         # props.start_tls = fetch('server.start_tls')
@@ -199,6 +200,7 @@ class LDAPProps(object):
     user = propproxy('server.user')
     password = propproxy('server.password')
     check_duplicates = propproxy('server.check_duplicates')
+    ignore_cert = propproxy('server.ignore_cert')
 
     # XXX: Later
     start_tls = propproxy('server.start_tls')
@@ -247,6 +249,7 @@ class UsersConfig(object):
     scope = propproxy('users.scope')
     queryFilter = propproxy('users.queryFilter')
     objectClasses = propproxy('users.objectClasses')
+    defaults = propproxy('users.defaults')
     memberOfSupport = propproxy('users.memberOfSupport')
     account_expiration = propproxy('users.account_expiration')
     _expiresAttr = propproxy('users.expires_attr')
@@ -274,6 +277,7 @@ class GroupsConfig(object):
     scope = propproxy('groups.scope')
     queryFilter = propproxy('groups.queryFilter')
     objectClasses = propproxy('groups.objectClasses')
+    defaults = propproxy('groups.defaults')
     memberOfSupport = propproxy('groups.memberOfSupport')
     expiresAttr = propproxy('groups.expires_attr')
     expiresUnit = propproxy('groups.expires_unit')

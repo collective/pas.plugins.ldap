@@ -34,7 +34,13 @@ widgets:
         value: expr:context.props.check_duplicates
         props:
             label: Check for duplicate keys?
-            help:  If duplicate keys are found in LDAP fail - or ignore them and take first?            
+            help:  If duplicate keys are found in LDAP fail - or ignore them and take first?
+    - ignore_cert:
+        factory: field:label:checkbox
+        value: expr:context.props.ignore_cert
+        props:
+            label: Ignore certificate check?
+            help:  If set on authenticate a failing certificate chain check including CA is ignored.
 - users:
     factory: fieldset
     props:
