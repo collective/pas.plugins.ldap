@@ -29,6 +29,12 @@ widgets:
         props:
             label: LDAP Manager Password
             required: No password defined
+    - ignore_cert:
+        factory: field:label:checkbox
+        value: expr:context.props.ignore_cert
+        props:
+            label: Ignore certificate check?
+            help:  If set on authenticate a failing certificate chain check including CA is ignored.
 - users:
     factory: fieldset
     props:

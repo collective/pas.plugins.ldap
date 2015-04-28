@@ -5,6 +5,9 @@ History
 1.5a1 (unreleased)
 ------------------
 
+- fix tests for Plone 5
+  [jensens]
+
 - Fixed LDAP errors not handled. This prevent leave the site broken
   just after the installation of the plugin
   [keul]
@@ -28,7 +31,7 @@ History
 - Use node.ext.ldap 1.0b1.
   [rnix]
 
-- fix tests for Plone 5.
+- major speedup expected by using node.ext.ldap >=1.0a1
   [jensens]
 
 - use implementer decorator for better readability.

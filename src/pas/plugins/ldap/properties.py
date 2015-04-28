@@ -72,7 +72,7 @@ class BasePropertiesForm(BrowserView):
                 continue
             self.groups_propsheet_attrmap[key] = value
         # handle form
-        form = parse_from_YAML('pas.plugins.ldap:properties.yaml', self,  _)
+        form = parse_from_YAML('pas.plugins.ldap:properties.yaml', self, _)
         controller = Controller(form, self.request)
         if not controller.next:
             return controller.rendered
@@ -99,8 +99,8 @@ class BasePropertiesForm(BrowserView):
         password = fetch('server.password')
         if password is not UNSET:
             props.password = password
+        props.ignore_cert = fetch('server.ignore_cert')
         # TODO: later
-        # props.ignore_cert = fetch('server.ignore_cert')
         # props.start_tls = fetch('server.start_tls')
         # props.tls_cacertfile = fetch('server.tls_cacertfile')
         # props.tls_cacertdir = fetch('server.tls_cacertdir')
@@ -189,7 +189,6 @@ class LDAPProps(object):
         self.plugin = plugin
 
     # XXX: Later
-    ignore_cert = 0
     tls_cacertfile = ''
     tls_cacertdir = ''
     tls_clcertfile = ''
@@ -201,6 +200,7 @@ class LDAPProps(object):
     user = propproxy('server.user')
     password = propproxy('server.password')
     start_tls = propproxy('server.start_tls')
+    ignore_cert = propproxy('server.ignore_cert')
     cache = propproxy('cache.cache')
     timeout = propproxy('cache.timeout')
 
@@ -239,6 +239,7 @@ class UsersConfig(object):
     scope = propproxy('users.scope')
     queryFilter = propproxy('users.queryFilter')
     objectClasses = propproxy('users.objectClasses')
+    defaults = propproxy('users.defaults')
     memberOfSupport = propproxy('users.memberOfSupport')
     account_expiration = propproxy('users.account_expiration')
     _expiresAttr = propproxy('users.expires_attr')
@@ -267,6 +268,7 @@ class GroupsConfig(object):
     scope = propproxy('groups.scope')
     queryFilter = propproxy('groups.queryFilter')
     objectClasses = propproxy('groups.objectClasses')
+    defaults = propproxy('groups.defaults')
     memberOfSupport = propproxy('groups.memberOfSupport')
     expiresAttr = propproxy('groups.expires_attr')
     expiresUnit = propproxy('groups.expires_unit')
