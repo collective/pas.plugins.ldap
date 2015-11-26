@@ -1,6 +1,9 @@
 .. image:: https://secure.travis-ci.org/collective/pas.plugins.ldap.png
     :target: http://travis-ci.org/#!/collective/pas.plugins.ldap
 
+.. image:: https://coveralls.io/repos/collective/pas.plugins.ldap/badge.svg?branch=master&service=github
+    :target: https://coveralls.io/github/collective/pas.plugins.ldap?branch=master
+
 This is a LDAP Plugin for the `Zope2 <http://zope2.zope.org>`_ `Pluggable Authentication Service (PAS) <http://pypi.python.org/pypi/Products.PluggableAuthService>`_.
 
 It provides users and/or groups from an LDAP Directory.
