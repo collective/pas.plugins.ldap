@@ -1,5 +1,6 @@
 *.pyc
 .*.cfg
+.coverage
 .mrsd
 /*eggs/
 /.project
@@ -10,6 +11,7 @@
 /coverage/
 /devsrc/
 /dist/
+/htmlcov/
 /include/
 /lib/
 /local/

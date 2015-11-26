@@ -1,0 +1,7 @@
+[report]
+include =
+    src/pas/*
+omit =
+    */test*
+    */upgrades/*
+
