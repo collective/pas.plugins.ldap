@@ -28,3 +28,4 @@ install:
   - bin/buildout -N -t 3 -c travis.cfg
 script:
   - bin/test
+
