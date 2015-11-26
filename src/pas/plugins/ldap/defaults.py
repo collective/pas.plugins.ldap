@@ -8,6 +8,7 @@ DEFAULTS = {
     'server.check_duplicates':  True,
     'server.start_tls':         False,
     'server.check_duplicates':  False,
+    'server.ignore_cert':       False,
 
     'cache.cache':              False,
     'cache.memcached':          '127.0.0.1:11211',
@@ -23,6 +24,7 @@ DEFAULTS = {
     'users.scope':              ONELEVEL,
     'users.queryFilter':        '(objectClass=inetOrgPerson)',
     'users.objectClasses':      ['inetOrgPerson'],
+    'users.defaults':     {},
     'users.memberOfSupport':    False,
     'users.account_expiration': False,
     'users.expires_attr':       'shadowExpire',
@@ -37,6 +39,7 @@ DEFAULTS = {
     'groups.scope':             ONELEVEL,
     'groups.queryFilter':       '(objectClass=groupOfNames)',
     'groups.objectClasses':     ['groupOfNames'],
+    'groups.defaults':     {},
     'groups.memberOfSupport':   False,
     'groups.expires_attr':      'unused',
     'groups.expires_unit':      0,
