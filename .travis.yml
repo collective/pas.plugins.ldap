@@ -6,6 +6,9 @@ cache:
     - $HOME/buildout-cache
 python:
   - 2.7
+env:
+  - PLONE_VERSION=4.3 QA=true
+  - PLONE_VERSION=5.0 QA=true
 addons:
   apt:
     packages:
@@ -21,6 +24,7 @@ before_install:
   - virtualenv .
   - bin/pip install --upgrade pip setuptools zc.buildout coveralls
 install:
+  - sed -ie "s#plone-4.3.x.cfg#plone-$PLONE_VERSION.x.cfg#" travis.cfg
   - bin/buildout -N -t 3 -c travis.cfg
 script:
   - bin/test
