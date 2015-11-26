@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from Products.CMFCore.interfaces import ISiteRoot
-from Products.PlonePAS.Extensions.Install import migrate_root_uf
 from node.ext.ldap import testing as ldaptesting
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
@@ -12,6 +11,13 @@ from zope.component import provideAdapter
 from zope.component import provideUtility
 from zope.interface import Interface
 from zope.interface import implementer
+
+try:
+    # plone 5.x with PlonePAS >=5.0
+    from Products.PlonePAS.setuphandlers import migrate_root_uf
+except ImportError:
+    # plone 4.x with PlonePAS <5.0
+    from Products.PlonePAS.Extensions.Install import migrate_root_uf
 
 SITE_OWNER_NAME = SITE_OWNER_PASSWORD = 'admin'
 

@@ -5,6 +5,9 @@ History
 1.4.1 (unreleased)
 ------------------
 
+- fix tests for Plone 5
+  [jensens]
+
 - use implementer decorator for better readability
   [jensens]
 
