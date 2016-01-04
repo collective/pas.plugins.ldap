@@ -20,7 +20,6 @@ from zope.component import adapter
 from zope.component import queryUtility
 from zope.i18nmessageid import MessageFactory
 from zope.interface import implementer
-
 import ldap
 import logging
 
@@ -30,13 +29,11 @@ _ = MessageFactory('pas.plugins.ldap')
 
 
 class BasePropertiesForm(BrowserView):
-
     scope_vocab = [
         (str(BASE), 'BASE'),
         (str(ONELEVEL), 'ONELEVEL'),
         (str(SUBTREE), 'SUBTREE'),
     ]
-
     static_attrs_users = ['rdn', 'id', 'login']
     static_attrs_groups = ['rdn', 'id']
 
@@ -56,18 +53,15 @@ class BasePropertiesForm(BrowserView):
         self.props = ILDAPProps(self.plugin)
         self.users = ILDAPUsersConfig(self.plugin)
         self.groups = ILDAPGroupsConfig(self.plugin)
-
         # prepare users data on form context
         self.users_attrmap = odict()
         for key in self.static_attrs_users:
             self.users_attrmap[key] = self.users.attrmap.get(key)
-
         self.users_propsheet_attrmap = odict()
         for key, value in self.users.attrmap.items():
             if key in self.static_attrs_users:
                 continue
             self.users_propsheet_attrmap[key] = value
-
         # prepare groups data on form context
         self.groups_attrmap = odict()
         for key in self.static_attrs_groups:
@@ -77,7 +71,6 @@ class BasePropertiesForm(BrowserView):
             if key in self.static_attrs_groups:
                 continue
             self.groups_propsheet_attrmap[key] = value
-
         # handle form
         form = parse_from_YAML('pas.plugins.ldap:properties.yaml', self,  _)
         controller = Controller(form, self.request)
@@ -100,14 +93,14 @@ class BasePropertiesForm(BrowserView):
             if val is UNSET:
                 return default
             return val
+
         props.uri = fetch('server.uri')
         props.user = fetch('server.user')
         password = fetch('server.password')
         if password is not UNSET:
             props.password = password
-        props.check_duplicates = fetch('server.check_duplicates')
-
         # TODO: later
+        # props.ignore_cert = fetch('server.ignore_cert')
         # props.start_tls = fetch('server.start_tls')
         # props.tls_cacertfile = fetch('server.tls_cacertfile')
         # props.tls_cacertdir = fetch('server.tls_cacertdir')
@@ -119,12 +112,12 @@ class BasePropertiesForm(BrowserView):
         props.memcached = fetch('cache.memcached')
         props.timeout = fetch('cache.timeout')
         users.baseDN = fetch('users.dn')
-        map = odict()
-        map.update(fetch('users.aliases_attrmap'))
+        attrmap = odict()
+        attrmap.update(fetch('users.aliases_attrmap'))
         users_propsheet_attrmap = fetch('users.propsheet_attrmap')
         if users_propsheet_attrmap is not UNSET:
-            map.update(users_propsheet_attrmap)
-        users.attrmap = map
+            attrmap.update(users_propsheet_attrmap)
+        users.attrmap = attrmap
         users.scope = fetch('users.scope')
         if users.scope is not UNSET:
             users.scope = int(users.scope.strip('"'))
@@ -135,14 +128,13 @@ class BasePropertiesForm(BrowserView):
         users.account_expiration = fetch('users.account_expiration')
         users._expiresAttr = fetch('users.expires_attr')
         users._expiresUnit = int(fetch('users.expires_unit', 0))
-        groups = self.groups
         groups.baseDN = fetch('groups.dn')
-        map = odict()
-        map.update(fetch('groups.aliases_attrmap'))
+        attrmap = odict()
+        attrmap.update(fetch('groups.aliases_attrmap'))
         groups_propsheet_attrmap = fetch('groups.propsheet_attrmap')
         if groups_propsheet_attrmap is not UNSET:
-            map.update(groups_propsheet_attrmap)
-        groups.attrmap = map
+            attrmap.update(groups_propsheet_attrmap)
+        groups.attrmap = attrmap
         groups.scope = fetch('groups.scope')
         if groups.scope is not UNSET:
             groups.scope = int(groups.scope.strip('"'))
@@ -185,6 +177,7 @@ def propproxy(ckey):
 
     def _setter(context, value):
         context.plugin.settings[ckey] = value
+
     return property(_getter, _setter)
 
 
@@ -195,13 +188,8 @@ class LDAPProps(object):
     def __init__(self, plugin):
         self.plugin = plugin
 
-    uri = propproxy('server.uri')
-    user = propproxy('server.user')
-    password = propproxy('server.password')
-    check_duplicates = propproxy('server.check_duplicates')
-
     # XXX: Later
-    start_tls = propproxy('server.start_tls')
+    ignore_cert = 0
     tls_cacertfile = ''
     tls_cacertdir = ''
     tls_clcertfile = ''
@@ -209,26 +197,29 @@ class LDAPProps(object):
     retry_max = 3
     retry_delay = 5
 
+    uri = propproxy('server.uri')
+    user = propproxy('server.user')
+    password = propproxy('server.password')
+    start_tls = propproxy('server.start_tls')
     cache = propproxy('cache.cache')
+    timeout = propproxy('cache.timeout')
 
-    def _memcached_get(self):
+    @property
+    def memcached(self):
         recordProvider = queryUtility(ICacheSettingsRecordProvider)
         if recordProvider is not None:
             record = recordProvider()
             return record.value
         return u'feature not available'
 
-    def _memcached_set(self, value):
+    @memcached.setter
+    def memcached(self, value):
         recordProvider = queryUtility(ICacheSettingsRecordProvider)
         if recordProvider is not None:
             record = recordProvider()
             record.value = value.decode('utf8')
         else:
             return u'feature not available'
-
-    memcached = property(_memcached_get, _memcached_set)
-
-    timeout = propproxy('cache.timeout')
 
     binary_attributes = BINARY_DEFAULTS
     multivalued_attributes = MULTIVALUED_DEFAULTS
@@ -242,6 +233,7 @@ class UsersConfig(object):
         self.plugin = plugin
 
     strict = False
+    defaults = dict()
     baseDN = propproxy('users.baseDN')
     attrmap = propproxy('users.attrmap')
     scope = propproxy('users.scope')
@@ -269,6 +261,7 @@ class GroupsConfig(object):
         self.plugin = plugin
 
     strict = False
+    defaults = dict()
     baseDN = propproxy('groups.baseDN')
     attrmap = propproxy('groups.attrmap')
     scope = propproxy('groups.scope')

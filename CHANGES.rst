@@ -2,16 +2,35 @@
 History
 =======
 
-1.4.1 (unreleased)
+1.5a1 (unreleased)
 ------------------
 
-- fix tests for Plone 5
+- Adopt LDAP instector to use DN instead of RDN for node identification.
+  [rnix]
+
+- Add dummy ``defaults`` setting to ``UsersConfig`` and ``GroupsConfig``
+  adapters. These defaults are used to set child creation defaults, thus
+  concrete implementation is postponed until user and group creation is
+  supported through plone UI.
+  [rnix]
+
+- Add ``ignore_cert`` setting to ``LDAPProps`` adapter.
+  [rnix]
+
+- Remove ``check_duplicates`` setting which is not available any more in
+  node.ext.ldap.
+  [rnix]
+
+- Use node.ext.ldap 1.0b1.
+  [rnix]
+
+- fix tests for Plone 5.
   [jensens]
 
-- use implementer decorator for better readability
+- use implementer decorator for better readability.
   [jensens]
 
-- Fix setuptools to v7.0
+- Fix setuptools to v7.0.
   [jensens]
 
 

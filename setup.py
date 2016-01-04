@@ -4,7 +4,7 @@ from setuptools import (
     find_packages,
 )
 
-version = '1.4.1.dev0'
+version = '1.5a1.dev0'
 shortdesc = "LDAP Plugin for Zope2 PluggableAuthService (users and groups)"
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'TODO.rst')).read()
@@ -39,7 +39,7 @@ setup(
         'bda.cache',
         'five.globalrequest',
         'node',
-        'node.ext.ldap>=0.9.6',
+        'node.ext.ldap>=1.0b1',
         'odict',
         'plone.registry',
         'Products.CMFCore',

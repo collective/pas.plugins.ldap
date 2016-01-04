@@ -18,4 +18,5 @@
 /parts/
 /src/*.egg-info
 /var/
-buildout.cfg
+/buildout.cfg
+/pip-selfcheck.json

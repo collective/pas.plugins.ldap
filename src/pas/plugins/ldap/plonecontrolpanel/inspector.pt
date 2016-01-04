@@ -20,6 +20,7 @@
 
   <div>
     <ul id="ldap_child_listing">
+      <li>No search base selected</li>
     </ul>
   </div>
 
@@ -61,11 +62,19 @@
     (function($) {
         $("select[name=ldap_base_container]").bind('change', function(evt) {
             evt.preventDefault();
-            var val = $(this).attr('value');
+            var val = $(this).val();
             if (val == 'Users') {
                 ldap_inspector.query_users();
             } else if (val == 'Groups') {
                 ldap_inspector.query_groups();
+            } else {
+                var listing = ldap_inspector.listing();
+                listing.empty();
+                var li = $(document.createElement('li'));
+                var span = $(document.createElement('span'));
+                span.text('No search base selected');
+                li.append(span);
+                listing.append(li);
             }
         });
 
@@ -101,10 +110,17 @@
                     var li = $(document.createElement('li'));
                     li.attr('class', 'ldap_child');
                     var a = $(document.createElement('a'));
-                    a.text(this.rdn);
+                    a.text(this.dn);
                     li.append(a);
                     listing.append(li);
                 });
+                if (listing.children().length === 0) {
+                    var li = $(document.createElement('li'));
+                    var span = $(document.createElement('span'));
+                    span.text('Empty result');
+                    li.append(span);
+                    listing.append(li);
+                }
                 $('li a', listing).bind('click',
                                         ldap_inspector.node_attributes);
             },
@@ -116,11 +132,11 @@
                 $('li table', listing).remove();
                 var elem = $(this);
                 elem.addClass('current');
-                var rdn = elem.text();
+                var dn = elem.text();
                 $.ajax({
                     url: '@@plone_ldapnodeattributes',
                     data: {
-                        rdn: rdn,
+                        dn: dn,
                         base: ldap_inspector.listing().data('base')
                     },
                     dataType: 'json',
@@ -133,9 +149,9 @@
                 var listing = ldap_inspector.listing();
                 var elem = $('li a.current', listing).parent();
                 var table = $(document.createElement('table'));
-                table.attr('class', 'ldap_node_attributes')
+                table.attr('class', 'ldap_node_attributes');
                 var chk_arr = function(val) {
-                    var str = Object.prototype.toString.call(val)
+                    var str = Object.prototype.toString.call(val);
                     return str === '[object Array]';
                 };
                 var key, val, m_val, row, key_td, val_td, key_wrap;

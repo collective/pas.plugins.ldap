@@ -118,10 +118,8 @@ We appreciate any contribution and if a release is needed to be done on pypi, pl
 Contributors
 ============
 
-- Jens W. Klein <jens@bluedynamics.com>
-
-- Robert Niederrreiter <rnix [at] squarewave [dot] at>
-
-- Florian Friesdorf <flo [at] chaoflow [dot] net>
-
-- Daniel Widerin <daniel@widerin.net>
+- Jens W. Klein
+- Robert Niederrreiter
+- Florian Friesdorf
+- Daniel Widerin
+- Johannes Raggam

@@ -29,12 +29,6 @@ widgets:
         props:
             label: LDAP Manager Password
             required: No password defined
-    - check_duplicates:
-        factory: field:label:checkbox
-        value: expr:context.props.check_duplicates
-        props:
-            label: Check for duplicate keys?
-            help:  If duplicate keys are found in LDAP fail - or ignore them and take first?            
 - users:
     factory: fieldset
     props:

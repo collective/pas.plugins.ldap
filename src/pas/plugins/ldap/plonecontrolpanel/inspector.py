@@ -38,7 +38,7 @@ class LDAPInspector(BrowserView):
         return self.children(groups.baseDN)
 
     def node_attributes(self):
-        rdn = self.request['rdn']
+        dn = self.request['dn']
         base = self.request['base']
         if base == 'users':
             users = ILDAPUsersConfig(self.plugin)
@@ -47,7 +47,7 @@ class LDAPInspector(BrowserView):
             groups = ILDAPGroupsConfig(self.plugin)
             baseDN = groups.baseDN
         root = LDAPNode(baseDN, self.props)
-        node = root[rdn]
+        node = root.node_by_dn(dn, strict=True)
         ret = dict()
         for key, val in node.attrs.items():
             try:
@@ -65,6 +65,7 @@ class LDAPInspector(BrowserView):
     def children(self, baseDN):
         node = LDAPNode(baseDN, self.props)
         ret = list()
-        for key in node:
-            ret.append({'rdn': key})
+        # XXX: related search filters for users and groups container?
+        for dn in node.search():
+            ret.append({'dn': dn})
         return json.dumps(ret)
