@@ -5,6 +5,10 @@ History
 1.5a1 (unreleased)
 ------------------
 
+- Fixed LDAP errors not handled. This prevent leave the site broken
+  just after the installation of the plugin
+  [keul]
+
 - Adopt LDAP instector to use DN instead of RDN for node identification.
   [rnix]
 
