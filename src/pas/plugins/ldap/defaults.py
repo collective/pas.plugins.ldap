@@ -15,13 +15,13 @@ DEFAULTS = {
 
     'users.baseDN':             'ou=users,dc=my-domain,dc=com',
     'users.attrmap':            {
-                                    'rdn': 'uid',
-                                    'id': 'uid',
-                                    'login': 'uid',
-                                    'fullname': 'cn',
-                                    'email': 'mail',
-                                    'location': 'l'
-                                },
+        'rdn': 'uid',
+        'id': 'uid',
+        'login': 'uid',
+        'fullname': 'cn',
+        'email': 'mail',
+        'location': 'l'
+    },
     'users.scope':              ONELEVEL,
     'users.queryFilter':        '(objectClass=inetOrgPerson)',
     'users.objectClasses':      ['inetOrgPerson'],
@@ -32,11 +32,11 @@ DEFAULTS = {
 
     'groups.baseDN':            'ou=groups,dc=my-domain,dc=com',
     'groups.attrmap':           {
-                                    'rdn': 'cn',
-                                    'id': 'cn',
-                                    'title': 'o',
-                                    'description': 'description'
-                                },
+        'rdn': 'cn',
+        'id': 'cn',
+        'title': 'o',
+        'description': 'description'
+    },
     'groups.scope':             ONELEVEL,
     'groups.queryFilter':       '(objectClass=groupOfNames)',
     'groups.objectClasses':     ['groupOfNames'],

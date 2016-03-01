@@ -50,9 +50,9 @@ manage_addLDAPPluginForm = PageTemplateFile(
 def ldap_error_handler(prefix):
     """decorator, deals with non-working LDAP"""
 
-    def _decorator(original_method):
+    def _decorator(original_method, *args, **kwargs):
 
-        def _wrapper(self):
+        def _wrapper(self, *args, **kwargs):
             # look if error is in timeout phase
             if hasattr(self, '_v_ldaperror_timeout'):
                 waiting = time.time() - self._v_ldaperror_timeout
@@ -69,7 +69,7 @@ def ldap_error_handler(prefix):
             try:
                 # call original method - get metrics
                 start = time.clock()
-                result = original_method(self)
+                result = original_method(self, *args, **kwargs)
                 end = time.clock()
                 logger.debug(
                     'call of {0!r} took {1:0.5f}s'.format(
@@ -182,6 +182,7 @@ class LDAPPlugin(BasePlugin):
     #
     #  Map credentials to a user ID.
     #
+    @ldap_error_handler('authenticateCredentials')
     @security.public
     def authenticateCredentials(self, credentials):
         """credentials -> (userid, login)
@@ -308,6 +309,7 @@ class LDAPPlugin(BasePlugin):
     #
     #   Allow querying users by ID, and searching for users.
     #
+    @ldap_error_handler('enumerateUsers')
     @security.private
     def enumerateUsers(self, id=None, login=None, exact_match=False,
                        sort_by=None, max_results=None, **kw):
