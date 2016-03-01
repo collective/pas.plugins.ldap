@@ -70,21 +70,13 @@ You can place the exported ``ldapsettings.xml`` in your integration profile, so 
 Attention: The **ldap-password is in there in plain text!**
 
 
-Caching, Limitations and Future Optimizations
-=============================================
+Caching
+=======
 
 By default the LDAP-queries are not cached.
 A must have for a production environment is having `memcached <http://memcached.org/>`_ server configured as LDAP query cache.
 Without this this module is slow (as any other module talking to LDAP will be).
 Cache at least for ~6 seconds, so a page load with all its resources is covered also in worst case.
-
-This package works fine for hundreds and also up to 3000 users (or more depending on your hardware).
-But then it slows down a bit. Primary problem is here the UGM tree used.
-It loads currently lots data - more than it need for a specific case - in its caching/working UGM tree.
-
-This is not that much a problem for small amount of users.
-There is room for future optimization in the underlying ``node.ext.ldap``.
-Contact us if you have resources in time or budget for this development task.
 
 The UGM tree is cached by default on the request, that means its built up every request from (cached) ldap queries.
 
@@ -99,6 +91,19 @@ Please keep in mind: Caching the UGM tree longer than one request means it could
 
 If you plan a different implementation of UGM tree caching:
 Just provide your own adapter implementing ``pas.plugins.ldap.interfaces.IPluginCacheHandler``.
+
+
+Limitations and Future Optimizations
+====================================
+
+This package works fine for several 10000 users or groups, *unless you search or list users*.
+
+This is not that much a problem for small amount of users.
+There is room for future optimization in the underlying `node.ext.ldap <https://pypi.python.org/pypi/node.ext.ldap>`_.
+It currently does not support paginated queries.
+Many LDAP servers are having a maximum page size per answer.
+If the result is larger than this number, the query might fail or be truncated.
+Contact us if you have resources in time or budget for this development task.
 
 
 Source Code
@@ -123,3 +128,4 @@ Contributors
 - Florian Friesdorf
 - Daniel Widerin
 - Johannes Raggam
+- Luca Fabbri
