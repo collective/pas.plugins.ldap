@@ -149,7 +149,7 @@ class BasePropertiesForm(BrowserView):
         groups = ILDAPGroupsConfig(self.plugin)
         ugm = Ugm('test', props=props, ucfg=users, gcfg=groups)
         try:
-            ugm.users
+            ugm.users.iterkeys().next()
         except ldap.SERVER_DOWN, e:
             return False, _("Server Down")
         except ldap.LDAPError, e:

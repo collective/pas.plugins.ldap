@@ -5,6 +5,9 @@ History
 1.5a1 (unreleased)
 ------------------
 
+- Fix LDAP check.
+  [jensens]
+
 - Split profiles for Plone 4 and 5.
   [jensens]
 
