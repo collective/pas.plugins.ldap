@@ -2,6 +2,6 @@
 <metadata>
   <version>1</version>
   <dependencies>
-    <dependency>profile-pas.plugins.ldap.plonecontrolpanel:base</dependency>
+    <dependency>profile-pas.plugins.ldap.plonecontrolpanel:install-base</dependency>
   </dependencies>
 </metadata>
