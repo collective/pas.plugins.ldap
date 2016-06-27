@@ -9,7 +9,7 @@
 
 
   <genericsetup:registerProfile
-    name="base"
+    name="install-base"
     title="LDAP Plugin for PAS - Base Plone Integration"
     directory="profiles/base"
     description="Extension profile for pas.plugins.ldap Base Plone Integration (Do not install this direct)."
