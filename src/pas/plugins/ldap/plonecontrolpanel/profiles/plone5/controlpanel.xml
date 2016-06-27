@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <object name="portal_controlpanel">
-  <configlet title="LDAP Configuration"
+  <configlet title="LDAP/ AD Support"
              action_id="LDAP_Configuration"
              appId="pas.plugins.ldap"
              category="plone-users"
