@@ -70,7 +70,10 @@ setup(
         ],
         'plone': [
             'Plone',
-        ]
+        ],
+        'plone5': [
+            'yafowil.plone[plone5]'
+        ],
     },
     entry_points="""
     [z3c.autoinclude.plugin]
