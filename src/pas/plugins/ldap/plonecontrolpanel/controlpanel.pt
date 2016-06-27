@@ -21,7 +21,7 @@
     <strong tal:content="python: state_ok and 'OK' or 'ERROR'"
             tal:attributes="style python: state_ok and 'color:green' or 'color:red'"
     >state</strong>: <span tal:content="state_msg">msg</span>
-
+    <br tal:condition="state_ok" />
     <a href=""
        tal:condition="state_ok"
        tal:attributes="href string:${context/absolute_url}/@@plone_ldapinspector"
