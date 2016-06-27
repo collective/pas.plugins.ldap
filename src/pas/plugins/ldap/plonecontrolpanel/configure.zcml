@@ -2,27 +2,47 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="bda.plone.ldap">
 
   <include package="Products.CMFCore" />
 
+
   <genericsetup:registerProfile
-    name="yafowil"
-    title="LDAP Plugin for PAS - Configure YAFOWIL resource groups."
-    directory="profiles/yafowil"
-    description="Extension profile for pas.plugins.ldap YAFOWIL Integration."
+    name="base"
+    title="LDAP Plugin for PAS - Base Plone Integration"
+    directory="profiles/base"
+    description="Extension profile for pas.plugins.ldap Base Plone Integration (Do not install this direct)."
     provides="Products.GenericSetup.interfaces.EXTENSION" />
 
   <genericsetup:registerProfile
+    zcml:condition="not-have plone-5"
     name="default"
-    title="LDAP Plugin for PAS - Plone Integration"
-    directory="profiles/default"
-    description="Extension profile for pas.plugins.ldap Plone Integration."
+    title="LDAP/ Active Directory Support"
+    directory="profiles/plone4"
+    description="pas.plugins.ldap support for users and groups from ldap/active directory."
+    provides="Products.GenericSetup.interfaces.EXTENSION" />
+
+  <genericsetup:registerProfile
+    zcml:condition="not-have plone-5"
+    name="yafowil"
+    title="LDAP/ Active Directory Support - Load YAFOWIL Form integration"
+    directory="profiles/yafowil"
+    description="pas.plugins.ldap - yafowil forms (install after LDAP Support)"
+    provides="Products.GenericSetup.interfaces.EXTENSION" />
+
+  <genericsetup:registerProfile
+    zcml:condition="have plone-5"
+    name="default"
+    title="LDAP/ Active Directory Support"
+    directory="profiles/plone5"
+    description="pas.plugins.ldap support for users and groups from ldap/active directory."
     provides="Products.GenericSetup.interfaces.EXTENSION" />
 
   <utility
     factory=".HiddenProfiles"
-    name="pas.plugins.ldap" />
+    provides="Products.CMFPlone.interfaces.INonInstallable"
+    name="pas-plugins-ldap" />
 
   <browser:page
     name="plone_ldapcontrolpanel"

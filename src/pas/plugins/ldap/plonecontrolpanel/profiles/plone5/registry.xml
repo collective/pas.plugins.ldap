@@ -1,0 +1,19 @@
+<registry>
+
+  <!-- yafowil.widget.array -->
+  <record name="yafowil.widget.array.common">
+    <field type="plone.registry.field.Bool">
+      <title>Array widget common resources</title>
+    </field>
+    <value>True</value>
+  </record>
+
+  <!-- yafowil.widget.dict -->
+  <record name="yafowil.widget.dict.common">
+    <field type="plone.registry.field.Bool">
+      <title>Dict widget common resources</title>
+    </field>
+    <value>True</value>
+  </record>
+
+</registry>
