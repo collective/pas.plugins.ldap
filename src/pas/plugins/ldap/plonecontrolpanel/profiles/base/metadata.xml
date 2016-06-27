@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<metadata>
+  <version>1</version>
+  <dependencies>
+    <dependency>profile-pas.plugins.ldap:default</dependency>
+    <dependency>profile-yafowil.plone:default</dependency>
+  </dependencies>
+</metadata>

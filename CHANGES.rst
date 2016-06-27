@@ -5,6 +5,9 @@ History
 1.5a1 (unreleased)
 ------------------
 
+- Split profiles for Plone 4 and 5.
+  [jensens]
+
 - fix tests for Plone 5
   [jensens]
 
