@@ -34,7 +34,7 @@ widgets:
         value: expr:context.props.ignore_cert
         props:
             label: Ignore certificate check?
-            help:  If set on authenticate a failing certificate chain check including CA is ignored.
+            help: If set on authenticate a failing certificate chain check including CA is ignored.
 - users:
     factory: fieldset
     props:
@@ -59,10 +59,11 @@ widgets:
         props:
             label: Users search query filter
     - object_classes:
-        factory: field:error:array
+        factory: '#array'
         value: "expr:not isinstance(context.users.objectClasses, basestring) and context.users.objectClasses or [context.users.objectClasses]"
         props:
             label: Object classes for User creation
+            array.label: Object class
         widgets:
             - oc:
                 factory: field:text
@@ -129,10 +130,11 @@ widgets:
         props:
             label: Groups search query filter
     - object_classes:
-        factory: field:error:array
+        factory: '#array'
         value: "expr:not isinstance(context.groups.objectClasses, basestring) and context.groups.objectClasses or [context.groups.objectClasses]"
         props:
             label: Object classes for Group creation
+            array.label: Object class
         widgets:
             - oc:
                 factory: field:text
