@@ -11,26 +11,26 @@ widgets:
         class: formPanel
     widgets:
     - uri:
-        factory: field:label:help:error:text
+        factory: '#field:text'
         value: expr:context.props.uri
         props:
             label: LDAP URI
             help: "Example: ldap://127.0.0.1:12345"
             required: No URI defined
     - user:
-        factory: field:label:error:text
+        factory: '#field:text'
         value: expr:context.props.user
         props:
             label: LDAP Manager User
             required: No user defined
     - password:
-        factory: field:label:error:password
+        factory: '#field:password'
         value: expr:context.props.password
         props:
             label: LDAP Manager Password
             required: No password defined
     - ignore_cert:
-        factory: field:label:checkbox
+        factory: '#field:checkbox'
         value: expr:context.props.ignore_cert
         props:
             label: Ignore certificate check?
@@ -42,19 +42,19 @@ widgets:
         class: formPanel
     widgets:
     - dn:
-        factory: field:label:error:text
+        factory: '#field:text'
         value: expr:context.users.baseDN
         props:
             label: Users container DN
             required: No Users DN defined
     - scope:
-        factory: field:label:error:select
+        factory: '#field:select'
         value: expr:str(context.users.scope)
         props:
             label: Users search scope
             vocabulary: expr:context.scope_vocab
     - query:
-        factory: field:label:error:text
+        factory: '#field:text'
         value: expr:context.users.queryFilter
         props:
             label: Users search query filter
@@ -67,28 +67,28 @@ widgets:
             - oc:
                 factory: field:text
     - memberOfSupport:
-        factory: field:label:checkbox
+        factory: '#field:checkbox'
         value: expr:context.users.memberOfSupport
         props:
             label: memberOf attribute supported?
     - account_expiration:
-        factory: field:label:checkbox
+        factory: '#field:checkbox'
         value: expr:context.users.account_expiration
         props:
             label: User Accounts expires?
     - expires_attr:
-        factory: field:label:text
+        factory: '#field:text'
         value: expr:context.users.expiresAttr
         props:
             label: Attribute containing expiration Time
     - expires_unit:
-        factory: field:label:select
+        factory: '#field:select'
         value: expr:context.users.expiresUnit
         props:
             label: Account expiration unit
             vocabulary: expr:((0, 'Days since Epoch'), (1, 'Seconds since epoch'))
     - aliases_attrmap:
-        factory: field:label:error:dict
+        factory: '#field:dict'
         value: expr:context.users_attrmap
         props:
             label: User attribute aliases
@@ -98,7 +98,7 @@ widgets:
                 key: Reserved key
                 value: LDAP attr name
     - propsheet_attrmap:
-        factory: field:label:error:dict
+        factory: '#field:dict'
         value: expr:context.users_propsheet_attrmap
         props:
             label: User Property-Sheet Attributes
@@ -112,19 +112,19 @@ widgets:
         class: formPanel
     widgets:
     - dn:
-        factory: field:label:error:text
+        factory: '#field:text'
         value: expr:context.groups.baseDN
         props:
             label: Groups container DN
             required: No Groups DN defined
     - scope:
-        factory: field:label:error:select
+        factory: '#field:select'
         value: expr:str(context.groups.scope)
         props:
             label: Groups search scope
             vocabulary: expr:context.scope_vocab
     - query:
-        factory: field:label:error:text
+        factory: '#field:text'
         value: expr:context.groups.queryFilter
         props:
             label: Groups search query filter
@@ -137,12 +137,12 @@ widgets:
             - oc:
                 factory: field:text
     - memberOfSupport:
-        factory: field:label:checkbox
+        factory: '#field:checkbox'
         value: expr:context.groups.memberOfSupport
         props:
             label: memberOf attribute supported?
     - aliases_attrmap:
-        factory: field:label:error:dict
+        factory: '#field:dict'
         value: expr:context.groups_attrmap
         props:
             label: Group attribute aliases
@@ -152,7 +152,7 @@ widgets:
                 key: Reserved key
                 value: LDAP attr name
     - propsheet_attrmap:
-        factory: field:label:error:dict
+        factory: '#field:dict'
         value: expr:context.groups_propsheet_attrmap
         props:
             label: Group Property-Sheet Attributes
@@ -166,19 +166,19 @@ widgets:
         class: formPanel
     widgets:
     - cache:
-        factory: field:label:error:checkbox
+        factory: '#field:checkbox'
         value: expr:context.props.cache
         props:
             label: Cache LDAP queries
     - memcached:
-        factory: field:label:error:text
+        factory: '#field:text'
         value: expr:context.props.memcached
         props:
             label: Memcached Server to use
             help: global - same server for all ldap plugins
             field.class: memcached field
     - timeout:
-        factory: field:label:error:number
+        factory: '#field:number'
         value: expr:context.props.timeout
         props:
             label: Cache timeout in seconds
@@ -191,3 +191,4 @@ widgets:
         handler: context.save
         next: context.next
         label: Save
+        class: submit-widget button-field context
