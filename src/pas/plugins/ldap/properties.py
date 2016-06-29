@@ -108,6 +108,7 @@ class BasePropertiesForm(BrowserView):
         # props.tls_clkeyfile = fetch('server.tls_clkeyfile')
         # props.retry_max = fetch(at('server.retry_max')
         # props.retry_delay = fetch('server.retry_delay')
+        props.page_size = fetch('server.page_size')
         props.cache = fetch('cache.cache')
         props.memcached = fetch('cache.memcached')
         props.timeout = fetch('cache.timeout')
@@ -201,6 +202,7 @@ class LDAPProps(object):
     password = propproxy('server.password')
     start_tls = propproxy('server.start_tls')
     ignore_cert = propproxy('server.ignore_cert')
+    page_size = propproxy('server.page_size')
     cache = propproxy('cache.cache')
     timeout = propproxy('cache.timeout')
 

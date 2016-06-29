@@ -5,6 +5,9 @@ History
 1.5a1 (unreleased)
 ------------------
 
+- Add page_size server property.
+  [jensens]
+
 - Fix LDAP check.
   [jensens]
 
