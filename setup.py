@@ -47,7 +47,6 @@ setup(
         'odict',
         'plone.registry',
         'Products.CMFCore',
-        'Products.CMFQuickInstallerTool',
         'Products.GenericSetup',
         'Products.PlonePAS',
         'Products.PluggableAuthService',

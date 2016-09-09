@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Products.CMFQuickInstallerTool.interfaces.INonInstallable
 from Products.CMFPlone.interfaces.installable import INonInstallable
 from zope.interface import implementer
 
