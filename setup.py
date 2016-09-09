@@ -13,17 +13,21 @@ longdesc += open(os.path.join(os.path.dirname(__file__), 'LICENSE.rst')).read()
 
 
 setup(
-    name='pas.plugins.ldap',
+    name='LDAP/AD Support for Plone',
     version=version,
     description=shortdesc,
     long_description=longdesc,
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Zope2',
-        'Operating System :: OS Independent',
+        'Framework :: Plone',
+        'Framework :: Plone :: 5.0',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+        'Operating System :: OS Independent',
+        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
     ],
-    keywords='zope2 pas plone ldap',
+    keywords='zope2 pas plone ldap authentication',
     author='BlueDynamics Alliance',
     author_email='dev@bluedynamics.com',
     url='https://pypi.python.org/pypi/pas.plugins.ldap',
