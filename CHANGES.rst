@@ -2,7 +2,7 @@
 History
 =======
 
-1.5a1 (unreleased)
+1.5b1 (2016-09-09)
 ------------------
 
 - GroupEnumeration paged.
