@@ -5,7 +5,7 @@ from setuptools import (
 )
 
 version = '1.5b1.dev0'
-shortdesc = "LDAP Plugin for Zope2 PluggableAuthService (users and groups)"
+shortdesc = "LDAP/AD Plugin for Plone/Zope PluggableAuthService (users+groups)"
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'TODO.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'CHANGES.rst')).read()
@@ -13,7 +13,7 @@ longdesc += open(os.path.join(os.path.dirname(__file__), 'LICENSE.rst')).read()
 
 
 setup(
-    name='LDAP/AD Support for Plone',
+    name='pas.plugins.ldap',
     version=version,
     description=shortdesc,
     long_description=longdesc,
