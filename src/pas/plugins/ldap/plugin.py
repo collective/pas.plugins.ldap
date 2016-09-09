@@ -266,10 +266,21 @@ class LDAPPlugin(BasePlugin):
         if not kw:  # show all
             matches = groups.ids
         else:
-            try:
-                matches = groups.search(criteria=kw, exact_match=exact_match)
-            except ValueError:
-                return ()
+            matches = []
+            cookie = None
+            while True:
+                try:
+                    batch_matches, cookie = groups.search(
+                        criteria=kw,
+                        exact_match=exact_match,
+                        page_size=self._ldap_props.page_size,
+                        cookie=cookie,
+                    )
+                except ValueError:
+                    return tuple()
+                matches += batch_matches
+                if not cookie:
+                    break
         if sort_by == 'id':
             matches = sorted(matches)
         pluginid = self.getId()

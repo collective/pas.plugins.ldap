@@ -5,6 +5,9 @@ History
 1.5a1 (unreleased)
 ------------------
 
+- GroupEnumeration paged.
+  [jensens]
+
 - UserEnumeration paged.
   [jensens]
 
