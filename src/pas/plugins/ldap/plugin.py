@@ -139,15 +139,18 @@ class LDAPPlugin(BasePlugin):
     def users_enabled(self):
         return self.users is not None
 
+    @property
+    def _ldap_props(self):
+        return ILDAPProps(self)
+
     def _ugm(self):
         plugin_cache = get_plugin_cache(self)
         ugm = plugin_cache.get()
         if ugm is not VALUE_NOT_CACHED:
             return ugm
-        props = ILDAPProps(self)
         ucfg = ILDAPUsersConfig(self)
         gcfg = ILDAPGroupsConfig(self)
-        ugm = Ugm(props=props, ucfg=ucfg, gcfg=gcfg, rcfg=None)
+        ugm = Ugm(props=self._ldap_props, ucfg=ucfg, gcfg=gcfg, rcfg=None)
         plugin_cache.set(ugm)
         return ugm
 
@@ -372,13 +375,22 @@ class LDAPPlugin(BasePlugin):
         users = self.users
         if not users:
             return tuple()
-        try:
-            matches = users.search(
-                criteria=kw,
-                attrlist=('login',),
-                exact_match=exact_match)
-        except ValueError:
-            return tuple()
+        matches = []
+        cookie = None
+        while True:
+            try:
+                batch_matches, cookie = users.search(
+                    criteria=kw,
+                    attrlist=('login',),
+                    exact_match=exact_match,
+                    page_size=self._ldap_props.page_size,
+                    cookie=cookie,
+                )
+            except ValueError:
+                return tuple()
+            matches += batch_matches
+            if not cookie:
+                break
         pluginid = self.getId()
         ret = list()
         for id, attrs in matches:

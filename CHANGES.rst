@@ -5,6 +5,9 @@ History
 1.5a1 (unreleased)
 ------------------
 
+- UserEnumeration paged.
+  [jensens]
+
 - Add page_size server property.
   [jensens]
 
