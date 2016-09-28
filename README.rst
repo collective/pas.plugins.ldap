@@ -21,11 +21,24 @@ See section *TODO*.
 Installation
 ============
 
+Dependencies
+------------
+
+This package depends on ``python-ldap``.
+In order to build it correctly you need to have some development libraries included in your system.
+On a typical Debian-based installation use:
+
+.. code-block:: console
+
+    sudo apt install python-dev libldap2-dev libsasl2-dev libssl-dev
+
 
 Zope2
 -----
 
-Add to the instance section of your buildout::
+Add to the instance section of your buildout:
+
+.. code-block:: ini
 
     eggs =
         ...
@@ -44,7 +57,9 @@ Configure it using the settings form and activate its features with the ``activa
 Plone
 -----
 
-Add to the instance section of your buildout::
+Add to the instance section of your buildout:
+
+.. code-block:: ini
 
     eggs =
         ...
@@ -56,7 +71,9 @@ Then go to the Plone control-panel, select ``extensions`` and install the LDAP P
 A new LDAP Settings icon appear on the left. Click it and configure the plugin there.
 
 To use an own integration-profile, just add to the profiles
-``metadata.xml`` file::
+``metadata.xml`` file:
+
+.. code-block:: xml
 
     ...
     <dependencies>
