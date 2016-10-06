@@ -2,10 +2,10 @@
 History
 =======
 
-1.5b2 (unreleased)
-------------------
+1.5 (2016-10-06)
+----------------
 
-- Nothing changed yet.
+- No changes.
 
 
 1.5b1 (2016-09-09)
