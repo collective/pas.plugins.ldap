@@ -38,11 +38,12 @@ widgets:
     - page_size:
         factory: '#field:number'
         value: expr:context.props.page_size
-        min: 1
-        required_message: 'Page size must be given.'
         props:
             label: Page Size
             help:  Maximum page size, number of results to query the server at once for.
+            datatype: integer
+            min: 1
+            required_message: 'Page size must be given.'
 - users:
     factory: fieldset
     props:

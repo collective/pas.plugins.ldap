@@ -5,7 +5,10 @@ History
 1.5.1 (unreleased)
 ------------------
 
-- No chnages yet.
+- Fix: TTW setting of ``page_size`` resulted in float value.
+  Now set form datattype to integer.
+  Thanks @datakurre for reporting!
+  [jensens]
 
 
 1.5 (2016-10-06)
