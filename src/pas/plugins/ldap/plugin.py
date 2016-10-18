@@ -321,9 +321,7 @@ class LDAPPlugin(BasePlugin):
             # return if there is no user
             return tuple()
         if self.groups:
-            # XXX: provide group_ids function in UGM! Way too calculation-heavy
-            #      now
-            return [_.id for _ in _principal.groups]
+            return _principal.group_ids
         return tuple()
 
     # ##
