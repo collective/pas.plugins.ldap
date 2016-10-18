@@ -103,13 +103,7 @@ def ldap_error_handler(prefix):
     pas_interfaces.IGroupsPlugin,
     pas_interfaces.IPropertiesPlugin,
     pas_interfaces.IUserEnumerationPlugin,
-    plonepas_interfaces.capabilities.IDeleteCapability,
-    plonepas_interfaces.capabilities.IGroupCapability,
-    plonepas_interfaces.capabilities.IPasswordSetCapability,
-    plonepas_interfaces.group.IGroupManagement,
-    plonepas_interfaces.group.IGroupIntrospection,
-    plonepas_interfaces.plugins.IMutablePropertiesPlugin,
-    plonepas_interfaces.plugins.IUserManagement)
+    plonepas_interfaces.group.IGroupIntrospection)
 class LDAPPlugin(BasePlugin):
     """Glue layer for making node.ext.ldap available to PAS.
     """
