@@ -20,6 +20,7 @@ from pas.plugins.ldap.interfaces import ILDAPPlugin
 from pas.plugins.ldap.interfaces import VALUE_NOT_CACHED
 from pas.plugins.ldap.sheet import LDAPUserPropertySheet
 from zope.interface import implementer
+from plone.memoize import ram
 import ldap
 import logging
 import os
@@ -94,6 +95,17 @@ def ldap_error_handler(prefix):
         return _wrapper
 
     return _decorator
+
+
+def cacheKey(func, *args, **kwargs):
+    key = __file__
+    key += ':' + func.__name__
+    key += ':' + str(int(time.time() // 10))
+    for arg in ([args] + list(kwargs.values())):
+        if isinstance(arg, unicode):
+            arg = arg.encode('utf-8')
+        key += ':' + str(arg)
+    return key
 
 
 @implementer(
@@ -211,6 +223,7 @@ class LDAPPlugin(BasePlugin):
     #  Allow querying groups by ID, and searching for groups.
     #
     @security.private
+    @ram.cache(lambda f, o, *args, **kwargs: cacheKey(f, *args, **kwargs))
     def enumerateGroups(self, id=None, exact_match=False, sort_by=None,
                         max_results=None, **kw):
         """ -> ( group_info_1, ... group_info_N )
@@ -288,6 +301,7 @@ class LDAPPlugin(BasePlugin):
     #
     #  Determine the groups to which a user belongs.
     @security.private
+    @ram.cache(lambda f, o, *args, **kwargs: cacheKey(f, args[0]))
     def getGroupsForPrincipal(self, principal, request=None):
         """principal -> ( group_1, ... group_N )
 
@@ -319,6 +333,7 @@ class LDAPPlugin(BasePlugin):
     #
     @ldap_error_handler('enumerateUsers')
     @security.private
+    @ram.cache(lambda f, o, *args, **kwargs: cacheKey(f, *args, **kwargs))
     def enumerateUsers(self, id=None, login=None, exact_match=False,
                        sort_by=None, max_results=None, **kw):
         """-> ( user_info_1, ... user_info_N )
@@ -475,6 +490,7 @@ class LDAPPlugin(BasePlugin):
     #  which case the properties are not persistently mutable).
     #
     @security.private
+    @ram.cache(lambda f, o, *args, **kwargs: cacheKey(f, args[0]))
     def getPropertiesForUser(self, user_or_group, request=None):
         """User -> IMutablePropertySheet || {}
 
@@ -633,6 +649,7 @@ class LDAPPlugin(BasePlugin):
         """
         return map(self.getGroupById, self.getGroupIds())
 
+    @ram.cache(lambda f, o: cacheKey(f))
     def getGroupIds(self):
         """
         Returns a list of the available groups (ids)
