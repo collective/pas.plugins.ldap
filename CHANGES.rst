@@ -2,7 +2,7 @@
 History
 =======
 
-1.5.1 (unreleased)
+1.5.1 (2016-10-18)
 ------------------
 
 - Fix: TTW setting of ``page_size`` resulted in float value.
