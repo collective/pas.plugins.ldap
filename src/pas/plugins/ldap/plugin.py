@@ -613,7 +613,8 @@ class LDAPPlugin(BasePlugin):
         """
         group_id = decode_utf8(group_id)
         groups = self.groups
-        if not groups or group_id not in groups.keys():
+        groups_ids = self.getGroupIds()
+        if not groups or group_id not in groups_ids:
             return None
         ugmgroup = self.groups[group_id]
         title = ugmgroup.attrs.get('title', None)
