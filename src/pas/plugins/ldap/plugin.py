@@ -9,6 +9,7 @@ from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
 from Products.PluggableAuthService.permissions import ManageGroups
 from Products.PluggableAuthService.permissions import ManageUsers
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
+from Products.statusmessages.interfaces import IStatusMessage
 from node.utils import decode
 from node.utils import encode
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
@@ -295,6 +296,10 @@ class LDAPPlugin(BasePlugin):
                 matches += batch_matches
                 if not cookie:
                     break
+        if len(matches) >= 100:
+            msg = 'Too many search results. Please, narrow your search.'
+            IStatusMessage(self.REQUEST).add(msg, type='warning')
+            return ()
         if sort_by == 'id':
             matches = sorted(matches)
         pluginid = self.getId()
@@ -440,6 +445,10 @@ class LDAPPlugin(BasePlugin):
             matches += batch_matches
             if not cookie:
                 break
+        if len(matches) >= 100:
+            msg = 'Too many search results. Please, narrow your search.'
+            IStatusMessage(self.REQUEST).add(msg, type='warning')
+            return ()
         pluginid = self.getId()
         ret = list()
         for id, attrs in matches:
@@ -709,7 +718,14 @@ class LDAPPlugin(BasePlugin):
             group = self.groups[group_id]
         except (KeyError, TypeError):
             return ()
-        return tuple(group.member_ids)
+        member_ids = group.member_ids
+        if len(member_ids) <= 500:
+            return tuple(member_ids)
+        else:
+            msg = ('Group "{0:s}" has over 500 members. '
+                   'Members cannot be listed.'.format(group_id))
+            IStatusMessage(self.REQUEST).add(msg, type='error')
+            return ()
 
     # ##
     # plonepas_interfaces.capabilities.IPasswordSetCapability
