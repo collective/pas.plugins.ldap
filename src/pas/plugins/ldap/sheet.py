@@ -48,6 +48,9 @@ class LDAPUserPropertySheet(UserPropertySheet):
                 request['_ldap_props_reloaded'] = 1
         for key in self._attrmap:
             self._properties[key] = ldapprincipal.attrs.get(key, '')
+        if 'fullname' in self._properties:
+            self._properties['fullname'] = ' '.join(map(
+                str.strip, reversed(self._properties['fullname'].split(','))))
         UserPropertySheet.__init__(self, principal.getId(), schema=None,
                                    **decode(self._properties))
 
