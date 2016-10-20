@@ -277,12 +277,19 @@ class LDAPPlugin(BasePlugin):
             cookie = None
             while True:
                 try:
-                    batch_matches, cookie = groups.search(
+                    res = groups.search(
                         criteria=kw,
+                        attrlist=exact_match and
+                        groups.context.search_attrlist or None,
                         exact_match=exact_match,
-                        page_size=self._ldap_props.page_size,
+                        page_size=not exact_match and
+                        self._ldap_props.page_size or None,
                         cookie=cookie,
                     )
+                    if isinstance(res, tuple):
+                        batch_matches, cookie = res
+                    else:
+                        batch_matches, cookie = res, ''
                 except ValueError:
                     return tuple()
                 matches += batch_matches
@@ -291,7 +298,17 @@ class LDAPPlugin(BasePlugin):
         if sort_by == 'id':
             matches = sorted(matches)
         pluginid = self.getId()
-        ret = [dict(id=encode_utf8(_id), pluginid=pluginid) for _id in matches]
+        ret = list()
+        if exact_match:
+            for id, attrs in matches:
+                ret.append({
+                    'id': encode_utf8(id),
+                    'pluginid': pluginid})
+        else:
+            for id in matches:
+                ret.append({
+                    'id': encode_utf8(id),
+                    'pluginid': pluginid})
         if max_results and len(ret) > max_results:
             ret = ret[:max_results]
         return ret
@@ -310,18 +327,22 @@ class LDAPPlugin(BasePlugin):
 
         o May assign groups based on values in the REQUEST object, if present
         """
-        users = self.users
-        if not users:
+        groups = self.groups
+        if not groups:
             return tuple()
-        try:
-            _principal = self.users[principal.getId()]
-        except KeyError:
+
+        _id = principal.getId()
+
+        if _id in self.getGroupIds():  # getGroupIds is cached groups.ids
             # XXX: that's where group in group will happen, but so far
             # group nodes do not provide membership info so we just
             # return if there is no user
             return tuple()
-        if self.groups:
-            return _principal.group_ids
+        users = self.users
+        try:
+            return users and users[_id].group_ids or []
+        except KeyError:
+            pass
         return tuple()
 
     # ##
@@ -393,17 +414,27 @@ class LDAPPlugin(BasePlugin):
         users = self.users
         if not users:
             return tuple()
+        if not exact_match:
+            for value in users.principal_attrmap.values():
+                kw[value] = kw.values()[0]
         matches = []
         cookie = None
         while True:
             try:
-                batch_matches, cookie = users.search(
+                res = users.search(
                     criteria=kw,
-                    attrlist=('login',),
+                    attrlist=exact_match and
+                    users.context.search_attrlist or ['login'],
                     exact_match=exact_match,
-                    page_size=self._ldap_props.page_size,
+                    or_search=not exact_match,
+                    page_size=not exact_match and
+                    self._ldap_props.page_size or None,
                     cookie=cookie,
                 )
+                if isinstance(res, tuple):
+                    batch_matches, cookie = res
+                else:
+                    batch_matches, cookie = res, ''
             except ValueError:
                 return tuple()
             matches += batch_matches
@@ -502,7 +533,7 @@ class LDAPPlugin(BasePlugin):
         """
         ugid = user_or_group.getId()
         try:
-            if self.enumerateUsers(id=ugid) or self.enumerateGroups(id=ugid):
+            if ugid in self.getGroupIds() or self.users[ugid]:
                 return LDAPUserPropertySheet(user_or_group, self)
         except KeyError:
             pass
@@ -613,8 +644,7 @@ class LDAPPlugin(BasePlugin):
         """
         group_id = decode_utf8(group_id)
         groups = self.groups
-        groups_ids = self.getGroupIds()
-        if not groups or group_id not in groups_ids:
+        if not groups or group_id not in self.getGroupIds():
             return None
         ugmgroup = self.groups[group_id]
         title = ugmgroup.attrs.get('title', None)
@@ -653,7 +683,24 @@ class LDAPPlugin(BasePlugin):
         """
         Returns a list of the available groups (ids)
         """
-        return self.groups and self.groups.ids or []
+        groups = self.groups
+        if not groups:
+            return []
+        matches = []
+        cookie = None
+        while True:
+            try:
+                batch_matches, cookie = groups.search(
+                    attrlist=['id'],
+                    page_size=self._ldap_props.page_size,
+                    cookie=cookie,
+                )
+            except ValueError:
+                return tuple()
+            matches += batch_matches
+            if not cookie:
+                break
+        return [group[1]['id'][0] for group in matches]
 
     def getGroupMembers(self, group_id):
         """
