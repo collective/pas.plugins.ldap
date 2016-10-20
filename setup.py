@@ -40,7 +40,7 @@ setup(
     install_requires=[
         'AccessControl>=3.0',
         'Acquisition',
-        'bda.cache',
+        'bda.cache[pylibmc]',
         'five.globalrequest',
         'node',
         'node.ext.ldap>=1.0b2',
