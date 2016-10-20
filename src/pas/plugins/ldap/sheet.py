@@ -2,6 +2,8 @@
 from Acquisition import aq_base
 from Products.PluggableAuthService.UserPropertySheet import UserPropertySheet
 from Products.PluggableAuthService.interfaces.propertysheets import IPropertySheet  # noqa
+from node.utils import decode
+from node.utils import encode
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPUsersConfig
 from zope.globalrequest import getRequest
@@ -47,7 +49,7 @@ class LDAPUserPropertySheet(UserPropertySheet):
         for key in self._attrmap:
             self._properties[key] = ldapprincipal.attrs.get(key, '')
         UserPropertySheet.__init__(self, principal.getId(), schema=None,
-                                   **self._properties)
+                                   **decode(self._properties))
 
     def _get_ldap_principal(self):
         """returns ldap principal
@@ -76,7 +78,8 @@ class LDAPUserPropertySheet(UserPropertySheet):
             assert(id in self._properties)
         ldapprincipal = self._get_ldap_principal()
         for id in mapping:
-            self._properties[id] = ldapprincipal.attrs[id] = mapping[id]
+            self._properties[id] = ldapprincipal.attrs[id] = encode(
+                mapping[id])
         try:
             ldapprincipal.context()
         except Exception, e:

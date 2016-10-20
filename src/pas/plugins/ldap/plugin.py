@@ -9,8 +9,8 @@ from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
 from Products.PluggableAuthService.permissions import ManageGroups
 from Products.PluggableAuthService.permissions import ManageUsers
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
-from node.ext.ldap.base import decode_utf8
-from node.ext.ldap.base import encode_utf8
+from node.utils import decode
+from node.utils import encode
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
@@ -278,7 +278,7 @@ class LDAPPlugin(BasePlugin):
             while True:
                 try:
                     res = groups.search(
-                        criteria=kw,
+                        criteria=encode(kw),
                         attrlist=exact_match and
                         groups.context.search_attrlist or None,
                         exact_match=exact_match,
@@ -302,12 +302,12 @@ class LDAPPlugin(BasePlugin):
         if exact_match:
             for id, attrs in matches:
                 ret.append({
-                    'id': encode_utf8(id),
+                    'id': id,
                     'pluginid': pluginid})
         else:
             for id in matches:
                 ret.append({
-                    'id': encode_utf8(id),
+                    'id': id,
                     'pluginid': pluginid})
         if max_results and len(ret) > max_results:
             ret = ret[:max_results]
@@ -422,7 +422,7 @@ class LDAPPlugin(BasePlugin):
         while True:
             try:
                 res = users.search(
-                    criteria=kw,
+                    criteria=encode(kw),
                     attrlist=exact_match and
                     users.context.search_attrlist or ['login'],
                     exact_match=exact_match,
@@ -444,7 +444,7 @@ class LDAPPlugin(BasePlugin):
         ret = list()
         for id, attrs in matches:
             ret.append({
-                'id': encode_utf8(id),
+                'id': id,
                 'login': attrs['login'][0],
                 'pluginid': pluginid})
         if max_results and len(ret) > max_results:
@@ -642,7 +642,6 @@ class LDAPPlugin(BasePlugin):
         Returns the portal_groupdata-ish object for a group
         corresponding to this id. None if group does not exist here!
         """
-        group_id = decode_utf8(group_id)
         groups = self.groups
         if not groups or group_id not in self.getGroupIds():
             return None
@@ -658,7 +657,7 @@ class LDAPPlugin(BasePlugin):
             data = propfinder.getPropertiesForUser(group, None)
             if not data:
                 continue
-            group.addPropertysheet(propfinder_id, data)
+            group.addPropertysheet(propfinder_id, decode(data))
         # add subgroups
         group._addGroups(pas._getGroupsForPrincipal(group, None,
                                                     plugins=plugins))

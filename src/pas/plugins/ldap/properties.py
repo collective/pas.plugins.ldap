@@ -174,7 +174,10 @@ def propproxy(ckey):
 
     def _getter(context):
         value = context.plugin.settings.get(ckey, DEFAULTS[ckey])
-        return value
+        if isinstance(value, unicode):
+            return value.encode('utf-8')
+        else:
+            return value
 
     def _setter(context, value):
         context.plugin.settings[ckey] = value
@@ -219,7 +222,7 @@ class LDAPProps(object):
         recordProvider = queryUtility(ICacheSettingsRecordProvider)
         if recordProvider is not None:
             record = recordProvider()
-            record.value = value.decode('utf8')
+            record.value = value
         else:
             return u'feature not available'
 
