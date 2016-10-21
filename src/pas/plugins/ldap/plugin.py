@@ -269,7 +269,15 @@ class LDAPPlugin(BasePlugin):
         groups = self.groups
         if not groups:
             return ()
-        if id:
+        if id and exact_match:
+            if id in self.getGroupIds():
+                return ({
+                    'id': id,
+                    'pluginid': self.getId()
+                })
+            else:
+                return ()
+        elif id:
             kw['id'] = id
         if not kw:  # show all
             matches = groups.ids
@@ -280,11 +288,9 @@ class LDAPPlugin(BasePlugin):
                 try:
                     res = groups.search(
                         criteria=encode(kw),
-                        attrlist=exact_match and
-                        groups.context.search_attrlist or None,
+                        attrlist=None,
                         exact_match=exact_match,
-                        page_size=not exact_match and
-                        self._ldap_props.page_size or None,
+                        page_size=self._ldap_props.page_size,
                         cookie=cookie,
                     )
                     if isinstance(res, tuple):
