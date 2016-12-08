@@ -19,7 +19,7 @@
  <element key="groups.scope" type="int">1</element>
  <element key="server.uri" type="string">ldap://127.0.0.1:12345</element>
  <element key="server.user"
-    type="string">cn=Manager,dc=my-domain,dc=com</element>
+    type="string">cn=Manager,ou=organizational-unit,dc=my-domain,dc=com</element>
  <element key="users.attrmap" type="dict">
   <element key="email" type="string">mail</element>
   <element key="fullname" type="string">cn</element>
