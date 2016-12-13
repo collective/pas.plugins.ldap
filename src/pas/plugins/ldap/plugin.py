@@ -458,6 +458,8 @@ class LDAPPlugin(BasePlugin):
         pluginid = self.getId()
         ret = list()
         for id, attrs in matches:
+            if 'login' not in attrs:
+                continue
             ret.append({
                 'id': id,
                 'login': attrs['login'][0],
