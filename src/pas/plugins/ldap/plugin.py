@@ -136,6 +136,12 @@ class LDAPPlugin(BasePlugin):
         self.settings = OOBTree.OOBTree()
         self.plugin_caching = True
 
+    @security.private
+    def is_plugin_active(self, iface):
+        pas = self._getPAS()
+        ids = pas.plugins.listPluginIds(iface)
+        return self.getId() in ids
+
     @property
     @security.private
     def groups_enabled(self):
@@ -204,19 +210,22 @@ class LDAPPlugin(BasePlugin):
 
         o If the credentials cannot be authenticated, return None.
         """
+        default = None
+        if not self.is_plugin_active(pas_interfaces.IAuthenticationPlugin):
+            return default
         login = credentials.get('login')
         pw = credentials.get('password')
         if not (login and pw):
-            return None
+            return default
         logger.debug('credentials: %s' % credentials)
         users = self.users
         if not users:
-            return None
+            return default
         userid = users.authenticate(login, pw)
         if userid:
             logger.info('logged in %s' % userid)
             return (userid, login)
-        return None
+        return default
 
     # ##
     # pas_interfaces.IGroupEnumerationPlugin
@@ -266,9 +275,12 @@ class LDAPPlugin(BasePlugin):
         o Insufficiently-specified criteria may have catastrophic
           scaling issues for some implementations.
         """
+        default = ()
+        if not self.is_plugin_active(pas_interfaces.IGroupEnumerationPlugin):
+            return default
         groups = self.groups
         if not groups:
-            return ()
+            return default
         if id and exact_match:
             if id in self.getGroupIds():
                 return ({
@@ -276,7 +288,7 @@ class LDAPPlugin(BasePlugin):
                     'pluginid': self.getId()
                 })
             else:
-                return ()
+                return default
         elif id:
             kw['id'] = id
         if not kw:  # show all
@@ -298,14 +310,14 @@ class LDAPPlugin(BasePlugin):
                     else:
                         batch_matches, cookie = res, ''
                 except ValueError:
-                    return tuple()
+                    return default
                 matches += batch_matches
                 if not cookie:
                     break
         if len(matches) >= 100:
             msg = 'Too many search results. Please, narrow your search.'
             IStatusMessage(self.REQUEST).add(msg, type='warning')
-            return ()
+            return default
         if sort_by == 'id':
             matches = sorted(matches)
         pluginid = self.getId()
@@ -338,9 +350,12 @@ class LDAPPlugin(BasePlugin):
 
         o May assign groups based on values in the REQUEST object, if present
         """
+        default = tuple()
+        if not self.is_plugin_active(pas_interfaces.IGroupsPlugin):
+            return default
         groups = self.groups
         if not groups:
-            return tuple()
+            return default
 
         _id = principal.getId()
 
@@ -348,13 +363,13 @@ class LDAPPlugin(BasePlugin):
             # XXX: that's where group in group will happen, but so far
             # group nodes do not provide membership info so we just
             # return if there is no user
-            return tuple()
+            return default
         users = self.users
         try:
             return users and users[_id].group_ids or []
         except KeyError:
             pass
-        return tuple()
+        return default
 
     # ##
     # pas_interfaces.IUserEnumerationPlugin
@@ -406,6 +421,9 @@ class LDAPPlugin(BasePlugin):
         o Insufficiently-specified criteria may have catastrophic
           scaling issues for some implementations.
         """
+        default = tuple()
+        if not self.is_plugin_active(pas_interfaces.IUserEnumerationPlugin):
+            return default
         # TODO: sort_by in node.ext.ldap
         if login:
             if not isinstance(login, basestring):
@@ -424,7 +442,7 @@ class LDAPPlugin(BasePlugin):
             kw['id'] = id
         users = self.users
         if not users:
-            return tuple()
+            return default
         if not exact_match:
             for value in users.principal_attrmap.values():
                 kw[value] = kw.values()[0]
@@ -447,14 +465,14 @@ class LDAPPlugin(BasePlugin):
                 else:
                     batch_matches, cookie = res, ''
             except ValueError:
-                return tuple()
+                return default
             matches += batch_matches
             if not cookie:
                 break
         if len(matches) >= 100:
             msg = 'Too many search results. Please, narrow your search.'
             IStatusMessage(self.REQUEST).add(msg, type='warning')
-            return ()
+            return default
         pluginid = self.getId()
         ret = list()
         for id, attrs in matches:
@@ -467,6 +485,38 @@ class LDAPPlugin(BasePlugin):
         if max_results and len(ret) > max_results:
             ret = ret[:max_results]
         return ret
+
+    @security.private
+    def updateUser(self, user_id, login_name):
+        """ Update the login name of the user with id user_id.
+
+        The plugin must return True (or any truth value) to indicate a
+        successful update, also when no update was needed.
+
+        When updating a login name makes no sense for a plugin (most
+        likely because it does not actually store login names) and it
+        does not do anything, it must return None or False.
+        """
+        # XXX
+        # if not self.is_plugin_active(pas_interfaces.IUserEnumerationPlugin):
+        #    return default
+        return False
+
+    @security.private
+    def updateEveryLoginName(self, quit_on_first_error=True):
+        """Update login names of all users to their canonical value.
+
+        This should be done after changing the login_transform
+        property of PAS.
+
+        You can set quit_on_first_error to False to report all errors
+        before quitting with an error.  This can be useful if you want
+        to know how many problems there are, if any.
+        """
+        # XXX
+        # if not self.is_plugin_active(pas_interfaces.IUserEnumerationPlugin):
+        #    return default
+        return
 
     # ##
     # plonepas_interfaces.group.IGroupManagement
@@ -548,13 +598,16 @@ class LDAPPlugin(BasePlugin):
         o May assign properties based on values in the REQUEST object, if
           present
         """
+        default = {}
+        if not self.is_plugin_active(pas_interfaces.IPropertiesPlugin):
+            return default
         ugid = user_or_group.getId()
         try:
             if ugid in self.getGroupIds() or self.users[ugid]:
                 return LDAPUserPropertySheet(user_or_group, self)
         except KeyError:
             pass
-        return {}
+        return default
 
     @security.private
     def setPropertiesForUser(self, user, propertysheet):
@@ -659,9 +712,13 @@ class LDAPPlugin(BasePlugin):
         Returns the portal_groupdata-ish object for a group
         corresponding to this id. None if group does not exist here!
         """
+        default = None
+        if not self.is_plugin_active(
+                plonepas_interfaces.group.IGroupIntrospection):
+            return default
         groups = self.groups
         if not groups or group_id not in self.getGroupIds():
-            return None
+            return default
         ugmgroup = self.groups[group_id]
         title = ugmgroup.attrs.get('title', None)
         group = PloneGroup(ugmgroup.id, title).__of__(self)
@@ -692,6 +749,9 @@ class LDAPPlugin(BasePlugin):
         """
         Returns an iteration of the available groups
         """
+        # Checking self.is_plugin_active(
+        # plonepas_interfaces.group.IGroupIntrospection)
+        # is done in self.getGroupIds() already.
         return map(self.getGroupById, self.getGroupIds())
 
     @ram.cache(lambda f, o: cacheKey(f, 300))
@@ -699,9 +759,13 @@ class LDAPPlugin(BasePlugin):
         """
         Returns a list of the available groups (ids)
         """
+        default = []
+        if not self.is_plugin_active(
+                plonepas_interfaces.group.IGroupIntrospection):
+            return default
         groups = self.groups
         if not groups:
-            return []
+            return default
         matches = []
         cookie = None
         while True:
@@ -712,7 +776,7 @@ class LDAPPlugin(BasePlugin):
                     cookie=cookie,
                 )
             except ValueError:
-                return tuple()
+                return default
             matches += batch_matches
             if not cookie:
                 break
@@ -722,10 +786,14 @@ class LDAPPlugin(BasePlugin):
         """
         return the members of the given group
         """
+        default = ()
+        if not self.is_plugin_active(
+                plonepas_interfaces.group.IGroupIntrospection):
+            return default
         try:
             group = self.groups[group_id]
         except (KeyError, TypeError):
-            return ()
+            return default
         member_ids = group.member_ids
         if len(member_ids) <= 500:
             return tuple(member_ids)
@@ -733,7 +801,7 @@ class LDAPPlugin(BasePlugin):
             msg = ('Group "{0:s}" has over 500 members. '
                    'Members cannot be listed.'.format(group_id))
             IStatusMessage(self.REQUEST).add(msg, type='error')
-            return ()
+            return default
 
     # ##
     # plonepas_interfaces.capabilities.IPasswordSetCapability
