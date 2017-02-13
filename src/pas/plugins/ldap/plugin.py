@@ -720,7 +720,7 @@ class LDAPPlugin(BasePlugin):
         try:
             group = self.groups[group_id]
         except (KeyError, TypeError):
-            default
+            return default
         return tuple(group.member_ids)
 
     # ##
