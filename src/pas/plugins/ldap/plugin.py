@@ -742,4 +742,5 @@ class LDAPPlugin(BasePlugin):
         except ValueError:
             return False
 
+
 InitializeClass(LDAPPlugin)

@@ -88,4 +88,5 @@ def patched_getPersonalPortrait(self, id=None, verifyPermission=0):
 
     return portrait
 
+
 MembershipTool.getPersonalPortrait = patched_getPersonalPortrait

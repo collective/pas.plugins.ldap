@@ -12,6 +12,7 @@ class ICacheSettingsRecordProvider(Interface):
     In future this may be used more generic.
     """
 
+
 VALUE_NOT_CACHED = dict()
 
 
