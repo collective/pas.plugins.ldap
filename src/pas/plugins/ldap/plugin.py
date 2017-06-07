@@ -25,6 +25,7 @@ import logging
 import os
 import time
 
+
 logger = logging.getLogger('pas.plugins.ldap')
 zmidir = os.path.join(os.path.dirname(__file__), 'zmi')
 

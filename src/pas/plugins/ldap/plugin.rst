@@ -9,15 +9,18 @@ Basics
 ------
 
 ::
+
     >>> app = layer['app']
     >>> pas = app.acl_users
     >>> pas
     <PluggableAuthService at /acl_users>
 
+
 Create
 ------
 
 ::
+
     >>> from pas.plugins.ldap.setuphandlers import _addPlugin
     >>> _addPlugin(app.acl_users)
     >>> sorted(pas.objectIds())
@@ -32,6 +35,7 @@ turn off plugin_caching for testing, because test request has strange
 behaviour::
 
     >>> ldap.plugin_caching = False
+
 
 PAS Plugins
 ===========
@@ -96,10 +100,12 @@ IGroupsPlugin
     >>> ldap.getGroupsForPrincipal(user)
     []
 
+
 IPropertiesPlugin
 -----------------
 
 see PlonePAS, IMutablePropertiesPlugin
+
 
 IUserEnumerationPlugin
 ----------------------
@@ -182,6 +188,7 @@ Same for deletion of groups::
     >>> ldap.allowGroupRemove('uid0', 'group0')
     False
 
+
 IGroupIntrospection
 -------------------
 
@@ -213,6 +220,7 @@ list all members of a group::
     >>> ldap.getGroupMembers('group3')
     (u'uid1', u'uid2', u'uid3')
 
+
 IPasswordSetCapability
 ----------------------
 
@@ -230,6 +238,7 @@ Also not for non existent::
 
     >>> ldap.allowPasswordSet('ghost')
     False
+
 
 IGroupManagement
 ----------------
@@ -253,6 +262,7 @@ See also ``IGroupCapability`` - for now we dont support this::
 
     >>> ldap.removePrincipalFromGroup('uid1', 'group1')
     False
+
 
 IMutablePropertiesPlugin
 ------------------------
@@ -283,7 +293,6 @@ Set does nothing, but the sheet itselfs set immediatly::
     u'foobar@example.com'
 
     >>> ldap.deleteUser('cn9')
-
 
 In order to cache propertysheets it must be picklable::
 
