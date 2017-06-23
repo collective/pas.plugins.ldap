@@ -5,7 +5,8 @@ History
 1.5.2 (unreleased)
 ------------------
 
-- No changes yet.
+- Improve README
+  [svx]
 
 
 1.5.1 (2016-10-18)
