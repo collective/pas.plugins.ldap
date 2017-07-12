@@ -4,7 +4,7 @@ from node.ext.ldap.scope import ONELEVEL
 
 DEFAULTS = {
     'server.uri': 'ldap://127.0.0.1:12345',
-    'server.user': 'cn=Manager,dc=my-domain,dc=com',
+    'server.user': 'cn=Manager,ou=organizational-unit,dc=my-domain,dc=com',
     'server.password': 'secret',
     'server.ignore_cert': False,
     'server.start_tls': False,
