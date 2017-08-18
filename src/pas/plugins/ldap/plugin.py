@@ -602,8 +602,9 @@ class LDAPPlugin(BasePlugin):
         if not self.is_plugin_active(pas_interfaces.IPropertiesPlugin):
             return default
         ugid = user_or_group.getId()
+        users = self.users
         try:
-            if ugid in self.getGroupIds() or self.users[ugid]:
+            if ugid in self.getGroupIds() or users and users[ugid]:
                 return LDAPUserPropertySheet(user_or_group, self)
         except KeyError:
             pass
