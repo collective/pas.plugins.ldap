@@ -5,7 +5,11 @@ History
 1.5.2 (unreleased)
 ------------------
 
-- No changes yet.
+- Check if interface is active when calling a method.  [maurits]
+
+- Skip matches that don't have our required login attribute.  [fredvd]
+
+- Merge Asko's speed optimizations.  [asko]
 
 
 1.5.1 (2016-10-18)
