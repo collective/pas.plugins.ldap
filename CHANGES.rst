@@ -5,6 +5,10 @@ History
 1.5.2 (unreleased)
 ------------------
 
+- Set the memcached TTW setting in the form definition to unicode, so that you
+  can save the controlpanel form if you change this field. 
+  [fredvd]
+
 - Improve README
   [svx]
 
