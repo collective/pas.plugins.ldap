@@ -188,7 +188,7 @@ widgets:
             label: Memcached Server to use
             help: global - same server for all ldap plugins
             field.class: memcached field
-            datatype: integer
+            datatype: unicode
     - timeout:
         factory: '#field:number'
         value: expr:context.props.timeout
