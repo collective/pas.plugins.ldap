@@ -2,7 +2,7 @@
 History
 =======
 
-1.5.2 (unreleased)
+1.5.2 (2017-10-20)
 ------------------
 
 - Set the memcached TTW setting in the form definition to unicode, so that you
