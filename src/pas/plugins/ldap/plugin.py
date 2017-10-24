@@ -133,7 +133,10 @@ class LDAPPlugin(BasePlugin):
     @security.private
     def is_plugin_active(self, iface):
         pas = self._getPAS()
-        ids = pas.plugins.listPluginIds(iface)
+        try:
+            ids = pas.plugins.listPluginIds(iface)
+        except KeyError:
+            return False
         return self.getId() in ids
 
     @property
