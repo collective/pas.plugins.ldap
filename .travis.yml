@@ -23,6 +23,9 @@ before_install:
   - bin/pip install -r requirements.txt
   - sed -ie "s#base-4.3.x.cfg#base-$PLONE_VERSION.x.cfg#" travis.cfg
   - bin/buildout -N -t 3 -c travis.cfg
+  - which slapd
+  - which ldapadd
+  - which ldapdelete
 script:
   - bin/code-analysis
   - bin/test
