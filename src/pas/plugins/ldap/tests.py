@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from interlude import interact
 from pas.plugins.ldap.testing import PASLDAPLayer
 from plone.testing import layered
 from plone.testing import z2
@@ -26,7 +25,6 @@ def test_suite():
             doctest.DocFileSuite(
                 docfile,
                 globs={
-                    'interact': interact,
                     'pprint': pprint.pprint,
                     'z2': z2,
                 },
