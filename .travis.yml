@@ -18,6 +18,7 @@ addons:
     - slapd
     - libldap-2.4-2
     - libldap2-dev
+    - ldapscripts
 before_install:
   - virtualenv --clear .
   - bin/pip install -r requirements.txt
