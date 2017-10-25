@@ -19,14 +19,15 @@ addons:
     - libldap-2.4-2
     - libldap2-dev
 before_install:
-  - pip install -r requirements.txt
+  - virtualenv .
+  - bin/pip install -r requirements.txt
   - sed -ie "s#base-4.3.x.cfg#base-$PLONE_VERSION.x.cfg#" travis.cfg
-  - buildout -N -t 3 -c travis.cfg
+  - bin/buildout -N -t 3 -c travis.cfg
 script:
   - bin/code-analysis
   - bin/test
 after_success:
-  - pip install -r requirements.txt
+  - bin/pip install -r requirements.txt
   - bin/createcoverage
   - python -m coverage.pickle2json
   - coveralls
