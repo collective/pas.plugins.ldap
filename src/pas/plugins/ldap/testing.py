@@ -77,10 +77,7 @@ class PASLDAPLayer(Layer):
             for p, config in self.products:
                 if not config['loadZCML']:
                     continue
-                try:
-                    package = resolve(p)
-                except ImportError:
-                    continue
+                package = resolve(p)
                 try:
                     xmlconfig.file(
                         filename,

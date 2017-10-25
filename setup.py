@@ -68,7 +68,6 @@ setup(
     ],
     extras_require={
         'test': [
-            'interlude[ipython]>=1.3.1',
             'plone.testing',
             'zope.configuration',
         ],
