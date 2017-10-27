@@ -5,7 +5,7 @@ cache:
   directories:
     - eggs
     - downloads
-    - parts/openldap
+    - openldap
 python:
   - 2.7.14
 env:
@@ -20,10 +20,11 @@ addons:
     packages:
     - libssl-dev
 install:
+  - mkdir -p openldap
   - virtualenv --clear -p `which python` .
   - bin/pip install -r requirements.txt
   - sed -ie "s#base-4.3.x.cfg#base-$PLONE_VERSION.x.cfg#" travis.cfg
-  - bin/buildout -N -t 3 -c travis.cfg
+  - bin/buildout -N -t 3 -c travis.cfg buildout:download-cache=downloads
 script:
   - bin/code-analysis
   - bin/test
