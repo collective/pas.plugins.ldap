@@ -13,8 +13,9 @@ env:
   - PLONE_VERSION=5.0
   - PLONE_VERSION=5.1
   - PLONE_VERSION=5.2
-allow_failures:
-  - env: PLONE_VERSION=5.2
+matrix:
+  allow_failures:
+    - env: PLONE_VERSION=5.2
 addons:
   apt:
     packages:
