@@ -16,6 +16,7 @@ env:
 matrix:
   allow_failures:
     - env: PLONE_VERSION=5.2
+  fast_finish: true
 addons:
   apt:
     packages:
