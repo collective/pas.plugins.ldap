@@ -5,14 +5,18 @@ History
 1.5.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- fix testing: register plugin type of PlonePAS.
+  [jensens, fredvd, mauritsvanrees]
+
+- overhaul of test setup (travis).
+  [jensens]
 
 
 1.5.2 (2017-10-20)
 ------------------
 
 - Set the memcached TTW setting in the form definition to unicode, so that you
-  can save the controlpanel form if you change this field. 
+  can save the controlpanel form if you change this field.
   [fredvd]
 
 - Improve README

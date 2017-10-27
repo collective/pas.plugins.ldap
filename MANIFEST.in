@@ -1,13 +1,3 @@
-include *.rst
-include *.sh
-include .coveragerc
-include base.cfg
-include coredev5.cfg
-include ldap.cfg
-include plone-4.3.x.cfg
-include plone-5.0.x.cfg
-include plone-5.1.x.cfg
-include travis.cfg
-include versions.cfg
-recursive-exclude src *.pyc
-recursive-include src *
+graft src
+include *.cfg *.rst
+global-exclude *.pyc

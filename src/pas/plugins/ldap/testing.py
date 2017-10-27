@@ -15,9 +15,11 @@ from zope.interface import implementer
 try:
     # plone 5.x with PlonePAS >=5.0
     from Products.PlonePAS.setuphandlers import migrate_root_uf
+    from Products.PlonePAS.setuphandlers import registerPluginTypes
 except ImportError:
     # plone 4.x with PlonePAS <5.0
     from Products.PlonePAS.Extensions.Install import migrate_root_uf
+    from Products.PlonePAS.Extensions.Install import registerPluginTypes
 
 SITE_OWNER_NAME = SITE_OWNER_PASSWORD = 'admin'
 
@@ -63,6 +65,7 @@ class PASLDAPLayer(Layer):
         self.setUpProducts()
         provideUtility(self['app'], provides=ISiteRoot)
         migrate_root_uf(self['app'])
+        registerPluginTypes(self['app'].acl_users)
 
     def setUpZCML(self):
         """Stack a new global registry and load ZCML configuration of Plone
@@ -77,10 +80,7 @@ class PASLDAPLayer(Layer):
             for p, config in self.products:
                 if not config['loadZCML']:
                     continue
-                try:
-                    package = resolve(p)
-                except ImportError:
-                    continue
+                package = resolve(p)
                 try:
                     xmlconfig.file(
                         filename,

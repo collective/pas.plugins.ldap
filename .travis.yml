@@ -3,34 +3,35 @@ sudo: false
 cache:
   pip: true
   directories:
-    - $HOME/buildout-cache
+    - eggs
+    - downloads
+    - openldap
 python:
-  - 2.7
+  - 2.7.14
 env:
-  - PLONE_VERSION=4.3 QA=true
-  - PLONE_VERSION=5.0 QA=true
-  - PLONE_VERSION=5.1 QA=true
+  - PLONE_VERSION=4.3
+  - PLONE_VERSION=5.0
+  - PLONE_VERSION=5.1
+  - PLONE_VERSION=5.2
+matrix:
+  allow_failures:
+    - env: PLONE_VERSION=5.2
+  fast_finish: true
 addons:
   apt:
     packages:
-    - libsasl2-dev
     - libssl-dev
-    - libdb-dev
-before_install:
-  - mkdir -p $HOME/buildout-cache/{eggs,downloads}
-  - mkdir $HOME/.buildout
-  - echo "[buildout]" > $HOME/.buildout/default.cfg
-  - echo "download-cache = $HOME/buildout-cache/downloads" >> $HOME/.buildout/default.cfg
-  - echo "eggs-directory = $HOME/buildout-cache/eggs" >> $HOME/.buildout/default.cfg
-  - virtualenv .
-  - bin/pip install --upgrade pip setuptools zc.buildout coveralls createcoverage
 install:
-  - sed -ie "s#plone-4.3.x.cfg#plone-$PLONE_VERSION.x.cfg#" travis.cfg
-  - bin/buildout -N -t 3 -c travis.cfg
+  - mkdir -p openldap
+  - virtualenv --clear -p `which python` .
+  - bin/pip install -r requirements.txt
+  - sed -ie "s#base-4.3.x.cfg#base-$PLONE_VERSION.x.cfg#" travis.cfg
+  - bin/buildout -N -t 3 -c travis.cfg buildout:download-cache=downloads
 script:
   - bin/code-analysis
   - bin/test
 after_success:
+  - bin/pip install -r requirements.txt
   - bin/createcoverage
-  - bin/python -m coverage.pickle2json
-  - bin/coveralls
+  - python -m coverage.pickle2json
+  - coveralls
