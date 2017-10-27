@@ -17,10 +17,6 @@ addons:
     packages:
     - libssl-dev
 install:
-  - which slapd
-  - which ldapadd
-  - which ldapdelete
-  - which python
   - virtualenv --clear -p `which python` .
   - bin/pip install -r requirements.txt
   - sed -ie "s#base-4.3.x.cfg#base-$PLONE_VERSION.x.cfg#" travis.cfg
