@@ -15,10 +15,7 @@ env:
 addons:
   apt:
     packages:
-    - slapd
-    - libldap-2.4-2
-    - libldap2-dev
-    - ldapscripts
+    - libssl-dev
 install:
   - which slapd
   - which ldapadd
