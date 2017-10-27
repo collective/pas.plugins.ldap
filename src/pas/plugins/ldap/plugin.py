@@ -204,7 +204,6 @@ class LDAPPlugin(BasePlugin):
 
         o If the credentials cannot be authenticated, return None.
         """
-        import pdb; pdb.set_trace()
         default = None
         if not self.is_plugin_active(pas_interfaces.IAuthenticationPlugin):
             return default
