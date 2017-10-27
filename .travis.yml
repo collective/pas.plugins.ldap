@@ -19,14 +19,15 @@ addons:
     - libldap-2.4-2
     - libldap2-dev
     - ldapscripts
-before_install:
-  - virtualenv --clear .
-  - bin/pip install -r requirements.txt
-  - sed -ie "s#base-4.3.x.cfg#base-$PLONE_VERSION.x.cfg#" travis.cfg
-  - bin/buildout -N -t 3 -c travis.cfg
+install:
   - which slapd
   - which ldapadd
   - which ldapdelete
+  - which python
+  - virtualenv --clear -p `which python` .
+  - bin/pip install -r requirements.txt
+  - sed -ie "s#base-4.3.x.cfg#base-$PLONE_VERSION.x.cfg#" travis.cfg
+  - bin/buildout -N -t 3 -c travis.cfg
 script:
   - bin/code-analysis
   - bin/test
