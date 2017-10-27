@@ -5,6 +5,7 @@ cache:
   directories:
     - eggs
     - downloads
+    - parts/openldap
 python:
   - 2.7.14
 env:
@@ -12,6 +13,8 @@ env:
   - PLONE_VERSION=5.0
   - PLONE_VERSION=5.1
   - PLONE_VERSION=5.2
+allow_failures:
+  - env: PLONE_VERSION=5.2
 addons:
   apt:
     packages:
