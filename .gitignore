@@ -16,6 +16,7 @@
 /lib/
 /local/
 /parts/
+/share/
 /src/*.egg-info
 /var/
 /buildout.cfg
