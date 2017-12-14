@@ -5,10 +5,14 @@ History
 1.5.3 (unreleased)
 ------------------
 
-- fix testing: register plugin type of PlonePAS.
+- Remove manual LDAP search pagination on UGM principal ``search`` calls.
+  This is done in downstream API as of ``node.ext.ldap`` 1.0b7.
+  [rnix]
+
+- Fix testing: register plugin type of PlonePAS.
   [jensens, fredvd, mauritsvanrees]
 
-- overhaul of test setup (travis).
+- Overhaul of test setup (travis).
   [jensens]
 
 

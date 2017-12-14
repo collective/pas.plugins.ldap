@@ -279,21 +279,7 @@ class LDAPPlugin(BasePlugin):
         if not kw:  # show all
             matches = groups.ids
         else:
-            matches = []
-            cookie = None
-            while True:
-                try:
-                    batch_matches, cookie = groups.search(
-                        criteria=kw,
-                        exact_match=exact_match,
-                        page_size=self._ldap_props.page_size,
-                        cookie=cookie,
-                    )
-                except ValueError:
-                    return default
-                matches += batch_matches
-                if not cookie:
-                    break
+            matches = groups.search(criteria=kw, exact_match=exact_match)
         if sort_by == 'id':
             matches = sorted(matches)
         pluginid = self.getId()
@@ -405,22 +391,11 @@ class LDAPPlugin(BasePlugin):
         users = self.users
         if not users:
             return default
-        matches = []
-        cookie = None
-        while True:
-            try:
-                batch_matches, cookie = users.search(
-                    criteria=kw,
-                    attrlist=('login',),
-                    exact_match=exact_match,
-                    page_size=self._ldap_props.page_size,
-                    cookie=cookie,
-                )
-            except ValueError:
-                return default
-            matches += batch_matches
-            if not cookie:
-                break
+        matches = users.search(
+            criteria=kw,
+            attrlist=('login',),
+            exact_match=exact_match
+        )
         pluginid = self.getId()
         ret = list()
         for id, attrs in matches:
@@ -736,9 +711,12 @@ class LDAPPlugin(BasePlugin):
         if not users:
             return False
         try:
-            return len(self.users.search(criteria={'id': id},
-                                         attrlist=(),
-                                         exact_match=True)) > 0
+            res = self.users.search(
+                criteria={'id': id},
+                attrlist=(),
+                exact_match=True
+            )
+            return len(res) > 0
         except ValueError:
             return False
 
