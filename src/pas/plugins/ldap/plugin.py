@@ -279,7 +279,11 @@ class LDAPPlugin(BasePlugin):
         if not kw:  # show all
             matches = groups.ids
         else:
-            matches = groups.search(criteria=kw, exact_match=exact_match)
+            try:
+                matches = groups.search(criteria=kw, exact_match=exact_match)
+            # raised if exact_match and result not unique.
+            except ValueError:
+                return default
         if sort_by == 'id':
             matches = sorted(matches)
         pluginid = self.getId()
@@ -372,30 +376,32 @@ class LDAPPlugin(BasePlugin):
         default = tuple()
         if not self.is_plugin_active(pas_interfaces.IUserEnumerationPlugin):
             return default
-        # TODO: sort_by in node.ext.ldap
+        # XXX: sort_by in node.ext.ldap
         if login:
             if not isinstance(login, basestring):
-                # XXX TODO
+                # XXX
                 raise NotImplementedError('sequence is not supported yet.')
             kw['login'] = login
-
         # pas search users gives both login and name if login is meant
         if "login" in kw and "name" in kw:
             del kw["name"]
-
         if id:
             if not isinstance(id, basestring):
-                # XXX TODO
+                # XXX
                 raise NotImplementedError('sequence is not supported yet.')
             kw['id'] = id
         users = self.users
         if not users:
             return default
-        matches = users.search(
-            criteria=kw,
-            attrlist=('login',),
-            exact_match=exact_match
-        )
+        try:
+            matches = users.search(
+                criteria=kw,
+                attrlist=('login',),
+                exact_match=exact_match
+            )
+        # raised if exact_match and result not unique.
+        except ValueError:
+            return default
         pluginid = self.getId()
         ret = list()
         for id, attrs in matches:
