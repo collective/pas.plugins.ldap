@@ -2,7 +2,7 @@
 History
 =======
 
-1.5.3 (unreleased)
+1.5.3 (2017-12-15)
 ------------------
 
 - Remove manual LDAP search pagination on UGM principal ``search`` calls.
