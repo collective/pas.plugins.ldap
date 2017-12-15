@@ -1,7 +1,7 @@
 PropProxy
 =========
 
-::
+.. code-block:: pycon
 
     >>> class SomePlugin(object):
     ...     def __init__(self):
@@ -29,7 +29,7 @@ PropProxy
 Properties
 ==========
 
-::
+.. code-block:: pycon
 
     >>> from pas.plugins.ldap.properties import LDAPProps
     >>> from pas.plugins.ldap.properties import UsersConfig

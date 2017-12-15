@@ -8,7 +8,7 @@ Setup
 Basics
 ------
 
-::
+.. code-block:: pycon
 
     >>> app = layer['app']
     >>> pas = app.acl_users
@@ -19,7 +19,7 @@ Basics
 Create
 ------
 
-::
+.. code-block:: pycon
 
     >>> from pas.plugins.ldap.setuphandlers import _addPlugin
     >>> _addPlugin(app.acl_users)
@@ -32,7 +32,9 @@ Create
     <LDAPPlugin at /acl_users/pasldap>
 
 turn off plugin_caching for testing, because test request has strange
-behaviour::
+behaviour:
+
+.. code-block:: pycon
 
     >>> ldap.plugin_caching = False
 
@@ -43,7 +45,7 @@ PAS Plugins
 IAuthenticationPlugin
 ---------------------
 
-::
+.. code-block:: pycon
 
     >>> ldap.authenticateCredentials({'login':'cn0', 'password': 'secret0'})
     (u'uid0', 'cn0')
@@ -59,7 +61,7 @@ IGroupEnumerationPlugin
 Signature is ``enumerateGroups(self, id=None, exact_match=False, sort_by=None,
 max_results=None, **kw)``
 
-::
+.. code-block:: pycon
 
     >>> ldap.enumerateGroups(id='group2')
     [{'pluginid': 'pasldap', 'id': 'group2'}]
@@ -85,7 +87,7 @@ max_results=None, **kw)``
 IGroupsPlugin
 -------------
 
-::
+.. code-block:: pycon
 
     >>> user = pas.getUserById('uid9')
     >>> ldap.getGroupsForPrincipal(user)
@@ -113,7 +115,7 @@ IUserEnumerationPlugin
 Signature is ``enumerateUsers( id=None, login=None, exact_match=False,
 sort_by=None, max_results=None, **kw)``
 
-::
+.. code-block:: pycon
 
     >>> ldap.enumerateUsers(id='uid1')
     [{'login': u'cn1', 'pluginid': 'pasldap', 'id': 'uid1'}]
@@ -151,7 +153,9 @@ IDeleteCapability
 -----------------
 
 It's not allowed to delete a principal using this plugin. We may change this
-later and make it configurable::
+later and make it configurable:
+
+.. code-block:: pycon
 
     >>> ldap.allowDeletePrincipal('uid0')
     False
@@ -163,7 +167,9 @@ later and make it configurable::
 Picklable
 ---------
 
-In order to cache propertysheets it must be picklable::
+In order to cache propertysheets it must be picklable:
+
+.. code-block:: pycon
 
     >>> from Acquisition import aq_base
     >>> import pickle
@@ -178,12 +184,16 @@ IGroupCapability
 ----------------
 
 By now adding groups is not allowed.  We may change this later and make it
-configurable::
+configurable:
+
+.. code-block:: pycon
 
     >>> ldap.allowGroupAdd('uid0', 'group0')
     False
 
-Same for deletion of groups::
+Same for deletion of groups:
+
+.. code-block:: pycon
 
     >>> ldap.allowGroupRemove('uid0', 'group0')
     False
@@ -193,7 +203,9 @@ IGroupIntrospection
 -------------------
 
 getGroupById returns the portal_groupdata-ish object for a group corresponding
-to this id::
+to this id:
+
+.. code-block:: pycon
 
     >>> ldap.getGroupById('group0')
     <PloneGroup u'group0'>
@@ -201,13 +213,17 @@ to this id::
     >>> print ldap.getGroupById('non-existent')
     None
 
-list all groups ids::
+list all groups ids:
+
+.. code-block:: pycon
 
     >>> ldap.getGroupIds()
     [u'group0', u'group1', u'group2', u'group3', u'group4', u'group5',
     u'group6', u'group7', u'group8', u'group9']
 
-list all groups::
+list all groups:
+
+.. code-block:: pycon
 
     >>> ldap.getGroups()
     [<PloneGroup u'group0'>, <PloneGroup u'group1'>, <PloneGroup u'group2'>,
@@ -215,7 +231,9 @@ list all groups::
     <PloneGroup u'group6'>, <PloneGroup u'group7'>, <PloneGroup u'group8'>,
     <PloneGroup u'group9'>]
 
-list all members of a group::
+list all members of a group:
+
+.. code-block:: pycon
 
     >>> ldap.getGroupMembers('group3')
     (u'uid1', u'uid2', u'uid3')
@@ -224,17 +242,23 @@ list all members of a group::
 IPasswordSetCapability
 ----------------------
 
-User are able to set the password::
+User are able to set the password:
+
+.. code-block:: pycon
 
     >>> ldap.allowPasswordSet('uid0')
     True
 
-Not so for groups::
+Not so for groups:
+
+.. code-block:: pycon
 
     >>> ldap.allowPasswordSet('group0')
     False
 
-Also not for non existent::
+Also not for non existent:
+
+.. code-block:: pycon
 
     >>> ldap.allowPasswordSet('ghost')
     False
@@ -243,7 +267,9 @@ Also not for non existent::
 IGroupManagement
 ----------------
 
-See also ``IGroupCapability`` - for now we dont support this::
+See also ``IGroupCapability`` - for now we dont support this:
+
+.. code-block:: pycon
 
     >>> ldap.addGroup(id)
     False
@@ -267,7 +293,9 @@ See also ``IGroupCapability`` - for now we dont support this::
 IMutablePropertiesPlugin
 ------------------------
 
-Get works::
+Get works:
+
+.. code-block:: pycon
 
     >>> user = pas.getUserById('uid0')
     >>> sheet = ldap.getPropertiesForUser(user, request=None)
@@ -277,7 +305,9 @@ Get works::
     >>> sheet.getProperty('mail')
     u'uid0@groupOfNames_10_10.com'
 
-Set does nothing, but the sheet itselfs set immediatly::
+Set does nothing, but the sheet itselfs set immediatly:
+
+.. code-block:: pycon
 
     >>> from pas.plugins.ldap.sheet import LDAPUserPropertySheet
     >>> sheet = LDAPUserPropertySheet(user, ldap)
@@ -294,7 +324,9 @@ Set does nothing, but the sheet itselfs set immediatly::
 
     >>> ldap.deleteUser('cn9')
 
-In order to cache propertysheets it must be picklable::
+In order to cache propertysheets it must be picklable:
+
+.. code-block:: pycon
 
     >>> len(pickle.dumps(sheet2)) > 600
     True
@@ -303,7 +335,9 @@ In order to cache propertysheets it must be picklable::
 IUserManagement
 ---------------
 
-Password change and attributes at once with ``doChangeUser``::
+Password change and attributes at once with ``doChangeUser``:
+
+.. code-block:: pycon
 
     >>> ldap.doChangeUser('uid9', 'geheim') is None
     True
@@ -313,7 +347,9 @@ Password change and attributes at once with ``doChangeUser``::
 
 
 We dont support user deletion for now. We may change this later and make it
-configurable::
+configurable:
+
+.. code-block:: pycon
 
     >>> ldap.doDeleteUser('uid0')
     False
