@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from bda.cache import Memcached
 from bda.cache import NullCache
 from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
@@ -9,7 +10,12 @@ from zope.component import adapter
 from zope.component import queryUtility
 from zope.globalrequest import getRequest
 from zope.interface import implementer
+
+import threading
 import time
+
+
+thread_local = threading.local()
 
 
 def cacheProviderFactory():
@@ -19,7 +25,14 @@ def cacheProviderFactory():
     value = recordProvider().value or ''
     servers = value.split()
     if servers:
-        return Memcached(servers)
+        # thread safety for memcached connections
+        key = '_v_cacheProviderFactory_Memcached'
+        mcd = getattr(thread_local, key, None)
+        if not mcd:
+            mcd = Memcached(servers)
+            setattr(thread_local, key, mcd)
+        return mcd
+
     return NullCache()
 
 
