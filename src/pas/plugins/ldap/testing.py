@@ -1,16 +1,27 @@
 # -*- coding: utf-8 -*-
-from Products.CMFCore.interfaces import ISiteRoot
+
 from node.ext.ldap import testing as ldaptesting
+from node.ext.ldap.interfaces import ICacheProviderFactory
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
+from pas.plugins.ldap.cache import cacheProviderFactory
+from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
+from pas.plugins.ldap.plonecontrolpanel.cache import ( # noqa
+    CacheSettingsRecordProvider,                       # noqa
+)                                                      # noqa
+from pas.plugins.ldap.properties import LDAPProps
+from plone.registry import Registry
+from plone.registry.interfaces import IRegistry
 from plone.testing import Layer
 from plone.testing import z2
+from Products.CMFCore.interfaces import ISiteRoot
 from zope.component import adapter
 from zope.component import provideAdapter
 from zope.component import provideUtility
-from zope.interface import Interface
 from zope.interface import implementer
+from zope.interface import Interface
+
 
 try:
     # plone 5.x with PlonePAS >=5.0
@@ -27,7 +38,15 @@ SITE_OWNER_NAME = SITE_OWNER_PASSWORD = 'admin'
 @implementer(ILDAPProps)
 @adapter(Interface)
 def ldapprops(context):
-    return ldaptesting.props
+    props = LDAPProps(context)
+
+    props.uri = ldaptesting.props.uri
+    props.user = ldaptesting.props.user
+    props.password = ldaptesting.props.password
+    props.cache = ldaptesting.props.cache
+    props.page_size = ldaptesting.props.page_size
+
+    return props
 
 
 @implementer(ILDAPUsersConfig)
@@ -64,6 +83,13 @@ class PASLDAPLayer(Layer):
     def testSetUp(self):
         self.setUpProducts()
         provideUtility(self['app'], provides=ISiteRoot)
+
+        # Layer is not a plone site, registry of some utilities is required
+        provideUtility(Registry(), provides=IRegistry)
+        provideUtility(cacheProviderFactory(), provides=ICacheProviderFactory)
+        provideUtility(CacheSettingsRecordProvider(),
+                       provides=ICacheSettingsRecordProvider)
+
         migrate_root_uf(self['app'])
         registerPluginTypes(self['app'].acl_users)
 

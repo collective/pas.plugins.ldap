@@ -2,6 +2,7 @@
 
 from bda.cache import Memcached
 from bda.cache import NullCache
+from node.ext.ldap.interfaces import ICacheProviderFactory
 from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
 from pas.plugins.ldap.interfaces import ILDAPPlugin
 from pas.plugins.ldap.interfaces import IPluginCacheHandler
@@ -15,25 +16,73 @@ import threading
 import time
 
 
-thread_local = threading.local()
+class PasLdapMemcached(Memcached):
+
+    _servers = None
+
+    def __init__(self, servers):
+        self._servers = servers
+        super(PasLdapMemcached, self).__init__(servers)
+
+    @property
+    def servers(self):
+        return self._servers
+
+    def disconnect_all(self):
+        self._client.disconnect_all()
+
+    def __repr__(self):
+        return '<{0} {1}>'.format(self.__class__.__name__, self.servers)
 
 
-def cacheProviderFactory():
-    recordProvider = queryUtility(ICacheSettingsRecordProvider)
-    if not recordProvider:
-        return NullCache()
-    value = recordProvider().value or ''
-    servers = value.split()
-    if servers:
+@implementer(ICacheProviderFactory)
+class cacheProviderFactory(object):
+    # memcache factory for node.ext.ldap
+
+    _thread_local = threading.local()
+
+    @property
+    def _key(self):
+        return '_v_{0}_PasLdapMemcached'.format(self.__class__.__name__)
+
+    @property
+    def servers(self):
+        recordProvider = queryUtility(ICacheSettingsRecordProvider)
+        if not recordProvider:
+            return ''
+
+        value = recordProvider().value or ''
+        return value.split()
+
+    @property
+    def cache(self):
+        servers = self.servers
+        if not servers:
+            return NullCache()
+
+        key = self._key
+
         # thread safety for memcached connections
-        key = '_v_cacheProviderFactory_Memcached'
-        mcd = getattr(thread_local, key, None)
-        if not mcd:
-            mcd = Memcached(servers)
-            setattr(thread_local, key, mcd)
+        mcd = getattr(self._thread_local, key, None)
+
+        # if mcd is set and server config has not changed
+        # return mcd
+        if mcd and frozenset(mcd.servers) == frozenset(servers):
+            return mcd
+        elif mcd:
+            # server config has changed, close all connections
+            mcd.disconnect_all()
+            del mcd
+
+        # establish new memcached connection and store
+        # it on local thread
+        mcd = PasLdapMemcached(servers)
+        setattr(self._thread_local, key, mcd)
+
         return mcd
 
-    return NullCache()
+    def __call__(self):
+        return self.cache
 
 
 def get_plugin_cache(context):

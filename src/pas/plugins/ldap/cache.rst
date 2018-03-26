@@ -82,3 +82,48 @@ The volatile Plugin Cache:
     >>> cache.invalidate()
     >>> tree is ldap._ugm()
     False
+
+Test node.ext.ldap.cache memcached
+
+   >>> from zope.component import queryUtility
+   >>> from node.ext.ldap.interfaces import ICacheProviderFactory   
+   >>> cacheFactory = queryUtility(ICacheProviderFactory)
+   
+Memcached is not set
+
+.. code-block:: pycon
+
+   >>> from bda.cache import NullCache
+   >>> cache = cacheFactory()
+   >>> isinstance(cache, NullCache)
+   True
+
+Turn on memcached
+
+.. code-block:: pycon
+
+   >>> from pas.plugins.ldap.cache import PasLdapMemcached
+   >>> ldapprops = ldap._ldap_props
+   >>> ldapprops.memcached = '127.0.0.1:11211'
+   
+   >>> cache = cacheFactory()
+   >>> cache
+   <PasLdapMemcached [u'127.0.0.1:11211']>
+
+Check thread safety of memcached connection
+
+.. code-block:: pycon
+
+   >>> cache is cacheFactory()
+   True
+
+Change memcached config
+
+.. code-block:: pycon
+
+   >>> ldapprops.memcached = '127.0.0.2:11211'
+   >>> cache is cacheFactory()
+   False
+   
+   >>> cacheFactory()
+   <PasLdapMemcached [u'127.0.0.2:11211']>
