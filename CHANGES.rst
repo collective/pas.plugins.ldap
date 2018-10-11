@@ -5,7 +5,8 @@ History
 1.5.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix #51: plone_ldapinspector broken with UnicodeDecodeError
+  [dmunico]
 
 
 1.5.3 (2017-12-15)
