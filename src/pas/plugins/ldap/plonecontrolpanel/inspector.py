@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from Products.CMFCore.interfaces import ISiteRoot
+from Products.CMFPlone.utils import safe_unicode
 from Products.Five import BrowserView
 from node.ext.ldap import LDAPNode
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
@@ -47,7 +48,7 @@ class LDAPInspector(BrowserView):
             groups = ILDAPGroupsConfig(self.plugin)
             baseDN = groups.baseDN
         root = LDAPNode(baseDN, self.props)
-        node = root.node_by_dn(dn, strict=True)
+        node = root.node_by_dn(safe_unicode(dn), strict=True)
         ret = dict()
         for key, val in node.attrs.items():
             try:
