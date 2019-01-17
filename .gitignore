@@ -2,6 +2,7 @@
 .*.cfg
 .coverage
 .mrsd
+.python-version
 /*eggs/
 /.project
 /.pydevproject

@@ -300,7 +300,7 @@ Get works:
     >>> user = pas.getUserById('uid0')
     >>> sheet = ldap.getPropertiesForUser(user, request=None)
     >>> sheet
-    <pas.plugins.ldap.sheet.LDAPUserPropertySheet instance at ...>
+    <pas.plugins.ldap.sheet.LDAPUserPropertySheet ... at ...>
 
     >>> sheet.getProperty('mail')
     u'uid0@groupOfNames_10_10.com'
