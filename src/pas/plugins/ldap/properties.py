@@ -13,6 +13,7 @@ from odict import odict
 from pas.plugins.ldap.defaults import DEFAULTS
 from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
 from pas.plugins.ldap.interfaces import ILDAPPlugin
+from yafowil.base import ExtractionError
 from yafowil.base import UNSET
 from yafowil.controller import Controller
 from yafowil.yaml import parse_from_YAML
@@ -26,6 +27,8 @@ import logging
 
 logger = logging.getLogger('pas.plugins.ldap')
 _ = MessageFactory('pas.plugins.ldap')
+
+_marker = dict()
 
 
 class BasePropertiesForm(BrowserView):
@@ -50,9 +53,15 @@ class BasePropertiesForm(BrowserView):
 
     def form(self):
         # make configuration data available on form context
-        self.props = ILDAPProps(self.plugin)
-        self.users = ILDAPUsersConfig(self.plugin)
-        self.groups = ILDAPGroupsConfig(self.plugin)
+        try:
+            self.props = ILDAPProps(self.plugin)
+            self.users = ILDAPUsersConfig(self.plugin)
+            self.groups = ILDAPGroupsConfig(self.plugin)
+        except Exception:
+            msg = 'Problems getting the configuration adapters, re-initialize!'
+            logger.exception(msg)
+            self.plugin.init_settings()
+        self.anonymous = not self.props.user
         # prepare users data on form context
         self.users_attrmap = odict()
         for key in self.static_attrs_users:
@@ -95,8 +104,14 @@ class BasePropertiesForm(BrowserView):
             return val
 
         props.uri = fetch('server.uri')
-        props.user = fetch('server.user', '')
-        password = fetch('server.password', '')
+        if not fetch('server.anonymous'):
+            props.user = fetch('server.user')
+            password = fetch('server.password')
+            if password is not UNSET:
+                props.password = password
+        else:
+            props.user = ""
+            props.password = ""
         props.ignore_cert = fetch('server.ignore_cert')
         # TODO: later
         # props.start_tls = fetch('server.start_tls')
@@ -142,12 +157,49 @@ class BasePropertiesForm(BrowserView):
         groups.objectClasses = objectClasses
         groups.memberOfSupport = fetch('groups.memberOfSupport')
 
+    def userpassanon_extractor(self, widget, data):
+        if not data.extracted or data['anonymous'].extracted:
+            return data.extracted
+        has_error = False
+        if not data['user'].extracted:
+            error = ExtractionError(
+                _('Username is required for non-anonymous connections.')
+            )
+            data['user'].errors.append(error)
+            has_error = True
+        if not data['password'].extracted:
+            error = ExtractionError(
+                _('Password is required for non-anonymous connections.')
+            )
+            data['password'].errors.append(error)
+            has_error = True
+        if has_error:
+            raise ExtractionError(
+                _("User/Password are required if not anonymous.")
+            )
+        return data.extracted
+
     def connection_test(self):
-        props = ILDAPProps(self.plugin)
-        users = ILDAPUsersConfig(self.plugin)
-        groups = ILDAPGroupsConfig(self.plugin)
-        ugm = Ugm('test', props=props, ucfg=users, gcfg=groups)
         try:
+            props = ILDAPProps(self.plugin)
+        except Exception as e:
+            msg = _('Non-LDAP error while getting ILDAPProps!')
+            logger.exception(msg)
+            return False, msg + str(e)
+        try:
+            users = ILDAPUsersConfig(self.plugin)
+        except Exception as e:
+            msg = _('Non-LDAP error while getting ILDAPUsersConfig!')
+            logger.exception(msg)
+            return False, msg + str(e)
+        try:
+            groups = ILDAPGroupsConfig(self.plugin)
+        except Exception as e:
+            msg = _('Non-LDAP error while getting ILDAPGroupsConfig!')
+            logger.exception(msg)
+            return False, msg + str(e)
+        try:
+            ugm = Ugm('test', props=props, ucfg=users, gcfg=groups)
             ugm.users.iterkeys().next()
         except ldap.SERVER_DOWN, e:
             return False, _("Server Down")

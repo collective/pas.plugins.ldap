@@ -5,28 +5,37 @@ props:
     class: edit-form enableFormTabbing enableUnloadProtection
 widgets:
 - server:
-    factory: fieldset
+    factory: "*userpassanon:fieldset"
     props:
         legend: LDAP Server Settings
         class: formPanel
+    custom:
+        userpassanon:
+            extractors: context.userpassanon_extractor
     widgets:
     - uri:
         factory: '#field:text'
         value: expr:context.props.uri
         props:
-            label: LDAP URI
+            label: Connection URI
             help: "Example: ldap://127.0.0.1:12345"
             required: No URI defined
+    - anonymous:
+        factory: '#field:checkbox'
+        value: expr:context.anonymous
+        default: False
+        props:
+            label: Anonymous Connection?
     - user:
         factory: '#field:text'
         value: expr:context.props.user
         props:
-            label: LDAP Manager User
+            label: Manager User
     - password:
         factory: '#field:password'
         value: expr:context.props.password
         props:
-            label: LDAP Manager Password
+            label: Manager Password
     - ignore_cert:
         factory: '#field:checkbox'
         value: expr:context.props.ignore_cert

@@ -9,7 +9,7 @@ History
   [dmunico]
 
 - Make bind user and password optional.
-  [thet]
+  [thet, jensens]
 
 
 1.5.3 (2017-12-15)

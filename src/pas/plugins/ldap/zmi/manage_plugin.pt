@@ -54,7 +54,7 @@
     <p class="form-help">
     Set properties for users and groups from LDAP using the pas.plugins.ldap plugin.
     </p>
-    <div class="ldap-manage-form" tal:content="structure view/form">
+    <div class="ldap-manage-form" tal:content="structure python:view.form()">
     form
     </div>
 
