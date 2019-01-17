@@ -1,37 +1,34 @@
 language: python
 sudo: false
-cache:
-  pip: true
-  directories:
-    - eggs
-    - downloads
-    - openldap
-python:
-  - 2.7.14
-env:
-  - PLONE_VERSION=4.3
-  - PLONE_VERSION=5.0
-  - PLONE_VERSION=5.1
-  - PLONE_VERSION=5.2
-matrix:
-  allow_failures:
-    - env: PLONE_VERSION=5.2
-  fast_finish: true
 addons:
   apt:
     packages:
     - libssl-dev
+    - libdb-dev
+cache:
+  pip: true
+  directories:
+  - eggs
+  - downloads
+  - openldap
+env:
+  - PLONE_VERSION=4.3
+  - PLONE_VERSION=5.1
+  - PLONE_VERSION=5.2
+python:
+  - "2.7"
+matrix:
+  fast_finish: true
 install:
-  - mkdir -p openldap
-  - virtualenv --clear -p `which python` .
-  - bin/pip install -r requirements.txt
-  - sed -ie "s#base-4.3.x.cfg#base-$PLONE_VERSION.x.cfg#" travis.cfg
-  - bin/buildout -N -t 3 -c travis.cfg buildout:download-cache=downloads
+  - pip install -r requirements-${PLONE_VERSION}.x.txt
+  - buildout -Nc buildout-${PLONE_VERSION}.x.cfg buildout:download-cache=downloads code-analysis:return-status-codes=True annotate
+  - buildout -Nc buildout-${PLONE_VERSION}.x.cfg buildout:download-cache=downloads code-analysis:return-status-codes=True
 script:
   - bin/code-analysis
   - bin/test
 after_success:
-  - bin/pip install -r requirements.txt
   - bin/createcoverage
-  - python -m coverage.pickle2json
+  - bin/pip install coverage
+  - bin/python -m coverage.pickle2json
+  - pip install coveralls
   - coveralls
