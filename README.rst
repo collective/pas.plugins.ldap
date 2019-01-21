@@ -1,5 +1,5 @@
 .. image:: https://secure.travis-ci.org/collective/pas.plugins.ldap.png
-    :target: http://travis-ci.org/#!/collective/pas.plugins.ldap
+    :target: http://travis-ci.org/collective/pas.plugins.ldap
 
 .. image:: https://coveralls.io/repos/collective/pas.plugins.ldap/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/collective/pas.plugins.ldap?branch=master
