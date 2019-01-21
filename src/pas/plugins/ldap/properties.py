@@ -167,7 +167,7 @@ class BasePropertiesForm(BrowserView):
             )
             data['user'].errors.append(error)
             has_error = True
-        if not data['password'].extracted:
+        if not data['password'].extracted and not data['password'].value:
             error = ExtractionError(
                 _('Password is required for non-anonymous connections.')
             )
