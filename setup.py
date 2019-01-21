@@ -44,7 +44,7 @@ setup(
         'bda.cache',
         'five.globalrequest',
         'node',
-        'node.ext.ldap>=1.0b7',
+        'node.ext.ldap>=1.0b8',
         'odict',
         'plone.registry',
         'Products.CMFCore',
