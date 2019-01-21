@@ -127,8 +127,11 @@ class LDAPPlugin(BasePlugin):
     def __init__(self, id, title=None, **kw):
         self._setId(id)
         self.title = title
-        self.settings = OOBTree.OOBTree()
+        self.init_settings()
         self.plugin_caching = True
+
+    def init_settings(self):
+        self.settings = OOBTree.OOBTree()
 
     @security.private
     def is_plugin_active(self, iface):

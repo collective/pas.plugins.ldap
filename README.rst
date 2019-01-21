@@ -93,17 +93,20 @@ You can place the exported ``ldapsettings.xml`` in your integration profile, so 
 
 **Warning:**
 
-   **The ldap-password is in there in plain text!**
+**The LDAP-password is stored in there in plain text!**
+
+But anonymous bindings are possible.
 
 
 Caching
 =======
 
-By default the LDAP-queries are not cached.
+**Without caching this module is slow** (as any other module talking to LDAP will be).
 
-A must have for a production environment is having `memcached <http://memcached.org/>`_ server configured as LDAP query cache.
+By **default** the LDAP-queries are **not cached**.
 
-Without this this module is slow (as any other module talking to LDAP will be).
+A **must have** for a production environment is having `memcached <http://memcached.org/>`_ server configured as LDAP query cache.
+
 
 Cache at least for ~6 seconds, so a page load with all its resources is covered also in worst case.
 
@@ -122,7 +125,7 @@ It defaults to 10 and its unit is seconds.
 
 **Note:**
 
-   **Caching the UGM tree longer than one request means it could contain outdated data.**
+**Caching the UGM tree longer than one request means it could contain outdated data.**
 
 If you plan a different implementation of UGM tree caching,provide your own adapter implementing ``pas.plugins.ldap.interfaces.IPluginCacheHandler``.
 
@@ -130,17 +133,10 @@ If you plan a different implementation of UGM tree caching,provide your own adap
 Limitations and Future Optimizations
 ====================================
 
-This package works fine for several 10000 users or groups, *unless you search or list users*.
+This package works fine for several 10000 users or groups, **unless you search or list users**.
 
 This is not that much a problem for small amount of users.
 There is room for future optimization in the underlying `node.ext.ldap <https://pypi.python.org/pypi/node.ext.ldap>`_.
-
-It currently does not support paginated queries.
-Many LDAP servers are having a maximum page size per answer.
-
-If the result is larger than this number, the query might fail or be truncated.
-Contact us if you have resources in time or budget for this development task.
-
 
 Source Code
 ===========
