@@ -17,6 +17,7 @@
  <element key="groups.queryFilter"
     type="string">(objectClass=groupOfNames)</element>
  <element key="groups.scope" type="int">1</element>
+ <element key="server.anonymous" type="bool">False</element>
  <element key="server.uri" type="string">ldap://127.0.0.1:12345</element>
  <element key="server.user"
     type="string">cn=Manager,dc=my-domain,dc=com</element>
