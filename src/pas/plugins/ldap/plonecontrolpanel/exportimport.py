@@ -5,8 +5,6 @@ from Products.GenericSetup.utils import XMLAdapterBase
 from zope.component import queryMultiAdapter
 from zope.interface import implementer
 
-import types
-
 
 def _get_import_export_handler(context):
     aclu = context.getSite().acl_users
