@@ -67,7 +67,7 @@ class LDAPUserPropertySheet(UserPropertySheet):
         self._properties[id] = ldapprincipal.attrs[id] = value
         try:
             ldapprincipal.context()
-        except Exception, e:
+        except Exception as e:
             # XXX: specific exception(s)
             logger.error('LDAPUserPropertySheet.setProperty: %s' % str(e))
 
@@ -79,6 +79,6 @@ class LDAPUserPropertySheet(UserPropertySheet):
             self._properties[id] = ldapprincipal.attrs[id] = mapping[id]
         try:
             ldapprincipal.context()
-        except Exception, e:
+        except Exception as e:
             # XXX: specific exception(s)
             logger.error('LDAPUserPropertySheet.setProperties: %s' % str(e))

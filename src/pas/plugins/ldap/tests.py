@@ -2,6 +2,7 @@
 from pas.plugins.ldap.testing import PASLDAPLayer
 from plone.testing import layered
 from plone.testing import z2
+from node.ext.ldap.tests import Py23DocChecker
 import doctest
 import pprint
 import unittest
@@ -29,6 +30,7 @@ def test_suite():
                     'z2': z2,
                 },
                 optionflags=optionflags,
+                checker=Py23DocChecker(),
             ),
             layer=layer(),
         ) for docfile, layer in TESTFILES

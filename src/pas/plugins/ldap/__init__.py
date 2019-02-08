@@ -7,7 +7,7 @@ from pas.plugins.ldap.plugin import manage_addLDAPPluginForm
 from pas.plugins.ldap.plugin import zmidir
 
 import os
-import monkey  # noqa
+from pas.plugins.ldap import monkey  # noqa
 
 
 def initialize(context):

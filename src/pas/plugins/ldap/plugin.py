@@ -23,7 +23,9 @@ from zope.interface import implementer
 import ldap
 import logging
 import os
+import six
 import time
+from six.moves import map
 
 
 logger = logging.getLogger('pas.plugins.ldap')
@@ -81,12 +83,12 @@ def ldap_error_handler(prefix):
                 return result
 
             # handle errors
-            except ldap.LDAPError, e:
+            except ldap.LDAPError as e:
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
                 logger.warn('LDAPError in {0} -> {1}'.format(prefix, str(e)))
                 return None
-            except Exception, e:
+            except Exception as e:
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
                 logger.warn('Error in {0} -> {1}'.format(prefix, str(e)))
@@ -290,7 +292,7 @@ class LDAPPlugin(BasePlugin):
         if sort_by == 'id':
             matches = sorted(matches)
         pluginid = self.getId()
-        ret = [dict(id=encode_utf8(_id), pluginid=pluginid) for _id in matches]
+        ret = [dict(id=_id, pluginid=pluginid) for _id in matches]
         if max_results and len(ret) > max_results:
             ret = ret[:max_results]
         return ret
@@ -381,7 +383,7 @@ class LDAPPlugin(BasePlugin):
             return default
         # XXX: sort_by in node.ext.ldap
         if login:
-            if not isinstance(login, basestring):
+            if not isinstance(login, six.string_types):
                 # XXX
                 raise NotImplementedError('sequence is not supported yet.')
             kw['login'] = login
@@ -389,7 +391,7 @@ class LDAPPlugin(BasePlugin):
         if "login" in kw and "name" in kw:
             del kw["name"]
         if id:
-            if not isinstance(id, basestring):
+            if not isinstance(id, six.string_types):
                 # XXX
                 raise NotImplementedError('sequence is not supported yet.')
             kw['id'] = id
@@ -409,7 +411,7 @@ class LDAPPlugin(BasePlugin):
         ret = list()
         for id, attrs in matches:
             ret.append({
-                'id': encode_utf8(id),
+                'id': id,
                 'login': attrs['login'][0],
                 'pluginid': pluginid})
         if max_results and len(ret) > max_results:
@@ -531,6 +533,8 @@ class LDAPPlugin(BasePlugin):
         if not self.is_plugin_active(pas_interfaces.IPropertiesPlugin):
             return default
         ugid = user_or_group.getId()
+        if not isinstance(ugid, six.text_type):
+            ugid = ugid.decode('utf-8')
         try:
             if self.enumerateUsers(id=ugid) or self.enumerateGroups(id=ugid):
                 return LDAPUserPropertySheet(user_or_group, self)
@@ -647,7 +651,7 @@ class LDAPPlugin(BasePlugin):
             return default
         group_id = decode_utf8(group_id)
         groups = self.groups
-        if not groups or group_id not in groups.keys():
+        if not groups or group_id not in list(groups.keys()):
             return default
         ugmgroup = self.groups[group_id]
         title = ugmgroup.attrs.get('title', None)
@@ -682,7 +686,7 @@ class LDAPPlugin(BasePlugin):
         # Checking self.is_plugin_active(
         # plonepas_interfaces.group.IGroupIntrospection)
         # is done in self.getGroupIds() already.
-        return map(self.getGroupById, self.getGroupIds())
+        return list(map(self.getGroupById, self.getGroupIds()))
 
     def getGroupIds(self):
         """

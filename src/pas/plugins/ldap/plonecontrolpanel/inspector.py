@@ -9,10 +9,11 @@ from node.ext.ldap.interfaces import ILDAPUsersConfig
 from zope.component import getUtility
 
 import json
+import six
 
 
 def safe_encode(val):
-    if isinstance(val, unicode):
+    if isinstance(val, six.text_type):
         return val.encode('utf-8')
     return val
 

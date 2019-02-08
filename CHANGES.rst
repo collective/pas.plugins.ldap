@@ -11,6 +11,14 @@ History
 - Make bind user and password optional.
   [thet, jensens]
 
+- Python 3 support:
+  - fixed imports
+  - text/encoding fixes
+  - fixed exception handling
+  - mangled doctests using Py23DocChecker from node.ext.ldap
+  - simplified object_classes expressions in yaml config
+  [reinhardt]
+
 
 1.5.3 (2017-12-15)
 ------------------

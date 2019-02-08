@@ -48,7 +48,7 @@ IAuthenticationPlugin
 .. code-block:: pycon
 
     >>> ldap.authenticateCredentials({'login':'cn0', 'password': 'secret0'})
-    (u'uid0', 'cn0')
+    ('uid0', 'cn0')
 
     >>> ldap.authenticateCredentials({'login':'admin', 'password': 'admin'})
 
@@ -63,10 +63,10 @@ max_results=None, **kw)``
 
 .. code-block:: pycon
 
-    >>> ldap.enumerateGroups(id='group2')
-    [{'pluginid': 'pasldap', 'id': 'group2'}]
+    >>> [sorted(group.items()) for group in ldap.enumerateGroups(id='group2')]
+    [[('id', 'group2'), ('pluginid', 'pasldap')]]
 
-    >>> print sorted([_['id'] for _ in ldap.enumerateGroups(id='group*')])
+    >>> print(sorted([_['id'] for _ in ldap.enumerateGroups(id='group*')]))
     ['group0', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6',
     'group7', 'group8', 'group9']
 
@@ -77,8 +77,8 @@ max_results=None, **kw)``
     >>> ldap.enumerateGroups(id='group*', exact_match=True)
     ()
 
-    >>> ldap.enumerateGroups(id='group5', exact_match=True)
-    [{'pluginid': 'pasldap', 'id': 'group5'}]
+    >>> [sorted(group.items()) for group in ldap.enumerateGroups(id='group5', exact_match=True)]
+    [[('id', 'group5'), ('pluginid', 'pasldap')]]
 
     >>> len(ldap.enumerateGroups(id='group*', max_results=3))
     3
@@ -91,12 +91,12 @@ IGroupsPlugin
 
     >>> user = pas.getUserById('uid9')
     >>> ldap.getGroupsForPrincipal(user)
-    [u'group9']
+    ['group9']
 
     >>> user = pas.getUserById('uid1')
     >>> ldap.getGroupsForPrincipal(user)
-    [u'group1', u'group2', u'group3', u'group4', u'group5',
-    u'group6', u'group7', u'group8', u'group9']
+    ['group1', 'group2', 'group3', 'group4', 'group5',
+    'group6', 'group7', 'group8', 'group9']
 
     >>> user = pas.getUserById('uid0')
     >>> ldap.getGroupsForPrincipal(user)
@@ -117,20 +117,20 @@ sort_by=None, max_results=None, **kw)``
 
 .. code-block:: pycon
 
-    >>> ldap.enumerateUsers(id='uid1')
-    [{'login': u'cn1', 'pluginid': 'pasldap', 'id': 'uid1'}]
+    >>> [sorted(user.items()) for user in ldap.enumerateUsers(id='uid1')]
+    [[('id', 'uid1'), ('login', 'cn1'), ('pluginid', 'pasldap')]]
 
-    >>> ldap.enumerateUsers(id='uid*')
-    [{'login': u'cn0', 'pluginid': 'pasldap', 'id': 'uid0'},
-    {'login': u'cn1', 'pluginid': 'pasldap', 'id': 'uid1'},
-    {'login': u'cn2', 'pluginid': 'pasldap', 'id': 'uid2'},
-    {'login': u'cn3', 'pluginid': 'pasldap', 'id': 'uid3'},
-    {'login': u'cn4', 'pluginid': 'pasldap', 'id': 'uid4'},
-    {'login': u'cn5', 'pluginid': 'pasldap', 'id': 'uid5'},
-    {'login': u'cn6', 'pluginid': 'pasldap', 'id': 'uid6'},
-    {'login': u'cn7', 'pluginid': 'pasldap', 'id': 'uid7'},
-    {'login': u'cn8', 'pluginid': 'pasldap', 'id': 'uid8'},
-    {'login': u'cn9', 'pluginid': 'pasldap', 'id': 'uid9'}]
+    >>> [sorted(user.items()) for user in ldap.enumerateUsers(id='uid*')]
+    [[('id', 'uid0'), ('login', 'cn0'), ('pluginid', 'pasldap')],
+    [('id', 'uid1'), ('login', 'cn1'), ('pluginid', 'pasldap')],
+    [('id', 'uid2'), ('login', 'cn2'), ('pluginid', 'pasldap')],
+    [('id', 'uid3'), ('login', 'cn3'), ('pluginid', 'pasldap')],
+    [('id', 'uid4'), ('login', 'cn4'), ('pluginid', 'pasldap')],
+    [('id', 'uid5'), ('login', 'cn5'), ('pluginid', 'pasldap')],
+    [('id', 'uid6'), ('login', 'cn6'), ('pluginid', 'pasldap')],
+    [('id', 'uid7'), ('login', 'cn7'), ('pluginid', 'pasldap')],
+    [('id', 'uid8'), ('login', 'cn8'), ('pluginid', 'pasldap')],
+    [('id', 'uid9'), ('login', 'cn9'), ('pluginid', 'pasldap')]]
 
     >>> [_['id'] for _ in ldap.enumerateUsers(id='uid*', sort_by='id')]
     ['uid0', 'uid1', 'uid2', 'uid3', 'uid4', 'uid5', 'uid6', 'uid7', 'uid8',
@@ -139,14 +139,14 @@ sort_by=None, max_results=None, **kw)``
     >>> ldap.enumerateUsers(id='uid*', exact_match=True)
     ()
 
-    >>> ldap.enumerateUsers(id='uid4', exact_match=True)
-    [{'login': u'cn4', 'pluginid': 'pasldap', 'id': 'uid4'}]
+    >>> [sorted(user.items()) for user in ldap.enumerateUsers(id='uid4', exact_match=True)]
+    [[('id', 'uid4'), ('login', 'cn4'), ('pluginid', 'pasldap')]]
 
     >>> len(ldap.enumerateUsers(id='uid*', max_results=3))
     3
 
-    >>> ldap.enumerateUsers(login='cn1')
-    [{'login': u'cn1', 'pluginid': 'pasldap', 'id': 'uid1'}]
+    >>> [sorted(user.items()) for user in ldap.enumerateUsers(login='cn1')]
+    [[('id', 'uid1'), ('login', 'cn1'), ('pluginid', 'pasldap')]]
 
 
 IDeleteCapability
@@ -208,9 +208,9 @@ to this id:
 .. code-block:: pycon
 
     >>> ldap.getGroupById('group0')
-    <PloneGroup u'group0'>
+    <PloneGroup 'group0'>
 
-    >>> print ldap.getGroupById('non-existent')
+    >>> print(ldap.getGroupById('non-existent'))
     None
 
 list all groups ids:
@@ -218,25 +218,25 @@ list all groups ids:
 .. code-block:: pycon
 
     >>> ldap.getGroupIds()
-    [u'group0', u'group1', u'group2', u'group3', u'group4', u'group5',
-    u'group6', u'group7', u'group8', u'group9']
+    ['group0', 'group1', 'group2', 'group3', 'group4', 'group5',
+    'group6', 'group7', 'group8', 'group9']
 
 list all groups:
 
 .. code-block:: pycon
 
     >>> ldap.getGroups()
-    [<PloneGroup u'group0'>, <PloneGroup u'group1'>, <PloneGroup u'group2'>,
-    <PloneGroup u'group3'>, <PloneGroup u'group4'>, <PloneGroup u'group5'>,
-    <PloneGroup u'group6'>, <PloneGroup u'group7'>, <PloneGroup u'group8'>,
-    <PloneGroup u'group9'>]
+    [<PloneGroup 'group0'>, <PloneGroup 'group1'>, <PloneGroup 'group2'>,
+    <PloneGroup 'group3'>, <PloneGroup 'group4'>, <PloneGroup 'group5'>,
+    <PloneGroup 'group6'>, <PloneGroup 'group7'>, <PloneGroup 'group8'>,
+    <PloneGroup 'group9'>]
 
 list all members of a group:
 
 .. code-block:: pycon
 
     >>> ldap.getGroupMembers('group3')
-    (u'uid1', u'uid2', u'uid3')
+    ('uid1', 'uid2', 'uid3')
 
 
 IPasswordSetCapability
@@ -303,7 +303,7 @@ Get works:
     <pas.plugins.ldap.sheet.LDAPUserPropertySheet ... at ...>
 
     >>> sheet.getProperty('mail')
-    u'uid0@groupOfNames_10_10.com'
+    'uid0@groupOfNames_10_10.com'
 
 Set does nothing, but the sheet itselfs set immediatly:
 
@@ -312,15 +312,15 @@ Set does nothing, but the sheet itselfs set immediatly:
     >>> from pas.plugins.ldap.sheet import LDAPUserPropertySheet
     >>> sheet = LDAPUserPropertySheet(user, ldap)
     >>> sheet.getProperty('mail')
-    u'uid0@groupOfNames_10_10.com'
+    'uid0@groupOfNames_10_10.com'
 
-    >>> sheet.setProperty(None, 'mail', u'foobar@example.com')
+    >>> sheet.setProperty(None, 'mail', 'foobar@example.com')
     >>> sheet.getProperty('mail')
-    u'foobar@example.com'
+    'foobar@example.com'
 
     >>> sheet2 = LDAPUserPropertySheet(user, ldap)
     >>> sheet2.getProperty('mail')
-    u'foobar@example.com'
+    'foobar@example.com'
 
     >>> ldap.deleteUser('cn9')
 
@@ -343,7 +343,7 @@ Password change and attributes at once with ``doChangeUser``:
     True
 
     >>> ldap.authenticateCredentials({'login':'cn9', 'password': 'geheim'})
-    (u'uid9', 'cn9')
+    ('uid9', 'cn9')
 
 
 We dont support user deletion for now. We may change this later and make it
