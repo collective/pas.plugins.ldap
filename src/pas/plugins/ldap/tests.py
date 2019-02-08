@@ -4,6 +4,8 @@ from plone.testing import layered
 from plone.testing import z2
 import doctest
 import pprint
+import six
+import re
 import unittest
 
 
