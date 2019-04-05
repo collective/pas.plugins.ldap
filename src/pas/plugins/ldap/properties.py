@@ -23,6 +23,7 @@ from zope.i18nmessageid import MessageFactory
 from zope.interface import implementer
 import ldap
 import logging
+import six
 
 
 logger = logging.getLogger('pas.plugins.ldap')
@@ -200,20 +201,20 @@ class BasePropertiesForm(BrowserView):
             return False, msg + str(e)
         try:
             ugm = Ugm('test', props=props, ucfg=users, gcfg=groups)
-            ugm.users.iterkeys().next()
-        except ldap.SERVER_DOWN, e:
+            six.iterkeys(ugm.users)
+        except ldap.SERVER_DOWN as e:
             return False, _("Server Down")
-        except ldap.LDAPError, e:
+        except ldap.LDAPError as e:
             return False, _('LDAP users; ') + str(e)
-        except Exception, e:
+        except Exception as e:
             logger.exception('Non-LDAP error while connection test!')
             return False, _('Exception in Users; ') + str(e)
         try:
             ugm.groups
-        except ldap.LDAPError, e:
+        except ldap.LDAPError as e:
             return False, _('LDAP Users ok, but groups not; ') + \
                 e.message['desc']
-        except Exception, e:
+        except Exception as e:
             logger.exception('Non-LDAP error while connection test!')
             return False, _('Exception in Groups; ') + str(e)
         return True, \
@@ -269,7 +270,7 @@ class LDAPProps(object):
         recordProvider = queryUtility(ICacheSettingsRecordProvider)
         if recordProvider is not None:
             record = recordProvider()
-            record.value = value.decode('utf8')
+            record.value = value
         else:
             return u'feature not available'
 

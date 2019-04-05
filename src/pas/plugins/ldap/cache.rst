@@ -104,11 +104,11 @@ Turn on memcached
 
    >>> from pas.plugins.ldap.cache import PasLdapMemcached
    >>> ldapprops = ldap._ldap_props
-   >>> ldapprops.memcached = '127.0.0.1:11211'
+   >>> ldapprops.memcached = u'127.0.0.1:11211'
    
    >>> cache = cacheFactory()
    >>> cache
-   <PasLdapMemcached [u'127.0.0.1:11211']>
+   <PasLdapMemcached ['127.0.0.1:11211']>
 
 Check thread safety of memcached connection
 
@@ -121,9 +121,9 @@ Change memcached config
 
 .. code-block:: pycon
 
-   >>> ldapprops.memcached = '127.0.0.2:11211'
+   >>> ldapprops.memcached = u'127.0.0.2:11211'
    >>> cache is cacheFactory()
    False
    
    >>> cacheFactory()
-   <PasLdapMemcached [u'127.0.0.2:11211']>
+   <PasLdapMemcached ['127.0.0.2:11211']>

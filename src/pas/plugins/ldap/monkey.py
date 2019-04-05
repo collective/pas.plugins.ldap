@@ -8,7 +8,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.PlonePAS.tools.membership import MembershipTool
 from Products.PlonePAS.tools.membership import _checkPermission
 from Products.PlonePAS.tools.membership import default_portrait
-from StringIO import StringIO
+from six import StringIO
 from zope.interface import implementer
 from zope.traversing.interfaces import ITraversable
 

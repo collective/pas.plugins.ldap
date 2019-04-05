@@ -120,7 +120,7 @@ class RequestPluginCache(object):
     def get(self):
         request = getRequest()
         rcachekey = self._key()
-        if request and rcachekey in request.keys():
+        if request and rcachekey in list(request.keys()):
             return request[rcachekey]
         return VALUE_NOT_CACHED
 
@@ -133,7 +133,7 @@ class RequestPluginCache(object):
     def invalidate(self):
         request = getRequest()
         rcachekey = self._key()
-        if request and rcachekey in request.keys():
+        if request and rcachekey in list(request.keys()):
             del request[rcachekey]
 
 

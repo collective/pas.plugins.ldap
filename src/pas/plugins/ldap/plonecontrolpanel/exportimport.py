@@ -5,8 +5,6 @@ from Products.GenericSetup.utils import XMLAdapterBase
 from zope.component import queryMultiAdapter
 from zope.interface import implementer
 
-import types
-
 
 def _get_import_export_handler(context):
     aclu = context.getSite().acl_users
@@ -80,16 +78,16 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
                 self._setDataAndType(data[key], element)
                 node.appendChild(element)
             return
-        if isinstance(data, types.BooleanType):
+        if isinstance(data, bool):
             node.setAttribute('type', 'bool')
             data = str(data)
-        elif isinstance(data, types.IntType):
+        elif isinstance(data, int):
             node.setAttribute('type', 'int')
             data = str(data)
-        elif isinstance(data, types.FloatType):
+        elif isinstance(data, float):
             node.setAttribute('type', 'float')
             data = str(data)
-        elif isinstance(data, types.StringTypes):
+        elif isinstance(data, (str,)):
             node.setAttribute('type', 'string')
         else:
             self._logger.warning(
