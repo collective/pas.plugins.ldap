@@ -4,11 +4,11 @@
 .. image:: https://coveralls.io/repos/collective/pas.plugins.ldap/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/collective/pas.plugins.ldap?branch=master
 
-This is a `LDAP <https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol>`_ Plugin for the `Zope2 <http://zope2.zope.org>`_ `Pluggable Authentication Service (PAS) <http://pypi.python.org/pypi/Products.PluggableAuthService>`_.
+This is a `LDAP <https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol>`_ Plugin for the `Zope <http://www.zope.org/en/latest/>`_ `Pluggable Authentication Service (PAS) <http://pypi.python.org/pypi/Products.PluggableAuthService>`_.
 
 It provides users and/or groups from an LDAP directory.
 
-It works in a plain Zope2 even if it depends on `PlonePAS <http://pypi.python.org/pypi/Products.PlonePAS>`_.
+It works in a plain Zope even if it depends on `PlonePAS <http://pypi.python.org/pypi/Products.PlonePAS>`_.
 
 If `Plone <https://plone.org>`_ is installed an integration layer with a setup-profile and a plone-controlpanel page is available.
 
@@ -38,8 +38,8 @@ On a Debian-based installation use:
     sudo apt install python-dev libldap2-dev libsasl2-dev libssl-dev
 
 
-Zope2
------
+Zope
+----
 
 Add to the instance section of your buildout:
 
@@ -55,7 +55,7 @@ Add to the instance section of your buildout:
 
 Run buildout. Restart Zope.
 
-Browse to your acl_users folder and add an LDAP-Plugin.
+Browse to your ``acl_users`` folder and add an LDAP-Plugin.
 
 Configure it using the settings form and activate its features with the ``activate`` tab.
 
@@ -107,12 +107,11 @@ By **default** the LDAP-queries are **not cached**.
 
 A **must have** for a production environment is having `memcached <http://memcached.org/>`_ server configured as LDAP query cache.
 
-
 Cache at least for ~6 seconds, so a page load with all its resources is covered also in worst case.
 
 The UGM tree is cached by default on the request, that means its built up every request from (cached) ldap queries.
 
-There is an alternative adapter available which will cache the ugm tree as volatile attribute on the persistent plugin.
+There is an alternative adapter available which will cache the ugm tree as volatile attribute (``_v_...``) on the persistent plugin.
 
 Volatile attributes are not persisted in the ZODB.
 If the plugin object vanishes from ZODB cache the atrribute is gone.
