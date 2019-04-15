@@ -4,7 +4,7 @@ from setuptools import setup
 import os
 
 
-version = "1.5.4.dev0"
+version = "1.6.0.dev0"
 shortdesc = "LDAP/AD Plugin for Plone/Zope PluggableAuthService (users+groups)"
 longdesc = open(os.path.join(os.path.dirname(__file__), "README.rst")).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), "TODO.rst")).read()

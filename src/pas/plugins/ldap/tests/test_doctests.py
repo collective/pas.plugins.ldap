@@ -29,9 +29,8 @@ class Py23DocChecker(doctest.OutputChecker):
 
 
 TESTFILES = [
-    ("properties.rst", PASLDAPLayer),
-    ("plugin.rst", PASLDAPLayer),
-    ("cache.rst", PASLDAPLayer),
+    ("../properties.rst", PASLDAPLayer),
+    ("../cache.rst", PASLDAPLayer),
 ]
 
 

@@ -2,8 +2,11 @@
 History
 =======
 
-1.5.4 (unreleased)
+1.6.0 (unreleased)
 ------------------
+
+- Convert `plugin.py` doctests to unittests.
+  [jensens]
 
 - Black code style.
   [jensens]

@@ -19,7 +19,6 @@ from zope.component import provideUtility
 from zope.interface import implementer
 from zope.interface import Interface
 
-
 try:
     # plone 5.x with PlonePAS >=5.0
     from Products.PlonePAS.setuphandlers import migrate_root_uf
@@ -77,6 +76,7 @@ class PASLDAPLayer(Layer):
     def testSetUp(self):
         self.setUpProducts()
         provideUtility(self["app"], provides=ISiteRoot)
+        provideUtility(self["app"], provides=ISiteRoot)
 
         # Layer is not a plone site, registry of some utilities is required
         provideUtility(Registry(), provides=IRegistry)
@@ -84,7 +84,6 @@ class PASLDAPLayer(Layer):
         provideUtility(
             CacheSettingsRecordProvider(), provides=ICacheSettingsRecordProvider
         )
-
         migrate_root_uf(self["app"])
         registerPluginTypes(self["app"].acl_users)
 
@@ -122,3 +121,6 @@ class PASLDAPLayer(Layer):
         """
         for prd, config in self.products:
             z2.installProduct(self["app"], prd)
+
+
+PASLDAP_FIXTURE = PASLDAPLayer()
