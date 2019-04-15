@@ -9,8 +9,8 @@ class HiddenProfiles(object):
     """
 
     _hidden = [
-        u'pas.plugins.ldap:default',
-        u'pas.plugins.ldap.plonecontrolpanel:install-base',
+        u"pas.plugins.ldap:default",
+        u"pas.plugins.ldap.plonecontrolpanel:install-base",
     ]
 
     def getNonInstallableProducts(self):

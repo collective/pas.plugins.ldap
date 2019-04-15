@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from Products.CMFCore.interfaces import ISiteRoot
-from Products.CMFPlone.utils import safe_unicode
-from Products.Five import BrowserView
 from node.ext.ldap import LDAPNode
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
+from Products.CMFCore.interfaces import ISiteRoot
+from Products.CMFPlone.utils import safe_unicode
+from Products.Five import BrowserView
 from zope.component import getUtility
 
 import json
@@ -14,12 +14,11 @@ import six
 
 def safe_encode(val):
     if isinstance(val, six.text_type):
-        return val.encode('utf-8')
+        return val.encode("utf-8")
     return val
 
 
 class LDAPInspector(BrowserView):
-
     @property
     def plugin(self):
         portal = getUtility(ISiteRoot)
@@ -40,9 +39,9 @@ class LDAPInspector(BrowserView):
         return self.children(groups.baseDN)
 
     def node_attributes(self):
-        dn = self.request['dn']
-        base = self.request['base']
-        if base == 'users':
+        dn = self.request["dn"]
+        base = self.request["base"]
+        if base == "users":
             users = ILDAPUsersConfig(self.plugin)
             baseDN = users.baseDN
         else:
@@ -56,12 +55,13 @@ class LDAPInspector(BrowserView):
                 if not node.attrs.is_binary(key):
                     ret[safe_encode(key)] = safe_encode(val)
                 else:
-                    ret[safe_encode(key)] = \
-                        '(Binary Data with {0} Bytes)'.format(len(val))
+                    ret[safe_encode(key)] = "(Binary Data with {0} Bytes)".format(
+                        len(val)
+                    )
             except UnicodeDecodeError:
-                ret[safe_encode(key)] = '! (UnicodeDecodeError)'
+                ret[safe_encode(key)] = "! (UnicodeDecodeError)"
             except Exception:
-                ret[safe_encode(key)] = '! (Unknown Exception)'
+                ret[safe_encode(key)] = "! (Unknown Exception)"
         return json.dumps(ret)
 
     def children(self, baseDN):
@@ -69,5 +69,5 @@ class LDAPInspector(BrowserView):
         ret = list()
         # XXX: related search filters for users and groups container?
         for dn in node.search():
-            ret.append({'dn': dn})
+            ret.append({"dn": dn})
         return json.dumps(ret)

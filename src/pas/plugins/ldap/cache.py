@@ -32,7 +32,7 @@ class PasLdapMemcached(Memcached):
         self._client.disconnect_all()
 
     def __repr__(self):
-        return '<{0} {1}>'.format(self.__class__.__name__, self.servers)
+        return "<{0} {1}>".format(self.__class__.__name__, self.servers)
 
 
 @implementer(ICacheProviderFactory)
@@ -43,15 +43,15 @@ class cacheProviderFactory(object):
 
     @property
     def _key(self):
-        return '_v_{0}_PasLdapMemcached'.format(self.__class__.__name__)
+        return "_v_{0}_PasLdapMemcached".format(self.__class__.__name__)
 
     @property
     def servers(self):
         recordProvider = queryUtility(ICacheSettingsRecordProvider)
         if not recordProvider:
-            return ''
+            return ""
 
-        value = recordProvider().value or ''
+        value = recordProvider().value or ""
         return value.split()
 
     @property
@@ -97,7 +97,6 @@ def get_plugin_cache(context):
 
 @implementer(IPluginCacheHandler)
 class NullPluginCache(object):
-
     def __init__(self, context):
         self.context = context
 
@@ -110,12 +109,11 @@ class NullPluginCache(object):
 
 @implementer(IPluginCacheHandler)
 class RequestPluginCache(object):
-
     def __init__(self, context):
         self.context = context
 
     def _key(self):
-        return '_v_ldap_ugm_{0}_'.format(self.context.getId())
+        return "_v_ldap_ugm_{0}_".format(self.context.getId())
 
     def get(self):
         request = getRequest()
@@ -142,7 +140,6 @@ VOLATILE_CACHE_MAXAGE = 10  # 10s default maxage on volatile
 
 @adapter(ILDAPPlugin)
 class VolatilePluginCache(RequestPluginCache):
-
     def get(self):
         try:
             cachetime, value = getattr(self.context, self._key())

@@ -2,13 +2,6 @@
 from AccessControl import ClassSecurityInfo
 from App.class_init import InitializeClass
 from BTrees import OOBTree
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.PlonePAS import interfaces as plonepas_interfaces
-from Products.PlonePAS.plugins.group import PloneGroup
-from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
-from Products.PluggableAuthService.permissions import ManageGroups
-from Products.PluggableAuthService.permissions import ManageUsers
-from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from node.ext.ldap.base import decode_utf8
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
@@ -18,34 +11,40 @@ from pas.plugins.ldap.cache import get_plugin_cache
 from pas.plugins.ldap.interfaces import ILDAPPlugin
 from pas.plugins.ldap.interfaces import VALUE_NOT_CACHED
 from pas.plugins.ldap.sheet import LDAPUserPropertySheet
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.PlonePAS import interfaces as plonepas_interfaces
+from Products.PlonePAS.plugins.group import PloneGroup
+from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
+from Products.PluggableAuthService.permissions import ManageGroups
+from Products.PluggableAuthService.permissions import ManageUsers
+from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
+from six.moves import map
 from zope.interface import implementer
+
 import ldap
 import logging
 import os
 import six
 import time
-from six.moves import map
 
 
-logger = logging.getLogger('pas.plugins.ldap')
-zmidir = os.path.join(os.path.dirname(__file__), 'zmi')
+logger = logging.getLogger("pas.plugins.ldap")
+zmidir = os.path.join(os.path.dirname(__file__), "zmi")
 
 LDAP_ERROR_TIMEOUT = 300.0
 
 
-def manage_addLDAPPlugin(dispatcher, id, title='', RESPONSE=None, **kw):
+def manage_addLDAPPlugin(dispatcher, id, title="", RESPONSE=None, **kw):
     """Create an instance of a LDAP Plugin.
     """
     ldapplugin = LDAPPlugin(id, title, **kw)
     dispatcher._setObject(ldapplugin.getId(), ldapplugin)
     if RESPONSE is not None:
-        RESPONSE.redirect('manage_workspace')
+        RESPONSE.redirect("manage_workspace")
 
 
 manage_addLDAPPluginForm = PageTemplateFile(
-    os.path.join(zmidir, 'add_plugin.pt'),
-    globals(),
-    __name__='addLDAPPlugin'
+    os.path.join(zmidir, "add_plugin.pt"), globals(), __name__="addLDAPPlugin"
 )
 
 
@@ -53,18 +52,14 @@ def ldap_error_handler(prefix):
     """decorator, deals with non-working LDAP"""
 
     def _decorator(original_method, *args, **kwargs):
-
         def _wrapper(self, *args, **kwargs):
             # look if error is in timeout phase
-            if hasattr(self, '_v_ldaperror_timeout'):
+            if hasattr(self, "_v_ldaperror_timeout"):
                 waiting = time.time() - self._v_ldaperror_timeout
                 if waiting < LDAP_ERROR_TIMEOUT:
                     logger.debug(
-                        '{0}: retry wait {1:0.5f} of {2:0.0f}s -> {3}'.format(
-                            prefix,
-                            waiting,
-                            LDAP_ERROR_TIMEOUT,
-                            self._v_ldaperror_msg,
+                        "{0}: retry wait {1:0.5f} of {2:0.0f}s -> {3}".format(
+                            prefix, waiting, LDAP_ERROR_TIMEOUT, self._v_ldaperror_msg
                         )
                     )
                     return None
@@ -74,10 +69,7 @@ def ldap_error_handler(prefix):
                 result = original_method(self, *args, **kwargs)
                 end = time.clock()
                 logger.debug(
-                    'call of {0!r} took {1:0.5f}s'.format(
-                        original_method,
-                        end - start
-                    )
+                    "call of {0!r} took {1:0.5f}s".format(original_method, end - start)
                 )
                 return result
 
@@ -85,12 +77,12 @@ def ldap_error_handler(prefix):
             except ldap.LDAPError as e:
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
-                logger.warn('LDAPError in {0} -> {1}'.format(prefix, str(e)))
+                logger.warn("LDAPError in {0} -> {1}".format(prefix, str(e)))
                 return None
             except Exception as e:
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
-                logger.warn('Error in {0} -> {1}'.format(prefix, str(e)))
+                logger.warn("Error in {0} -> {1}".format(prefix, str(e)))
                 return None
 
         return _wrapper
@@ -111,16 +103,17 @@ def ldap_error_handler(prefix):
     plonepas_interfaces.group.IGroupManagement,
     plonepas_interfaces.group.IGroupIntrospection,
     plonepas_interfaces.plugins.IMutablePropertiesPlugin,
-    plonepas_interfaces.plugins.IUserManagement)
+    plonepas_interfaces.plugins.IUserManagement,
+)
 class LDAPPlugin(BasePlugin):
     """Glue layer for making node.ext.ldap available to PAS.
     """
+
     security = ClassSecurityInfo()
-    meta_type = 'LDAP Plugin'
-    manage_options = ({
-        'label': 'LDAP Settings',
-        'action': 'manage_ldapplugin',
-    }, ) + BasePlugin.manage_options
+    meta_type = "LDAP Plugin"
+    manage_options = (
+        {"label": "LDAP Settings", "action": "manage_ldapplugin"},
+    ) + BasePlugin.manage_options
 
     # Tell PAS not to swallow our exceptions
     _dont_swallow_my_exceptions = False
@@ -166,13 +159,13 @@ class LDAPPlugin(BasePlugin):
         return ugm
 
     @property
-    @ldap_error_handler('groups')
+    @ldap_error_handler("groups")
     @security.private
     def groups(self):
         return self._ugm().groups
 
     @property
-    @ldap_error_handler('users')
+    @ldap_error_handler("users")
     @security.private
     def users(self):
         return self._ugm().users
@@ -180,10 +173,10 @@ class LDAPPlugin(BasePlugin):
     @property
     @security.protected(ManageUsers)
     def ldaperror(self):
-        if hasattr(self, '_v_ldaperror_msg'):
+        if hasattr(self, "_v_ldaperror_msg"):
             waiting = time.time() - self._v_ldaperror_timeout
             if waiting < LDAP_ERROR_TIMEOUT:
-                return self._v_ldaperror_msg + ' (for %0.2fs)' % waiting
+                return self._v_ldaperror_msg + " (for %0.2fs)" % waiting
         return False
 
     @security.public  # really public??
@@ -196,7 +189,7 @@ class LDAPPlugin(BasePlugin):
     #
     #  Map credentials to a user ID.
     #
-    @ldap_error_handler('authenticateCredentials')
+    @ldap_error_handler("authenticateCredentials")
     @security.public
     def authenticateCredentials(self, credentials):
         """credentials -> (userid, login)
@@ -211,17 +204,17 @@ class LDAPPlugin(BasePlugin):
         default = None
         if not self.is_plugin_active(pas_interfaces.IAuthenticationPlugin):
             return default
-        login = credentials.get('login')
-        pw = credentials.get('password')
+        login = credentials.get("login")
+        pw = credentials.get("password")
         if not (login and pw):
             return default
-        logger.debug('credentials: %s' % credentials)
+        logger.debug("credentials: %s" % credentials)
         users = self.users
         if not users:
             return default
         userid = users.authenticate(login, pw)
         if userid:
-            logger.info('logged in %s' % userid)
+            logger.info("logged in %s" % userid)
             return (userid, login)
         return default
 
@@ -231,8 +224,9 @@ class LDAPPlugin(BasePlugin):
     #  Allow querying groups by ID, and searching for groups.
     #
     @security.private
-    def enumerateGroups(self, id=None, exact_match=False, sort_by=None,
-                        max_results=None, **kw):
+    def enumerateGroups(
+        self, id=None, exact_match=False, sort_by=None, max_results=None, **kw
+    ):
         """ -> ( group_info_1, ... group_info_N )
 
         o Return mappings for groups matching the given criteria.
@@ -279,7 +273,7 @@ class LDAPPlugin(BasePlugin):
         if not groups:
             return default
         if id:
-            kw['id'] = id
+            kw["id"] = id
         if not kw:  # show all
             matches = groups.ids
         else:
@@ -288,7 +282,7 @@ class LDAPPlugin(BasePlugin):
             # raised if exact_match and result not unique.
             except ValueError:
                 return default
-        if sort_by == 'id':
+        if sort_by == "id":
             matches = sorted(matches)
         pluginid = self.getId()
         ret = [dict(id=_id, pluginid=pluginid) for _id in matches]
@@ -333,10 +327,17 @@ class LDAPPlugin(BasePlugin):
     #
     #   Allow querying users by ID, and searching for users.
     #
-    @ldap_error_handler('enumerateUsers')
+    @ldap_error_handler("enumerateUsers")
     @security.private
-    def enumerateUsers(self, id=None, login=None, exact_match=False,
-                       sort_by=None, max_results=None, **kw):
+    def enumerateUsers(
+        self,
+        id=None,
+        login=None,
+        exact_match=False,
+        sort_by=None,
+        max_results=None,
+        **kw
+    ):
         """-> ( user_info_1, ... user_info_N )
 
         o Return mappings for users matching the given criteria.
@@ -384,24 +385,22 @@ class LDAPPlugin(BasePlugin):
         if login:
             if not isinstance(login, six.string_types):
                 # XXX
-                raise NotImplementedError('sequence is not supported yet.')
-            kw['login'] = login
+                raise NotImplementedError("sequence is not supported yet.")
+            kw["login"] = login
         # pas search users gives both login and name if login is meant
         if "login" in kw and "name" in kw:
             del kw["name"]
         if id:
             if not isinstance(id, six.string_types):
                 # XXX
-                raise NotImplementedError('sequence is not supported yet.')
-            kw['id'] = id
+                raise NotImplementedError("sequence is not supported yet.")
+            kw["id"] = id
         users = self.users
         if not users:
             return default
         try:
             matches = users.search(
-                criteria=kw,
-                attrlist=('login',),
-                exact_match=exact_match
+                criteria=kw, attrlist=("login",), exact_match=exact_match
             )
         # raised if exact_match and result not unique.
         except ValueError:
@@ -409,10 +408,7 @@ class LDAPPlugin(BasePlugin):
         pluginid = self.getId()
         ret = list()
         for id, attrs in matches:
-            ret.append({
-                'id': id,
-                'login': attrs['login'][0],
-                'pluginid': pluginid})
+            ret.append({"id": id, "login": attrs["login"][0], "pluginid": pluginid})
         if max_results and len(ret) > max_results:
             ret = ret[:max_results]
         return ret
@@ -533,7 +529,7 @@ class LDAPPlugin(BasePlugin):
             return default
         ugid = user_or_group.getId()
         if not isinstance(ugid, six.text_type):
-            ugid = ugid.decode('utf-8')
+            ugid = ugid.decode("utf-8")
         try:
             if self.enumerateUsers(id=ugid) or self.enumerateGroups(id=ugid):
                 return LDAPUserPropertySheet(user_or_group, self)
@@ -585,7 +581,7 @@ class LDAPPlugin(BasePlugin):
             try:
                 self.users.passwd(user_id, None, password)
             except KeyError:
-                msg = '{0:s} is not an LDAP user.'.format(user_id)
+                msg = "{0:s} is not an LDAP user.".format(user_id)
                 logger.warn(msg)
                 raise RuntimeError(msg)
 
@@ -645,32 +641,30 @@ class LDAPPlugin(BasePlugin):
         corresponding to this id. None if group does not exist here!
         """
         default = None
-        if not self.is_plugin_active(
-                plonepas_interfaces.group.IGroupIntrospection):
+        if not self.is_plugin_active(plonepas_interfaces.group.IGroupIntrospection):
             return default
         group_id = decode_utf8(group_id)
         groups = self.groups
         if not groups or group_id not in list(groups.keys()):
             return default
         ugmgroup = self.groups[group_id]
-        title = ugmgroup.attrs.get('title', None)
+        title = ugmgroup.attrs.get("title", None)
         group = PloneGroup(ugmgroup.id, title).__of__(self)
         pas = self._getPAS()
         plugins = pas.plugins
         # add properties
-        for propfinder_id, propfinder in \
-                plugins.listPlugins(pas_interfaces.IPropertiesPlugin):
+        for propfinder_id, propfinder in plugins.listPlugins(
+            pas_interfaces.IPropertiesPlugin
+        ):
 
             data = propfinder.getPropertiesForUser(group, None)
             if not data:
                 continue
             group.addPropertysheet(propfinder_id, data)
         # add subgroups
-        group._addGroups(pas._getGroupsForPrincipal(group, None,
-                                                    plugins=plugins))
+        group._addGroups(pas._getGroupsForPrincipal(group, None, plugins=plugins))
         # add roles
-        for rolemaker_id, rolemaker in \
-                plugins.listPlugins(pas_interfaces.IRolesPlugin):
+        for rolemaker_id, rolemaker in plugins.listPlugins(pas_interfaces.IRolesPlugin):
 
             roles = rolemaker.getRolesForPrincipal(group, None)
             if not roles:
@@ -692,8 +686,7 @@ class LDAPPlugin(BasePlugin):
         Returns a list of the available groups (ids)
         """
         default = []
-        if not self.is_plugin_active(
-                plonepas_interfaces.group.IGroupIntrospection):
+        if not self.is_plugin_active(plonepas_interfaces.group.IGroupIntrospection):
             return default
         return self.groups and self.groups.ids or default
 
@@ -702,8 +695,7 @@ class LDAPPlugin(BasePlugin):
         return the members of the given group
         """
         default = ()
-        if not self.is_plugin_active(
-                plonepas_interfaces.group.IGroupIntrospection):
+        if not self.is_plugin_active(plonepas_interfaces.group.IGroupIntrospection):
             return default
         try:
             group = self.groups[group_id]
@@ -723,11 +715,7 @@ class LDAPPlugin(BasePlugin):
         if not users:
             return False
         try:
-            res = self.users.search(
-                criteria={'id': id},
-                attrlist=(),
-                exact_match=True
-            )
+            res = self.users.search(criteria={"id": id}, attrlist=(), exact_match=True)
             return len(res) > 0
         except ValueError:
             return False

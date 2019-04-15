@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from node.ext.ldap import testing as ldaptesting
 from node.ext.ldap.interfaces import ICacheProviderFactory
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
@@ -7,9 +6,7 @@ from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
 from pas.plugins.ldap.cache import cacheProviderFactory
 from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
-from pas.plugins.ldap.plonecontrolpanel.cache import ( # noqa
-    CacheSettingsRecordProvider,                       # noqa
-)                                                      # noqa
+from pas.plugins.ldap.plonecontrolpanel.cache import CacheSettingsRecordProvider
 from pas.plugins.ldap.properties import LDAPProps
 from plone.registry import Registry
 from plone.registry.interfaces import IRegistry
@@ -32,7 +29,7 @@ except ImportError:
     from Products.PlonePAS.Extensions.Install import migrate_root_uf
     from Products.PlonePAS.Extensions.Install import registerPluginTypes
 
-SITE_OWNER_NAME = SITE_OWNER_PASSWORD = 'admin'
+SITE_OWNER_NAME = SITE_OWNER_PASSWORD = "admin"
 
 
 @implementer(ILDAPProps)
@@ -63,18 +60,15 @@ def groupsconfig(context):
 
 class PASLDAPLayer(Layer):
 
-    defaultBases = (
-        ldaptesting.LDIF_groupOfNames_10_10,
-        z2.INTEGRATION_TESTING,
-    )
+    defaultBases = (ldaptesting.LDIF_groupOfNames_10_10, z2.INTEGRATION_TESTING)
 
     # Products that will be installed, plus options
     products = (
-        ('Products.GenericSetup',           {'loadZCML': True}, ),  # noqa
-        ('Products.CMFCore',                {'loadZCML': True}, ),  # noqa
-        ('Products.PluggableAuthService',   {'loadZCML': True}, ),  # noqa
-        ('Products.PluginRegistry',         {'loadZCML': True}, ),  # noqa
-        ('Products.PlonePAS',               {'loadZCML': True}, ),  # noqa
+        ("Products.GenericSetup", {"loadZCML": True}),  # noqa
+        ("Products.CMFCore", {"loadZCML": True}),  # noqa
+        ("Products.PluggableAuthService", {"loadZCML": True}),  # noqa
+        ("Products.PluginRegistry", {"loadZCML": True}),  # noqa
+        ("Products.PlonePAS", {"loadZCML": True}),  # noqa
     )
 
     def setUp(self):
@@ -82,16 +76,17 @@ class PASLDAPLayer(Layer):
 
     def testSetUp(self):
         self.setUpProducts()
-        provideUtility(self['app'], provides=ISiteRoot)
+        provideUtility(self["app"], provides=ISiteRoot)
 
         # Layer is not a plone site, registry of some utilities is required
         provideUtility(Registry(), provides=IRegistry)
         provideUtility(cacheProviderFactory(), provides=ICacheProviderFactory)
-        provideUtility(CacheSettingsRecordProvider(),
-                       provides=ICacheSettingsRecordProvider)
+        provideUtility(
+            CacheSettingsRecordProvider(), provides=ICacheSettingsRecordProvider
+        )
 
-        migrate_root_uf(self['app'])
-        registerPluginTypes(self['app'].acl_users)
+        migrate_root_uf(self["app"])
+        registerPluginTypes(self["app"].acl_users)
 
     def setUpZCML(self):
         """Stack a new global registry and load ZCML configuration of Plone
@@ -104,21 +99,19 @@ class PASLDAPLayer(Layer):
 
         def loadAll(filename):
             for p, config in self.products:
-                if not config['loadZCML']:
+                if not config["loadZCML"]:
                     continue
                 package = resolve(p)
                 try:
                     xmlconfig.file(
-                        filename,
-                        package,
-                        context=self['configurationContext']
+                        filename, package, context=self["configurationContext"]
                     )
                 except IOError:
                     pass
 
-        loadAll('meta.zcml')
-        loadAll('configure.zcml')
-        loadAll('overrides.zcml')
+        loadAll("meta.zcml")
+        loadAll("configure.zcml")
+        loadAll("overrides.zcml")
         provideAdapter(ldapprops)
         provideAdapter(usersconfig)
         provideAdapter(groupsconfig)
@@ -128,4 +121,4 @@ class PASLDAPLayer(Layer):
         of this class.
         """
         for prd, config in self.products:
-            z2.installProduct(self['app'], prd)
+            z2.installProduct(self["app"], prd)

@@ -5,26 +5,25 @@ from Acquisition import aq_inner
 from Acquisition import aq_parent
 from OFS.Image import Image
 from Products.CMFCore.utils import getToolByName
-from Products.PlonePAS.tools.membership import MembershipTool
 from Products.PlonePAS.tools.membership import _checkPermission
 from Products.PlonePAS.tools.membership import default_portrait
+from Products.PlonePAS.tools.membership import MembershipTool
 from six import StringIO
 from zope.interface import implementer
 from zope.traversing.interfaces import ITraversable
 
 
 class PortraitImage(Image):
-
     def getPhysicalPath(self):
         parent = aq_parent(aq_inner(self))
-        trav = '++portrait++%s' % self.id()
-        if not hasattr(parent, 'getPhysicalPath'):
-            return ('', trav)
+        trav = "++portrait++%s" % self.id()
+        if not hasattr(parent, "getPhysicalPath"):
+            return ("", trav)
         return tuple(list(parent.getPhysicalPath()) + [trav])
 
 
 def getPortraitFromSheet(context, userid):
-    mtool = getToolByName(context, 'portal_membership')
+    mtool = getToolByName(context, "portal_membership")
     member = mtool.getMemberById(userid)
     if not member:
         return None
@@ -32,8 +31,8 @@ def getPortraitFromSheet(context, userid):
     portrait = None
     for sheetname in user.listPropertysheets():
         sheet = user.getPropertysheet(sheetname)
-        if 'portrait' in sheet.propertyIds():
-            portrait = sheet.getProperty('portrait')
+        if "portrait" in sheet.propertyIds():
+            portrait = sheet.getProperty("portrait")
             break
     if not portrait:
         # nothing found on sheet
@@ -41,15 +40,13 @@ def getPortraitFromSheet(context, userid):
     # turn into OFS.Image
     sio = StringIO()
     sio.write(portrait)
-    content_type = 'image/jpeg'  # XXX sniff it
-    portrait = PortraitImage(userid, user.getProperty('fullname'), sio,
-                             content_type)
+    content_type = "image/jpeg"  # XXX sniff it
+    portrait = PortraitImage(userid, user.getProperty("fullname"), sio, content_type)
     return portrait
 
 
 @implementer(ITraversable)
 class PortraitTraverser(object):
-
     def __init__(self, context, request=None):
         self.context = context
         self.request = request
@@ -74,16 +71,16 @@ def patched_getPersonalPortrait(self, id=None, verifyPermission=0):
 
     # fallback to memberdata
     safe_id = self._getSafeMemberId(userid)
-    membertool = getToolByName(self, 'portal_memberdata')
+    membertool = getToolByName(self, "portal_memberdata")
     portrait = membertool._getPortrait(safe_id)
     if isinstance(portrait, str):
         portrait = None
     if portrait is not None:
-        if verifyPermission and not _checkPermission('View', portrait):
+        if verifyPermission and not _checkPermission("View", portrait):
             # Don't return the portrait if the user can't get to it
             portrait = None
     if portrait is None:
-        portal = getToolByName(self, 'portal_url').getPortalObject()
+        portal = getToolByName(self, "portal_url").getPortalObject()
         portrait = getattr(portal, default_portrait, None)
 
     return portrait

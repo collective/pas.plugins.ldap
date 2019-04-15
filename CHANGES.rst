@@ -5,6 +5,9 @@ History
 1.5.4 (unreleased)
 ------------------
 
+- Black code style.
+  [jensens]
+
 - Fix #51: plone_ldapinspector broken with UnicodeDecodeError
   [dmunico]
 
