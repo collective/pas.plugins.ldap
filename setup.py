@@ -59,6 +59,7 @@ setup(
         "Products.statusmessages",
         "python-ldap",
         "setuptools",
+        "six",
         "yafowil>=2.2b2",
         "yafowil.plone>=1.3",
         "yafowil.widget.array",

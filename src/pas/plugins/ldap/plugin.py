@@ -2,7 +2,6 @@
 from AccessControl import ClassSecurityInfo
 from App.class_init import InitializeClass
 from BTrees import OOBTree
-from node.ext.ldap.base import decode_utf8
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
@@ -643,7 +642,8 @@ class LDAPPlugin(BasePlugin):
         default = None
         if not self.is_plugin_active(plonepas_interfaces.group.IGroupIntrospection):
             return default
-        group_id = decode_utf8(group_id)
+        if not isinstance(group_id, six.text_type):
+            group_id = group_id.decode('utf8')
         groups = self.groups
         if not groups or group_id not in list(groups.keys()):
             return default
