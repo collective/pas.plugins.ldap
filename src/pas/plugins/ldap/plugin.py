@@ -634,6 +634,7 @@ class LDAPPlugin(BasePlugin):
 
     # XXX: why dont we have security declarations here?
 
+    @security.public
     def getGroupById(self, group_id):
         """
         Returns the portal_groupdata-ish object for a group

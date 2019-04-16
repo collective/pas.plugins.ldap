@@ -191,7 +191,7 @@ class TestPluginFeatures(unittest.TestCase):
         from Acquisition import aq_base
         import pickle
 
-        self.assertGreater(len(pickle.dumps(aq_base(self.ldap))), 200)
+        self.assertGreater(len(pickle.dumps(aq_base(self.ldap))), 170)
 
     def test_IGroupCapability(self):
         """By now adding groups is not allowed.
