@@ -5,6 +5,9 @@ History
 1.6.0 (unreleased)
 ------------------
 
+- Add bundle on request for latest YAFOWIL.
+  [jensens]
+
 - Drop Plone 4.3 support.
   [jensens]
 
