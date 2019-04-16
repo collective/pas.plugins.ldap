@@ -44,6 +44,9 @@ class TestPluginFeatures(unittest.TestCase):
         # otherwise test request has some strange behaviour:
         self.ldap.plugin_caching = False
 
+        self.ldap.users.principal_attrmap["fullname"] = "cn"
+        self.ldap.groups.principal_attrmap["title"] = "cn"
+
     def test_IAuthenticationPlugin(self):
         self.assertEqual(
             self.ldap.authenticateCredentials({"login": "cn0", "password": "secret0"}),
@@ -60,7 +63,7 @@ class TestPluginFeatures(unittest.TestCase):
             )
         )
 
-    def test_IGroupEnumerationPlugin(self):
+    def test_IGroupEnumerationPlugin_id(self):
         self.assertEqual(
             [sorted(group.items()) for group in self.ldap.enumerateGroups(id="group2")],
             [[("id", "group2"), ("pluginid", "pasldap")]],
@@ -105,6 +108,18 @@ class TestPluginFeatures(unittest.TestCase):
         )
         self.assertEqual(len(self.ldap.enumerateGroups(id="group*", max_results=3)), 3)
 
+    def test_IGroupEnumerationPlugin_title(self):
+        self.assertEqual(
+            [
+                sorted(group.items())
+                for group in self.ldap.enumerateGroups(title="group2")
+            ],
+            [[("id", "group2"), ("pluginid", "pasldap")]],
+        )
+        self.assertEqual(
+            len(self.ldap.enumerateGroups(title="group*", max_results=3)), 3
+        )
+
     def test_IGroupsPlugin(self):
         user = self.pas.getUserById("uid9")
         self.assertEqual(self.ldap.getGroupsForPrincipal(user), ["group9"])
@@ -128,8 +143,7 @@ class TestPluginFeatures(unittest.TestCase):
         user = self.pas.getUserById("uid0")
         self.assertEqual(self.ldap.getGroupsForPrincipal(user), [])
 
-    def test_IUserEnumerationPlugin(self):
-
+    def test_IUserEnumerationPlugin_with_id(self):
         self.assertEqual(
             [sorted(user.items()) for user in self.ldap.enumerateUsers(id="uid1")],
             [[("id", "uid1"), ("login", "cn1"), ("pluginid", "pasldap")]],
@@ -174,10 +188,22 @@ class TestPluginFeatures(unittest.TestCase):
             [[("id", "uid4"), ("login", "cn4"), ("pluginid", "pasldap")]],
         )
         self.assertEqual(len(self.ldap.enumerateUsers(id="uid*", max_results=3)), 3)
+
+    def test_IUserEnumerationPlugin_with_login(self):
+        users = self.ldap.enumerateUsers(login="cn1")
         self.assertEqual(
-            [sorted(user.items()) for user in self.ldap.enumerateUsers(login="cn1")],
+            [sorted(user.items()) for user in users],
             [[("id", "uid1"), ("login", "cn1"), ("pluginid", "pasldap")]],
         )
+
+    def test_IUserEnumerationPlugin_with_fullname(self):
+        users = self.ldap.enumerateUsers(fullname="cn1")
+        self.assertEqual(
+            [sorted(user.items()) for user in users],
+            [[("id", "uid1"), ("login", "cn1"), ("pluginid", "pasldap")]],
+        )
+        users = self.ldap.enumerateUsers(fullname="cn*")
+        self.assertEqual(len(users), 10)
 
     def test_IDeleteCapability(self):
         """It's not allowed to delete a principal using this plugin.

@@ -5,6 +5,9 @@ History
 1.6.0 (unreleased)
 ------------------
 
+- Enable partial search for users if no exact match was asked.
+  [jensens]
+
 - Add bundle on request for latest YAFOWIL.
   [jensens]
 

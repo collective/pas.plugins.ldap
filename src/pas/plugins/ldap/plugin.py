@@ -47,7 +47,7 @@ manage_addLDAPPluginForm = PageTemplateFile(
 )
 
 
-def ldap_error_handler(prefix):
+def ldap_error_handler(prefix, default=None):
     """decorator, deals with non-working LDAP"""
 
     def _decorator(original_method, *args, **kwargs):
@@ -61,7 +61,7 @@ def ldap_error_handler(prefix):
                             prefix, waiting, LDAP_ERROR_TIMEOUT, self._v_ldaperror_msg
                         )
                     )
-                    return None
+                    return default
             try:
                 # call original method - get metrics
                 start = time.clock()
@@ -77,12 +77,12 @@ def ldap_error_handler(prefix):
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
                 logger.warn("LDAPError in {0} -> {1}".format(prefix, str(e)))
-                return None
+                return default
             except Exception as e:
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
                 logger.warn("Error in {0} -> {1}".format(prefix, str(e)))
-                return None
+                return default
 
         return _wrapper
 
@@ -326,7 +326,7 @@ class LDAPPlugin(BasePlugin):
     #
     #   Allow querying users by ID, and searching for users.
     #
-    @ldap_error_handler("enumerateUsers")
+    @ldap_error_handler("enumerateUsers", default=tuple())
     @security.private
     def enumerateUsers(
         self,
@@ -397,17 +397,24 @@ class LDAPPlugin(BasePlugin):
         users = self.users
         if not users:
             return default
+        if not exact_match:
+            for key in kw:
+                value = kw[key]
+                if not value.endswith("*"):
+                    kw[key] = value + "*"
         try:
             matches = users.search(
                 criteria=kw, attrlist=("login",), exact_match=exact_match
             )
+            print(kw, matches)
         # raised if exact_match and result not unique.
         except ValueError:
+            logger.exception(str(kw))
             return default
         pluginid = self.getId()
         ret = list()
-        for id, attrs in matches:
-            ret.append({"id": id, "login": attrs["login"][0], "pluginid": pluginid})
+        for id_, attrs in matches:
+            ret.append({"id": id_, "login": attrs["login"][0], "pluginid": pluginid})
         if max_results and len(ret) > max_results:
             ret = ret[:max_results]
         return ret
@@ -644,7 +651,7 @@ class LDAPPlugin(BasePlugin):
         if not self.is_plugin_active(plonepas_interfaces.group.IGroupIntrospection):
             return default
         if not isinstance(group_id, six.text_type):
-            group_id = group_id.decode('utf8')
+            group_id = group_id.decode("utf8")
         groups = self.groups
         if not groups or group_id not in list(groups.keys()):
             return default
@@ -673,6 +680,7 @@ class LDAPPlugin(BasePlugin):
             group._addRoles(roles)
         return group
 
+    @security.private
     def getGroups(self):
         """
         Returns an iteration of the available groups
@@ -682,6 +690,7 @@ class LDAPPlugin(BasePlugin):
         # is done in self.getGroupIds() already.
         return list(map(self.getGroupById, self.getGroupIds()))
 
+    @security.private
     def getGroupIds(self):
         """
         Returns a list of the available groups (ids)
@@ -691,6 +700,7 @@ class LDAPPlugin(BasePlugin):
             return default
         return self.groups and self.groups.ids or default
 
+    @security.private
     def getGroupMembers(self, group_id):
         """
         return the members of the given group
