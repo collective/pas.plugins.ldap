@@ -5,6 +5,9 @@ History
 1.6.0 (unreleased)
 ------------------
 
+- Drop Plone 4.3 support.
+  [jensens]
+
 - Convert `plugin.py` doctests to unittests.
   [jensens]
 
