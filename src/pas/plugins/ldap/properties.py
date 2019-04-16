@@ -201,7 +201,7 @@ class BasePropertiesForm(BrowserView):
         try:
             ugm = Ugm("test", props=props, ucfg=users, gcfg=groups)
             six.iterkeys(ugm.users)
-        except ldap.SERVER_DOWN as e:
+        except ldap.SERVER_DOWN:
             return False, _("Server Down")
         except ldap.LDAPError as e:
             return False, _("LDAP users; ") + str(e)
