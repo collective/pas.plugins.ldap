@@ -19,7 +19,8 @@
     title="LDAP Plugin for PAS - Zope 2 Base Installation"
     directory="profile"
     description="Extension profile for pas.plugins.ldap Zope Base."
-    provides="Products.GenericSetup.interfaces.EXTENSION" />
+    provides="Products.GenericSetup.interfaces.EXTENSION"
+    post_handler=".setuphandlers.post_install" />
 
   <adapter factory=".properties.LDAPProps" />
 

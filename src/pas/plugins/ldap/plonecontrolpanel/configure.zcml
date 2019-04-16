@@ -16,23 +16,6 @@
     provides="Products.GenericSetup.interfaces.EXTENSION" />
 
   <genericsetup:registerProfile
-    zcml:condition="not-have plone-5"
-    name="default"
-    title="LDAP/ Active Directory Support"
-    directory="profiles/plone4"
-    description="pas.plugins.ldap support for users and groups from ldap/active directory."
-    provides="Products.GenericSetup.interfaces.EXTENSION" />
-
-  <genericsetup:registerProfile
-    zcml:condition="not-have plone-5"
-    name="yafowil"
-    title="LDAP/ Active Directory Support - Load YAFOWIL Form integration"
-    directory="profiles/yafowil"
-    description="pas.plugins.ldap - yafowil forms (install after LDAP Support)"
-    provides="Products.GenericSetup.interfaces.EXTENSION" />
-
-  <genericsetup:registerProfile
-    zcml:condition="have plone-5"
     name="default"
     title="LDAP/ Active Directory Support"
     directory="profiles/plone5"

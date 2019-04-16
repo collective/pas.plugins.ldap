@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 from pas.plugins.ldap.plugin import LDAPPlugin
+from zope.component.hooks import getSite
 
 
 TITLE = "LDAP plugin (pas.plugins.ldap)"
-
-
-def isNotThisProfile(context):
-    return context.readDataFile("bdapasldap_marker.txt") is None
 
 
 def _addPlugin(pas, pluginid="pasldap"):
@@ -26,9 +23,7 @@ def _addPlugin(pas, pluginid="pasldap"):
         )
 
 
-def setupPlugin(context):
-    if isNotThisProfile(context):
-        return
-    site = context.getSite()
+def post_install(context):
+    site = getSite()
     pas = site.acl_users
     _addPlugin(pas)
