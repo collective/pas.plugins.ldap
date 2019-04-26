@@ -399,13 +399,16 @@ class LDAPPlugin(BasePlugin):
             return default
         if not exact_match:
             for key in kw:
-                value = kw[key]
-                if not value.endswith("*"):
-                    kw[key] = value + "*"
+                if not kw[key].endswith("*"):
+                    kw[key] = kw[key] + "*"
+                if not kw[key].startswith("*"):
+                    kw[key] = "*" + kw[key]
+
         try:
             matches = users.search(
                 criteria=kw, attrlist=("login",), exact_match=exact_match
             )
+            logger.debug(kw, matches)
         # raised if exact_match and result not unique.
         except ValueError:
             return default
