@@ -406,10 +406,8 @@ class LDAPPlugin(BasePlugin):
             matches = users.search(
                 criteria=kw, attrlist=("login",), exact_match=exact_match
             )
-            print(kw, matches)
         # raised if exact_match and result not unique.
         except ValueError:
-            logger.exception(str(kw))
             return default
         pluginid = self.getId()
         ret = list()

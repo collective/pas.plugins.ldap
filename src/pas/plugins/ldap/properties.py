@@ -24,7 +24,6 @@ from zope.interface import implementer
 
 import ldap
 import logging
-import six
 
 
 logger = logging.getLogger("pas.plugins.ldap")
@@ -128,12 +127,17 @@ class BasePropertiesForm(BrowserView):
         props.memcached = fetch("cache.memcached")
         props.timeout = fetch("cache.timeout")
         users.baseDN = fetch("users.dn")
-        attrmap = odict()
-        attrmap.update(fetch("users.aliases_attrmap"))
+        # build attrmap from static keys and dynamic keys inputs
+        users.attrmap = odict()
+        users.attrmap.update(fetch("users.aliases_attrmap"))
         users_propsheet_attrmap = fetch("users.propsheet_attrmap")
         if users_propsheet_attrmap is not UNSET:
-            attrmap.update(users_propsheet_attrmap)
-        users.attrmap = attrmap
+            users.attrmap.update(users_propsheet_attrmap)
+        # we expect to always have the id key mapped under the same name in the
+        # propertysheet. this would be set implicit on LDAPPrincipal init, but
+        # to avoid a write on read, we do it here.
+        if users.attrmap['id'] not in users.attrmap:
+            users.attrmap[users.attrmap['id']] = users.attrmap['id']
         users.scope = fetch("users.scope")
         if users.scope is not UNSET:
             users.scope = int(users.scope.strip('"'))
@@ -145,12 +149,11 @@ class BasePropertiesForm(BrowserView):
         users._expiresAttr = fetch("users.expires_attr")
         users._expiresUnit = int(fetch("users.expires_unit", 0))
         groups.baseDN = fetch("groups.dn")
-        attrmap = odict()
-        attrmap.update(fetch("groups.aliases_attrmap"))
+        groups.attrmap = odict()
+        groups.attrmap.update(fetch("groups.aliases_attrmap"))
         groups_propsheet_attrmap = fetch("groups.propsheet_attrmap")
         if groups_propsheet_attrmap is not UNSET:
-            attrmap.update(groups_propsheet_attrmap)
-        groups.attrmap = attrmap
+            groups.attrmap.update(groups_propsheet_attrmap)
         groups.scope = fetch("groups.scope")
         if groups.scope is not UNSET:
             groups.scope = int(groups.scope.strip('"'))
@@ -158,6 +161,7 @@ class BasePropertiesForm(BrowserView):
         objectClasses = fetch("groups.object_classes")
         groups.objectClasses = objectClasses
         groups.memberOfSupport = fetch("groups.memberOfSupport")
+        users.attrmap
 
     def userpassanon_extractor(self, widget, data):
         if not data.extracted or data["anonymous"].extracted:
@@ -200,7 +204,7 @@ class BasePropertiesForm(BrowserView):
             return False, msg + str(e)
         try:
             ugm = Ugm("test", props=props, ucfg=users, gcfg=groups)
-            six.iterkeys(ugm.users)
+            ugm.users
         except ldap.SERVER_DOWN:
             return False, _("Server Down")
         except ldap.LDAPError as e:

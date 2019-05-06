@@ -112,8 +112,8 @@ widgets:
             required: User attribute aliases values are mandatory
             static: True
             head:
-                key: Reserved key
-                value: LDAP attr name
+                key: Reserved Key
+                value: LDAP Attribute
     - propsheet_attrmap:
         factory: '#field:dict'
         value: expr:context.users_propsheet_attrmap
@@ -149,7 +149,8 @@ widgets:
         factory: '#array'
         value: expr:context.groups.objectClasses
         props:
-            label: Object classes for Group creation
+            label: Object classes for Groups
+            help: "One of those is mandatory: groupOfNames, groupOfUniqueNames, posixGroup, group"
             array.label: Object class
         widgets:
             - oc:

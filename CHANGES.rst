@@ -5,6 +5,15 @@ History
 1.6.0 (unreleased)
 ------------------
 
+- Fix inspector: In Python 3 JSON dumps does not accept bytes as keys.
+  [jensens, 2silver]
+
+- Explicitly set the ID on the property sheet instead of write on read.
+  [jensens, 2silver]
+
+- Less verbose plugin logging of pseudo errors.
+  [jensens, 2silver]
+
 - Enable partial search for users if no exact match was asked.
   [jensens]
 
