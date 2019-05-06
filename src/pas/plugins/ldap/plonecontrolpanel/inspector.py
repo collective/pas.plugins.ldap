@@ -53,9 +53,9 @@ class LDAPInspector(BrowserView):
         for key, val in node.attrs.items():
             try:
                 if not node.attrs.is_binary(key):
-                    ret[safe_encode(key)] = safe_encode(val)
+                    ret[safe_unicode(key)] = safe_unicode(val)
                 else:
-                    ret[safe_encode(key)] = "(Binary Data with {0} Bytes)".format(
+                    ret[safe_unicode(key)] = "(Binary Data with {0} Bytes)".format(
                         len(val)
                     )
             except UnicodeDecodeError:
