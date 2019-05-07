@@ -5,6 +5,9 @@ History
 1.6.1 (unreleased)
 ------------------
 
+- Pimp ZMI view to look better on Zope 4.
+  [jensens]
+
 - Fixes #71, node.ext.ldap version-requirement wrong
   [jensens]
 
