@@ -2,7 +2,7 @@
 History
 =======
 
-1.6.0 (unreleased)
+1.6.0 (2019-05-07)
 ------------------
 
 - Fix inspector: In Python 3 JSON dumps does not accept bytes as keys.
