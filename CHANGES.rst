@@ -5,7 +5,8 @@ History
 1.6.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Pimp ZMI view to look better on Zope 4.
+  [jensens]
 
 
 1.6.0 (2019-05-07)
