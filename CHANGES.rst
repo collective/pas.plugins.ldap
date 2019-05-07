@@ -2,7 +2,7 @@
 History
 =======
 
-1.6.1 (unreleased)
+1.6.1 (2019-05-07)
 ------------------
 
 - Pimp ZMI view to look better on Zope 4.
