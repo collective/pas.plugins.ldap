@@ -5,7 +5,8 @@ History
 1.6.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixes #71, node.ext.ldap version-requirement wrong
+  [jensens]
 
 
 1.6.0 (2019-05-07)
