@@ -8,6 +8,9 @@ History
 - Pimp ZMI view to look better on Zope 4.
   [jensens]
 
+- Fixes #71, node.ext.ldap version-requirement wrong
+  [jensens]
+
 
 1.6.0 (2019-05-07)
 ------------------
