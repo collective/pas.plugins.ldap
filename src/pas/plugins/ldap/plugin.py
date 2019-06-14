@@ -276,6 +276,11 @@ class LDAPPlugin(BasePlugin):
         if not kw:  # show all
             matches = groups.ids
         else:
+            for key in kw:
+                if not kw[key].endswith("*"):
+                    kw[key] = kw[key] + "*"
+                if not kw[key].startswith("*"):
+                    kw[key] = "*" + kw[key]
             try:
                 matches = groups.search(criteria=kw, exact_match=exact_match)
             # raised if exact_match and result not unique.
