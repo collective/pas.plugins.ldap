@@ -406,7 +406,9 @@ class LDAPPlugin(BasePlugin):
 
         try:
             matches = users.search(
-                criteria=kw, attrlist=("login",), exact_match=exact_match
+                criteria=kw,
+                attrlist=("login", "fullname", "email"),
+                exact_match=exact_match,
             )
             logger.debug(kw, matches)
         # raised if exact_match and result not unique.
@@ -415,7 +417,14 @@ class LDAPPlugin(BasePlugin):
         pluginid = self.getId()
         ret = list()
         for id_, attrs in matches:
-            ret.append({"id": id_, "login": attrs["login"][0], "pluginid": pluginid})
+            item = {
+                "id": id_,
+                "login": attrs["login"][0],
+                "pluginid": pluginid,
+                "email": attrs.get("email", [""])[0],
+                "title": attrs.get("fullname", [id_])[0],
+            }
+            ret.append(item)
         if max_results and len(ret) > max_results:
             ret = ret[:max_results]
         return ret
