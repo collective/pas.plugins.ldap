@@ -665,7 +665,7 @@ class LDAPPlugin(BasePlugin):
         default = None
         if not self.is_plugin_active(plonepas_interfaces.group.IGroupIntrospection):
             return default
-        if not isinstance(group_id, six.text_type):
+        if group_id and not isinstance(group_id, six.text_type):
             group_id = group_id.decode("utf8")
         groups = self.groups
         if not groups or group_id not in list(groups.keys()):
