@@ -58,7 +58,7 @@ setup(
         "Products.PlonePAS",
         "Products.PluggableAuthService",
         "Products.statusmessages",
-        "python-ldap",
+        "python-ldap>=3.2.0",
         "setuptools",
         "six",
         "yafowil>=2.3.1",

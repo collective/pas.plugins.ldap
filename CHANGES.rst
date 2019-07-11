@@ -5,7 +5,9 @@ History
 1.6.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Require python-ldap 3.2.0. Fixes "initialize() got an unexpected keyword
+  argument 'bytes_strictness'".
+  [reinhardt]
 
 
 1.6.1 (2019-05-07)
