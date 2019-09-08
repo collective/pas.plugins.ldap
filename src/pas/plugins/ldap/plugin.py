@@ -64,9 +64,13 @@ def ldap_error_handler(prefix, default=None):
                     return default
             try:
                 # call original method - get metrics
-                start = time.clock()
+                if six.PY2:
+                    process_time = time.clock
+                else:
+                    process_time = time.process_time
+                start = process_time()
                 result = original_method(self, *args, **kwargs)
-                end = time.clock()
+                end = process_time()
                 logger.debug(
                     "call of {0!r} took {1:0.5f}s".format(original_method, end - start)
                 )
