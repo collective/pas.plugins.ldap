@@ -5,6 +5,10 @@ History
 1.6.2 (unreleased)
 ------------------
 
+- Remove deprecation warning for removal of time.clock() which will break
+  Python 3.8 support.
+  [fredvd]
+
 - Require python-ldap 3.2.0. Fixes "initialize() got an unexpected keyword
   argument 'bytes_strictness'".
   [reinhardt]
