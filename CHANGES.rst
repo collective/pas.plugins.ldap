@@ -5,6 +5,10 @@ History
 1.6.2 (unreleased)
 ------------------
 
+- Remove broken old import step from base profile.
+  Fixes `issue  #74 <https://github.com/collective/pas.plugins.ldap/issues/74>`_.
+  [maurits]
+
 - Remove deprecation warning for removal of time.clock() which will break
   Python 3.8 support.
   [fredvd]
