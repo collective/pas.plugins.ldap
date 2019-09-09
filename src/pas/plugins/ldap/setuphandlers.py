@@ -6,6 +6,26 @@ from zope.component.hooks import getSite
 TITLE = "LDAP plugin (pas.plugins.ldap)"
 
 
+def remove_persistent_import_step(context):
+    """Remove broken persistent import step.
+
+    profile/import_steps.xml defined an import step with id
+    "pas.plugins.ldap.setup" which pointed to
+    pas.plugins.ldap.setuphandlers.setupPlugin.
+    This function no longer exists, and the import step is not needed,
+    because a post_install handler is now used for this.
+    But you get an error in the log whenever you import a profile:
+
+      GenericSetup Step pas.plugins.ldap.setup has an invalid import handler
+
+    So we remove the step.
+    """
+    registry = context.getImportStepRegistry()
+    import_step = "pas.plugins.ldap.setup"
+    if import_step in registry._registered:
+        registry.unregisterStep(import_step)
+
+
 def _addPlugin(pas, pluginid="pasldap"):
     installed = pas.objectIds()
     if pluginid in installed:

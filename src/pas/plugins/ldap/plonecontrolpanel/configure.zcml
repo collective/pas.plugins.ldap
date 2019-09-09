@@ -22,6 +22,13 @@
     description="pas.plugins.ldap support for users and groups from ldap/active directory."
     provides="Products.GenericSetup.interfaces.EXTENSION" />
 
+  <genericsetup:upgradeStep
+    source="1"
+    destination="2"
+    title="Unregister broken old persistent import step"
+    profile="pas.plugins.ldap.plonecontrolpanel:default"
+    handler=".upgrades.remove_persistent_import_step_from_base_profile" />
+
   <utility
     factory=".HiddenProfiles"
     provides="Products.CMFPlone.interfaces.INonInstallable"
