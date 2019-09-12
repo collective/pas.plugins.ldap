@@ -2,7 +2,7 @@
 History
 =======
 
-1.6.2 (unreleased)
+1.6.2 (2019-09-12)
 ------------------
 
 - Remove broken old import step from base profile.
