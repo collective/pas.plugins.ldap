@@ -2,7 +2,7 @@
 History
 =======
 
-1.5.4 (unreleased)
+1.5.4 (2019-09-18)
 ------------------
 
 - Added compatibility with node.ext.ldap 1.0b9+.
