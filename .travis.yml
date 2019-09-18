@@ -1,3 +1,4 @@
+dist: bionic
 language: python
 sudo: false
 addons:
@@ -11,21 +12,25 @@ cache:
   - eggs
   - downloads
   - openldap
-env:
-  - PLONE_VERSION=4.3
-  - PLONE_VERSION=5.1
-  - PLONE_VERSION=5.2
 python:
   - "2.7"
 matrix:
+  include:
+    - python: "2.7"
+      env: PLONE_VERSION="4.3" PART="test"
+    - python: "2.7"
+      env: PLONE_VERSION="5.1" PART="test"
+    - python: "2.7"
+      env: PLONE_VERSION="5.2" PART="test"
+    - python: "2.7"
+      env: PLONE_VERSION="5.2" PART="code-analysis"
   fast_finish: true
 install:
   - pip install -r requirements-${PLONE_VERSION}.x.txt
   - buildout -Nc buildout-${PLONE_VERSION}.x.cfg buildout:download-cache=downloads code-analysis:return-status-codes=True annotate
-  - buildout -Nc buildout-${PLONE_VERSION}.x.cfg buildout:download-cache=downloads code-analysis:return-status-codes=True
+  - buildout -Nc buildout-${PLONE_VERSION}.x.cfg buildout:download-cache=downloads code-analysis:return-status-codes=True install ${PART}
 script:
-  - bin/code-analysis
-  - bin/test
+  - bin/${PART}
 after_success:
   - bin/createcoverage
   - bin/pip install coverage
