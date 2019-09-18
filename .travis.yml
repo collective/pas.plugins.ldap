@@ -17,17 +17,17 @@ python:
 matrix:
   include:
     - python: "2.7"
-      env: PLONE_VERSION="4.3" PART="test"
+      env: PLONE_VERSION="4.3" PARTS="openldap testldap test" COMMAND="test"
     - python: "2.7"
-      env: PLONE_VERSION="5.1" PART="test"
+      env: PLONE_VERSION="5.1" PARTS="openldap testldap test" COMMAND="test"
     - python: "2.7"
-      env: PLONE_VERSION="5.2" PART="test"
+      env: PLONE_VERSION="5.2" PARTS="openldap testldap test" COMMAND="test"
     - python: "2.7"
-      env: PLONE_VERSION="5.2" PART="code-analysis"
+      env: PLONE_VERSION="5.2" PARTS="code-analysis" COMMAND="code-analysis"
   fast_finish: true
 install:
   - pip install -r requirements-${PLONE_VERSION}.x.txt
   - buildout -Nc buildout-${PLONE_VERSION}.x.cfg buildout:download-cache=downloads code-analysis:return-status-codes=True annotate
-  - buildout -Nc buildout-${PLONE_VERSION}.x.cfg buildout:download-cache=downloads code-analysis:return-status-codes=True install ${PART}
+  - buildout -Nc buildout-${PLONE_VERSION}.x.cfg buildout:download-cache=downloads code-analysis:return-status-codes=True install ${PARTS}
 script:
-  - bin/${PART}
+  - bin/${COMMAND}
