@@ -9,8 +9,6 @@ from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
 from Products.PluggableAuthService.permissions import ManageGroups
 from Products.PluggableAuthService.permissions import ManageUsers
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
-from node.ext.ldap.base import decode_utf8
-from node.ext.ldap.base import encode_utf8
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
@@ -24,6 +22,14 @@ import ldap
 import logging
 import os
 import time
+
+try:
+    from node.ext.ldap.base import decode_utf8
+    from node.ext.ldap.base import encode_utf8
+except ImportError:
+    # Support newer node.ext.ldap 1.0b9+ where those functions were renamed.
+    from node.ext.ldap.base import ensure_text as decode_utf8
+    from node.ext.ldap.base import ensure_bytes as encode_utf8
 
 
 logger = logging.getLogger('pas.plugins.ldap')
