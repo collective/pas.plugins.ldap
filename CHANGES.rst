@@ -5,6 +5,11 @@ History
 1.5.4 (unreleased)
 ------------------
 
+- Added compatibility with node.ext.ldap 1.0b9+.
+  There decode_utf8 was renamed to ensure_text,
+  and encode_utf8 to ensure_bytes.  We support both names now.
+  [maurits]
+
 - Fix #51: plone_ldapinspector broken with UnicodeDecodeError
   [dmunico]
 
