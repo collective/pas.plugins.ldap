@@ -31,9 +31,3 @@ install:
   - buildout -Nc buildout-${PLONE_VERSION}.x.cfg buildout:download-cache=downloads code-analysis:return-status-codes=True install ${PART}
 script:
   - bin/${PART}
-after_success:
-  - bin/createcoverage
-  - bin/pip install coverage
-  - bin/python -m coverage.pickle2json
-  - pip install coveralls
-  - coveralls
