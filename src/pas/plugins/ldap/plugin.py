@@ -109,6 +109,7 @@ def ldap_error_handler(prefix, default=None):
     pas_interfaces.IGroupsPlugin,
     pas_interfaces.IPropertiesPlugin,
     pas_interfaces.IUserEnumerationPlugin,
+    pas_interfaces.IRolesPlugin,
     plonepas_interfaces.capabilities.IDeleteCapability,
     plonepas_interfaces.capabilities.IGroupCapability,
     plonepas_interfaces.capabilities.IPasswordSetCapability,
@@ -433,6 +434,18 @@ class LDAPPlugin(BasePlugin):
         if max_results and len(ret) > max_results:
             ret = ret[:max_results]
         return ret
+
+    # ##
+    # pas_interfaces.plugins.IRolesPlugin
+    #
+    def getRolesForPrincipal(self, principal, request=None):
+        default = ()
+        users = self.users
+        if not users:
+            return default
+        if self.enumerateUsers(id=principal.getId()):
+            return ('Member', )
+        return default
 
     @security.private
     def updateUser(self, user_id, login_name):
