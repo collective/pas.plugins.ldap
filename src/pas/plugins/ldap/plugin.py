@@ -280,6 +280,11 @@ class LDAPPlugin(BasePlugin):
         if not kw:  # show all
             matches = groups.ids
         else:
+            for key in kw:
+                if not kw[key].endswith("*"):
+                    kw[key] = kw[key] + "*"
+                if not kw[key].startswith("*"):
+                    kw[key] = "*" + kw[key]
             try:
                 matches = groups.search(criteria=kw, exact_match=exact_match)
             # raised if exact_match and result not unique.
@@ -403,20 +408,32 @@ class LDAPPlugin(BasePlugin):
             return default
         if not exact_match:
             for key in kw:
-                value = kw[key]
-                if not value.endswith("*"):
-                    kw[key] = value + "*"
+                if not kw[key].endswith("*"):
+                    kw[key] = kw[key] + "*"
+                if not kw[key].startswith("*"):
+                    kw[key] = "*" + kw[key]
+
         try:
             matches = users.search(
-                criteria=kw, attrlist=("login",), exact_match=exact_match
+                criteria=kw,
+                attrlist=("login", "fullname", "email"),
+                exact_match=exact_match,
             )
+            logger.debug(kw, matches)
         # raised if exact_match and result not unique.
         except ValueError:
             return default
         pluginid = self.getId()
         ret = list()
         for id_, attrs in matches:
-            ret.append({"id": id_, "login": attrs["login"][0], "pluginid": pluginid})
+            item = {
+                "id": id_,
+                "login": attrs["login"][0],
+                "pluginid": pluginid,
+                "email": attrs.get("email", [""])[0],
+                "title": attrs.get("fullname", [id_])[0],
+            }
+            ret.append(item)
         if max_results and len(ret) > max_results:
             ret = ret[:max_results]
         return ret
@@ -652,7 +669,7 @@ class LDAPPlugin(BasePlugin):
         default = None
         if not self.is_plugin_active(plonepas_interfaces.group.IGroupIntrospection):
             return default
-        if not isinstance(group_id, six.text_type):
+        if group_id and not isinstance(group_id, six.text_type):
             group_id = group_id.decode("utf8")
         groups = self.groups
         if not groups or group_id not in list(groups.keys()):
