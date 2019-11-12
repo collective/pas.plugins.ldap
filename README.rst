@@ -98,8 +98,29 @@ You can place the exported ``ldapsettings.xml`` in your integration profile, so 
 But anonymous bindings are possible.
 
 
+Logging
+-------
+
+To get detailed output of all LDAP-operations and much more set the logging level to debug.
+Attention, this is lots of output.
+
+LDAP as an external service might be down, non-responsive or slow.
+This package logs such events to raise awareness.
+There are two environment variables to control the logging of LDAP-errors:
+
+PAS_PLUGINS_LDAP_ERROR_LOG_TIMEOUT
+    First LDAP-error is logged, further errors ignored until the given number of seconds have passed.
+    This supresses flooding logs if LDAP is down.
+    Default: 300.0 (time in seconds, float).
+
+PAS_PLUGINS_LDAP_LONG_RUNNING_LOG_THRESHOLD
+    Log long running LDAP/PAS operations.
+    If a PAS operation takes longer than he given number of seconds, log it as error.
+    Default: 5 (time in seconds, float).
+
+
 Caching
-=======
+-------
 
 **Without caching this module is slow** (as any other module talking to LDAP will be).
 
@@ -132,7 +153,10 @@ If you plan a different implementation of UGM tree caching,provide your own adap
 Limitations and Future Optimizations
 ====================================
 
-This package works fine for several 10000 users or groups, **unless you search or list users**.
+This package was not tested/developed with Windows.
+It may work under Windows if ``python-ldap`` is installed properly and recognized by buildout.
+
+This package works fine for several 10000 users or groups, **unless you list users**.
 
 This is not that much a problem for small amount of users.
 There is room for future optimization in the underlying `node.ext.ldap <https://pypi.python.org/pypi/node.ext.ldap>`_.
