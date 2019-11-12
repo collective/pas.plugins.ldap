@@ -2,7 +2,7 @@
 History
 =======
 
-1.6.3 (unreleased)
+1.7.0 (unreleased)
 ------------------
 
 - Log LDAP-errors as level error, to get them i.e. into Sentry.
@@ -12,7 +12,7 @@ History
   [jensens]
 
 - Log long running LDAP/ pas.plugin.ldap operations as error.
-  Threshold can be controlled with environment variable ``LDAP_LONG_RUNNING_LOG_THRESHOLD``.
+  Threshold can be controlled with environment variable ``PAS_PLUGINS_LDAP_LONG_RUNNING_LOG_THRESHOLD``.
   [jensens]
 
 
