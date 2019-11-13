@@ -30,7 +30,17 @@ import time
 logger = logging.getLogger("pas.plugins.ldap")
 zmidir = os.path.join(os.path.dirname(__file__), "zmi")
 
-LDAP_ERROR_TIMEOUT = 300.0
+if six.PY2:
+    process_time = time.clock
+else:
+    process_time = time.process_time
+
+LDAP_ERROR_LOG_TIMEOUT = float(
+    os.environ.get("PAS_PLUGINS_LDAP_ERROR_LOG_TIMEOUT", 300.0)
+)
+LDAP_LONG_RUNNING_LOG_THRESHOLD = float(
+    os.environ.get("PAS_PLUGINS_LDAP_LONG_RUNNING_LOG_THRESHOLD", 5.0)
+)
 
 
 def manage_addLDAPPlugin(dispatcher, id, title="", RESPONSE=None, **kw):
@@ -55,37 +65,36 @@ def ldap_error_handler(prefix, default=None):
             # look if error is in timeout phase
             if hasattr(self, "_v_ldaperror_timeout"):
                 waiting = time.time() - self._v_ldaperror_timeout
-                if waiting < LDAP_ERROR_TIMEOUT:
+                if waiting < LDAP_ERROR_LOG_TIMEOUT:
                     logger.debug(
                         "{0}: retry wait {1:0.5f} of {2:0.0f}s -> {3}".format(
-                            prefix, waiting, LDAP_ERROR_TIMEOUT, self._v_ldaperror_msg
+                            prefix, waiting, LDAP_ERROR_LOG_TIMEOUT,
+                            self._v_ldaperror_msg,
                         )
                     )
                     return default
             try:
                 # call original method - get metrics
-                if six.PY2:
-                    process_time = time.clock
-                else:
-                    process_time = time.process_time
                 start = process_time()
                 result = original_method(self, *args, **kwargs)
-                end = process_time()
-                logger.debug(
-                    "call of {0!r} took {1:0.5f}s".format(original_method, end - start)
-                )
+                delta_t = process_time() - start
+                msg = "Call of {0!r} took {1:0.4f}s".format(original_method, delta_t)
+                if delta_t < LDAP_LONG_RUNNING_LOG_THRESHOLD:
+                    logger.debug(msg)
+                else:
+                    logger.error(msg)
                 return result
 
             # handle errors
             except ldap.LDAPError as e:
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
-                logger.warn("LDAPError in {0} -> {1}".format(prefix, str(e)))
+                logger.exception("LDAPError in {0}".format(prefix))
                 return default
             except Exception as e:
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
-                logger.warn("Error in {0} -> {1}".format(prefix, str(e)))
+                logger.exception("Error in {0} -> {1}".format(prefix))
                 return default
 
         return _wrapper
@@ -178,7 +187,7 @@ class LDAPPlugin(BasePlugin):
     def ldaperror(self):
         if hasattr(self, "_v_ldaperror_msg"):
             waiting = time.time() - self._v_ldaperror_timeout
-            if waiting < LDAP_ERROR_TIMEOUT:
+            if waiting < LDAP_ERROR_LOG_TIMEOUT:
                 return self._v_ldaperror_msg + " (for %0.2fs)" % waiting
         return False
 

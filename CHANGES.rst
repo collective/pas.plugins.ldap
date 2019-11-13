@@ -2,10 +2,19 @@
 History
 =======
 
-1.6.3 (unreleased)
+1.7.0 (unreleased)
 ------------------
 
-- No changes yet.
+- Log LDAP-errors as level error, to get them i.e. into Sentry.
+  [jensens]
+
+- Make timeout of LDAP-errors logging configurable with environment variable ``PAS_PLUGINS_LDAP_ERROR_LOG_TIMEOUT``.
+  [jensens]
+
+- Log long running LDAP/ pas.plugin.ldap operations as error.
+  Threshold can be controlled with environment variable ``PAS_PLUGINS_LDAP_LONG_RUNNING_LOG_THRESHOLD``.
+  [jensens]
+
 
 
 1.6.2 (2019-09-12)
