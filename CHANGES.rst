@@ -5,6 +5,10 @@ History
 1.7.0 (unreleased)
 ------------------
 
+- Fixed error display for /plone_ldapcontrolpanel when a wrong value is
+  provided for the "Groups container DN" field.
+  [alecghica]
+
 - Fixed error adding a Plone user group.
   [iulianpetchesi]
 
