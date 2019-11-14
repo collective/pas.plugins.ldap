@@ -5,6 +5,9 @@ History
 1.7.0 (unreleased)
 ------------------
 
+- Fixed error adding a Plone user group
+  [iulianpetchesi]
+
 - Log LDAP-errors as level error, to get them i.e. into Sentry.
   [jensens]
 
