@@ -331,7 +331,11 @@ class LDAPPlugin(BasePlugin):
         if self.groups:
             # XXX: provide group_ids function in UGM! Way too calculation-heavy
             #      now
-            return [_.id for _ in _principal.groups]
+            try:
+                return [_.id for _ in _principal.groups]
+            except Exception as err:
+                logger.exception(err)
+                return default
         return default
 
     # ##
