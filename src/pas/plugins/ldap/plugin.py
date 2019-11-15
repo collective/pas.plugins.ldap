@@ -333,8 +333,8 @@ class LDAPPlugin(BasePlugin):
             #      now
             try:
                 return [_.id for _ in _principal.groups]
-            except Exception as err:
-                logger.exception(err)
+            except Exception:
+                logger.exception("Problems with groups settings!")
                 return default
         return default
 
