@@ -2,7 +2,7 @@
 History
 =======
 
-1.7.0 (unreleased)
+1.7.0 (2020-01-22)
 ------------------
 
 - Fixed error display for /plone_ldapcontrolpanel when a wrong value is
