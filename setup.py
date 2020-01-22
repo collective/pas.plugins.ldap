@@ -18,6 +18,7 @@ setup(
     description=shortdesc,
     long_description=longdesc,
     classifiers=[
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Framework :: Plone :: 5.1",
         "Framework :: Plone :: 5.2",

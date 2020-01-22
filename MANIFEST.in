@@ -1,3 +1,5 @@
 graft src
 include *.cfg *.rst
 global-exclude *.pyc
+include *.txt
+include .coveragerc
