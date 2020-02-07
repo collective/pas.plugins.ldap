@@ -1,1 +1,4 @@
-github: [jensens, rnix]
+--- 
+github: 
+  - jensens
+  - rnix
