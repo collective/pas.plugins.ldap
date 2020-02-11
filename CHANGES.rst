@@ -5,7 +5,9 @@ History
 1.7.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Use the plugin ID as the property sheet ID instead of the user ID.
+  Fixes `issue  #95 <https://github.com/collective/pas.plugins.ldap/issues/95>`_.
+  [reinhardt]
 
 
 1.7.0 (2020-01-22)

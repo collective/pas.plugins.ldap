@@ -47,7 +47,7 @@ class LDAPUserPropertySheet(UserPropertySheet):
         for key in self._attrmap:
             self._properties[key] = ldapprincipal.attrs.get(key, "")
         UserPropertySheet.__init__(
-            self, principal.getId(), schema=None, **self._properties
+            self, plugin.getId(), schema=None, **self._properties
         )
 
     def _get_ldap_principal(self):
