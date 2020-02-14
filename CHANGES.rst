@@ -2,7 +2,7 @@
 History
 =======
 
-1.7.1 (unreleased)
+1.7.1 (2020-02-14)
 ------------------
 
 - Use the plugin ID as the property sheet ID instead of the user ID.
