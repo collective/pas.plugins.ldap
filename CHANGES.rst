@@ -15,8 +15,10 @@ New features:
 
 Bug fixes:
 
-- *add item here*
-
+- Import loader from YAFOWIL.
+  Fixes `issue #97 <https://github.com/collective/pas.plugins.ldap/issues/97>`_
+  and `issue #92 <https://github.com/collective/pas.plugins.ldap/issues/92>`_.
+  [al45tair]
 
 1.7.1 (2020-02-14)
 ------------------

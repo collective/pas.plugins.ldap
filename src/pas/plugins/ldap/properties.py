@@ -13,6 +13,7 @@ from pas.plugins.ldap.defaults import DEFAULTS
 from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
 from pas.plugins.ldap.interfaces import ILDAPPlugin
 from Products.Five import BrowserView
+from yafowil import loader  # noqa: F401
 from yafowil.base import ExtractionError
 from yafowil.base import UNSET
 from yafowil.controller import Controller
