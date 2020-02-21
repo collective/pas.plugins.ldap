@@ -5,14 +5,6 @@ History
 1.7.2 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Import loader from YAFOWIL.
