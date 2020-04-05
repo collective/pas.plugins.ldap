@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from pas.plugins.ldap.testing import PASLDAP_FIXTURE
+from Products.PlonePAS.plugins.ufactory import PloneUser
 
 import unittest
 
@@ -316,3 +317,15 @@ class TestPluginFeatures(unittest.TestCase):
         )
         # no delete support:
         self.assertFalse(self.ldap.doDeleteUser("uid0"))
+
+    def test_IRolesPlugin(self):
+        ldap_user = PloneUser('uid0', login='cn0')
+        self.assertEqual(
+            self.ldap.getRolesForPrincipal(ldap_user),
+            ('Member', ),
+        )
+        other_user = PloneUser('unknown', login='other')
+        self.assertEqual(
+            self.ldap.getRolesForPrincipal(other_user),
+            (),
+        )

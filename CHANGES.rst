@@ -25,6 +25,9 @@ Bug fixes:
   Fixes `issue  #95 <https://github.com/collective/pas.plugins.ldap/issues/95>`_.
   [reinhardt]
 
+- Grant the Member role to all LDAP users.
+  [reinhardt]
+
 
 1.7.0 (2020-01-22)
 ------------------
@@ -45,7 +48,6 @@ Bug fixes:
 - Log long running LDAP/ pas.plugin.ldap operations as error.
   Threshold can be controlled with environment variable ``PAS_PLUGINS_LDAP_LONG_RUNNING_LOG_THRESHOLD``.
   [jensens]
-
 
 
 1.6.2 (2019-09-12)
