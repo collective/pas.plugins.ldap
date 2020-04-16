@@ -146,6 +146,7 @@ class BasePropertiesForm(BrowserView):
         objectClasses = fetch("users.object_classes")
         users.objectClasses = objectClasses
         users.memberOfSupport = fetch("users.memberOfSupport")
+        users.memberOfExternalDNs = fetch("users.memberOfExternalDNs")
         users.account_expiration = fetch("users.account_expiration")
         users._expiresAttr = fetch("users.expires_attr")
         users._expiresUnit = int(fetch("users.expires_unit", 0))
@@ -162,6 +163,7 @@ class BasePropertiesForm(BrowserView):
         objectClasses = fetch("groups.object_classes")
         groups.objectClasses = objectClasses
         groups.memberOfSupport = fetch("groups.memberOfSupport")
+        groups.memberOfExternalDNs = []
         users.attrmap
 
     def userpassanon_extractor(self, widget, data):

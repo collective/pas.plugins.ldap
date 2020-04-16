@@ -88,6 +88,12 @@ widgets:
         value: expr:context.users.memberOfSupport
         props:
             label: memberOf attribute supported?
+    - memberOfExternalDNs:
+        factory: '#field:checkbox'
+        value: expr:context.users.memberOfExternalDNs
+        props:
+            label: memberOf external allowed Group DNs
+            help: Group DNs outside of the groups base DN are ignored, except if listed here.
     - account_expiration:
         factory: '#field:checkbox'
         value: expr:context.users.account_expiration
