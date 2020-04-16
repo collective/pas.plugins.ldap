@@ -26,8 +26,8 @@ matrix:
 sudo: true
 install:
   - pip install -r requirements-${PLONE_VERSION}.txt
-  - buildout -Nc buildout-${PLONE_VERSION}.cfg buildout:download-cache=downloads code-analysis:return-status-codes=True annotate
-  - buildout -Nc buildout-${PLONE_VERSION}.cfg buildout:download-cache=downloads code-analysis:return-status-codes=True
+  - buildout -Nc buildout-${PLONE_VERSION}.cfg buildout:download-cache=downloads code-analysis:return-status-codes=True "parts=test code-analysis coverage test-coverage testldap" annotate
+  - buildout -Nc buildout-${PLONE_VERSION}.cfg buildout:download-cache=downloads code-analysis:return-status-codes=True "parts=test code-analysis coverage test-coverage testldap"
 script:
   - bin/code-analysis
   - bin/test
