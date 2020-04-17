@@ -323,6 +323,6 @@ class GroupsConfig(object):
     objectClasses = propproxy("groups.objectClasses")
     defaults = propproxy("groups.defaults")
     memberOfSupport = propproxy("groups.memberOfSupport")
-    memberOfExternalGroupDNs = propproxy("users.memberOfExternalGroupDNs")
+    memberOfExternalGroupDNs = propproxy("groups.memberOfExternalGroupDNs")
     expiresAttr = propproxy("groups.expires_attr")
     expiresUnit = propproxy("groups.expires_unit")
