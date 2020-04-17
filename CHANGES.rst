@@ -2,11 +2,13 @@
 History
 =======
 
-1.7.3 (unreleased)
+1.8.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+Features:
 
+- Support for plugin-external group DNs when using memberOf attribute.
+  [jensens]
 
 1.7.2 (2020-02-21)
 ------------------
