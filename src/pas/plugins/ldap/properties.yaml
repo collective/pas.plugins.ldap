@@ -88,9 +88,9 @@ widgets:
         value: expr:context.users.memberOfSupport
         props:
             label: memberOf attribute supported?
-    - memberOfExternalDNs:
+    - memberOfExternalGroupDNs:
         factory: '#array'
-        value: expr:context.users.memberOfExternalDNs
+        value: expr:context.users.memberOfExternalGroupDNs
         props:
             array.help: "Group DNs outside of the groups base DN are ignored, except if listed here"
             array.label: memberOf external allowed Group DNs
@@ -169,9 +169,9 @@ widgets:
         value: expr:context.groups.memberOfSupport
         props:
             label: memberOf attribute supported?
-    - memberOfExternalDNs:
+    - memberOfExternalGroupDNs:
         factory: '#array'
-        value: expr:context.groups.memberOfExternalDNs
+        value: expr:context.groups.memberOfExternalGroupDNs
         props:
             array.help: "Group DNs outside of the groups base DN are ignored, except if listed here"
             array.label: memberOf external allowed Group DNs
