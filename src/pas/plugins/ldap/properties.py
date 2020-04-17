@@ -146,7 +146,7 @@ class BasePropertiesForm(BrowserView):
         objectClasses = fetch("users.object_classes")
         users.objectClasses = objectClasses
         users.memberOfSupport = fetch("users.memberOfSupport")
-        users.memberOfExternalDNs = fetch("users.memberOfExternalDNs")
+        users.memberOfExternalGroupDNs = fetch("users.memberOfExternalGroupDNs")
         users.account_expiration = fetch("users.account_expiration")
         users._expiresAttr = fetch("users.expires_attr")
         users._expiresUnit = int(fetch("users.expires_unit", 0))
@@ -163,7 +163,7 @@ class BasePropertiesForm(BrowserView):
         objectClasses = fetch("groups.object_classes")
         groups.objectClasses = objectClasses
         groups.memberOfSupport = fetch("groups.memberOfSupport")
-        groups.memberOfExternalDNs = []
+        groups.memberOfExternalGroupDNs = []
         users.attrmap
 
     def userpassanon_extractor(self, widget, data):
@@ -295,7 +295,7 @@ class UsersConfig(object):
     objectClasses = propproxy("users.objectClasses")
     defaults = propproxy("users.defaults")
     memberOfSupport = propproxy("users.memberOfSupport")
-    memberOfExternalDNs = propproxy("users.memberOfExternalDNs")
+    memberOfExternalGroupDNs = propproxy("users.memberOfExternalGroupDNs")
     account_expiration = propproxy("users.account_expiration")
     _expiresAttr = propproxy("users.expires_attr")
     _expiresUnit = propproxy("users.expires_unit")
@@ -324,6 +324,6 @@ class GroupsConfig(object):
     objectClasses = propproxy("groups.objectClasses")
     defaults = propproxy("groups.defaults")
     memberOfSupport = propproxy("groups.memberOfSupport")
-    memberOfExternalDNs = propproxy("users.memberOfExternalDNs")
+    memberOfExternalGroupDNs = propproxy("users.memberOfExternalGroupDNs")
     expiresAttr = propproxy("groups.expires_attr")
     expiresUnit = propproxy("groups.expires_unit")
