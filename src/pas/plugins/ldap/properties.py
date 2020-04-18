@@ -164,8 +164,8 @@ class BasePropertiesForm(BrowserView):
         objectClasses = fetch("groups.object_classes")
         groups.objectClasses = objectClasses
         groups.memberOfSupport = fetch("groups.memberOfSupport")
-        groups.recursiveGroups = fetch("groups.recursiveGroups")
-        groups.memberOfExternalGroupDNs = fetch("groups.memberOfExternalGroupDNs")
+        groups.recursiveGroups = False
+        groups.memberOfExternalGroupDNs = []
 
     def userpassanon_extractor(self, widget, data):
         if not data.extracted or data["anonymous"].extracted:
