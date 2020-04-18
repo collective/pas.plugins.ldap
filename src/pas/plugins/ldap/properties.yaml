@@ -175,21 +175,6 @@ widgets:
         value: expr:context.groups.memberOfSupport
         props:
             label: memberOf attribute supported?
-    - recursiveGroups:
-        factory: '#field:checkbox'
-        value: expr:context.groups.recursiveGroups
-        props:
-            label: Support recursive/nested groups?
-            help: If your LDAP/AD supports it this will use LDAP_MATCHING_RULE_IN_CHAIN
-    - memberOfExternalGroupDNs:
-        factory: '#array'
-        value: expr:context.groups.memberOfExternalGroupDNs
-        props:
-            array.help: "Group DNs outside of the groups base DN are ignored, except if listed here"
-            array.label: memberOf external allowed Group DNs
-        widgets:
-            - dn:
-                factory: field:text
     - aliases_attrmap:
         factory: '#field:dict'
         value: expr:context.groups_attrmap

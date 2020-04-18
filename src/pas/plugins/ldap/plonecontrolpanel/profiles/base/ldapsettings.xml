@@ -11,8 +11,6 @@
  <element key="groups.baseDN"
     type="string">ou=groups,ou=groupOfNames_10_10,dc=my-domain,dc=com</element>
  <element key="groups.memberOfSupport" type="bool">False</element>
- <element key="groups.memberOfExternalGroupDNs" type="list">
- </element>
  <element key="groups.objectClasses" type="list">
    <element type="string">groupOfNames</element>
  </element>
@@ -34,6 +32,7 @@
  <element key="users.baseDN"
     type="string">ou=users,ou=groupOfNames_10_10,dc=my-domain,dc=com</element>
  <element key="users.memberOfSupport" type="bool">False</element>
+ <element key="users.recursiveGroups" type="bool">False</element>
  <element key="users.memberOfExternalGroupDNs" type="list">
  </element>
  <element key="users.account_expiration" type="bool">False</element>
