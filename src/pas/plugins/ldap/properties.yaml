@@ -88,6 +88,12 @@ widgets:
         value: expr:context.users.memberOfSupport
         props:
             label: memberOf attribute supported?
+    - recursiveGroups:
+        factory: '#field:checkbox'
+        value: expr:context.users.recursiveGroups
+        props:
+            label: Support recursive/nested groups?
+            help: If your LDAP/AD supports it this will use LDAP_MATCHING_RULE_IN_CHAIN.
     - memberOfExternalGroupDNs:
         factory: '#array'
         value: expr:context.users.memberOfExternalGroupDNs
@@ -169,6 +175,12 @@ widgets:
         value: expr:context.groups.memberOfSupport
         props:
             label: memberOf attribute supported?
+    - recursiveGroups:
+        factory: '#field:checkbox'
+        value: expr:context.groups.recursiveGroups
+        props:
+            label: Support recursive/nested groups?
+            help: If your LDAP/AD supports it this will use LDAP_MATCHING_RULE_IN_CHAIN
     - memberOfExternalGroupDNs:
         factory: '#array'
         value: expr:context.groups.memberOfExternalGroupDNs
