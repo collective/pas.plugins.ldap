@@ -94,7 +94,7 @@ def ldap_error_handler(prefix, default=None):
             except Exception as e:
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
-                logger.exception("Error in {0} -> {1}".format(prefix))
+                logger.exception("Error in {0}".format(prefix))
                 return default
 
         return _wrapper
