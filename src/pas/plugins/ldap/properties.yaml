@@ -93,7 +93,7 @@ widgets:
         value: expr:context.users.recursiveGroups
         props:
             label: Support recursive/nested groups?
-            help: If your LDAP/AD supports it this will use LDAP_MATCHING_RULE_IN_CHAIN.
+            help: If your LDAP/AD supports it this will use LDAP_MATCHING_RULE_IN_CHAIN. By default only AD supports this.
     - memberOfExternalGroupDNs:
         factory: '#array'
         value: expr:context.users.memberOfExternalGroupDNs

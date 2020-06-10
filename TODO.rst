@@ -15,7 +15,7 @@ Milestone 2.0
 - modes for only groups or only users from ldap
 - SSL/TLS configuration TTW
 - creation defaults TTW
-- group in group (depends on: node.ext.ldap: group.groups support) (Done in 1.7.3)
+- group in group (depends on: node.ext.ldap: group.groups support) (Done for AD in 1.8.0)
 - roles from ldap
 - Option on LDAP inspector whether to use query filters from users and
   groups config

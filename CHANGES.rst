@@ -7,6 +7,9 @@ History
 
 Features:
 
+- Support for nested groups in AD using LDAP_MATCHING_RULE_IN_CHAIN.
+  [pbauer]
+
 - Support for plugin-external group DNs when using memberOf attribute.
   [jensens]
 
