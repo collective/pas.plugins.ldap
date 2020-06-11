@@ -26,6 +26,8 @@ DEFAULTS = {
     "users.objectClasses": ["inetOrgPerson"],
     "users.defaults": {},
     "users.memberOfSupport": False,
+    "users.recursiveGroups": False,
+    "users.memberOfExternalGroupDNs": [],
     "users.account_expiration": False,
     "users.expires_attr": "shadowExpire",
     "users.expires_unit": 0,
@@ -41,6 +43,8 @@ DEFAULTS = {
     "groups.objectClasses": ["groupOfNames"],
     "groups.defaults": {},
     "groups.memberOfSupport": False,
+    "groups.recursiveGroups": False,
+    "groups.memberOfExternalGroupDNs": [],
     "groups.expires_attr": "unused",
     "groups.expires_unit": 0,
 }

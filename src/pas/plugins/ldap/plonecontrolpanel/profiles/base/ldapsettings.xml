@@ -32,6 +32,9 @@
  <element key="users.baseDN"
     type="string">ou=users,ou=groupOfNames_10_10,dc=my-domain,dc=com</element>
  <element key="users.memberOfSupport" type="bool">False</element>
+ <element key="users.recursiveGroups" type="bool">False</element>
+ <element key="users.memberOfExternalGroupDNs" type="list">
+ </element>
  <element key="users.account_expiration" type="bool">False</element>
  <element key="users.expires_attr" type="string">shadowExpire</element>
  <element key="users.expires_unit" type="int">0</element>

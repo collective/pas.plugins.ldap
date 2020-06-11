@@ -94,7 +94,7 @@ def ldap_error_handler(prefix, default=None):
             except Exception as e:
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
-                logger.exception("Error in {0} -> {1}".format(prefix))
+                logger.exception("Error in {0}".format(prefix))
                 return default
 
         return _wrapper
@@ -323,20 +323,16 @@ class LDAPPlugin(BasePlugin):
         if not users:
             return default
         try:
-            _principal = self.users[principal.getId()]
+            ugm_principal = self.users[principal.getId()]
         except KeyError:
             # XXX: that's where group in group will happen, but so far
             # group nodes do not provide membership info so we just
             # return if there is no user
             return default
-        if self.groups:
-            # XXX: provide group_ids function in UGM! Way too calculation-heavy
-            #      now
-            try:
-                return [_.id for _ in _principal.groups]
-            except Exception:
-                logger.exception("Problems with groups settings!")
-                return default
+        try:
+            return ugm_principal.group_ids
+        except Exception:
+            logger.exception("Problems getting group_ids!")
         return default
 
     # ##
@@ -666,8 +662,6 @@ class LDAPPlugin(BasePlugin):
     # ##
     # plonepas_interfaces.capabilities.IGroupIntrospection
     # (plone ui specific)
-
-    # XXX: why dont we have security declarations here?
 
     @security.public
     def getGroupById(self, group_id):
