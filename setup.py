@@ -4,7 +4,7 @@ from setuptools import setup
 import os
 
 
-version = "1.8.0.dev0"
+version = "1.8.0"
 shortdesc = "LDAP/AD Plugin for Plone/Zope PluggableAuthService (users+groups)"
 longdesc = open(os.path.join(os.path.dirname(__file__), "README.rst")).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), "TODO.rst")).read()
@@ -33,7 +33,7 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python",
-        "Topic :: System :: Systems Administration :: Authentication/Directory :: LDAP",
+        "Topic :: System :: Systems Administration :: Authentication/Directory :: LDAP"
     ],
     keywords="zope pas plone ldap authentication plugin",
     author="BlueDynamics Alliance",
@@ -71,14 +71,14 @@ setup(
         "zope.globalrequest",
         "zope.i18nmessageid",
         "zope.interface",
-        "zope.traversing",
+        "zope.traversing"
     ],
     extras_require={
         "test": ["plone.testing", "zope.configuration"],
-        "plone": ["Plone"],
+        "plone": ["Plone"]
     },
     entry_points="""
     [z3c.autoinclude.plugin]
     target = plone
-    """,
+    """
 )

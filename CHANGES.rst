@@ -2,7 +2,7 @@
 History
 =======
 
-1.8.0 (unreleased)
+1.8.0 (2020-06-11)
 ------------------
 
 Features:
@@ -13,6 +13,7 @@ Features:
 - Support for plugin-external group DNs when using memberOf attribute.
   [jensens]
 
+
 1.7.2 (2020-02-21)
 ------------------
 
@@ -22,6 +23,7 @@ Bug fixes:
   Fixes `issue #97 <https://github.com/collective/pas.plugins.ldap/issues/97>`_
   and `issue #92 <https://github.com/collective/pas.plugins.ldap/issues/92>`_.
   [al45tair]
+
 
 1.7.1 (2020-02-14)
 ------------------
