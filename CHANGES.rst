@@ -5,7 +5,8 @@ History
 1.8.1 (unreleased)
 ------------------
 
-- No changes yet.
+- Fix imports for Zope 5 and Plone 6.
+  [pbauer]
 
 
 1.8.0 (2020-06-11)
