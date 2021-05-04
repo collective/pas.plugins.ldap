@@ -14,9 +14,7 @@ class TestPluginInit(unittest.TestCase):
         return self.layer["app"].acl_users
 
     def test_pas_installed(self):
-        from Products.PluggableAuthService.PluggableAuthService import (
-            PluggableAuthService,
-        )
+        from Products.PluggableAuthService.PluggableAuthService import PluggableAuthService
 
         self.assertIsInstance(self.pas, PluggableAuthService)
 
@@ -355,3 +353,14 @@ class TestPluginFeatures(unittest.TestCase):
             self.ldap.getRolesForPrincipal(other_user),
             (),
         )
+
+    # other tests higher pas level
+    def test_user_for_group_without_memberOfSupport(self):
+        user = self.pas.getUserById("uid9")
+        self.assertEqual(user.getGroups(), ["group9"])
+
+    def test_user_for_group_with_memberOfSupport(self):
+        self.ldap.users.parent.ucfg.memberOfSupport = True
+        user = self.pas.getUserById("uid9")
+        self.assertEqual(user.getGroups(), ["group9"])
+        self.ldap.users.parent.ucfg.memberOfSupport = False
