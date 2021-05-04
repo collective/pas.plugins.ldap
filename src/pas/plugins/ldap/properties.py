@@ -137,8 +137,8 @@ class BasePropertiesForm(BrowserView):
         # we expect to always have the id key mapped under the same name in the
         # propertysheet. this would be set implicit on LDAPPrincipal init, but
         # to avoid a write on read, we do it here.
-        if users.attrmap['id'] not in users.attrmap:
-            users.attrmap[users.attrmap['id']] = users.attrmap['id']
+        if users.attrmap["id"] not in users.attrmap:
+            users.attrmap[users.attrmap["id"]] = users.attrmap["id"]
         users.scope = fetch("users.scope")
         if users.scope is not UNSET:
             users.scope = int(users.scope.strip('"'))

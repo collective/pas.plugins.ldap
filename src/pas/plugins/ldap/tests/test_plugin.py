@@ -14,9 +14,7 @@ class TestPluginInit(unittest.TestCase):
         return self.layer["app"].acl_users
 
     def test_pas_installed(self):
-        from Products.PluggableAuthService.PluggableAuthService import (
-            PluggableAuthService,
-        )
+        from Products.PluggableAuthService.PluggableAuthService import PluggableAuthService
 
         self.assertIsInstance(self.pas, PluggableAuthService)
 
@@ -216,6 +214,7 @@ class TestPluginFeatures(unittest.TestCase):
     def test_pickable_propertysheet(self):
         """In order to cache propertysheets it must be picklable"""
         from Acquisition import aq_base
+
         import pickle
 
         self.assertGreater(len(pickle.dumps(aq_base(self.ldap))), 170)
@@ -319,12 +318,12 @@ class TestPluginFeatures(unittest.TestCase):
         self.assertFalse(self.ldap.doDeleteUser("uid0"))
 
     def test_IRolesPlugin(self):
-        ldap_user = PloneUser('uid0', login='cn0')
+        ldap_user = PloneUser("uid0", login="cn0")
         self.assertEqual(
             self.ldap.getRolesForPrincipal(ldap_user),
-            ('Member', ),
+            ("Member",),
         )
-        other_user = PloneUser('unknown', login='other')
+        other_user = PloneUser("unknown", login="other")
         self.assertEqual(
             self.ldap.getRolesForPrincipal(other_user),
             (),

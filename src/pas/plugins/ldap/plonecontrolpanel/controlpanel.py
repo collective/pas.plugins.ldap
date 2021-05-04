@@ -24,8 +24,7 @@ class LDAPControlPanel(BasePropertiesForm):
 
     @property
     def plugin(self):
-        """ControlPanel config is only for GS installed 'pasldap' plugin
-        """
+        """ControlPanel config is only for GS installed 'pasldap' plugin"""
         portal = getPortal()
         aclu = portal.acl_users
         plugin = aclu.pasldap

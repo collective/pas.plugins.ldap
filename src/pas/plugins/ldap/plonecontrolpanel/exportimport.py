@@ -45,8 +45,7 @@ def export_settings(context):
 
 @implementer(IBody)
 class LDAPPluginXMLAdapter(XMLAdapterBase):
-    """import pas groups from ldap config.
-    """
+    """import pas groups from ldap config."""
 
     name = "ldapsettings"
 
