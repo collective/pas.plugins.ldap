@@ -14,7 +14,9 @@ class TestPluginInit(unittest.TestCase):
         return self.layer["app"].acl_users
 
     def test_pas_installed(self):
-        from Products.PluggableAuthService.PluggableAuthService import PluggableAuthService
+        from Products.PluggableAuthService.PluggableAuthService import (
+            PluggableAuthService,
+        )
 
         self.assertIsInstance(self.pas, PluggableAuthService)
 
@@ -119,7 +121,7 @@ class TestPluginFeatures(unittest.TestCase):
             len(self.ldap.enumerateGroups(title="group*", max_results=3)), 3
         )
 
-    def test_IGroupsPlugin(self):
+    def test_IGroupsPlugin_without_memberOf_support(self):
         user = self.pas.getUserById("uid9")
         self.assertEqual(self.ldap.getGroupsForPrincipal(user), ["group9"])
 
@@ -141,6 +143,31 @@ class TestPluginFeatures(unittest.TestCase):
 
         user = self.pas.getUserById("uid0")
         self.assertEqual(self.ldap.getGroupsForPrincipal(user), [])
+
+    def test_IGroupsPlugin_with_memberOf_support(self):
+        self.ldap.users.parent.ucfg.memberOfSupport = True
+        user = self.pas.getUserById("uid9")
+        self.assertEqual(self.ldap.getGroupsForPrincipal(user), ["group9"])
+
+        user = self.pas.getUserById("uid1")
+        self.assertEqual(
+            self.ldap.getGroupsForPrincipal(user),
+            [
+                "group1",
+                "group2",
+                "group3",
+                "group4",
+                "group5",
+                "group6",
+                "group7",
+                "group8",
+                "group9",
+            ],
+        )
+
+        user = self.pas.getUserById("uid0")
+        self.assertEqual(self.ldap.getGroupsForPrincipal(user), [])
+        self.ldap.users.parent.ucfg.memberOfSupport = False
 
     def test_IUserEnumerationPlugin_with_id(self):
         self.assertEqual(
