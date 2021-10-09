@@ -2,7 +2,7 @@
 History
 =======
 
-1.8.1 (unreleased)
+1.8.1 (2021-10-09)
 ------------------
 
 - Fix imports for Zope 5 and Plone 6.
