@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from AccessControl import ClassSecurityInfo
-from App.class_init import InitializeClass
+from AccessControl.class_init import InitializeClass
 from BTrees import OOBTree
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
@@ -44,8 +44,7 @@ LDAP_LONG_RUNNING_LOG_THRESHOLD = float(
 
 
 def manage_addLDAPPlugin(dispatcher, id, title="", RESPONSE=None, **kw):
-    """Create an instance of a LDAP Plugin.
-    """
+    """Create an instance of a LDAP Plugin."""
     ldapplugin = LDAPPlugin(id, title, **kw)
     dispatcher._setObject(ldapplugin.getId(), ldapplugin)
     if RESPONSE is not None:
@@ -68,7 +67,9 @@ def ldap_error_handler(prefix, default=None):
                 if waiting < LDAP_ERROR_LOG_TIMEOUT:
                     logger.debug(
                         "{0}: retry wait {1:0.5f} of {2:0.0f}s -> {3}".format(
-                            prefix, waiting, LDAP_ERROR_LOG_TIMEOUT,
+                            prefix,
+                            waiting,
+                            LDAP_ERROR_LOG_TIMEOUT,
                             self._v_ldaperror_msg,
                         )
                     )
@@ -119,8 +120,7 @@ def ldap_error_handler(prefix, default=None):
     plonepas_interfaces.plugins.IUserManagement,
 )
 class LDAPPlugin(BasePlugin):
-    """Glue layer for making node.ext.ldap available to PAS.
-    """
+    """Glue layer for making node.ext.ldap available to PAS."""
 
     security = ClassSecurityInfo()
     meta_type = "LDAP Plugin"
@@ -240,7 +240,7 @@ class LDAPPlugin(BasePlugin):
     def enumerateGroups(
         self, id=None, exact_match=False, sort_by=None, max_results=None, **kw
     ):
-        """ -> ( group_info_1, ... group_info_N )
+        """-> ( group_info_1, ... group_info_N )
 
         o Return mappings for groups matching the given criteria.
 
@@ -441,11 +441,12 @@ class LDAPPlugin(BasePlugin):
             return default
         if self.enumerateUsers(id=principal.getId()):
             return tuple(set(self._ldap_props.roles + ['Member']))
+
         return default
 
     @security.private
     def updateUser(self, user_id, login_name):
-        """ Update the login name of the user with id user_id.
+        """Update the login name of the user with id user_id.
 
         The plugin must return True (or any truth value) to indicate a
         successful update, also when no update was needed.
@@ -593,7 +594,7 @@ class LDAPPlugin(BasePlugin):
     #
     @security.private
     def doAddUser(self, login, password):
-        """ Add a user record to a User Manager, with the given login
+        """Add a user record to a User Manager, with the given login
             and password
 
         o Return a Boolean indicating whether a user was added or not
@@ -632,8 +633,7 @@ class LDAPPlugin(BasePlugin):
     #
     @security.public
     def allowDeletePrincipal(self, id):
-        """True if this plugin can delete a certain user/group.
-        """
+        """True if this plugin can delete a certain user/group."""
         # XXX
         return False
 
@@ -744,8 +744,7 @@ class LDAPPlugin(BasePlugin):
     #
     @security.public
     def allowPasswordSet(self, id):
-        """True if this plugin can set the password of a certain user.
-        """
+        """True if this plugin can set the password of a certain user."""
         users = self.users
         if not users:
             return False

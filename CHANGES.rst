@@ -2,10 +2,17 @@
 History
 =======
 
-1.8.1 (unreleased)
+1.8.2 (unreleased)
 ------------------
 
 - No changes yet.
+
+
+1.8.1 (2021-10-09)
+------------------
+
+- Fix imports for Zope 5 and Plone 6.
+  [pbauer]
 
 
 1.8.0 (2020-06-11)

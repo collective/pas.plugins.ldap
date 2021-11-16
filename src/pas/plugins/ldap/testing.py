@@ -19,6 +19,7 @@ from zope.component import provideUtility
 from zope.interface import implementer
 from zope.interface import Interface
 
+
 try:
     # plone 5.x with PlonePAS >=5.0
     from Products.PlonePAS.setuphandlers import migrate_root_uf

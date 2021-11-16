@@ -5,8 +5,7 @@ from zope.interface import implementer
 
 @implementer(INonInstallable)
 class HiddenProfiles(object):
-    """This hides zope2 profile from the quick installer tool and plone cpanel
-    """
+    """This hides zope2 profile from the quick installer tool and plone cpanel"""
 
     _hidden = [
         u"pas.plugins.ldap:default",
