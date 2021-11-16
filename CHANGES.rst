@@ -5,7 +5,7 @@ History
 1.8.2 (unreleased)
 ------------------
 
-- Plugin specific roles aquiring configuration support.
+- Default user roles configuration implementation.
   [sauzher]
 
 
