@@ -9,6 +9,7 @@ DEFAULTS = {
     "server.ignore_cert": False,
     "server.start_tls": False,
     "server.page_size": 1000,
+    "server.roles": ["Member"],
     "cache.cache": False,
     "cache.memcached": "127.0.0.1:11211",
     "cache.timeout": 300,  # seconds

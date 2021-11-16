@@ -106,6 +106,7 @@ class BasePropertiesForm(BrowserView):
             return val
 
         props.uri = fetch("server.uri")
+
         if not fetch("server.anonymous"):
             props.user = fetch("server.user")
             password = fetch("server.password")
@@ -127,8 +128,11 @@ class BasePropertiesForm(BrowserView):
         props.cache = fetch("cache.cache")
         props.memcached = fetch("cache.memcached")
         props.timeout = fetch("cache.timeout")
+
+        props.roles =  fetch("users.roles") # a server wide variable, but related to user
+
         users.baseDN = fetch("users.dn")
-        # build attrmap from static keys and dynamic keys inputs
+                # build attrmap from static keys and dynamic keys inputs
         users.attrmap = odict()
         users.attrmap.update(fetch("users.aliases_attrmap"))
         users_propsheet_attrmap = fetch("users.propsheet_attrmap")
@@ -253,6 +257,7 @@ class LDAPProps(object):
 
     uri = propproxy("server.uri")
     user = propproxy("server.user")
+    roles = propproxy("server.roles")
     password = propproxy("server.password")
     start_tls = propproxy("server.start_tls")
     ignore_cert = propproxy("server.ignore_cert")
