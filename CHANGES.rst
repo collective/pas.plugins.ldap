@@ -5,7 +5,8 @@ History
 1.8.2 (unreleased)
 ------------------
 
-- No changes yet.
+- Plugin specific roles aquiring configuration support.
+  [sauzher]
 
 
 1.8.1 (2021-10-09)
