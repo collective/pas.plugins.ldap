@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
 from BTrees import OOBTree
@@ -17,7 +16,6 @@ from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
 from Products.PluggableAuthService.permissions import ManageGroups
 from Products.PluggableAuthService.permissions import ManageUsers
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
-from six.moves import map
 from zope.interface import implementer
 
 import ldap
@@ -30,10 +28,7 @@ import time
 logger = logging.getLogger("pas.plugins.ldap")
 zmidir = os.path.join(os.path.dirname(__file__), "zmi")
 
-if six.PY2:
-    process_time = time.clock
-else:
-    process_time = time.process_time
+process_time = time.process_time
 
 LDAP_ERROR_LOG_TIMEOUT = float(
     os.environ.get("PAS_PLUGINS_LDAP_ERROR_LOG_TIMEOUT", 300.0)
@@ -66,7 +61,7 @@ def ldap_error_handler(prefix, default=None):
                 waiting = time.time() - self._v_ldaperror_timeout
                 if waiting < LDAP_ERROR_LOG_TIMEOUT:
                     logger.debug(
-                        "{0}: retry wait {1:0.5f} of {2:0.0f}s -> {3}".format(
+                        "{}: retry wait {:0.5f} of {:0.0f}s -> {}".format(
                             prefix,
                             waiting,
                             LDAP_ERROR_LOG_TIMEOUT,
@@ -79,7 +74,7 @@ def ldap_error_handler(prefix, default=None):
                 start = process_time()
                 result = original_method(self, *args, **kwargs)
                 delta_t = process_time() - start
-                msg = "Call of {0!r} took {1:0.4f}s".format(original_method, delta_t)
+                msg = f"Call of {original_method!r} took {delta_t:0.4f}s"
                 if delta_t < LDAP_LONG_RUNNING_LOG_THRESHOLD:
                     logger.debug(msg)
                 else:
@@ -90,12 +85,12 @@ def ldap_error_handler(prefix, default=None):
             except ldap.LDAPError as e:
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
-                logger.exception("LDAPError in {0}".format(prefix))
+                logger.exception(f"LDAPError in {prefix}")
                 return default
             except Exception as e:
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
-                logger.exception("Error in {0}".format(prefix))
+                logger.exception(f"Error in {prefix}")
                 return default
 
         return _wrapper
@@ -396,7 +391,7 @@ class LDAPPlugin(BasePlugin):
             return default
         # XXX: sort_by in node.ext.ldap
         if login:
-            if not isinstance(login, six.string_types):
+            if not isinstance(login, str):
                 # XXX
                 raise NotImplementedError("sequence is not supported yet.")
             kw["login"] = login
@@ -404,7 +399,7 @@ class LDAPPlugin(BasePlugin):
         if "login" in kw and "name" in kw:
             del kw["name"]
         if id:
-            if not isinstance(id, six.string_types):
+            if not isinstance(id, str):
                 # XXX
                 raise NotImplementedError("sequence is not supported yet.")
             kw["id"] = id
@@ -558,7 +553,7 @@ class LDAPPlugin(BasePlugin):
         if not self.is_plugin_active(pas_interfaces.IPropertiesPlugin):
             return default
         ugid = user_or_group.getId()
-        if not isinstance(ugid, six.text_type):
+        if not isinstance(ugid, str):
             ugid = ugid.decode("utf-8")
         try:
             if self.enumerateUsers(id=ugid) or self.enumerateGroups(id=ugid):
@@ -611,7 +606,7 @@ class LDAPPlugin(BasePlugin):
             try:
                 self.users.passwd(user_id, None, password)
             except KeyError:
-                msg = "{0:s} is not an LDAP user.".format(user_id)
+                msg = f"{user_id:s} is not an LDAP user."
                 logger.warn(msg)
                 raise RuntimeError(msg)
 
@@ -673,7 +668,7 @@ class LDAPPlugin(BasePlugin):
             return default
         if group_id is None:
             return None
-        if not isinstance(group_id, six.text_type):
+        if not isinstance(group_id, str):
             group_id = group_id.decode("utf8")
         groups = self.groups
         if not groups or group_id not in list(groups.keys()):

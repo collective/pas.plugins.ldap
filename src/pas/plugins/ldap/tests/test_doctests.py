@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from ..testing import PASLDAPLayer
 from plone.testing import layered
 from plone.testing import z2

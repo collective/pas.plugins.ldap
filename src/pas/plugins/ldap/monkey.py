@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # TEMPORARY MONKEY PATCH
 # until this is changed upstream!
 from Acquisition import aq_inner
@@ -46,7 +45,7 @@ def getPortraitFromSheet(context, userid):
 
 
 @implementer(ITraversable)
-class PortraitTraverser(object):
+class PortraitTraverser:
     def __init__(self, context, request=None):
         self.context = context
         self.request = request

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
@@ -88,7 +87,7 @@ class BasePropertiesForm(BrowserView):
         if not controller.next:
             return controller.rendered
         self.request.RESPONSE.redirect(controller.next)
-        return u""
+        return ""
 
     def save(self, widget, data):
         props = ILDAPProps(self.plugin)
@@ -241,7 +240,7 @@ def propproxy(ckey):
 
 @implementer(ILDAPProps)
 @adapter(ILDAPPlugin)
-class LDAPProps(object):
+class LDAPProps:
     def __init__(self, plugin):
         self.plugin = plugin
 
@@ -270,7 +269,7 @@ class LDAPProps(object):
         if recordProvider is not None:
             record = recordProvider()
             return record.value
-        return u"feature not available"
+        return "feature not available"
 
     @memcached.setter
     def memcached(self, value):
@@ -279,7 +278,7 @@ class LDAPProps(object):
             record = recordProvider()
             record.value = value
         else:
-            return u"feature not available"
+            return "feature not available"
 
     binary_attributes = BINARY_DEFAULTS
     multivalued_attributes = MULTIVALUED_DEFAULTS
@@ -287,7 +286,7 @@ class LDAPProps(object):
 
 @implementer(ILDAPUsersConfig)
 @adapter(ILDAPPlugin)
-class UsersConfig(object):
+class UsersConfig:
     def __init__(self, plugin):
         self.plugin = plugin
 
@@ -317,7 +316,7 @@ class UsersConfig(object):
 
 @implementer(ILDAPGroupsConfig)
 @adapter(ILDAPPlugin)
-class GroupsConfig(object):
+class GroupsConfig:
     def __init__(self, plugin):
         self.plugin = plugin
 

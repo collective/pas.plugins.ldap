@@ -1,15 +1,14 @@
-# -*- coding: utf-8 -*-
 from Products.CMFPlone.interfaces.installable import INonInstallable
 from zope.interface import implementer
 
 
 @implementer(INonInstallable)
-class HiddenProfiles(object):
+class HiddenProfiles:
     """This hides zope2 profile from the quick installer tool and plone cpanel"""
 
     _hidden = [
-        u"pas.plugins.ldap:default",
-        u"pas.plugins.ldap.plonecontrolpanel:install-base",
+        "pas.plugins.ldap:default",
+        "pas.plugins.ldap.plonecontrolpanel:install-base",
     ]
 
     def getNonInstallableProducts(self):

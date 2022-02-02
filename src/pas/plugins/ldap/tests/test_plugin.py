@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from ..testing import PASLDAP_FIXTURE
 from Products.PlonePAS.plugins.ufactory import PloneUser
 
@@ -68,7 +67,7 @@ class TestPluginFeatures(unittest.TestCase):
             [[("id", "group2"), ("pluginid", "pasldap")]],
         )
         self.assertEqual(
-            sorted([_["id"] for _ in self.ldap.enumerateGroups(id="group*")]),
+            sorted(_["id"] for _ in self.ldap.enumerateGroups(id="group*")),
             [
                 "group0",
                 "group1",

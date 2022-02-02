@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from node.ext.ldap.scope import ONELEVEL
 
 

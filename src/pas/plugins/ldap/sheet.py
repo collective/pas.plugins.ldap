@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Acquisition import aq_base
 from .interfaces import ILDAPGroupsConfig
 from .interfaces import ILDAPUsersConfig

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from .plugin import LDAPPlugin
 from zope.component.hooks import getSite
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from AccessControl.Permissions import add_user_folders
 from . import monkey  # noqa
 from . import LDAPPlugin

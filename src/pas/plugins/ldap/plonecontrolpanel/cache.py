@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from ..interfaces import ICacheSettingsRecordProvider
 from persistent import Persistent
 from plone.registry import field
@@ -11,7 +10,7 @@ from zope.interface import implementer
 REGKEY = "pas.plugins.ldap.memcached"
 
 
-class NullRecord(object):
+class NullRecord:
     value = ""
 
 
@@ -25,6 +24,6 @@ class CacheSettingsRecordProvider(Persistent):
         records = registry.records
         if REGKEY not in records:
             # init if not exist
-            value = field.TextLine(title=u"servers, delimited by space")
+            value = field.TextLine(title="servers, delimited by space")
             records[REGKEY] = Record(value)
         return records[REGKEY]

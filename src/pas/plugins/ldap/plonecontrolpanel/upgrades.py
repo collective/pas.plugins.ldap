@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 def remove_persistent_import_step_from_base_profile(context):
     """Remove broken persistent import step from base profile.
 

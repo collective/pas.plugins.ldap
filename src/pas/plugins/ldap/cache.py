@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from bda.cache import Memcached
 from bda.cache import NullCache
 from node.ext.ldap.interfaces import ICacheProviderFactory
@@ -22,7 +20,7 @@ class PasLdapMemcached(Memcached):
 
     def __init__(self, servers):
         self._servers = servers
-        super(PasLdapMemcached, self).__init__(servers)
+        super().__init__(servers)
 
     @property
     def servers(self):
@@ -32,18 +30,18 @@ class PasLdapMemcached(Memcached):
         self._client.disconnect_all()
 
     def __repr__(self):
-        return "<{0} {1}>".format(self.__class__.__name__, self.servers)
+        return f"<{self.__class__.__name__} {self.servers}>"
 
 
 @implementer(ICacheProviderFactory)
-class cacheProviderFactory(object):
+class cacheProviderFactory:
     # memcache factory for node.ext.ldap
 
     _thread_local = threading.local()
 
     @property
     def _key(self):
-        return "_v_{0}_PasLdapMemcached".format(self.__class__.__name__)
+        return f"_v_{self.__class__.__name__}_PasLdapMemcached"
 
     @property
     def servers(self):
@@ -96,7 +94,7 @@ def get_plugin_cache(context):
 
 
 @implementer(IPluginCacheHandler)
-class NullPluginCache(object):
+class NullPluginCache:
     def __init__(self, context):
         self.context = context
 
@@ -108,12 +106,12 @@ class NullPluginCache(object):
 
 
 @implementer(IPluginCacheHandler)
-class RequestPluginCache(object):
+class RequestPluginCache:
     def __init__(self, context):
         self.context = context
 
     def _key(self):
-        return "_v_ldap_ugm_{0}_".format(self.context.getId())
+        return f"_v_ldap_ugm_{self.context.getId()}_"
 
     def get(self):
         request = getRequest()

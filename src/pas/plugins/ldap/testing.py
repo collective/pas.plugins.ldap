@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from node.ext.ldap import testing as ldaptesting
 from node.ext.ldap.interfaces import ICacheProviderFactory
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
@@ -97,7 +96,7 @@ class PASLDAPLayer(Layer):
                     xmlconfig.file(
                         filename, package, context=self["configurationContext"]
                     )
-                except IOError:
+                except OSError:
                     pass
 
         loadAll("meta.zcml")
