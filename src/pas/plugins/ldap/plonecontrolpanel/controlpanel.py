@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from pas.plugins.ldap.properties import BasePropertiesForm
+from ..properties import BasePropertiesForm
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.CMFPlone.resources import add_bundle_on_request
 from Products.statusmessages.interfaces import IStatusMessage

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
+from ..interfaces import ICacheSettingsRecordProvider
 from persistent import Persistent
 from plone.registry import field
 from plone.registry import Record

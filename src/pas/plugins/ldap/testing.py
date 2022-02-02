@@ -4,10 +4,10 @@ from node.ext.ldap.interfaces import ICacheProviderFactory
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
-from pas.plugins.ldap.cache import cacheProviderFactory
-from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
-from pas.plugins.ldap.plonecontrolpanel.cache import CacheSettingsRecordProvider
-from pas.plugins.ldap.properties import LDAPProps
+from .cache import cacheProviderFactory
+from .interfaces import ICacheSettingsRecordProvider
+from .plonecontrolpanel.cache import CacheSettingsRecordProvider
+from .properties import LDAPProps
 from plone.registry import Registry
 from plone.registry.interfaces import IRegistry
 from plone.testing import Layer
@@ -18,16 +18,10 @@ from zope.component import provideAdapter
 from zope.component import provideUtility
 from zope.interface import implementer
 from zope.interface import Interface
-
-
-try:
-    # plone 5.x with PlonePAS >=5.0
-    from Products.PlonePAS.setuphandlers import migrate_root_uf
-    from Products.PlonePAS.setuphandlers import registerPluginTypes
-except ImportError:
-    # plone 4.x with PlonePAS <5.0
-    from Products.PlonePAS.Extensions.Install import migrate_root_uf
-    from Products.PlonePAS.Extensions.Install import registerPluginTypes
+from Products.PlonePAS.setuphandlers import migrate_root_uf
+from Products.PlonePAS.setuphandlers import registerPluginTypes
+from zope.configuration import xmlconfig
+from zope.dottedname.resolve import resolve
 
 SITE_OWNER_NAME = SITE_OWNER_PASSWORD = "admin"
 
@@ -94,9 +88,6 @@ class PASLDAPLayer(Layer):
         """
 
         # Load dependent products's ZCML
-        from zope.configuration import xmlconfig
-        from zope.dottedname.resolve import resolve
-
         def loadAll(filename):
             for p, config in self.products:
                 if not config["loadZCML"]:

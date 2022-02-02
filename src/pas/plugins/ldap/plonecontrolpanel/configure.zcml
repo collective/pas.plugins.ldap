@@ -7,18 +7,10 @@
 
   <include package="Products.CMFCore" />
 
-
-  <genericsetup:registerProfile
-    name="install-base"
-    title="LDAP Plugin for PAS - Base Plone Integration"
-    directory="profiles/base"
-    description="Extension profile for pas.plugins.ldap Base Plone Integration (Do not install this direct)."
-    provides="Products.GenericSetup.interfaces.EXTENSION" />
-
   <genericsetup:registerProfile
     name="default"
     title="LDAP/ Active Directory Support"
-    directory="profiles/plone5"
+    directory="profiles/default"
     description="pas.plugins.ldap support for users and groups from ldap/active directory."
     provides="Products.GenericSetup.interfaces.EXTENSION" />
 

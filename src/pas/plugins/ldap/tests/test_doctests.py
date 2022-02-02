@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from pas.plugins.ldap.testing import PASLDAPLayer
+from ..testing import PASLDAPLayer
 from plone.testing import layered
 from plone.testing import z2
 

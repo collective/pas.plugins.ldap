@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from Acquisition import aq_base
-from node.ext.ldap.interfaces import ILDAPGroupsConfig
-from node.ext.ldap.interfaces import ILDAPUsersConfig
+from .interfaces import ILDAPGroupsConfig
+from .interfaces import ILDAPUsersConfig
 from Products.PlonePAS.interfaces.propertysheets import IMutablePropertySheet
 from Products.PluggableAuthService.UserPropertySheet import UserPropertySheet
 from zope.globalrequest import getRequest

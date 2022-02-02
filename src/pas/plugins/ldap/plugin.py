@@ -6,10 +6,10 @@ from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
 from node.ext.ldap.ugm import Ugm
-from pas.plugins.ldap.cache import get_plugin_cache
-from pas.plugins.ldap.interfaces import ILDAPPlugin
-from pas.plugins.ldap.interfaces import VALUE_NOT_CACHED
-from pas.plugins.ldap.sheet import LDAPUserPropertySheet
+from .cache import get_plugin_cache
+from .interfaces import ILDAPPlugin
+from .interfaces import VALUE_NOT_CACHED
+from .sheet import LDAPUserPropertySheet
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PlonePAS import interfaces as plonepas_interfaces
 from Products.PlonePAS.plugins.group import PloneGroup
