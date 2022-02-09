@@ -1,3 +1,4 @@
+import re
 from .interfaces import ICacheSettingsRecordProvider
 from .interfaces import ILDAPPlugin
 from .interfaces import IPluginCacheHandler
@@ -109,26 +110,29 @@ class NullPluginCache:
 class RequestPluginCache:
     def __init__(self, context):
         self.context = context
+        self._key = f"_v_ldap_ugm_{self.context.getId()}_"
 
-    def _key(self):
-        return f"_v_ldap_ugm_{self.context.getId()}_"
+    def getRootRequest(self):
+        def parent_request(current_request):
+            preq = current_request.get("PARENT_REQUEST", None)
+            if preq:
+                return parent_request(preq)
+            return current_request
+
+        return parent_request(getRequest())
 
     def get(self):
-        request = getRequest()
-        rcachekey = self._key()
-        return (request or {}).get(rcachekey, VALUE_NOT_CACHED)
+        return (self.getRootRequest() or {}).get(self._key, VALUE_NOT_CACHED)
 
     def set(self, value):
-        request = getRequest()
+        request = self.getRootRequest()
         if request is not None:
-            rcachekey = self._key()
-            request[rcachekey] = value
+            request[self._key] = value
 
     def invalidate(self):
-        request = getRequest()
-        rcachekey = self._key()
-        if request and rcachekey in list(request.keys()):
-            del request[rcachekey]
+        request = self.getRootRequest()
+        if request and self._key in list(request.keys()):
+            del request[self._key]
 
 
 VOLATILE_CACHE_MAXAGE = 10  # 10s default maxage on volatile
@@ -138,7 +142,7 @@ VOLATILE_CACHE_MAXAGE = 10  # 10s default maxage on volatile
 class VolatilePluginCache(RequestPluginCache):
     def get(self):
         try:
-            cachetime, value = getattr(self.context, self._key())
+            cachetime, value = getattr(self.context, self._key)
         except AttributeError:
             return VALUE_NOT_CACHED
         if time.time() - cachetime > VOLATILE_CACHE_MAXAGE:
@@ -146,10 +150,10 @@ class VolatilePluginCache(RequestPluginCache):
         return value
 
     def set(self, value):
-        setattr(self.context, self._key(), (time.time(), value))
+        setattr(self.context, self._key, (time.time(), value))
 
     def invalidate(self):
         try:
-            delattr(self.context, self._key())
+            delattr(self.context, self._key)
         except AttributeError:
             pass
