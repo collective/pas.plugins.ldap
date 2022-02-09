@@ -1,9 +1,9 @@
-from AccessControl.Permissions import add_user_folders
 from . import monkey  # noqa
-from . import LDAPPlugin
-from . import manage_addLDAPPlugin
-from . import manage_addLDAPPluginForm
-from . import zmidir
+from .plugin import LDAPPlugin
+from .plugin import manage_addLDAPPlugin
+from .plugin import manage_addLDAPPluginForm
+from .plugin import zmidir
+from AccessControl.Permissions import add_user_folders
 from Products.PluggableAuthService import registerMultiPlugin
 
 import os

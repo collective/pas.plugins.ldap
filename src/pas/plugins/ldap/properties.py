@@ -1,3 +1,6 @@
+from .defaults import DEFAULTS
+from .interfaces import ICacheSettingsRecordProvider
+from .interfaces import ILDAPPlugin
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
@@ -8,9 +11,6 @@ from node.ext.ldap.scope import ONELEVEL
 from node.ext.ldap.scope import SUBTREE
 from node.ext.ldap.ugm import Ugm
 from odict import odict
-from .defaults import DEFAULTS
-from .interfaces import ICacheSettingsRecordProvider
-from .interfaces import ILDAPPlugin
 from Products.Five import BrowserView
 from yafowil import loader  # noqa: F401
 from yafowil.base import ExtractionError

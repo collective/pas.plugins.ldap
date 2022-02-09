@@ -13,7 +13,9 @@ class TestPluginInit(unittest.TestCase):
         return self.layer["app"].acl_users
 
     def test_pas_installed(self):
-        from Products.PluggableAuthService.PluggableAuthService import PluggableAuthService
+        from Products.PluggableAuthService.PluggableAuthService import (
+            PluggableAuthService,
+        )
 
         self.assertIsInstance(self.pas, PluggableAuthService)
 

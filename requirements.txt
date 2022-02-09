@@ -1,0 +1,6 @@
+-c constraints.txt
+waitress_fastlisten
+-e .[test]
+
+# until https://github.com/plone/plone.restapi/issues/1321 is solved
+plone.app.iterate

@@ -1,33 +1,42 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    xmlns:zcml="http://namespaces.zope.org/zcml"
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    i18n_domain="pas.plugins.ldap">
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    i18n_domain="pas.plugins.ldap"
+    >
 
   <include package="five.globalrequest" />
 
-  <five:registerPackage package="." initialize=".initialize" />
+  <five:registerPackage
+      package="."
+      initialize=".initialize"
+      />
 
-  <include package="Products.GenericSetup" file="meta.zcml" />
+  <include
+      package="Products.GenericSetup"
+      file="meta.zcml"
+      />
 
   <include package=".zmi" />
 
   <genericsetup:registerProfile
-    name="default"
-    title="LDAP Plugin for PAS - Zope 2 Base Installation"
-    directory="profile"
-    description="Extension profile for pas.plugins.ldap Zope Base."
-    provides="Products.GenericSetup.interfaces.EXTENSION"
-    post_handler=".setuphandlers.post_install" />
+      name="default"
+      title="LDAP Plugin for PAS - Zope 2 Base Installation"
+      description="Extension profile for pas.plugins.ldap Zope Base."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profile"
+      post_handler=".setuphandlers.post_install"
+      />
 
   <genericsetup:upgradeStep
-    source="1"
-    destination="2"
-    title="Unregister broken old persistent import step"
-    profile="pas.plugins.ldap:default"
-    handler=".setuphandlers.remove_persistent_import_step" />
+      title="Unregister broken old persistent import step"
+      profile="pas.plugins.ldap:default"
+      source="1"
+      destination="2"
+      handler=".setuphandlers.remove_persistent_import_step"
+      />
 
   <adapter factory=".properties.LDAPProps" />
 
@@ -36,16 +45,20 @@
   <adapter factory=".properties.GroupsConfig" />
 
   <utility
-    factory=".cache.cacheProviderFactory"
-    provides="node.ext.ldap.interfaces.ICacheProviderFactory" />
+      factory=".cache.cacheProviderFactory"
+      provides="node.ext.ldap.interfaces.ICacheProviderFactory"
+      />
 
   <include
-    zcml:condition="installed Products.CMFPlone"
-    package=".plonecontrolpanel" />
+      package=".plonecontrolpanel"
+      zcml:condition="installed Products.CMFPlone"
+      />
 
   <adapter
-    for="* ZPublisher.HTTPRequest.HTTPRequest"
-    factory=".monkey.PortraitTraverser"
-    name="portrait" />
+      factory=".monkey.PortraitTraverser"
+      for="*
+           ZPublisher.HTTPRequest.HTTPRequest"
+      name="portrait"
+      />
 
 </configure>

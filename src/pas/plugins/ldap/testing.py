@@ -1,26 +1,27 @@
+from .cache import cacheProviderFactory
+from .interfaces import ICacheSettingsRecordProvider
+from .plonecontrolpanel.cache import CacheSettingsRecordProvider
+from .properties import LDAPProps
 from node.ext.ldap import testing as ldaptesting
 from node.ext.ldap.interfaces import ICacheProviderFactory
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
-from .cache import cacheProviderFactory
-from .interfaces import ICacheSettingsRecordProvider
-from .plonecontrolpanel.cache import CacheSettingsRecordProvider
-from .properties import LDAPProps
 from plone.registry import Registry
 from plone.registry.interfaces import IRegistry
 from plone.testing import Layer
-from plone.testing import z2
+from plone.testing import zope
 from Products.CMFCore.interfaces import ISiteRoot
+from Products.PlonePAS.setuphandlers import migrate_root_uf
+from Products.PlonePAS.setuphandlers import registerPluginTypes
 from zope.component import adapter
 from zope.component import provideAdapter
 from zope.component import provideUtility
-from zope.interface import implementer
-from zope.interface import Interface
-from Products.PlonePAS.setuphandlers import migrate_root_uf
-from Products.PlonePAS.setuphandlers import registerPluginTypes
 from zope.configuration import xmlconfig
 from zope.dottedname.resolve import resolve
+from zope.interface import implementer
+from zope.interface import Interface
+
 
 SITE_OWNER_NAME = SITE_OWNER_PASSWORD = "admin"
 
@@ -53,7 +54,7 @@ def groupsconfig(context):
 
 class PASLDAPLayer(Layer):
 
-    defaultBases = (ldaptesting.LDIF_groupOfNames_10_10, z2.INTEGRATION_TESTING)
+    defaultBases = (ldaptesting.LDIF_groupOfNames_10_10, zope.INTEGRATION_TESTING)
 
     # Products that will be installed, plus options
     products = (
@@ -111,7 +112,7 @@ class PASLDAPLayer(Layer):
         of this class.
         """
         for prd, config in self.products:
-            z2.installProduct(self["app"], prd)
+            zope.installProduct(self["app"], prd)
 
 
 PASLDAP_FIXTURE = PASLDAPLayer()

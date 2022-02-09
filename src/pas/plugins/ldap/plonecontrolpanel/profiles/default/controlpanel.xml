@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <object name="portal_controlpanel">
-  <configlet title="LDAP/ AD Support"
-             action_id="LDAP_Configuration"
+  <configlet action_id="LDAP_Configuration"
              appId="pas.plugins.ldap"
              category="plone-users"
              condition_expr=""
+             title="LDAP/ AD Support"
              url_expr="string:${portal_url}/plone_ldapcontrolpanel"
-             visible="True">
+             visible="True"
+  >
     <permission>Manage Portal</permission>
   </configlet>
 </object>

@@ -128,8 +128,6 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
         elif vtype == "string":
             data = str(data)
         else:
-            self._logger.warning(
-                f"Invalid type {vtype:s} found on import, skipped."
-            )
+            self._logger.warning(f"Invalid type {vtype:s} found on import, skipped.")
             data = None
         return data

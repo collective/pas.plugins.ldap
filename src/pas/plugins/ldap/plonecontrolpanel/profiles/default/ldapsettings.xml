@@ -1,47 +1,109 @@
 <?xml version="1.0"?>
-<object name="pasldap" meta_type="LDAP Plugin" type="dict">
- <element key="cache.cache" type="bool">False</element>
- <element key="cache.timeout" type="int">300</element>
- <element key="groups.attrmap" type="dict">
-  <element key="description" type="string">description</element>
-  <element key="id" type="string">cn</element>
-  <element key="rdn" type="string">cn</element>
-  <element key="title" type="string">o</element>
- </element>
- <element key="groups.baseDN"
-    type="string">ou=groups,ou=groupOfNames_10_10,dc=my-domain,dc=com</element>
- <element key="groups.memberOfSupport" type="bool">False</element>
- <element key="groups.objectClasses" type="list">
-   <element type="string">groupOfNames</element>
- </element>
- <element key="groups.queryFilter"
-    type="string">(objectClass=groupOfNames)</element>
- <element key="groups.scope" type="int">1</element>
- <element key="server.anonymous" type="bool">False</element>
- <element key="server.uri" type="string">ldap://127.0.0.1:12345</element>
- <element key="server.user"
-    type="string">cn=Manager,dc=my-domain,dc=com</element>
- <element key="users.attrmap" type="dict">
-  <element key="email" type="string">mail</element>
-  <element key="fullname" type="string">cn</element>
-  <element key="id" type="string">uid</element>
-  <element key="location" type="string">l</element>
-  <element key="login" type="string">uid</element>
-  <element key="rdn" type="string">uid</element>
- </element>
- <element key="users.baseDN"
-    type="string">ou=users,ou=groupOfNames_10_10,dc=my-domain,dc=com</element>
- <element key="users.memberOfSupport" type="bool">False</element>
- <element key="users.recursiveGroups" type="bool">False</element>
- <element key="users.memberOfExternalGroupDNs" type="list">
- </element>
- <element key="users.account_expiration" type="bool">False</element>
- <element key="users.expires_attr" type="string">shadowExpire</element>
- <element key="users.expires_unit" type="int">0</element>
- <element key="users.objectClasses" type="list">
-   <element type="string">inetOrgPerson</element>
- </element>
- <element key="users.queryFilter"
-    type="string">(objectClass=inetOrgPerson)</element>
- <element key="users.scope" type="int">1</element>
+<object meta_type="LDAP Plugin"
+        name="pasldap"
+        type="dict"
+>
+  <element key="cache.cache"
+           type="bool"
+  >False</element>
+  <element key="cache.timeout"
+           type="int"
+  >300</element>
+  <element key="groups.attrmap"
+           type="dict"
+  >
+    <element key="description"
+             type="string"
+    >description</element>
+    <element key="id"
+             type="string"
+    >cn</element>
+    <element key="rdn"
+             type="string"
+    >cn</element>
+    <element key="title"
+             type="string"
+    >o</element>
+  </element>
+  <element key="groups.baseDN"
+           type="string"
+  >ou=groups,ou=groupOfNames_10_10,dc=my-domain,dc=com</element>
+  <element key="groups.memberOfSupport"
+           type="bool"
+  >False</element>
+  <element key="groups.objectClasses"
+           type="list"
+  >
+    <element type="string">groupOfNames</element>
+  </element>
+  <element key="groups.queryFilter"
+           type="string"
+  >(objectClass=groupOfNames)</element>
+  <element key="groups.scope"
+           type="int"
+  >1</element>
+  <element key="server.anonymous"
+           type="bool"
+  >False</element>
+  <element key="server.uri"
+           type="string"
+  >ldap://127.0.0.1:12345</element>
+  <element key="server.user"
+           type="string"
+  >cn=Manager,dc=my-domain,dc=com</element>
+  <element key="users.attrmap"
+           type="dict"
+  >
+    <element key="email"
+             type="string"
+    >mail</element>
+    <element key="fullname"
+             type="string"
+    >cn</element>
+    <element key="id"
+             type="string"
+    >uid</element>
+    <element key="location"
+             type="string"
+    >l</element>
+    <element key="login"
+             type="string"
+    >uid</element>
+    <element key="rdn"
+             type="string"
+    >uid</element>
+  </element>
+  <element key="users.baseDN"
+           type="string"
+  >ou=users,ou=groupOfNames_10_10,dc=my-domain,dc=com</element>
+  <element key="users.memberOfSupport"
+           type="bool"
+  >False</element>
+  <element key="users.recursiveGroups"
+           type="bool"
+  >False</element>
+  <element key="users.memberOfExternalGroupDNs"
+           type="list"
+  >
+  </element>
+  <element key="users.account_expiration"
+           type="bool"
+  >False</element>
+  <element key="users.expires_attr"
+           type="string"
+  >shadowExpire</element>
+  <element key="users.expires_unit"
+           type="int"
+  >0</element>
+  <element key="users.objectClasses"
+           type="list"
+  >
+    <element type="string">inetOrgPerson</element>
+  </element>
+  <element key="users.queryFilter"
+           type="string"
+  >(objectClass=inetOrgPerson)</element>
+  <element key="users.scope"
+           type="int"
+  >1</element>
 </object>
