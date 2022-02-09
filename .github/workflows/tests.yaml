@@ -17,8 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install xmllint
-        run: sudo apt-get install -y slapd ldap-utils
+      - name: Install system packages
+        run: sudo apt-get install -y libsasl2-dev libssl-dev libdb-dev libldap2-dev
 
       - name: Setup Plone ${{ matrix.plone }} with Python ${{ matrix.python }}
         id: setup
