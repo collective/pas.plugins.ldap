@@ -116,9 +116,7 @@ class RequestPluginCache:
     def get(self):
         request = getRequest()
         rcachekey = self._key()
-        if request and rcachekey in list(request.keys()):
-            return request[rcachekey]
-        return VALUE_NOT_CACHED
+        return (request or {}).get(rcachekey, VALUE_NOT_CACHED)
 
     def set(self, value):
         request = getRequest()
