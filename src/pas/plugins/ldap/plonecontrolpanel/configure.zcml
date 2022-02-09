@@ -30,6 +30,10 @@
       provides="Products.CMFPlone.interfaces.INonInstallable"
       name="pas-plugins-ldap"
       />
+  <utility
+      factory=".cache.CacheSettingsRecordProvider"
+      provides="..interfaces.ICacheSettingsRecordProvider"
+      />
 
   <browser:page
       name="plone_ldapcontrolpanel"
@@ -78,17 +82,16 @@
       />
 
   <genericsetup:importStep
-      name="pas.plugins.ldap.settings"
+      name="pas_plugins_ldap_settings"
       title="LDAP Settings"
       description="Imports LDAP Settings"
       handler=".exportimport.import_settings"
       >
-    <depends name="componentregistry" />
     <depends name="plonepas" />
   </genericsetup:importStep>
 
   <genericsetup:exportStep
-      name="pas.plugins.ldap"
+      name="pas_plugins_ldap_settings"
       title="LDAP Settings"
       description="Exports LDAP Settings"
       handler=".exportimport.export_settings"

@@ -19,17 +19,16 @@ class LDAPControlPanel(BasePropertiesForm):
         add_bundle_on_request(request, "yafowil")
 
     def next(self, request):
-        return "%s/plone_ldapcontrolpanel" % self.context.absolute_url()
+        return f"{self.context.absolute_url()}/plone_ldapcontrolpanel"
 
     @property
     def plugin(self):
         """ControlPanel config is only for GS installed 'pasldap' plugin"""
         portal = getPortal()
         aclu = portal.acl_users
-        plugin = aclu.pasldap
-        return plugin
+        return aclu.pasldap
 
     def save(self, widget, data):
-        BasePropertiesForm.save(self, widget, data)
+        super().save(widget, data)
         messages = IStatusMessage(self.request)
         messages.addStatusMessage(_("LDAP Settings saved."), type="info")
