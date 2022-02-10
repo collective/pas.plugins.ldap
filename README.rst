@@ -130,7 +130,7 @@ PAS_PLUGINS_LDAP_OPT_NETWORK_TIMEOUT
 
 PAS_PLUGINS_LDAP_OPT_TIMEOUT
     Overall timeout.
-    Default: 2.0s
+    Default: 30.0s
 
 See details in python-ldap documentation: OPT_NETWORK_TIMEOUT and OPT_TIMEOUT.
 

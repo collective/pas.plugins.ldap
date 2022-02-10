@@ -40,7 +40,7 @@ OPT_NETWORK_TIMEOUT = float(
     os.environ.get("PAS_PLUGINS_LDAP_OPT_NETWORK_TIMEOUT", 1.0)
 )
 OPT_TIMEOUT = float(
-    os.environ.get("PAS_PLUGINS_LDAP_OPT_TIMEOUT", 2.0)
+    os.environ.get("PAS_PLUGINS_LDAP_OPT_TIMEOUT", 30.0)
 )
 
 # initial connection timeout
