@@ -119,6 +119,22 @@ PAS_PLUGINS_LDAP_LONG_RUNNING_LOG_THRESHOLD
     Default: 5 (time in seconds, float).
 
 
+Timeouts
+--------
+
+Global LDAP timeouts are set and controlled by two environment variables:
+
+PAS_PLUGINS_LDAP_OPT_NETWORK_TIMEOUT
+    Connection timeout.
+    Default: 1.0s
+
+PAS_PLUGINS_LDAP_OPT_TIMEOUT
+    Overall timeout.
+    Default: 2.0s
+
+See details in python-ldap documentation: OPT_NETWORK_TIMEOUT and OPT_TIMEOUT.
+
+
 Caching
 -------
 
