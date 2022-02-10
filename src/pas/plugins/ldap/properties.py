@@ -209,7 +209,7 @@ class BasePropertiesForm(BrowserView):
             return False, msg + str(e)
         try:
             ugm = Ugm("test", props=props, ucfg=users, gcfg=groups)
-            ugm.users
+            ugm.users.authenticate('foo', 'bar')
         except ldap.SERVER_DOWN:
             return False, _("Server Down")
         except ldap.LDAPError as e:
@@ -218,7 +218,7 @@ class BasePropertiesForm(BrowserView):
             logger.exception("Non-LDAP error while connection test!")
             return False, _("Exception in Users; ") + str(e)
         try:
-            ugm.groups
+            ugm.groups.keys()
         except ldap.LDAPError as e:
             return False, _("LDAP Users ok, but groups not; ") + e.message["desc"]
         except Exception as e:
