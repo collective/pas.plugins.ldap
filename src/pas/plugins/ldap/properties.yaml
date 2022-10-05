@@ -26,6 +26,18 @@ widgets:
         default: False
         props:
             label: Anonymous Connection?
+    - conn_timeout:
+        factory: '#field:number'
+        value: expr:context.props.conn_timeout
+        props:
+            label: LDAP connection timeout in seconds
+            datatype: integer
+    - op_timeout:
+        factory: '#field:number'
+        value: expr:context.props.op_timeout
+        props:
+            label: LDAP operation timeout in seconds
+            datatype: integer
     - user:
         factory: '#field:text'
         value: expr:context.props.user

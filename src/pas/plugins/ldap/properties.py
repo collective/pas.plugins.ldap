@@ -124,6 +124,8 @@ class BasePropertiesForm(BrowserView):
         # props.retry_max = fetch(at('server.retry_max')
         # props.retry_delay = fetch('server.retry_delay')
         props.page_size = fetch("server.page_size")
+        props.conn_timeout = fetch("server.conn_timeout")
+        props.op_timeout = fetch("server.op_timeout")
         props.cache = fetch("cache.cache")
         props.memcached = fetch("cache.memcached")
         props.timeout = fetch("cache.timeout")
@@ -257,6 +259,8 @@ class LDAPProps(object):
     start_tls = propproxy("server.start_tls")
     ignore_cert = propproxy("server.ignore_cert")
     page_size = propproxy("server.page_size")
+    conn_timeout = propproxy("server.conn_timeout")
+    op_timeout = propproxy("server.op_timeout")
     cache = propproxy("cache.cache")
     timeout = propproxy("cache.timeout")
 
