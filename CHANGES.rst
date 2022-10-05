@@ -5,7 +5,9 @@ History
 1.8.2 (unreleased)
 ------------------
 
-- No changes yet.
+- Add connection and operation timeout properties for LDAP server.
+  Fixes `issue #61 <https://github.com/collective/pas.plugins.ldap/issues/61>`_.
+  [mamico]
 
 
 1.8.1 (2021-10-09)
