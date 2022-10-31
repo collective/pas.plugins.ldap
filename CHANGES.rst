@@ -2,7 +2,7 @@
 History
 =======
 
-1.8.2 (unreleased)
+1.8.2 (2022-10-31)
 ------------------
 
 - Add connection and operation timeout properties for LDAP server.
