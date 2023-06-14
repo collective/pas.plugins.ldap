@@ -46,7 +46,7 @@ PYTHON_BIN?=python3
 
 # Minimum required Python version.
 # Default: 3.7
-PYTHON_MIN_VERSION?=3.7
+PYTHON_MIN_VERSION?=3.9
 
 # Flag whether to use virtual environment. If `false`, the
 # interpreter according to `PYTHON_BIN` found in `PATH` is used.
@@ -109,7 +109,7 @@ TEST_COMMAND?=.mxmake/files/run-tests.sh
 # Additional Python requirements for running tests to be
 # installed (via pip).
 # Default: pytest
-TEST_REQUIREMENTS?=pytest
+TEST_REQUIREMENTS?=zope.testrunner
 
 # Additional make targets the test target depends on.
 # No default value.
