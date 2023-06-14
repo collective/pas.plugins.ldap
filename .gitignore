@@ -9,7 +9,7 @@ __pycache__
 *.mo
 *.pyc
 *.pyo
-/.make-sentinels/
+/.mxmake/
 /.project
 /.pydevproject
 /.Python
