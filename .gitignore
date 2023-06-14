@@ -20,6 +20,7 @@ __pycache__
 /dist/
 /htmlcov/
 /instance/
+/openldap/
 /pip-selfcheck.json
 /sources/
 /src/*.egg-info

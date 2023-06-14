@@ -10,6 +10,8 @@
 #: core.packages
 #: core.sources
 #: i18n.gettext
+#: ldap.openldap
+#: ldap.python-ldap
 #: qa.black
 #: qa.coverage
 #: qa.isort
@@ -37,6 +39,24 @@ CLEAN_FS?=
 # be used to provide custom targets or hook up to existing targets.
 # Default: include.mk
 INCLUDE_MAKEFILE?=include.mk
+
+## ldap.openldap
+
+# OpenLDAP version to download
+# Default: 2.4.59
+OPENLDAP_VERSION?=2.4.59
+
+# OpenLDAP base download URL
+# Default: https://www.openldap.org/software/download/OpenLDAP/openldap-release/
+OPENLDAP_URL?=https://www.openldap.org/software/download/OpenLDAP/openldap-release/
+
+# Build directory for OpenLDAP
+# Default: $(shell echo $(realpath .))/openldap
+OPENLDAP_DIR?=$(shell echo $(realpath .))/openldap
+
+# Build environment for OpenLDAP
+# Default: PATH=/usr/local/bin:/usr/bin:/bin
+OPENLDAP_ENV?=PATH=/usr/local/bin:/usr/bin:/bin
 
 ## core.mxenv
 
@@ -104,7 +124,7 @@ PROJECT_CONFIG?=mx.ini
 # The command which gets executed. Defaults to the location the
 # :ref:`run-tests` template gets rendered to if configured.
 # Default: .mxmake/files/run-tests.sh
-TEST_COMMAND?=.mxmake/files/run-tests.sh
+TEST_COMMAND?=.mxmake/files/run-tests.sh pas.plugins.ldap
 
 # Additional Python requirements for running tests to be
 # installed (via pip).
@@ -113,7 +133,7 @@ TEST_REQUIREMENTS?=zope.testrunner
 
 # Additional make targets the test target depends on.
 # No default value.
-TEST_DEPENDENCY_TARGETS?=
+TEST_DEPENDENCY_TARGETS?=openldap
 
 ## qa.coverage
 
@@ -184,6 +204,50 @@ SENTINEL?=$(SENTINEL_FOLDER)/about.txt
 $(SENTINEL):
 	@mkdir -p $(SENTINEL_FOLDER)
 	@echo "Sentinels for the Makefile process." > $(SENTINEL)
+
+##############################################################################
+# openldap
+##############################################################################
+
+# case `system.dependencies` domain is included
+SYSTEM_DEPENDENCIES+=libdb-dev libsasl2-dev
+
+OPENLDAP_TARGET:=$(SENTINEL_FOLDER)/openldap.sentinel
+$(OPENLDAP_TARGET): $(SENTINEL)
+	@echo "Building openldap server in '$(OPENLDAP_DIR)'"
+	@test -d $(OPENLDAP_DIR) || curl -o openldap-$(OPENLDAP_VERSION).tgz \
+		$(OPENLDAP_URL)/openldap-$(OPENLDAP_VERSION).tgz
+	@test -d $(OPENLDAP_DIR) || tar xf openldap-$(OPENLDAP_VERSION).tgz
+	@test -d $(OPENLDAP_DIR) || rm openldap-$(OPENLDAP_VERSION).tgz
+	@test -d $(OPENLDAP_DIR) || mv openldap-$(OPENLDAP_VERSION) $(OPENLDAP_DIR)
+	@env -i -C $(OPENLDAP_DIR) $(OPENLDAP_ENV) bash -c \
+		'./configure \
+			--with-tls \
+			--enable-slapd=yes \
+			--enable-overlays \
+			--prefix=$(OPENLDAP_DIR) \
+		&& make depend \
+		&& make -j4 \
+		&& make install'
+	@touch $(OPENLDAP_TARGET)
+
+.PHONY: openldap
+openldap: $(OPENLDAP_TARGET)
+
+.PHONY: openldap-dirty
+openldap-dirty:
+	@test -d $(OPENLDAP_DIR) \
+		&& env -i -C $(OPENLDAP_DIR) $(OPENLDAP_ENV) bash -c 'make clean'
+	@rm -f $(OPENLDAP_TARGET)
+
+.PHONY: openldap-clean
+openldap-clean:
+	@rm -f $(OPENLDAP_TARGET)
+	@rm -rf $(OPENLDAP_DIR)
+
+INSTALL_TARGETS+=openldap
+DIRTY_TARGETS+=openldap-dirty
+CLEAN_TARGETS+=openldap-clean
 
 ##############################################################################
 # mxenv
@@ -344,6 +408,36 @@ CHECK_TARGETS+=black-check
 FORMAT_TARGETS+=black-format
 DIRTY_TARGETS+=black-dirty
 CLEAN_TARGETS+=black-clean
+
+##############################################################################
+# python-ldap
+##############################################################################
+
+PYTHON_LDAP_TARGET:=$(SENTINEL_FOLDER)/python-ldap.sentinel
+$(PYTHON_LDAP_TARGET): $(MXENV_TARGET) $(OPENLDAP_TARGET)
+	@$(MXENV_PATH)pip install \
+		--force-reinstall \
+		--global-option=build_ext \
+		--global-option="-I$(OPENLDAP_DIR)/include" \
+		--global-option="-L$(OPENLDAP_DIR)/lib" \
+		--global-option="-R$(OPENLDAP_DIR)/lib" \
+		python-ldap
+	@touch $(PYTHON_LDAP_TARGET)
+
+.PHONY: python-ldap
+python-ldap: $(PYTHON_LDAP_TARGET)
+
+.PHONY: python-ldap-dirty
+python-ldap-dirty:
+	@rm -f $(PYTHON_LDAP_TARGET)
+
+.PHONY: python-ldap-clean
+python-ldap-clean: python-ldap-dirty
+	@test -e $(MXENV_PATH)pip && $(MXENV_PATH)pip uninstall -y python-ldap || :
+
+INSTALL_TARGETS+=python-ldap
+DIRTY_TARGETS+=python-ldap-dirty
+CLEAN_TARGETS+=python-ldap-clean
 
 ##############################################################################
 # sources
