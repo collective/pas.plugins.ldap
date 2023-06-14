@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from BTrees.OOBTree import OOBTree
 from Products.GenericSetup.interfaces import IBody
 from Products.GenericSetup.utils import XMLAdapterBase
@@ -14,7 +13,7 @@ def _get_import_export_handler(context):
     pasldap = aclu.pasldap
     handler = queryMultiAdapter((pasldap, context), IBody)
     if handler is not None:
-        handler.filename = "%s%s" % (handler.name, handler.suffix)
+        handler.filename = f"{handler.name}{handler.suffix}"
         return handler
     logger.warning("Can't find handler for ldap settings")
 
@@ -91,7 +90,7 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
             node.setAttribute("type", "string")
         else:
             self._logger.warning(
-                "Invalid type {0:s} found for key {1:s} on export, skipped.".format(
+                "Invalid type {:s} found for key {:s} on export, skipped.".format(
                     type(data), data
                 )
             )
@@ -129,8 +128,6 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
         elif vtype == "string":
             data = str(data)
         else:
-            self._logger.warning(
-                "Invalid type {0:s} found on import, skipped.".format(vtype)
-            )
+            self._logger.warning(f"Invalid type {vtype:s} found on import, skipped.")
             data = None
         return data

@@ -1,0 +1,37 @@
+name: Test the pas.plugins.ldap code
+on:
+  push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python:
+          - "3.9"
+          - "3.10"
+          - "3.11"
+        plone:
+          - "6.0.5"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install system packages
+        run: sudo apt-get install -y libsasl2-dev libssl-dev libdb-dev libldap2-dev
+
+      - name: Setup Plone ${{ matrix.plone }} with Python ${{ matrix.python }}
+        id: setup
+        uses: plone/setup-plone@v2.0.0
+        with:
+          python-version: ${{ matrix.python }}
+          plone-version: ${{ matrix.plone }}
+
+      - name: Install package
+        run: |
+          make VENV=off install
+
+      - name: Run tests
+        run: |
+          make VENV=off test-ignore-warnings

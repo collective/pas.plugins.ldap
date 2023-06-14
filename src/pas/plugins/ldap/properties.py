@@ -1,4 +1,6 @@
-# -*- coding: utf-8 -*-
+from .defaults import DEFAULTS
+from .interfaces import ICacheSettingsRecordProvider
+from .interfaces import ILDAPPlugin
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
@@ -9,9 +11,6 @@ from node.ext.ldap.scope import ONELEVEL
 from node.ext.ldap.scope import SUBTREE
 from node.ext.ldap.ugm import Ugm
 from odict import odict
-from pas.plugins.ldap.defaults import DEFAULTS
-from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
-from pas.plugins.ldap.interfaces import ILDAPPlugin
 from Products.Five import BrowserView
 from yafowil import loader  # noqa: F401
 from yafowil.base import ExtractionError
@@ -88,7 +87,7 @@ class BasePropertiesForm(BrowserView):
         if not controller.next:
             return controller.rendered
         self.request.RESPONSE.redirect(controller.next)
-        return u""
+        return ""
 
     def save(self, widget, data):
         props = ILDAPProps(self.plugin)
@@ -210,7 +209,7 @@ class BasePropertiesForm(BrowserView):
             return False, msg + str(e)
         try:
             ugm = Ugm("test", props=props, ucfg=users, gcfg=groups)
-            ugm.users
+            ugm.users.authenticate('foo', 'bar')
         except ldap.SERVER_DOWN:
             return False, _("Server Down")
         except ldap.LDAPError as e:
@@ -219,7 +218,7 @@ class BasePropertiesForm(BrowserView):
             logger.exception("Non-LDAP error while connection test!")
             return False, _("Exception in Users; ") + str(e)
         try:
-            ugm.groups
+            ugm.groups.keys()
         except ldap.LDAPError as e:
             return False, _("LDAP Users ok, but groups not; ") + e.message["desc"]
         except Exception as e:
@@ -241,7 +240,7 @@ def propproxy(ckey):
 
 @implementer(ILDAPProps)
 @adapter(ILDAPPlugin)
-class LDAPProps(object):
+class LDAPProps:
     def __init__(self, plugin):
         self.plugin = plugin
 
@@ -270,7 +269,7 @@ class LDAPProps(object):
         if recordProvider is not None:
             record = recordProvider()
             return record.value
-        return u"feature not available"
+        return "feature not available"
 
     @memcached.setter
     def memcached(self, value):
@@ -279,7 +278,7 @@ class LDAPProps(object):
             record = recordProvider()
             record.value = value
         else:
-            return u"feature not available"
+            return "feature not available"
 
     binary_attributes = BINARY_DEFAULTS
     multivalued_attributes = MULTIVALUED_DEFAULTS
@@ -287,7 +286,7 @@ class LDAPProps(object):
 
 @implementer(ILDAPUsersConfig)
 @adapter(ILDAPPlugin)
-class UsersConfig(object):
+class UsersConfig:
     def __init__(self, plugin):
         self.plugin = plugin
 
@@ -317,7 +316,7 @@ class UsersConfig(object):
 
 @implementer(ILDAPGroupsConfig)
 @adapter(ILDAPPlugin)
-class GroupsConfig(object):
+class GroupsConfig:
     def __init__(self, plugin):
         self.plugin = plugin
 

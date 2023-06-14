@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from node.ext.ldap import LDAPNode
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
@@ -9,11 +8,10 @@ from Products.Five import BrowserView
 from zope.component import getUtility
 
 import json
-import six
 
 
 def safe_encode(val):
-    if isinstance(val, six.text_type):
+    if isinstance(val, str):
         return val.encode("utf-8")
     return val
 
@@ -55,7 +53,7 @@ class LDAPInspector(BrowserView):
                 if not node.attrs.is_binary(key):
                     ret[safe_unicode(key)] = safe_unicode(val)
                 else:
-                    ret[safe_unicode(key)] = "(Binary Data with {0} Bytes)".format(
+                    ret[safe_unicode(key)] = "(Binary Data with {} Bytes)".format(
                         len(val)
                     )
             except UnicodeDecodeError:

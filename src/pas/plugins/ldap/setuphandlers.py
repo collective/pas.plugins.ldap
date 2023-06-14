@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from pas.plugins.ldap.plugin import LDAPPlugin
+from .plugin import LDAPPlugin
 from zope.component.hooks import getSite
 
 

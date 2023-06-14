@@ -1,5 +1,4 @@
-<configure
-    xmlns="http://namespaces.zope.org/zope">
+<configure xmlns="http://namespaces.zope.org/zope">
 
   <!--
   include this file if you want to cache the ugm tree longer than

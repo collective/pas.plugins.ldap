@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
-
+import re
+from .interfaces import ICacheSettingsRecordProvider
+from .interfaces import ILDAPPlugin
+from .interfaces import IPluginCacheHandler
+from .interfaces import VALUE_NOT_CACHED
 from bda.cache import Memcached
 from bda.cache import NullCache
 from node.ext.ldap.interfaces import ICacheProviderFactory
-from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
-from pas.plugins.ldap.interfaces import ILDAPPlugin
-from pas.plugins.ldap.interfaces import IPluginCacheHandler
-from pas.plugins.ldap.interfaces import VALUE_NOT_CACHED
 from zope.component import adapter
 from zope.component import queryUtility
 from zope.globalrequest import getRequest
@@ -22,7 +21,7 @@ class PasLdapMemcached(Memcached):
 
     def __init__(self, servers):
         self._servers = servers
-        super(PasLdapMemcached, self).__init__(servers)
+        super().__init__(servers)
 
     @property
     def servers(self):
@@ -32,18 +31,18 @@ class PasLdapMemcached(Memcached):
         self._client.disconnect_all()
 
     def __repr__(self):
-        return "<{0} {1}>".format(self.__class__.__name__, self.servers)
+        return f"<{self.__class__.__name__} {self.servers}>"
 
 
 @implementer(ICacheProviderFactory)
-class cacheProviderFactory(object):
+class cacheProviderFactory:
     # memcache factory for node.ext.ldap
 
     _thread_local = threading.local()
 
     @property
     def _key(self):
-        return "_v_{0}_PasLdapMemcached".format(self.__class__.__name__)
+        return f"_v_{self.__class__.__name__}_PasLdapMemcached"
 
     @property
     def servers(self):
@@ -96,7 +95,7 @@ def get_plugin_cache(context):
 
 
 @implementer(IPluginCacheHandler)
-class NullPluginCache(object):
+class NullPluginCache:
     def __init__(self, context):
         self.context = context
 
@@ -108,31 +107,32 @@ class NullPluginCache(object):
 
 
 @implementer(IPluginCacheHandler)
-class RequestPluginCache(object):
+class RequestPluginCache:
     def __init__(self, context):
         self.context = context
+        self._key = f"_v_ldap_ugm_{self.context.getId()}_"
 
-    def _key(self):
-        return "_v_ldap_ugm_{0}_".format(self.context.getId())
+    def getRootRequest(self):
+        def parent_request(current_request):
+            preq = current_request.get("PARENT_REQUEST", None)
+            if preq:
+                return parent_request(preq)
+            return current_request
+
+        return parent_request(getRequest())
 
     def get(self):
-        request = getRequest()
-        rcachekey = self._key()
-        if request and rcachekey in list(request.keys()):
-            return request[rcachekey]
-        return VALUE_NOT_CACHED
+        return (self.getRootRequest() or {}).get(self._key, VALUE_NOT_CACHED)
 
     def set(self, value):
-        request = getRequest()
+        request = self.getRootRequest()
         if request is not None:
-            rcachekey = self._key()
-            request[rcachekey] = value
+            request[self._key] = value
 
     def invalidate(self):
-        request = getRequest()
-        rcachekey = self._key()
-        if request and rcachekey in list(request.keys()):
-            del request[rcachekey]
+        request = self.getRootRequest()
+        if request and self._key in list(request.keys()):
+            del request[self._key]
 
 
 VOLATILE_CACHE_MAXAGE = 10  # 10s default maxage on volatile
@@ -142,7 +142,7 @@ VOLATILE_CACHE_MAXAGE = 10  # 10s default maxage on volatile
 class VolatilePluginCache(RequestPluginCache):
     def get(self):
         try:
-            cachetime, value = getattr(self.context, self._key())
+            cachetime, value = getattr(self.context, self._key)
         except AttributeError:
             return VALUE_NOT_CACHED
         if time.time() - cachetime > VOLATILE_CACHE_MAXAGE:
@@ -150,10 +150,10 @@ class VolatilePluginCache(RequestPluginCache):
         return value
 
     def set(self, value):
-        setattr(self.context, self._key(), (time.time(), value))
+        setattr(self.context, self._key, (time.time(), value))
 
     def invalidate(self):
         try:
-            delattr(self.context, self._key())
+            delattr(self.context, self._key)
         except AttributeError:
             pass

@@ -2,10 +2,11 @@
 History
 =======
 
-1.8.3 (unreleased)
+1.9.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Drop support for Plone 5/ Python < 3.9
+  [jensens]
 
 
 1.8.2 (2022-10-31)

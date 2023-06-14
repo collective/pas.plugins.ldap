@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from pas.plugins.ldap.testing import PASLDAP_FIXTURE
+from ..testing import PASLDAP_FIXTURE
 from Products.PlonePAS.plugins.ufactory import PloneUser
 
 import unittest
@@ -14,7 +13,9 @@ class TestPluginInit(unittest.TestCase):
         return self.layer["app"].acl_users
 
     def test_pas_installed(self):
-        from Products.PluggableAuthService.PluggableAuthService import PluggableAuthService
+        from Products.PluggableAuthService.PluggableAuthService import (
+            PluggableAuthService,
+        )
 
         self.assertIsInstance(self.pas, PluggableAuthService)
 
@@ -68,7 +69,7 @@ class TestPluginFeatures(unittest.TestCase):
             [[("id", "group2"), ("pluginid", "pasldap")]],
         )
         self.assertEqual(
-            sorted([_["id"] for _ in self.ldap.enumerateGroups(id="group*")]),
+            sorted(_["id"] for _ in self.ldap.enumerateGroups(id="group*")),
             [
                 "group0",
                 "group1",

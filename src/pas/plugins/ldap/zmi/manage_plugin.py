@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from pas.plugins.ldap.properties import BasePropertiesForm
+from ..properties import BasePropertiesForm
 
 
 class ManageLDAPPlugin(BasePropertiesForm):

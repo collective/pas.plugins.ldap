@@ -1,5 +1,13 @@
 <registry>
 
+  <!-- cache -->
+  <record name="pas.plugins.ldap.memcached">
+    <field type="plone.registry.field.TextLine">
+      <title>servers, delimited by space</title>
+    </field>
+    <value>127.0.0.1:11211</value>
+  </record>
+
   <!-- yafowil.widget.array -->
   <record name="yafowil.widget.array.common">
     <field type="plone.registry.field.Bool">

@@ -5,7 +5,7 @@ TODO
 See also `Issue-Tracker <https://github.com/collective/pas.plugins.ldap/issues>`_
 
 
-Milestone 2.0
+Milestone 3.0
 -------------
 
 - remove portrait monkey patch
