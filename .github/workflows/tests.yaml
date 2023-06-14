@@ -9,10 +9,11 @@ jobs:
       fail-fast: false
       matrix:
         python:
-          - "3.8"
           - "3.9"
+          - "3.10"
+          - "3.11"
         plone:
-          - "6.0.0a3"
+          - "6.0.5"
 
     steps:
       - uses: actions/checkout@v2
@@ -22,7 +23,7 @@ jobs:
 
       - name: Setup Plone ${{ matrix.plone }} with Python ${{ matrix.python }}
         id: setup
-        uses: plone/setup-plone@v1.0.0
+        uses: plone/setup-plone@v2.0.0
         with:
           python-version: ${{ matrix.python }}
           plone-version: ${{ matrix.plone }}
