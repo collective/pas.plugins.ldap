@@ -22,6 +22,13 @@
     description="pas.plugins.ldap support for users and groups from ldap/active directory."
     provides="Products.GenericSetup.interfaces.EXTENSION" />
 
+  <genericsetup:registerProfile
+    name="uninstall"
+    title="Uninstall LDAP Plugin for PAS"
+    description="Uninstalls the pas.plugins.ldap add-on."
+    provides="Products.GenericSetup.interfaces.EXTENSION"
+    post_handler=".setuphandlers.uninstall" />
+
   <genericsetup:upgradeStep
     source="1"
     destination="2"
