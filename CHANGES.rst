@@ -5,8 +5,8 @@ History
 1.8.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Add uninstall profile
+  [dumitval]
 
 1.8.2 (2022-10-31)
 ------------------
