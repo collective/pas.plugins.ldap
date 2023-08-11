@@ -64,7 +64,7 @@ setup(
         "setuptools",
         "six",
         "yafowil>=2.3.1",
-        "yafowil.plone==4.0.0a6-eea.1",
+        "yafowil.plone==4.0.0a6.dev0",
         "yafowil.widget.array",
         "yafowil.widget.dict",
         "yafowil.yaml",
