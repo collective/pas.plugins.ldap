@@ -4,7 +4,7 @@ from setuptools import setup
 import os
 
 
-version = "1.8.3.dev2"
+version = "1.8.3.dev3"
 shortdesc = "LDAP/AD Plugin for Plone/Zope PluggableAuthService (users+groups)"
 longdesc = open(os.path.join(os.path.dirname(__file__), "README.rst")).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), "TODO.rst")).read()
@@ -64,7 +64,8 @@ setup(
         "setuptools",
         "six",
         "yafowil>=2.3.1",
-        "yafowil.plone==4.0.0a6.dev1",
+        "yafowil.plone>=5.0.0a1",
+        "yafowil.bootstrap>=2.0.0a1",
         "yafowil.widget.array",
         "yafowil.widget.dict",
         "yafowil.yaml",
