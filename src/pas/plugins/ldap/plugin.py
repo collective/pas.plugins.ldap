@@ -439,7 +439,7 @@ class LDAPPlugin(BasePlugin):
         users = self.users
         if not users:
             return default
-        if self.enumerateUsers(id=principal.getId()):
+        if self.enumerateUsers(id=principal.getId(), exact_match=True):
             return ("Member",)
         return default
 
@@ -561,7 +561,9 @@ class LDAPPlugin(BasePlugin):
         if not isinstance(ugid, six.text_type):
             ugid = ugid.decode("utf-8")
         try:
-            if self.enumerateUsers(id=ugid) or self.enumerateGroups(id=ugid):
+            if self.enumerateUsers(id=ugid, exact_match=True) or self.enumerateGroups(
+                id=ugid, exact_match=True
+            ):
                 return LDAPUserPropertySheet(user_or_group, self)
         except KeyError:
             pass
@@ -687,7 +689,6 @@ class LDAPPlugin(BasePlugin):
         for propfinder_id, propfinder in plugins.listPlugins(
             pas_interfaces.IPropertiesPlugin
         ):
-
             data = propfinder.getPropertiesForUser(group, None)
             if not data:
                 continue
@@ -696,7 +697,6 @@ class LDAPPlugin(BasePlugin):
         group._addGroups(pas._getGroupsForPrincipal(group, None, plugins=plugins))
         # add roles
         for rolemaker_id, rolemaker in plugins.listPlugins(pas_interfaces.IRolesPlugin):
-
             roles = rolemaker.getRolesForPrincipal(group, None)
             if not roles:
                 continue
