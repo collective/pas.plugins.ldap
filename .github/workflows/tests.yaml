@@ -34,4 +34,4 @@ jobs:
 
       - name: Run tests
         run: |
-          make VENV=off test-ignore-warnings
+          make VENV=off test
