@@ -7,6 +7,10 @@ History
 
 - Add uninstall profile
   [dumitval]
+- Fix: use exact_match for searchUsers/searchGroups in getRolesForPrincipal/getPropertiesForUser
+  to avoid unexpected results
+  [mamico]
+
 
 1.8.2 (2022-10-31)
 ------------------
