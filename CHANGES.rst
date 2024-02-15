@@ -5,6 +5,8 @@ History
 1.8.3 (unreleased)
 ------------------
 
+- Add uninstall profile
+  [dumitval]
 - Fix: use exact_match for searchUsers/searchGroups in getRolesForPrincipal/getPropertiesForUser
   to avoid unexpected results
   [mamico]
