@@ -221,7 +221,7 @@ class LDAPPlugin(BasePlugin):
         pw = credentials.get("password")
         if not (login and pw):
             return default
-        logger.debug("credentials: %s" % credentials)
+        logger.debug("login: %s" % login)
         users = self.users
         if not users:
             return default
