@@ -68,7 +68,7 @@ widgets:
             help: If set, the LDAP server certificate is checked against the CA certificate file.
     - tls_cacertdir:
         factory: '#field:text'
-        value: expr:context.props.tls_cacertfile
+        value: expr:context.props.tls_cacertdir
         props:
             label: Path to folder with CA certificate files for TLS communication (OPT_X_TLS_CACERTDIR)
             help: If set, the LDAP server certificate is checked against the CA certificates in folder.
