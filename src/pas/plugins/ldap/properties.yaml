@@ -54,6 +54,12 @@ widgets:
         props:
             label: Ignore certificate check?
             help: If set on authenticate a failing certificate chain check including CA is ignored.
+    - start_tls:
+        factory: '#field:checkbox'
+        value: expr:context.props.start_tls
+        props:
+            label: Use TLS connection
+            help: If set, the connection is upgraded to TLS.
     - tls_cacertfile:
         factory: '#field:text'
         value: expr:context.props.tls_cacertfile
