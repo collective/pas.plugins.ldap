@@ -54,6 +54,30 @@ widgets:
         props:
             label: Ignore certificate check?
             help: If set on authenticate a failing certificate chain check including CA is ignored.
+    - tls_cacertfile:
+        factory: '#field:text'
+        value: expr:context.props.tls_cacertfile
+        props:
+            label: Path to CA certificate file for TLS communication (OPT_X_TLS_CACERTFILE)
+            help: If set, the LDAP server certificate is checked against the CA certificate file.
+    - tls_cacertdir:
+        factory: '#field:text'
+        value: expr:context.props.tls_cacertfile
+        props:
+            label: Path to folder with CA certificate files for TLS communication (OPT_X_TLS_CACERTDIR)
+            help: If set, the LDAP server certificate is checked against the CA certificates in folder.
+    - tls_clcertfile:
+        factory: '#field:text'
+        value: expr:context.props.tls_clcertfile
+        props:
+            label: Path to client certificate file for TLS communication (OPT_X_TLS_CERTFILE). Requires tls_clkeyfile
+            help: If set, the client certificate is sent to the server.
+    - tls_clkeyfile:
+        factory: '#field:text'
+        value: expr:context.props.tls_clkeyfile
+        props:
+            label: Path to client certificate key for TLS communication (OPT_X_TLS_KEYFILE). Requires tls_clcertfile
+            help: If set, the client certificate is sent to the server.
     - page_size:
         factory: '#field:number'
         value: expr:context.props.page_size
