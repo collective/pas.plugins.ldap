@@ -2,7 +2,7 @@
 History
 =======
 
-1.8.3 (unreleased)
+1.8.3 (2024-11-13)
 ------------------
 
 - Add uninstall profile
