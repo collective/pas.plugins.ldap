@@ -116,15 +116,17 @@ class BasePropertiesForm(BrowserView):
             props.user = ""
             props.password = ""
         props.ignore_cert = fetch("server.ignore_cert")
+        props.start_tls = fetch('server.start_tls')
+        props.tls_cacertfile = fetch('server.tls_cacertfile')
+        props.tls_cacertdir = fetch('server.tls_cacertdir')
+        props.tls_clcertfile = fetch('server.tls_clcertfile')
+        props.tls_clkeyfile = fetch('server.tls_clkeyfile')
         # TODO: later
-        # props.start_tls = fetch('server.start_tls')
-        # props.tls_cacertfile = fetch('server.tls_cacertfile')
-        # props.tls_cacertdir = fetch('server.tls_cacertdir')
-        # props.tls_clcertfile = fetch('server.tls_clcertfile')
-        # props.tls_clkeyfile = fetch('server.tls_clkeyfile')
         # props.retry_max = fetch(at('server.retry_max')
         # props.retry_delay = fetch('server.retry_delay')
         props.page_size = fetch("server.page_size")
+        props.conn_timeout = fetch("server.conn_timeout")
+        props.op_timeout = fetch("server.op_timeout")
         props.cache = fetch("cache.cache")
         props.memcached = fetch("cache.memcached")
         props.timeout = fetch("cache.timeout")
@@ -248,10 +250,6 @@ class LDAPProps(object):
         self.plugin = plugin
 
     # XXX: Later
-    tls_cacertfile = ""
-    tls_cacertdir = ""
-    tls_clcertfile = ""
-    tls_clkeyfile = ""
     retry_max = 3
     retry_delay = 5
 
@@ -261,7 +259,15 @@ class LDAPProps(object):
     password = propproxy("server.password")
     start_tls = propproxy("server.start_tls")
     ignore_cert = propproxy("server.ignore_cert")
+    start_tls = propproxy("server.start_tls")
+    tls_cacertfile = propproxy("server.tls_cacertfile")
+    tls_cacertdir = propproxy("server.tls_cacertdir")
+    tls_clcertfile = propproxy("server.tls_clcertfile")
+    tls_clkeyfile = propproxy("server.tls_clkeyfile")
+
     page_size = propproxy("server.page_size")
+    conn_timeout = propproxy("server.conn_timeout")
+    op_timeout = propproxy("server.op_timeout")
     cache = propproxy("cache.cache")
     timeout = propproxy("cache.timeout")
 

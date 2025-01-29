@@ -2,11 +2,30 @@
 History
 =======
 
-1.8.2 (unreleased)
+
+1.8.4 (unreleased)
 ------------------
 
 - Default user roles configuration implementation.
   [sauzher]
+
+
+1.8.3 (2024-11-13)
+------------------
+
+- Add uninstall profile
+  [dumitval]
+- Fix: use exact_match for searchUsers/searchGroups in getRolesForPrincipal/getPropertiesForUser
+  to avoid unexpected results
+  [mamico]
+
+
+1.8.2 (2022-10-31)
+------------------
+
+- Add connection and operation timeout properties for LDAP server.
+  Fixes `issue #61 <https://github.com/collective/pas.plugins.ldap/issues/61>`_.
+  [mamico]
 
 
 1.8.1 (2021-10-09)

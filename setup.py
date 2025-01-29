@@ -4,7 +4,7 @@ from setuptools import setup
 import os
 
 
-version = "1.8.2.dev0"
+version = "1.8.4.dev0"
 shortdesc = "LDAP/AD Plugin for Plone/Zope PluggableAuthService (users+groups)"
 longdesc = open(os.path.join(os.path.dirname(__file__), "README.rst")).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), "TODO.rst")).read()
@@ -33,7 +33,8 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python",
-        "Topic :: System :: Systems Administration :: Authentication/Directory :: LDAP",
+        "Topic :: System :: Systems Administration :: Authentication/Directory"
+        " :: LDAP",
     ],
     keywords="zope pas plone ldap authentication plugin",
     author="BlueDynamics Alliance",
@@ -51,7 +52,7 @@ setup(
         "bda.cache",
         "five.globalrequest",
         "node",
-        "node.ext.ldap>=1.0b12",
+        "node.ext.ldap>=1.1",
         "odict",
         "plone.registry",
         "Products.CMFCore",
@@ -63,7 +64,8 @@ setup(
         "setuptools",
         "six",
         "yafowil>=2.3.1",
-        "yafowil.plone>=4.0.0a3",
+        "yafowil.plone>=5.0.0a1",
+        "yafowil.bootstrap>=2.0.0a1",
         "yafowil.widget.array",
         "yafowil.widget.dict",
         "yafowil.yaml",
