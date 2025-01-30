@@ -134,7 +134,7 @@ class BasePropertiesForm(BrowserView):
         props.roles =  fetch("users.roles") # a server wide variable, but related to user
 
         users.baseDN = fetch("users.dn")
-                # build attrmap from static keys and dynamic keys inputs
+            # build attrmap from static keys and dynamic keys inputs
         users.attrmap = odict()
         users.attrmap.update(fetch("users.aliases_attrmap"))
         users_propsheet_attrmap = fetch("users.propsheet_attrmap")
