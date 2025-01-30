@@ -42,7 +42,7 @@
    <element type="string">inetOrgPerson</element>
  </element>
  <element key="server.roles" type="list">
-   <element type="string">Anonymous</element>
+   <element type="string">Member</element>
  </element>
  <element key="users.queryFilter"
     type="string">(objectClass=inetOrgPerson)</element>
