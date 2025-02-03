@@ -3,10 +3,11 @@ History
 =======
 
 
-1.8.4 (unreleased)
+1.9.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Default user roles configuration implementation.
+  [sauzher]
 
 
 1.8.3 (2024-11-13)

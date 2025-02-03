@@ -440,7 +440,7 @@ class LDAPPlugin(BasePlugin):
         if not users:
             return default
         if self.enumerateUsers(id=principal.getId(), exact_match=True):
-            return ("Member",)
+            return tuple(set(self._ldap_props.roles))
         return default
 
     @security.private

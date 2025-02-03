@@ -13,6 +13,7 @@ DEFAULTS = {
     "server.tls_clcertfile": None,
     "server.tls_clkeyfile": None,
     "server.page_size": 1000,
+    "server.roles": ["Member"],
     "server.conn_timeout": 5,
     "server.op_timeout": 600,
     "cache.cache": False,

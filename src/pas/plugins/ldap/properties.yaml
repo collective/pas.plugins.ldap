@@ -130,6 +130,17 @@ widgets:
         value: expr:context.users.memberOfSupport
         props:
             label: memberOf attribute supported?
+
+    - roles:
+        factory: '#array'
+        value: expr:context.props.roles
+        props:
+            label: Roles aquired
+            array.label: Roles acquired
+        widgets:
+            - roles:
+                factory: field:text
+
     - recursiveGroups:
         factory: '#field:checkbox'
         value: expr:context.users.recursiveGroups
