@@ -1,3 +1,4 @@
+"""Init and utils."""
 from . import monkey  # noqa
 from .plugin import LDAPPlugin
 from .plugin import manage_addLDAPPlugin
@@ -5,8 +6,13 @@ from .plugin import manage_addLDAPPluginForm
 from .plugin import zmidir
 from AccessControl.Permissions import add_user_folders
 from Products.PluggableAuthService import registerMultiPlugin
+from zope.i18nmessageid import MessageFactory
 
 import os
+
+PACKAGE_NAME = "pas.plugins.ldap"
+
+_ = MessageFactory(PACKAGE_NAME)
 
 
 def initialize(context):

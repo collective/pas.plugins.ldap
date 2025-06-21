@@ -1,9 +1,11 @@
-<registry>
+<?xml version="1.0" encoding="UTF-8"?>
+<registry xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+          i18n:domain="pas.plugins.ldap">
 
   <!-- cache -->
   <record name="pas.plugins.ldap.memcached">
     <field type="plone.registry.field.TextLine">
-      <title>servers, delimited by space</title>
+      <title i18n:translate="">servers, delimited by space</title>
     </field>
     <value>127.0.0.1:11211</value>
   </record>
