@@ -8,11 +8,14 @@ from AccessControl.Permissions import add_user_folders
 from Products.PluggableAuthService import registerMultiPlugin
 from zope.i18nmessageid import MessageFactory
 
+import logging
 import os
 
 PACKAGE_NAME = "pas.plugins.ldap"
 
 _ = MessageFactory(PACKAGE_NAME)
+
+logger = logging.getLogger(PACKAGE_NAME)
 
 
 def initialize(context):
