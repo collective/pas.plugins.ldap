@@ -2,11 +2,8 @@ from ..properties import BasePropertiesForm
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.CMFPlone.resources import add_bundle_on_request
 from Products.statusmessages.interfaces import IStatusMessage
+from pas.plugins.ldap import _
 from zope.component import getUtility
-from zope.i18nmessageid import MessageFactory
-
-
-_ = MessageFactory("pas.plugins.ldap")
 
 
 def getPortal():

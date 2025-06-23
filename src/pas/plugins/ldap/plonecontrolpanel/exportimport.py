@@ -1,13 +1,14 @@
 from BTrees.OOBTree import OOBTree
 from Products.GenericSetup.interfaces import IBody
 from Products.GenericSetup.utils import XMLAdapterBase
+from pas.plugins.ldap import PACKAGE_NAME
 from zope.component import queryMultiAdapter
 from zope.interface import implementer
 
 
 def _get_import_export_handler(context):
     aclu = context.getSite().acl_users
-    logger = context.getLogger("pas.plugins.ldap")
+    logger = context.getLogger(PACKAGE_NAME)
     if "pasldap" not in aclu.objectIds():
         return
     pasldap = aclu.pasldap
@@ -19,7 +20,7 @@ def _get_import_export_handler(context):
 
 
 def import_settings(context):
-    logger = context.getLogger("pas.plugins.ldap")
+    logger = context.getLogger(PACKAGE_NAME)
     handler = _get_import_export_handler(context)
     if not handler:
         return
@@ -36,7 +37,7 @@ def export_settings(context):
         return
     body = handler.body
     if body is None:
-        logger = context.getLogger("pas.plugins.ldap")
+        logger = context.getLogger(PACKAGE_NAME)
         logger.warning("Problem to get ldap settings.")
         return
     context.writeDataFile(handler.filename, body, handler.mime_type)

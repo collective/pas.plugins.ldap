@@ -11,6 +11,7 @@ from node.ext.ldap.scope import ONELEVEL
 from node.ext.ldap.scope import SUBTREE
 from node.ext.ldap.ugm import Ugm
 from odict import odict
+from pas.plugins.ldap import _, logger
 from Products.Five import BrowserView
 from yafowil import loader  # noqa: F401
 from yafowil.base import ExtractionError
@@ -19,15 +20,10 @@ from yafowil.controller import Controller
 from yafowil.yaml import parse_from_YAML
 from zope.component import adapter
 from zope.component import queryUtility
-from zope.i18nmessageid import MessageFactory
 from zope.interface import implementer
 
 import ldap
-import logging
 
-
-logger = logging.getLogger("pas.plugins.ldap")
-_ = MessageFactory("pas.plugins.ldap")
 
 _marker = dict()
 

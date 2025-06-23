@@ -10,6 +10,12 @@ History
 1.9.0 (unreleased)
 ------------------
 
+- Added Spanish translation #132
+  [macagua]
+
+- Added the initial i18n support #131
+  [macagua]
+
 - Drop support for Plone 5/ Python < 3.9
   [jensens]
 

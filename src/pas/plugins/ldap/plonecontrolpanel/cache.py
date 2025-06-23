@@ -1,5 +1,6 @@
 from ..interfaces import ICacheSettingsRecordProvider
 from persistent import Persistent
+from pas.plugins.ldap import _
 from plone.registry import field
 from plone.registry import Record
 from plone.registry.interfaces import IRegistry
@@ -24,6 +25,6 @@ class CacheSettingsRecordProvider(Persistent):
         records = registry.records
         if REGKEY not in records:
             # init if not exist
-            value = field.TextLine(title="servers, delimited by space")
+            value = field.TextLine(title=_("servers, delimited by space"))
             records[REGKEY] = Record(value)
         return records[REGKEY]
