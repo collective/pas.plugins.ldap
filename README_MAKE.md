@@ -32,7 +32,7 @@ make help
 The Makefile is built to detect changes.
 At the first ``make run`` all steps are executed.
 Subsequent calls are only starting the application server in the *run* step.
-If one of the input file is changed, steps needed to take those changes into effect are executed again.\
+If one of the input file is changed, steps needed to take those changes into effect are executed again.
 
 ## Python
 
