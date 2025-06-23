@@ -141,7 +141,7 @@ TEST_REQUIREMENTS?=zope.testrunner
 
 # Additional make targets the test target depends on.
 # No default value.
-TEST_DEPENDENCY_TARGETS?=openldap
+TEST_DEPENDENCY_TARGETS?=
 
 ## qa.coverage
 
