@@ -67,6 +67,9 @@ OPENLDAP_ENV?=PATH=/usr/local/bin:/usr/bin:/bin
 
 # Primary Python interpreter to use. It is used to create the
 # virtual environment if `VENV_ENABLED` and `VENV_CREATE` are set to `true`.
+# If global `uv` is used, this value is passed as `--python VALUE` to the venv creation.
+# uv then downloads the Python interpreter if it is not available.
+# for more on this feature read the [uv python documentation](https://docs.astral.sh/uv/concepts/python-versions/)
 # Default: python3
 PRIMARY_PYTHON?=3.12
 
@@ -320,8 +323,12 @@ endif
 
 MXENV_TARGET:=$(SENTINEL_FOLDER)/mxenv.sentinel
 $(MXENV_TARGET): $(SENTINEL)
+ifneq ("$(PYTHON_PACKAGE_INSTALLER)$(MXENV_UV_GLOBAL)","uvfalse")
 	@$(PRIMARY_PYTHON) -c "import sys; vi = sys.version_info; sys.exit(1 if (int(vi[0]), int(vi[1])) >= tuple(map(int, '$(PYTHON_MIN_VERSION)'.split('.'))) else 0)" \
 		&& echo "Need Python >= $(PYTHON_MIN_VERSION)" && exit 1 || :
+else
+	@echo "Use Python $(PYTHON_MIN_VERSION) over uv"
+endif
 	@[[ "$(VENV_ENABLED)" == "true" && "$(VENV_FOLDER)" == "" ]] \
 		&& echo "VENV_FOLDER must be configured if VENV_ENABLED is true" && exit 1 || :
 	@[[ "$(VENV_ENABLED)$(PYTHON_PACKAGE_INSTALLER)" == "falseuv" ]] \
