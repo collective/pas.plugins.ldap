@@ -9,27 +9,32 @@ jobs:
       fail-fast: false
       matrix:
         python:
-          - "3.9"
           - "3.10"
           - "3.11"
+          - "3.12"
+          - "3.13"
         plone:
-          - "6.0.5"
+          - "6.0.14"
+          - "6.1.2"
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Install system packages
-        run: sudo apt-get install -y libsasl2-dev libssl-dev libdb-dev libldap2-dev
+        run: |
+           sudo apt-get update -y
+           sudo apt-get install -y slapd
 
       - name: Setup Plone ${{ matrix.plone }} with Python ${{ matrix.python }}
         id: setup
-        uses: plone/setup-plone@v2.0.0
+        uses: plone/setup-plone@v3.0.0
         with:
           python-version: ${{ matrix.python }}
           plone-version: ${{ matrix.plone }}
 
       - name: Install package
         run: |
+          sed -i "s#\(-c https://dist.plone.org/release/\)[^/]\+\(/constraints.txt\)#\1${{ matrix.plone }}\2#" requirements.txt
           make VENV=off install
 
       - name: Run tests
