@@ -10,6 +10,7 @@
 #: core.packages
 #: core.sources
 #: i18n.gettext
+#: ldap.openldap
 #: qa.black
 #: qa.coverage
 #: qa.isort
@@ -43,6 +44,24 @@ INCLUDE_MAKEFILE?=include.mk
 # first.
 # No default value.
 EXTRA_PATH?=
+
+## ldap.openldap
+
+# OpenLDAP version to download
+# Default: 2.4.59
+OPENLDAP_VERSION?=2.4.59
+
+# OpenLDAP base download URL
+# Default: https://www.openldap.org/software/download/OpenLDAP/openldap-release/
+OPENLDAP_URL?=https://www.openldap.org/software/download/OpenLDAP/openldap-release/
+
+# Build directory for OpenLDAP
+# Default: $(shell echo $(realpath .))/openldap
+OPENLDAP_DIR?=$(shell echo $(realpath .))/openldap
+
+# Build environment for OpenLDAP
+# Default: PATH=/usr/local/bin:/usr/bin:/bin
+OPENLDAP_ENV?=PATH=/usr/local/bin:/usr/bin:/bin
 
 ## core.mxenv
 
@@ -141,7 +160,7 @@ TEST_REQUIREMENTS?=zope.testrunner
 
 # Additional make targets the test target depends on.
 # No default value.
-TEST_DEPENDENCY_TARGETS?=
+TEST_DEPENDENCY_TARGETS?=openldap
 
 ## qa.coverage
 
@@ -227,6 +246,50 @@ SENTINEL?=$(SENTINEL_FOLDER)/about.txt
 $(SENTINEL): $(firstword $(MAKEFILE_LIST))
 	@mkdir -p $(SENTINEL_FOLDER)
 	@echo "Sentinels for the Makefile process." > $(SENTINEL)
+
+##############################################################################
+# openldap
+##############################################################################
+
+# case `system.dependencies` domain is included
+SYSTEM_DEPENDENCIES+=libdb-dev libsasl2-dev
+
+OPENLDAP_TARGET:=$(SENTINEL_FOLDER)/openldap.sentinel
+$(OPENLDAP_TARGET): $(SENTINEL)
+	@echo "Building openldap server in '$(OPENLDAP_DIR)'"
+	@test -d $(OPENLDAP_DIR) || curl -o openldap-$(OPENLDAP_VERSION).tgz \
+		$(OPENLDAP_URL)/openldap-$(OPENLDAP_VERSION).tgz
+	@test -d $(OPENLDAP_DIR) || tar xf openldap-$(OPENLDAP_VERSION).tgz
+	@test -d $(OPENLDAP_DIR) || rm openldap-$(OPENLDAP_VERSION).tgz
+	@test -d $(OPENLDAP_DIR) || mv openldap-$(OPENLDAP_VERSION) $(OPENLDAP_DIR)
+	@env -i -C $(OPENLDAP_DIR) $(OPENLDAP_ENV) bash -c \
+		'./configure \
+			--with-tls \
+			--enable-slapd=yes \
+			--enable-overlays \
+			--prefix=$(OPENLDAP_DIR) \
+		&& make depend \
+		&& make -j4 \
+		&& make install'
+	@touch $(OPENLDAP_TARGET)
+
+.PHONY: openldap
+openldap: $(OPENLDAP_TARGET)
+
+.PHONY: openldap-dirty
+openldap-dirty:
+	@test -d $(OPENLDAP_DIR) \
+		&& env -i -C $(OPENLDAP_DIR) $(OPENLDAP_ENV) bash -c 'make clean'
+	@rm -f $(OPENLDAP_TARGET)
+
+.PHONY: openldap-clean
+openldap-clean:
+	@rm -f $(OPENLDAP_TARGET)
+	@rm -rf $(OPENLDAP_DIR)
+
+INSTALL_TARGETS+=openldap
+DIRTY_TARGETS+=openldap-dirty
+CLEAN_TARGETS+=openldap-clean
 
 ##############################################################################
 # mxenv
