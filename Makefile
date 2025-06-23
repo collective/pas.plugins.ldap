@@ -49,7 +49,7 @@ EXTRA_PATH?=
 
 # OpenLDAP version to download
 # Default: 2.4.59
-OPENLDAP_VERSION?=2.4.59
+OPENLDAP_VERSION?=2.6.9
 
 # OpenLDAP base download URL
 # Default: https://www.openldap.org/software/download/OpenLDAP/openldap-release/
@@ -263,13 +263,13 @@ $(OPENLDAP_TARGET): $(SENTINEL)
 	@test -d $(OPENLDAP_DIR) || curl -o openldap-$(OPENLDAP_VERSION).tgz \
 		$(OPENLDAP_URL)/openldap-$(OPENLDAP_VERSION).tgz
 	@test -d $(OPENLDAP_DIR) || tar xf openldap-$(OPENLDAP_VERSION).tgz
-	@test -d $(OPENLDAP_DIR) || rm openldap-$(OPENLDAP_VERSION).tgz
 	@test -d $(OPENLDAP_DIR) || mv openldap-$(OPENLDAP_VERSION) $(OPENLDAP_DIR)
 	@env -i -C $(OPENLDAP_DIR) $(OPENLDAP_ENV) bash -c \
 		'./configure \
 			--with-tls \
 			--enable-slapd=yes \
 			--enable-overlays \
+			--without-systemd \
 			--prefix=$(OPENLDAP_DIR) \
 		&& make depend \
 		&& make -j4 \
