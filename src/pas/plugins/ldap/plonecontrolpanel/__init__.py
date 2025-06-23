@@ -1,4 +1,4 @@
-from Products.CMFPlone.interfaces.installable import INonInstallable
+from plone.base.interfaces import INonInstallable
 from zope.interface import implementer
 
 
@@ -16,3 +16,4 @@ class HiddenProfiles:
 
     def getNonInstallableProfiles(self):
         return self._hidden
+

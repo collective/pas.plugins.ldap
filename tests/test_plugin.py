@@ -1,4 +1,4 @@
-from ..testing import PASLDAP_FIXTURE
+from testing import PASLDAP_FIXTURE
 from Products.PlonePAS.plugins.ufactory import PloneUser
 
 import unittest

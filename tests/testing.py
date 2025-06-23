@@ -1,7 +1,8 @@
-from .cache import cacheProviderFactory
-from .interfaces import ICacheSettingsRecordProvider
-from .plonecontrolpanel.cache import CacheSettingsRecordProvider
-from .properties import LDAPProps
+from pas.plugins.ldap.cache import cacheProviderFactory
+from pas.plugins.ldap.cache import cacheProviderFactory
+from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
+from pas.plugins.ldap.plonecontrolpanel.cache import CacheSettingsRecordProvider
+from pas.plugins.ldap.properties import LDAPProps
 from node.ext.ldap import testing as ldaptesting
 from node.ext.ldap.interfaces import ICacheProviderFactory
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
