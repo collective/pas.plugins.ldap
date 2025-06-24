@@ -25,10 +25,6 @@ History
 - Remove five.globalrequest dependency.
   [cillianderoiste]
 
-
-1.9.0 (unreleased)
-------------------
-
 - Added Spanish translation #132
   [macagua]
 
@@ -37,6 +33,19 @@ History
 
 - Drop support for Plone 5/ Python < 3.9
   [jensens]
+
+- Default user roles configuration implementation.
+  [sauzher]
+
+
+1.8.3 (2024-11-13)
+------------------
+
+- Add uninstall profile
+  [dumitval]
+- Fix: use exact_match for searchUsers/searchGroups in getRolesForPrincipal/getPropertiesForUser
+  to avoid unexpected results
+  [mamico]
 
 
 1.8.2 (2022-10-31)

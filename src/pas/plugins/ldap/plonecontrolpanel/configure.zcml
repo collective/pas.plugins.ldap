@@ -18,6 +18,14 @@
       directory="profiles/default"
       />
 
+  <genericsetup:registerProfile
+    name="uninstall"
+    title="Uninstall LDAP Plugin for PAS"
+    directory="profiles/uninstall"
+    description="Uninstalls the pas.plugins.ldap add-on."
+    provides="Products.GenericSetup.interfaces.EXTENSION"
+    post_handler=".setuphandlers.uninstall" />
+
   <genericsetup:upgradeStep
       title="Unregister broken old persistent import step"
       profile="pas.plugins.ldap.plonecontrolpanel:default"
