@@ -11,7 +11,8 @@ from node.ext.ldap.scope import ONELEVEL
 from node.ext.ldap.scope import SUBTREE
 from node.ext.ldap.ugm import Ugm
 from odict import odict
-from pas.plugins.ldap import _, logger
+from pas.plugins.ldap import _
+from pas.plugins.ldap import logger
 from Products.Five import BrowserView
 from yafowil import loader  # noqa: F401
 from yafowil.base import ExtractionError
@@ -205,7 +206,7 @@ class BasePropertiesForm(BrowserView):
             return False, msg + str(e)
         try:
             ugm = Ugm("test", props=props, ucfg=users, gcfg=groups)
-            ugm.users.authenticate('foo', 'bar')
+            ugm.users.authenticate("foo", "bar")
         except ldap.SERVER_DOWN:
             return False, _("Server Down")
         except ldap.LDAPError as e:

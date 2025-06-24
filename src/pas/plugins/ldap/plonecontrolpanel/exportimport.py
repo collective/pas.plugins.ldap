@@ -1,7 +1,7 @@
 from BTrees.OOBTree import OOBTree
+from pas.plugins.ldap import PACKAGE_NAME
 from Products.GenericSetup.interfaces import IBody
 from Products.GenericSetup.utils import XMLAdapterBase
-from pas.plugins.ldap import PACKAGE_NAME
 from zope.component import queryMultiAdapter
 from zope.interface import implementer
 

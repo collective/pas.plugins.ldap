@@ -36,12 +36,8 @@ LDAP_ERROR_LOG_TIMEOUT = float(
 LDAP_LONG_RUNNING_LOG_THRESHOLD = float(
     os.environ.get("PAS_PLUGINS_LDAP_LONG_RUNNING_LOG_THRESHOLD", 5.0)
 )
-OPT_NETWORK_TIMEOUT = float(
-    os.environ.get("PAS_PLUGINS_LDAP_OPT_NETWORK_TIMEOUT", 1.0)
-)
-OPT_TIMEOUT = float(
-    os.environ.get("PAS_PLUGINS_LDAP_OPT_TIMEOUT", 30.0)
-)
+OPT_NETWORK_TIMEOUT = float(os.environ.get("PAS_PLUGINS_LDAP_OPT_NETWORK_TIMEOUT", 1.0))
+OPT_TIMEOUT = float(os.environ.get("PAS_PLUGINS_LDAP_OPT_TIMEOUT", 30.0))
 
 # initial connection timeout
 ldap.set_option(ldap.OPT_NETWORK_TIMEOUT, OPT_NETWORK_TIMEOUT)

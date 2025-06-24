@@ -2,7 +2,8 @@
 <object xmlns:i18n="http://xml.zope.org/namespaces/i18n"
         name="portal_controlpanel"
         purge="False"
-        i18n:domain="pas.plugins.ldap">
+        i18n:domain="pas.plugins.ldap"
+>
   <configlet action_id="LDAP_Configuration"
              appId="pas.plugins.ldap"
              category="plone-users"

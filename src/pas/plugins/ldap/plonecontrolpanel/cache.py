@@ -1,6 +1,6 @@
 from ..interfaces import ICacheSettingsRecordProvider
-from persistent import Persistent
 from pas.plugins.ldap import _
+from persistent import Persistent
 from plone.registry import field
 from plone.registry import Record
 from plone.registry.interfaces import IRegistry

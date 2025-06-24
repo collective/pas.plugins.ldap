@@ -26,8 +26,8 @@ excludes = '"*.html *json-schema*.xml"'
 
 def i18n_script_setup():
     """Setup the i18n scripts"""
-    cmd_i18ndude = ("uvx i18ndude")
-    cmd_lingua = ("uvx lingua")
+    cmd_i18ndude = "uvx i18ndude"
+    cmd_lingua = "uvx lingua"
     subprocess.call(cmd_i18ndude, shell=True)  # noQA: S602
     subprocess.call(cmd_lingua, shell=True)  # noQA: S602
 

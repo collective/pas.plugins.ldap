@@ -1,8 +1,8 @@
 from ..properties import BasePropertiesForm
+from pas.plugins.ldap import _
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.CMFPlone.resources import add_bundle_on_request
 from Products.statusmessages.interfaces import IStatusMessage
-from pas.plugins.ldap import _
 from zope.component import getUtility
 
 

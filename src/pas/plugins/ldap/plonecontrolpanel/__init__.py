@@ -16,4 +16,3 @@ class HiddenProfiles:
 
     def getNonInstallableProfiles(self):
         return self._hidden
-

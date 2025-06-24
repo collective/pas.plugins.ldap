@@ -1,4 +1,3 @@
-import re
 from .interfaces import ICacheSettingsRecordProvider
 from .interfaces import ILDAPPlugin
 from .interfaces import IPluginCacheHandler
@@ -11,6 +10,7 @@ from zope.component import queryUtility
 from zope.globalrequest import getRequest
 from zope.interface import implementer
 
+import re
 import threading
 import time
 
