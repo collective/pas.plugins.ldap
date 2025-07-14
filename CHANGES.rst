@@ -2,10 +2,21 @@
 History
 =======
 
-1.8.3 (unreleased)
+
+1.8.4 (unreleased)
 ------------------
 
 - Nothing changed yet.
+
+
+1.8.3 (2024-11-13)
+------------------
+
+- Add uninstall profile
+  [dumitval]
+- Fix: use exact_match for searchUsers/searchGroups in getRolesForPrincipal/getPropertiesForUser
+  to avoid unexpected results
+  [mamico]
 
 
 1.8.2 (2022-10-31)
