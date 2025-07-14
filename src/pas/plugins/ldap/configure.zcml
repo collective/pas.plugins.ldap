@@ -6,8 +6,6 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="pas.plugins.ldap">
 
-  <include package="five.globalrequest" />
-
   <five:registerPackage package="." initialize=".initialize" />
 
   <include package="Products.GenericSetup" file="meta.zcml" />

@@ -50,7 +50,6 @@ setup(
         "AccessControl>=3.0",
         "Acquisition",
         "bda.cache",
-        "five.globalrequest",
         "node",
         "node.ext.ldap>=1.1",
         "odict",

@@ -6,7 +6,10 @@ History
 1.8.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Remove the dependency from ``five.globalrequest``.
+  This is needed to make this package work on Plone 6.1.2.
+  See `PR #134 <https://github.com/collective/pas.plugins.ldap/pull/134>`_.
+  [cillianderoiste]
 
 
 1.8.3 (2024-11-13)
