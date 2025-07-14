@@ -3,7 +3,7 @@ History
 =======
 
 
-1.8.4 (unreleased)
+1.8.4 (2025-07-14)
 ------------------
 
 - Remove the dependency from ``five.globalrequest``.
