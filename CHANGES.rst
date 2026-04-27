@@ -29,6 +29,15 @@ History
   [sauzher]
 
 
+1.8.4 (2025-07-14)
+------------------
+
+- Remove the dependency from ``five.globalrequest``.
+  This is needed to make this package work on Plone 6.1.2.
+  See `PR #134 <https://github.com/collective/pas.plugins.ldap/pull/134>`_.
+  [cillianderoiste]
+
+
 1.8.3 (2024-11-13)
 ------------------
 
