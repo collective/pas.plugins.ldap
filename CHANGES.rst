@@ -19,24 +19,24 @@ History
 
 - Increase PAS_PLUGINS_LDAP_OPT_TIMEOUT t
 
-- Add i18n support and Spanish translation.
-  [macagua]
-
 - Remove five.globalrequest dependency.
   [cillianderoiste]
 
+- Add i18n support and Spanish translation.
+  [macagua]
 
-1.9.0 (unreleased)
+- Default user roles configuration implementation.
+  [sauzher]
+
+
+1.8.3 (2024-11-13)
 ------------------
 
-- Added Spanish translation #132
-  [macagua]
-
-- Added the initial i18n support #131
-  [macagua]
-
-- Drop support for Plone 5/ Python < 3.9
-  [jensens]
+- Add uninstall profile
+  [dumitval]
+- Fix: use exact_match for searchUsers/searchGroups in getRolesForPrincipal/getPropertiesForUser
+  to avoid unexpected results
+  [mamico]
 
 
 1.8.2 (2022-10-31)

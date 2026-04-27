@@ -102,6 +102,7 @@ class BasePropertiesForm(BrowserView):
             return val
 
         props.uri = fetch("server.uri")
+
         if not fetch("server.anonymous"):
             props.user = fetch("server.user")
             password = fetch("server.password")
@@ -111,12 +112,12 @@ class BasePropertiesForm(BrowserView):
             props.user = ""
             props.password = ""
         props.ignore_cert = fetch("server.ignore_cert")
+        props.start_tls = fetch('server.start_tls')
+        props.tls_cacertfile = fetch('server.tls_cacertfile')
+        props.tls_cacertdir = fetch('server.tls_cacertdir')
+        props.tls_clcertfile = fetch('server.tls_clcertfile')
+        props.tls_clkeyfile = fetch('server.tls_clkeyfile')
         # TODO: later
-        # props.start_tls = fetch('server.start_tls')
-        # props.tls_cacertfile = fetch('server.tls_cacertfile')
-        # props.tls_cacertdir = fetch('server.tls_cacertdir')
-        # props.tls_clcertfile = fetch('server.tls_clcertfile')
-        # props.tls_clkeyfile = fetch('server.tls_clkeyfile')
         # props.retry_max = fetch(at('server.retry_max')
         # props.retry_delay = fetch('server.retry_delay')
         props.page_size = fetch("server.page_size")
@@ -125,8 +126,11 @@ class BasePropertiesForm(BrowserView):
         props.cache = fetch("cache.cache")
         props.memcached = fetch("cache.memcached")
         props.timeout = fetch("cache.timeout")
+
+        props.roles =  fetch("users.roles") # a server wide variable, but related to user
+
         users.baseDN = fetch("users.dn")
-        # build attrmap from static keys and dynamic keys inputs
+            # build attrmap from static keys and dynamic keys inputs
         users.attrmap = odict()
         users.attrmap.update(fetch("users.aliases_attrmap"))
         users_propsheet_attrmap = fetch("users.propsheet_attrmap")
@@ -242,18 +246,21 @@ class LDAPProps:
         self.plugin = plugin
 
     # XXX: Later
-    tls_cacertfile = ""
-    tls_cacertdir = ""
-    tls_clcertfile = ""
-    tls_clkeyfile = ""
     retry_max = 3
     retry_delay = 5
 
     uri = propproxy("server.uri")
     user = propproxy("server.user")
+    roles = propproxy("server.roles")
     password = propproxy("server.password")
     start_tls = propproxy("server.start_tls")
     ignore_cert = propproxy("server.ignore_cert")
+    start_tls = propproxy("server.start_tls")
+    tls_cacertfile = propproxy("server.tls_cacertfile")
+    tls_cacertdir = propproxy("server.tls_cacertdir")
+    tls_clcertfile = propproxy("server.tls_clcertfile")
+    tls_clkeyfile = propproxy("server.tls_clkeyfile")
+
     page_size = propproxy("server.page_size")
     conn_timeout = propproxy("server.conn_timeout")
     op_timeout = propproxy("server.op_timeout")

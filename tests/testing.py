@@ -34,6 +34,7 @@ def ldapprops(context):
 
     props.uri = ldaptesting.props.uri
     props.user = ldaptesting.props.user
+    props.roles = ldaptesting.props.roles
     props.password = ldaptesting.props.password
     props.cache = ldaptesting.props.cache
     props.page_size = ldaptesting.props.page_size

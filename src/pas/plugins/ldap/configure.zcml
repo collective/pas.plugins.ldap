@@ -8,12 +8,7 @@
     i18n_domain="pas.plugins.ldap"
     >
 
-  <include package="five.globalrequest" />
-
-  <five:registerPackage
-      package="."
-      initialize=".initialize"
-      />
+  <five:registerPackage package="." initialize=".initialize" />
 
   <i18n:registerTranslations directory="locales" />
 

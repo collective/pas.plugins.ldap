@@ -1,0 +1,9 @@
+<registry>
+
+  <!-- yafowil.widget.array -->
+  <record name="yafowil.widget.array.common" remove="True" />
+
+  <!-- yafowil.widget.dict -->
+  <record name="yafowil.widget.dict.common" remove="True" />
+
+</registry>
