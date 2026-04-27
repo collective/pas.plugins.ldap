@@ -13,5 +13,5 @@ default_context:
     initial_user_name: admin
     initial_user_password: admin
     debug_mode: on
-    load_zcml: {package_includes: ['pas.plugins.ldap']}
+    zcml_package_includes: ['pas.plugins.ldap']
     db_storage: direct

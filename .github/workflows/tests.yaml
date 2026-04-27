@@ -39,8 +39,8 @@ jobs:
       - name: Install package
         run: |
           sed -i "s#\(-c https://dist.plone.org/release/\)[^/]\+\(/constraints.txt\)#\1${{ matrix.plone }}\2#" requirements.txt
-          make VENV=off install
+          make PRIMARY_PYTHON=${{ matrix.python }} install
 
       - name: Run tests
         run: |
-          make VENV=off test
+          make PRIMARY_PYTHON=${{ matrix.python }} test

@@ -9,6 +9,7 @@ __pycache__
 *.mo
 *.pyc
 *.pyo
+/.mxdev_cache/
 /.mxmake/
 /.project
 /.pydevproject
