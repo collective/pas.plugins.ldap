@@ -203,3 +203,9 @@ Contributors
 - Johannes Raggam
 - Luca Fabbri
 - Leonardo J. Caballero G.
+
+
+License
+=======
+
+The project is licensed under the GPLv2.
