@@ -4,17 +4,17 @@
 .. image:: https://coveralls.io/repos/collective/pas.plugins.ldap/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/collective/pas.plugins.ldap?branch=master
 
-This is a `LDAP <https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol>`_ Plugin for the `Zope <http://www.zope.org/en/latest/>`_ `Pluggable Authentication Service (PAS) <http://pypi.python.org/pypi/Products.PluggableAuthService>`_.
+This is a `LDAP <https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol>`_ Plugin for the `Zope <https://www.zope.dev/>`_ `Pluggable Authentication Service (PAS) <https://pypi.org/project/Products.PluggableAuthService/>`_.
 
 It provides users and/or groups from an LDAP directory.
 
-It works in a plain Zope even if it depends on `PlonePAS <http://pypi.python.org/pypi/Products.PlonePAS>`_.
+It works in a plain Zope even if it depends on `PlonePAS <https://pypi.org/project/Products.PlonePAS>`_.
 
 If `Plone <https://plone.org>`_ is installed an integration layer with a setup-profile and a plone-controlpanel page is available.
 
-``pas.plugins.ldap`` is **not** releated to the old LDAPUserFolder/ LDAPMultiPlugins and the packages (i.e. PloneLDAP) stacked on top of it in any way.
+``pas.plugins.ldap`` is **not** releated to the old `LDAPUserFolder <https://pypi.org/project/Products.LDAPUserFolder/>`_/ `LDAPMultiPlugins <https://pypi.org/project/Products.LDAPMultiPlugins/>`_ and the packages (i.e. `PloneLDAP <https://pypi.org/project/Products.PloneLDAP/>`_) stacked on top of it in any way.
 
-It is based on **node.ext.ldap**, an almost framework independent LDAP stack.
+It is based on **`node.ext.ldap <https://pypi.org/project/node.ext.ldap/>`_**, an almost framework independent LDAP stack.
 
 For now users and groups can't be added or deleted. Properties on both are read/write.
 
@@ -53,9 +53,9 @@ Add to the instance section of your buildout:
         ...
         pas.plugins.ldap
 
-Run buildout. Restart Zope.
+Run ``buildout``. Restart Zope.
 
-Browse to your ``acl_users`` folder and add an LDAP-Plugin.
+Browse to your ``acl_users`` folder and add an ``LDAP-Plugin``.
 
 Configure it using the settings form and activate its features with the ``activate`` tab.
 
@@ -63,7 +63,7 @@ Configure it using the settings form and activate its features with the ``activa
 Plone
 -----
 
-Add to the instance section of your buildout:
+Add to the instance section of your ``buildout``:
 
 .. code-block:: ini
 
@@ -71,11 +71,11 @@ Add to the instance section of your buildout:
         ...
         pas.plugins.ldap
 
-Run buildout. Restart Plone.
+Run ``buildout``. Restart Plone.
 
-Then go to the Plone control-panel, select ``extensions`` and install the LDAP Plugin.
+Then go to the Plone control-panel, select ``Addons`` and install the ``LDAP/ Active Directory Support``.
 
-A new LDAP Settings icon appear on the left. Click it and configure the plugin there.
+A new ``LDAP Settings`` icon appear on the left. Click it and configure the plugin there.
 
 To use an own integration-profile, add to the profiles ``metadata.xml`` file:
 
@@ -89,7 +89,7 @@ To use an own integration-profile, add to the profiles ``metadata.xml`` file:
     ...
 
 Additionally ldap settings can be exported and imported with ``portal_setup``.
-You can place the exported ``ldapsettings.xml`` in your integration profile, so it will be imported with your next install again.
+You can place the exported ``ldapsettings.xml`` file in your integration profile, so it will be imported with your next install again.
 
 **Warning:**
 
@@ -108,12 +108,12 @@ LDAP as an external service might be down, non-responsive or slow.
 This package logs such events to raise awareness.
 There are two environment variables to control the logging of LDAP-errors:
 
-PAS_PLUGINS_LDAP_ERROR_LOG_TIMEOUT
+``PAS_PLUGINS_LDAP_ERROR_LOG_TIMEOUT``
     First LDAP-error is logged, further errors ignored until the given number of seconds have passed.
     This supresses flooding logs if LDAP is down.
     Default: 300.0 (time in seconds, float).
 
-PAS_PLUGINS_LDAP_LONG_RUNNING_LOG_THRESHOLD
+``PAS_PLUGINS_LDAP_LONG_RUNNING_LOG_THRESHOLD``
     Log long running LDAP/PAS operations.
     If a PAS operation takes longer than he given number of seconds, log it as error.
     Default: 5 (time in seconds, float).
@@ -124,11 +124,11 @@ Timeouts
 
 Global LDAP timeouts are set and controlled by two environment variables:
 
-PAS_PLUGINS_LDAP_OPT_NETWORK_TIMEOUT
+``PAS_PLUGINS_LDAP_OPT_NETWORK_TIMEOUT``
     Connection timeout.
     Default: 1.0s
 
-PAS_PLUGINS_LDAP_OPT_TIMEOUT
+``PAS_PLUGINS_LDAP_OPT_TIMEOUT``
     Overall timeout.
     Default: 30.0s
 
@@ -142,7 +142,7 @@ Caching
 
 By **default** the LDAP-queries are **not cached**.
 
-A **must have** for a production environment is having `memcached <http://memcached.org/>`_ server configured as LDAP query cache.
+A **must have** for a production environment is having `memcached <https://memcached.org/>`_ server configured as LDAP query cache.
 
 Cache at least for ~6 seconds, so a page load with all its resources is covered also in worst case.
 
@@ -175,7 +175,7 @@ It may work under Windows if ``python-ldap`` is installed properly and recognize
 This package works fine for several 10000 users or groups, **unless you list users**.
 
 This is not that much a problem for small amount of users.
-There is room for future optimization in the underlying `node.ext.ldap <https://pypi.python.org/pypi/node.ext.ldap>`_.
+There is room for future optimization in the underlying `node.ext.ldap <https://pypi.org/project/node.ext.ldap/>`_.
 
 
 Source Code
@@ -185,7 +185,7 @@ If you want to help with the development (improvement, update, bug-fixing, ...) 
 
 The code is located in the `GitHub Collective <https://github.com/collective/pas.plugins.ldap>`_.
 
-You can clone it or `get access to the GitHub Collective <https://collective.github.com/>`_ and work directly on the project.
+You can clone it or `get access to the GitHub Collective <https://collective.github.io/>`_ and work directly on the project.
 
 Maintainers are Robert Niederreiter, Jens Klein and the `BlueDynamics Alliance <https://bluedynamics.com/>`_ developer team.
 
@@ -202,3 +202,4 @@ Contributors
 - Daniel Widerin
 - Johannes Raggam
 - Luca Fabbri
+- Leonardo J. Caballero G.
