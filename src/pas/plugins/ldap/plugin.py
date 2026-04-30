@@ -1,3 +1,5 @@
+"""LDAP plugin for Plone PAS."""
+
 from .cache import get_plugin_cache
 from .interfaces import ILDAPPlugin
 from .interfaces import VALUE_NOT_CACHED
@@ -23,7 +25,6 @@ import logging
 import os
 import six
 import time
-
 
 logger = logging.getLogger("pas.plugins.ldap")
 zmidir = os.path.join(os.path.dirname(__file__), "zmi")
@@ -63,7 +64,10 @@ def ldap_error_handler(prefix, default=None):
     """decorator, deals with non-working LDAP"""
 
     def _decorator(original_method, *args, **kwargs):
+        """Decorator that wraps a method to handle LDAP errors gracefully."""
+
         def _wrapper(self, *args, **kwargs):
+            """Wrapper function that handles LDAP errors and logs them."""
             # look if error is in timeout phase
             if hasattr(self, "_v_ldaperror_timeout"):
                 waiting = time.time() - self._v_ldaperror_timeout
@@ -145,6 +149,7 @@ class LDAPPlugin(BasePlugin):
 
     @security.private
     def is_plugin_active(self, iface):
+        """Check if the plugin is active for a given interface."""
         pas = self._getPAS()
         ids = pas.plugins.listPluginIds(iface)
         return self.getId() in ids
@@ -152,18 +157,22 @@ class LDAPPlugin(BasePlugin):
     @property
     @security.private
     def groups_enabled(self):
+        """Check if group enumeration is enabled."""
         return self.groups is not None
 
     @property
     @security.private
     def users_enabled(self):
+        """Check if user enumeration is enabled."""
         return self.users is not None
 
     @property
     def _ldap_props(self):
+        """Get the LDAP properties from the plugin."""
         return ILDAPProps(self)
 
     def _ugm(self):
+        """Get the user and group management object, using caching if enabled."""
         plugin_cache = get_plugin_cache(self)
         ugm = plugin_cache.get()
         if ugm is not VALUE_NOT_CACHED:
@@ -178,17 +187,20 @@ class LDAPPlugin(BasePlugin):
     @ldap_error_handler("groups")
     @security.private
     def groups(self):
+        """Get the groups from the LDAP plugin."""
         return self._ugm().groups
 
     @property
     @ldap_error_handler("users")
     @security.private
     def users(self):
+        """Get the users from the LDAP plugin."""
         return self._ugm().users
 
     @property
     @security.protected(ManageUsers)
     def ldaperror(self):
+        """Get the current LDAP error message, if any."""
         if hasattr(self, "_v_ldaperror_msg"):
             waiting = time.time() - self._v_ldaperror_timeout
             if waiting < LDAP_ERROR_LOG_TIMEOUT:
@@ -197,6 +209,7 @@ class LDAPPlugin(BasePlugin):
 
     @security.public  # really public??
     def reset(self):
+        """Reset the plugin cache, if caching is enabled."""
         # XXX flush caches
         pass
 
@@ -438,6 +451,15 @@ class LDAPPlugin(BasePlugin):
     # pas_interfaces.plugins.IRolesPlugin
     #
     def getRolesForPrincipal(self, principal, request=None):
+        """Get the roles for a principal.
+
+        Args:
+            principal (object): The principal object.
+            request (object, optional): The request object. Defaults to None.
+
+        Returns:
+            tuple: A tuple of roles for the principal.
+        """
         default = ()
         users = self.users
         if not users:

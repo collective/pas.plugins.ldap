@@ -1,3 +1,5 @@
+"""Properties and configuration for the LDAP plugin."""
+
 from .defaults import DEFAULTS
 from .interfaces import ICacheSettingsRecordProvider
 from .interfaces import ILDAPPlugin
@@ -29,11 +31,18 @@ _marker = dict()
 
 
 class BasePropertiesForm(BrowserView):
+    """Base class for LDAP properties forms."""
+
+    # scope vocabulary, used in the form to provide options for the LDAP search
+    # scope. The values represent the respective LDAP search scope constants.
     scope_vocab = [
         (str(BASE), _("BASE")),
         (str(ONELEVEL), _("ONELEVEL")),
         (str(SUBTREE), _("SUBTREE")),
     ]
+    # account expiration unit vocabulary, used in the form to provide options
+    # for the expiration unit of user accounts. The values represent the number
+    # of seconds in the respective unit.
     account_expiration_unit_vocab = [
         (int(0), _("Days since Epoch")),
         (int(1), _("Seconds since epoch")),
@@ -43,16 +52,24 @@ class BasePropertiesForm(BrowserView):
 
     @property
     def plugin(self):
+        """Get the LDAP plugin instance."""
         raise NotImplementedError()
 
     def next(self, request):
+        """Get the next URL for redirection after form submission."""
         raise NotImplementedError()
 
     @property
     def action(self):
+        """Get the form action URL."""
         return self.next({})
 
     def form(self):
+        """Render the LDAP properties form.
+
+        Returns:
+            str: Rendered HTML of the form
+        """
         # make configuration data available on form context
         try:
             self.props = ILDAPProps(self.plugin)
@@ -90,6 +107,12 @@ class BasePropertiesForm(BrowserView):
         return ""
 
     def save(self, widget, data):
+        """Save the LDAP properties form.
+
+        Args:
+            widget (Widget): Widget instance
+            data (Data): Data extracted from the form
+        """
         props = ILDAPProps(self.plugin)
         users = ILDAPUsersConfig(self.plugin)
         groups = ILDAPGroupsConfig(self.plugin)
@@ -115,11 +138,11 @@ class BasePropertiesForm(BrowserView):
             props.user = ""
             props.password = ""
         props.ignore_cert = fetch("server.ignore_cert")
-        props.start_tls = fetch('server.start_tls')
-        props.tls_cacertfile = fetch('server.tls_cacertfile')
-        props.tls_cacertdir = fetch('server.tls_cacertdir')
-        props.tls_clcertfile = fetch('server.tls_clcertfile')
-        props.tls_clkeyfile = fetch('server.tls_clkeyfile')
+        props.start_tls = fetch("server.start_tls")
+        props.tls_cacertfile = fetch("server.tls_cacertfile")
+        props.tls_cacertdir = fetch("server.tls_cacertdir")
+        props.tls_clcertfile = fetch("server.tls_clcertfile")
+        props.tls_clkeyfile = fetch("server.tls_clkeyfile")
         # TODO: later
         # props.retry_max = fetch(at('server.retry_max')
         # props.retry_delay = fetch('server.retry_delay')
@@ -130,10 +153,12 @@ class BasePropertiesForm(BrowserView):
         props.memcached = fetch("cache.memcached")
         props.timeout = fetch("cache.timeout")
 
-        props.roles =  fetch("users.roles") # a server wide variable, but related to user
+        props.roles = fetch(
+            "users.roles"
+        )  # a server wide variable, but related to user
 
         users.baseDN = fetch("users.dn")
-            # build attrmap from static keys and dynamic keys inputs
+        # build attrmap from static keys and dynamic keys inputs
         users.attrmap = odict()
         users.attrmap.update(fetch("users.aliases_attrmap"))
         users_propsheet_attrmap = fetch("users.propsheet_attrmap")
@@ -173,6 +198,13 @@ class BasePropertiesForm(BrowserView):
         groups.memberOfExternalGroupDNs = []
 
     def userpassanon_extractor(self, widget, data):
+        """Extract the user, password and anonymous values from
+        the form data.
+
+        Args:
+            widget (Widget): Widget instance
+            data (Data): Data extracted from the form
+        """
         if not data.extracted or data["anonymous"].extracted:
             return data.extracted
         has_error = False
@@ -193,6 +225,12 @@ class BasePropertiesForm(BrowserView):
         return data.extracted
 
     def connection_test(self):
+        """Test the LDAP connection.
+
+        Returns:
+            tuple: A tuple containing a boolean indicating success and
+            a message string.
+        """
         try:
             props = ILDAPProps(self.plugin)
         except Exception as e:
@@ -232,11 +270,31 @@ class BasePropertiesForm(BrowserView):
 
 
 def propproxy(ckey):
+    """Create a property proxy for LDAP plugin settings.
+
+    Args:
+        ckey (str): The key for the LDAP plugin setting.
+    """
+
     def _getter(context):
+        """Get a property proxy for LDAP plugin settings
+
+        Args:
+            context (object): Context object
+
+        Returns:
+            object: The value of the LDAP plugin setting for the given key.
+        """
         value = context.plugin.settings.get(ckey, DEFAULTS[ckey])
         return value
 
     def _setter(context, value):
+        """Set a property proxy for LDAP plugin settings
+
+        Args:
+            context (object): Context object
+            value (object): Value to set for the LDAP plugin setting.
+        """
         context.plugin.settings[ckey] = value
 
     return property(_getter, _setter)
@@ -245,6 +303,8 @@ def propproxy(ckey):
 @implementer(ILDAPProps)
 @adapter(ILDAPPlugin)
 class LDAPProps:
+    """Properties for LDAP plugin."""
+
     def __init__(self, plugin):
         self.plugin = plugin
 
@@ -272,6 +332,12 @@ class LDAPProps:
 
     @property
     def memcached(self):
+        """Get the memcached setting.
+
+        Returns:
+            str: The memcached setting value or a message if the feature
+            is not available.
+        """
         recordProvider = queryUtility(ICacheSettingsRecordProvider)
         if recordProvider is not None:
             record = recordProvider()
@@ -280,6 +346,14 @@ class LDAPProps:
 
     @memcached.setter
     def memcached(self, value):
+        """Set the memcached setting.
+
+        Args:
+            value (object): Value to set for memcached setting.
+
+        Returns:
+            str: The result of setting the memcached value.
+        """
         recordProvider = queryUtility(ICacheSettingsRecordProvider)
         if recordProvider is not None:
             record = recordProvider()
@@ -294,6 +368,8 @@ class LDAPProps:
 @implementer(ILDAPUsersConfig)
 @adapter(ILDAPPlugin)
 class UsersConfig:
+    """Configuration for LDAP users."""
+
     def __init__(self, plugin):
         self.plugin = plugin
 
@@ -314,16 +390,28 @@ class UsersConfig:
 
     @property
     def expiresAttr(self):
+        """Expires attribute
+
+        Returns:
+            str: The expiration attribute.
+        """
         return self.account_expiration and self._expiresAttr or None
 
     @property
     def expiresUnit(self):
+        """Expires unit
+
+        Returns:
+            int: The expiration unit.
+        """
         return self.account_expiration and self._expiresUnit or 0
 
 
 @implementer(ILDAPGroupsConfig)
 @adapter(ILDAPPlugin)
 class GroupsConfig:
+    """Configuration for LDAP groups."""
+
     def __init__(self, plugin):
         self.plugin = plugin
 

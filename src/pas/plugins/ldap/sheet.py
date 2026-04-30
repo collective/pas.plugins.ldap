@@ -1,3 +1,5 @@
+"""Property sheet for LDAP users and groups."""
+
 from Acquisition import aq_base
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPUsersConfig
@@ -8,12 +10,18 @@ from zope.interface import implementer
 
 import logging
 
-
 logger = logging.getLogger("pas.plugins.ldap")
 
 
 @implementer(IMutablePropertySheet)
 class LDAPUserPropertySheet(UserPropertySheet):
+    """A property sheet for LDAP users and groups.
+
+    This property sheet is used to store the properties of LDAP users and
+    groups. It is used by the LDAP plugin to store the properties of LDAP
+    users and groups in the PAS user and group objects.
+    """
+
     def __init__(self, principal, plugin):
         """Instanciate LDAPUserPropertySheet.
 
@@ -59,9 +67,11 @@ class LDAPUserPropertySheet(UserPropertySheet):
         return ldap_principals[self._ldapprincipal_id]
 
     def canWriteProperty(self, obj, id):
+        """Check if the property can be written to."""
         return id in self._properties
 
     def setProperty(self, obj, id, value):
+        """Set a property value."""
         assert id in self._properties
         ldapprincipal = self._get_ldap_principal()
         self._properties[id] = ldapprincipal.attrs[id] = value
@@ -72,6 +82,7 @@ class LDAPUserPropertySheet(UserPropertySheet):
             logger.error("LDAPUserPropertySheet.setProperty: %s" % str(e))
 
     def setProperties(self, obj, mapping):
+        """Set multiple property values."""
         for id in mapping:
             assert id in self._properties
         ldapprincipal = self._get_ldap_principal()

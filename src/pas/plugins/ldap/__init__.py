@@ -12,7 +12,6 @@ from zope.i18nmessageid import MessageFactory
 import logging
 import os
 
-
 PACKAGE_NAME = "pas.plugins.ldap"
 
 _ = MessageFactory(PACKAGE_NAME)

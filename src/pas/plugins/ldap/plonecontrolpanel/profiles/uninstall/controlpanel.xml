@@ -1,6 +1,7 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <object name="portal_controlpanel">
   <configlet action_id="LDAP_Configuration"
-             remove="True">
+             remove="True"
+  >
   </configlet>
 </object>

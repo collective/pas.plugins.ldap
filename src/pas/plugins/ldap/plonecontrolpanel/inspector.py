@@ -1,3 +1,5 @@
+"""View for inspecting LDAP directory structure and attributes for debugging."""
+
 from node.ext.ldap import LDAPNode
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
@@ -11,12 +13,16 @@ import json
 
 
 def safe_encode(val):
+    """Encode a value to bytes if it's a string, otherwise return it as is."""
     if isinstance(val, str):
         return val.encode("utf-8")
     return val
 
 
 class LDAPInspector(BrowserView):
+    """A view to inspect the LDAP directory structure and attributes for
+    debugging purposes."""
+
     @property
     def plugin(self):
         portal = getUtility(ISiteRoot)
@@ -26,9 +32,11 @@ class LDAPInspector(BrowserView):
 
     @property
     def props(self):
+        """Get the LDAP properties from the plugin."""
         return ILDAPProps(self.plugin)
 
     def users_children(self):
+        """Get the children of the LDAP users container."""
         users = ILDAPUsersConfig(self.plugin)
         return self.children(users.baseDN)
 
@@ -37,6 +45,7 @@ class LDAPInspector(BrowserView):
         return self.children(groups.baseDN)
 
     def node_attributes(self):
+        """Get the attributes of the LDAP node specified by the DN in the request."""
         dn = self.request["dn"]
         base = self.request["base"]
         if base == "users":

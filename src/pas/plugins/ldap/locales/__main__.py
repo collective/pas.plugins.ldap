@@ -6,7 +6,6 @@ import logging
 import re
 import subprocess
 
-
 logger = logging.getLogger("i18n")
 logger.setLevel(logging.DEBUG)
 
@@ -55,7 +54,7 @@ def locale_folder_setup(domain: str):
 
 
 def _rebuild(domain: str):
-    """Rebuild pot file
+    """Rebuild the pot file from the source code
 
     Args:
         domain (str): locale domain application
@@ -106,7 +105,7 @@ def _sync(domain: str):
 def main():
     """Main application function"""
     if domain:
-        logger.info(f"Updating translations for {domain}")
+        logger.info("Updating translations for %s", domain)
         i18n_script_setup()
         locale_folder_setup(domain)
         _rebuild(domain)
