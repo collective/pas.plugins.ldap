@@ -25,15 +25,18 @@ from zope.interface import implementer
 
 import ldap
 
-
 _marker = dict()
 
 
 class BasePropertiesForm(BrowserView):
     scope_vocab = [
-        (str(BASE), "BASE"),
-        (str(ONELEVEL), "ONELEVEL"),
-        (str(SUBTREE), "SUBTREE"),
+        (str(BASE), _("BASE")),
+        (str(ONELEVEL), _("ONELEVEL")),
+        (str(SUBTREE), _("SUBTREE")),
+    ]
+    account_expiration_unit_vocab = [
+        (int(0), _("Days since Epoch")),
+        (int(1), _("Seconds since epoch")),
     ]
     static_attrs_users = ["rdn", "id", "login"]
     static_attrs_groups = ["rdn", "id"]
@@ -225,7 +228,7 @@ class BasePropertiesForm(BrowserView):
         except Exception as e:
             logger.exception("Non-LDAP error while connection test!")
             return False, _("Exception in Groups; ") + str(e)
-        return True, "Connection, users- and groups-access tested successfully."
+        return True, _("Connection, users- and groups-access tested successfully.")
 
 
 def propproxy(ckey):
