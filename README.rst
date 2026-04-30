@@ -12,9 +12,9 @@ It works in a plain Zope even if it depends on `PlonePAS <https://pypi.org/proje
 
 If `Plone <https://plone.org>`_ is installed an integration layer with a setup-profile and a plone-controlpanel page is available.
 
-``pas.plugins.ldap`` is **not** releated to the old `LDAPUserFolder <https://pypi.org/project/Products.LDAPUserFolder/>`_/ `LDAPMultiPlugins <https://pypi.org/project/Products.LDAPMultiPlugins/>`_ and the packages (i.e. `PloneLDAP <https://pypi.org/project/Products.PloneLDAP/>`_) stacked on top of it in any way.
+``pas.plugins.ldap`` is **not** releated to the old `LDAPUserFolder <https://pypi.org/project/Products.LDAPUserFolder/>`_ / `LDAPMultiPlugins <https://pypi.org/project/Products.LDAPMultiPlugins/>`_ and the packages (i.e. `PloneLDAP <https://pypi.org/project/Products.PloneLDAP/>`_) stacked on top of it in any way.
 
-It is based on **`node.ext.ldap <https://pypi.org/project/node.ext.ldap/>`_**, an almost framework independent LDAP stack.
+It is based on `node.ext.ldap <https://pypi.org/project/node.ext.ldap/>`_, an almost framework independent LDAP stack.
 
 For now users and groups can't be added or deleted. Properties on both are read/write.
 
