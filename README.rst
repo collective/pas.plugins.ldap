@@ -1,3 +1,16 @@
+
+.. image:: https://img.shields.io/pypi/v/pas.plugins.ldap.svg
+    :target: https://pypi.python.org/pypi/pas.plugins.ldap
+    :alt: Latest PyPI version
+
+.. image:: https://img.shields.io/pypi/dm/pas.plugins.ldap.svg
+    :target: https://pypi.python.org/pypi/pas.plugins.ldap
+    :alt: Number of PyPI downloads
+
+.. image:: https://github.com/conestack/pas.plugins.ldap/actions/workflows/tests.yml/badge.svg
+    :target: https://github.com/conestack/pas.plugins.ldap/actions/workflows/tests.yml
+    :alt: Test pas.plugins.ldap
+
 .. image:: https://secure.travis-ci.org/collective/pas.plugins.ldap.png
     :target: http://travis-ci.org/collective/pas.plugins.ldap
 
