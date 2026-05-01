@@ -7,9 +7,9 @@
     :target: https://pypi.python.org/pypi/pas.plugins.ldap
     :alt: Number of PyPI downloads
 
-.. image:: https://github.com/collective/pas.plugins.ldap/actions/workflows/tests.yml/badge.svg
-    :target: https://github.com/collective/pas.plugins.ldap/actions/workflows/tests.yml
-    :alt: Test pas.plugins.ldap
+.. image:: https://github.com/collective/pas.plugins.ldap/actions/workflows/tests.yaml/badge.svg
+    :target: https://github.com/collective/pas.plugins.ldap/actions/workflows/tests.yaml
+    :alt: Test the pas.plugins.ldap code
 
 .. image:: https://secure.travis-ci.org/collective/pas.plugins.ldap.png
     :target: http://travis-ci.org/collective/pas.plugins.ldap
