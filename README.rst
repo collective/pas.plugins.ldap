@@ -11,9 +11,6 @@
     :target: https://github.com/collective/pas.plugins.ldap/actions/workflows/tests.yaml
     :alt: Test the pas.plugins.ldap code
 
-.. image:: https://secure.travis-ci.org/collective/pas.plugins.ldap.png
-    :target: http://travis-ci.org/collective/pas.plugins.ldap
-
 .. image:: https://coveralls.io/repos/collective/pas.plugins.ldap/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/collective/pas.plugins.ldap?branch=master
 
@@ -72,6 +69,7 @@ Browse to your ``acl_users`` folder and add an ``LDAP-Plugin``.
 
 Configure it using the settings form and activate its features with the ``activate`` tab.
 
+----
 
 Plone
 -----
@@ -86,9 +84,9 @@ Add to the instance section of your ``buildout``:
 
 Run ``buildout``. Restart Plone.
 
-Then go to the Plone control-panel, select ``Addons`` and install the ``LDAP/ Active Directory Support``.
+Then go to the Plone control-panel, select ``Addons`` and install the ``LDAP / Active Directory Support``.
 
-A new ``LDAP Settings`` icon appear on the left. Click it and configure the plugin there.
+So, you can navigate to ``Site Setup`` > ``Users`` > ``LDAP / AD Support`` and click it and configure the plugin there.
 
 To use an own integration-profile, add to the profiles ``metadata.xml`` file:
 
