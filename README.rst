@@ -68,7 +68,7 @@ On a Debian-based installation use:
 Zope
 ----
 
-Add to the instance section of your buildout:
+Install ``pas.plugins.ldap`` by adding it to the ``instance`` section of your ``buildout``:
 
 .. code-block:: ini
 
@@ -80,9 +80,9 @@ Add to the instance section of your buildout:
         ...
         pas.plugins.ldap
 
-Run ``buildout``. Restart Zope.
+Run ``buildout`` and then restart the ``Zope`` instance.
 
-Browse to your ``acl_users`` folder and add an ``LDAP Plugin`` object.
+Then browse to your ``acl_users`` folder and add an ``LDAP Plugin`` object.
 
 Configure it using the ``LDAP Settings`` form and choose the functionality this
 ``LDAP Plugin`` will perform with the ``Activate`` tab.
@@ -103,7 +103,8 @@ Configure it using the ``LDAP Settings`` form and choose the functionality this
 Plone
 -----
 
-Add to the instance section of your ``buildout``:
+To install ``pas.plugins.ldap`` in a Plone site, you need by adding it to the
+``instance`` section of your ``buildout``:
 
 .. code-block:: ini
 
@@ -111,7 +112,7 @@ Add to the instance section of your ``buildout``:
         ...
         pas.plugins.ldap
 
-Run ``buildout``. Restart Plone.
+Run ``buildout`` and then restart the ``Plone`` instance.
 
 Then go to the Plone control-panel, select ``Addons`` and install the ``LDAP / Active Directory Support``.
 
@@ -225,14 +226,19 @@ Source Code
 
 If you want to help with the development (improvement, update, bug-fixing, ...) of ``pas.plugins.ldap`` this is a great idea!
 
-The code is located in the `GitHub Collective <https://github.com/collective/pas.plugins.ldap>`_.
+- The code is located in the `GitHub Collective <https://github.com/collective/pas.plugins.ldap>`_.
+  You can clone it or `get access to the GitHub Collective <https://collective.github.io/>`_ and work directly on the project.
 
-You can clone it or `get access to the GitHub Collective <https://collective.github.io/>`_ and work directly on the project.
+Authors
+-------
+
+This product was developed by `BlueDynamics Alliance <https://bluedynamics.com/>`_ team.
+
+.. image:: https://bluedynamics.com/++theme++bda.theme/static/bda-media/bda-logo.svg
+    :target: https://bluedynamics.com/
+    :alt: BlueDynamics Alliance
 
 Maintainers are Robert Niederreiter, Jens Klein and the `BlueDynamics Alliance <https://bluedynamics.com/>`_ developer team.
-
-We appreciate any contribution and if a release is needed to be done on pypi, please just contact one of us:
-`dev@bluedynamics dot com <mailto:dev@bluedynamics.com>`_
 
 Contributors
 ============
@@ -240,6 +246,14 @@ Contributors
 For a list of all contributors to this project, please checkout the following resources:
 - The `CONTRIBUTORS file <https://github.com/collective/pas.plugins.ldap/blob/main/CONTRIBUTORS.rst>`_.
 - The `Contributors page on GitHub <https://github.com/collective/pas.plugins.ldap/graphs/contributors>`_.
+
+Support
+=======
+
+We appreciate any contribution and if a release is needed to be done on pypi, please just contact one of us:
+`dev@bluedynamics dot com <mailto:dev@bluedynamics.com>`_.
+
+- If you are having issues, please let us know at our `issue tracker <https://github.com/collective/pas.plugins.ldap/issues>`_.
 
 License
 =======
