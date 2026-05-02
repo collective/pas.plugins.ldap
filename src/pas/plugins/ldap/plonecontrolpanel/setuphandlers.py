@@ -1,11 +1,12 @@
 """Setup handlers for the LDAP plugin."""
 
+from pas.plugins.ldap import PACKAGE_NAME
 from pas.plugins.ldap.plugin import LDAPPlugin
 from zope.component.hooks import getSite
 
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(PACKAGE_NAME)
 
 
 TITLE = "LDAP plugin (pas.plugins.ldap)"

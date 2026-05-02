@@ -1,5 +1,6 @@
 """Update locales."""
 
+from pas.plugins.ldap import PACKAGE_NAME
 from pathlib import Path
 
 import logging
@@ -14,7 +15,7 @@ PATTERN = r"^[a-z]{2}.*"
 
 locale_path = Path(__file__).parent.resolve()
 target_path = locale_path.parent.resolve()
-domain = "pas.plugins.ldap"
+domain = PACKAGE_NAME
 
 i18ndude = "uvx i18ndude"
 lingua = "pot-create"
