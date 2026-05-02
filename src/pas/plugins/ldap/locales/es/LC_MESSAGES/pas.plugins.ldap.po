@@ -3,8 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: pas.plugins.ldap\n"
-"POT-Creation-Date: 2026-04-29 16:56+0000\n"
-"PO-Revision-Date: 2026-04-29 19:02+0200\n"
+"POT-Creation-Date: 2026-05-01 23:50+0000\n"
+"PO-Revision-Date: 2026-05-02 01:51+0200\n"
 "Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -52,6 +52,18 @@ msgstr "Perfil de extensión base de Zope para pas.plugins.ldap."
 msgid "Groups"
 msgstr "Grupos"
 
+#: pas/plugins/ldap/plonecontrolpanel/profiles/default/controlpanel.xml
+msgid "LDAP / AD Support"
+msgstr "Soporte con LDAP/AD"
+
+#: pas/plugins/ldap/plonecontrolpanel/controlpanel.pt:12
+msgid "LDAP / Active Directory Configuration"
+msgstr "Configuración de LDAP / Active Directory"
+
+#: pas/plugins/ldap/plonecontrolpanel/configure.zcml:19
+msgid "LDAP / Active Directory Support"
+msgstr "Soporte con LDAP/Active Directory"
+
 #: pas/plugins/ldap/plonecontrolpanel/inspector.pt:11
 msgid "LDAP Child Inspector"
 msgstr "Inspector secundario LDAP"
@@ -76,21 +88,9 @@ msgstr "Los usuarios de LDAP están bien, pero los grupos no; "
 msgid "LDAP users; "
 msgstr "Usuarios de LDAP; "
 
-#: pas/plugins/ldap/plonecontrolpanel/profiles/default/controlpanel.xml
-msgid "LDAP/ AD Support"
-msgstr "Soporte con LDAP/AD"
-
-#: pas/plugins/ldap/plonecontrolpanel/controlpanel.pt:14
-msgid "LDAP/ Active Directory Configuration"
-msgstr "Configuración de LDAP/Active Directory"
-
-#: pas/plugins/ldap/plonecontrolpanel/configure.zcml:19
-msgid "LDAP/ Active Directory Support"
-msgstr "Soporte con LDAP/Active Directory"
-
 #: pas/plugins/ldap/zmi/manage_plugin.pt:38
-msgid "Manage LDAP/AD plugin properties for id ${plugin_properties_id}"
-msgstr "Administre las propiedades del complemento LDAP / AD para id $ {plugin_properties_id}"
+msgid "Manage LDAP/AD plugin properties for the '${plugin_properties_id}' id."
+msgstr "Administre las propiedades del complemento LDAP / AD para el id '${plugin_properties_id}'."
 
 #: pas/plugins/ldap/plonecontrolpanel/inspector.pt:23
 msgid "No search base selected"
@@ -159,6 +159,14 @@ msgstr "El nombre de usuario es necesario para las conexiones no anónimas."
 #: pas/plugins/ldap/plonecontrolpanel/inspector.pt:17
 msgid "Users"
 msgstr "Usuarios"
+
+#: pas/plugins/ldap/plonecontrolpanel/controlpanel.pt:17
+msgid "You can configure an LDAP connection in this control panel. You can use a standard LDAP server or a Microsoft Active Directory server."
+msgstr "En este panel de control se puede configurar una conexión LDAP. Puede utilizar un servidor LDAP estándar o un servidor de Microsoft Active Directory."
+
+#: pas/plugins/ldap/properties.py:353
+msgid "feature not available"
+msgstr "función no disponible"
 
 #. Default: LDAP attr name
 #: pas/plugins/ldap/properties.yaml:243

@@ -8,7 +8,7 @@
              appId="pas.plugins.ldap"
              category="plone-users"
              condition_expr=""
-             title="LDAP/ AD Support"
+             title="LDAP / AD Support"
              url_expr="string:${portal_url}/plone_ldapcontrolpanel"
              visible="True"
              i18n:attributes="title"

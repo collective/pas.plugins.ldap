@@ -12,7 +12,7 @@
 
   <genericsetup:registerProfile
       name="default"
-      title="LDAP/ Active Directory Support"
+      title="LDAP / Active Directory Support"
       description="pas.plugins.ldap support for users and groups from ldap/active directory."
       provides="Products.GenericSetup.interfaces.EXTENSION"
       directory="profiles/default"

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-04-29 16:56+0000\n"
+"POT-Creation-Date: 2026-05-01 23:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,6 +50,18 @@ msgstr ""
 msgid "Groups"
 msgstr ""
 
+#: pas/plugins/ldap/plonecontrolpanel/profiles/default/controlpanel.xml
+msgid "LDAP / AD Support"
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/controlpanel.pt:12
+msgid "LDAP / Active Directory Configuration"
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/configure.zcml:19
+msgid "LDAP / Active Directory Support"
+msgstr ""
+
 #: pas/plugins/ldap/plonecontrolpanel/inspector.pt:11
 msgid "LDAP Child Inspector"
 msgstr ""
@@ -74,20 +86,8 @@ msgstr ""
 msgid "LDAP users; "
 msgstr ""
 
-#: pas/plugins/ldap/plonecontrolpanel/profiles/default/controlpanel.xml
-msgid "LDAP/ AD Support"
-msgstr ""
-
-#: pas/plugins/ldap/plonecontrolpanel/controlpanel.pt:14
-msgid "LDAP/ Active Directory Configuration"
-msgstr ""
-
-#: pas/plugins/ldap/plonecontrolpanel/configure.zcml:19
-msgid "LDAP/ Active Directory Support"
-msgstr ""
-
 #: pas/plugins/ldap/zmi/manage_plugin.pt:38
-msgid "Manage LDAP/AD plugin properties for id ${plugin_properties_id}"
+msgid "Manage LDAP/AD plugin properties for the '${plugin_properties_id}' id."
 msgstr ""
 
 #: pas/plugins/ldap/plonecontrolpanel/inspector.pt:23

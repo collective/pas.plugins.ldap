@@ -238,7 +238,7 @@ widgets:
             required: i18n:msg_group_attribute_aliases:Group attribute aliases values are mandatory
             static: True
             head:
-                key: i18n:head_reserved_key:Reserved key
+                key: i18n:head_reserved_key:Reserved Key
                 value: i18n:head_ldap_attr_name:LDAP attr name
     - propsheet_attrmap:
         factory: '#field:dict'

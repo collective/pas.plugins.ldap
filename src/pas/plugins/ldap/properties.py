@@ -342,7 +342,7 @@ class LDAPProps:
         if recordProvider is not None:
             record = recordProvider()
             return record.value
-        return "feature not available"
+        return _("feature not available")
 
     @memcached.setter
     def memcached(self, value):
@@ -359,7 +359,7 @@ class LDAPProps:
             record = recordProvider()
             record.value = value
         else:
-            return "feature not available"
+            return _("feature not available")
 
     binary_attributes = BINARY_DEFAULTS
     multivalued_attributes = MULTIVALUED_DEFAULTS

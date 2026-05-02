@@ -35,7 +35,7 @@
 
     </p>
 
-    <h2 i18n:translate="">Manage LDAP/AD plugin properties for id <i i18n:name="plugin_properties_id" tal:content="context/getId">id</i></h2>
+    <h2 i18n:translate="">Manage LDAP/AD plugin properties for the '<i i18n:name="plugin_properties_id" tal:content="context/getId">id</i>' id.</h2>
 
     <p class="form-help" i18n:translate="">
     Set properties for users and groups from LDAP/ActiveDirectory using the <a href="https://pypi.org/project/pas.plugins.ldap/" i18n:name="plugin_name">pas.plugins.ldap</a> plugin.
