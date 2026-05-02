@@ -1,3 +1,5 @@
+"""Testing layer for pas.plugins.ldap."""
+
 from pas.plugins.ldap.cache import cacheProviderFactory
 from pas.plugins.ldap.cache import cacheProviderFactory
 from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
@@ -30,6 +32,8 @@ SITE_OWNER_NAME = SITE_OWNER_PASSWORD = "admin"
 @implementer(ILDAPProps)
 @adapter(Interface)
 def ldapprops(context):
+    """Adapter to provide LDAPProps for the test layer, using
+    the properties defined in the ldaptesting fixture."""
     props = LDAPProps(context)
 
     props.uri = ldaptesting.props.uri
@@ -45,16 +49,21 @@ def ldapprops(context):
 @implementer(ILDAPUsersConfig)
 @adapter(Interface)
 def usersconfig(context):
+    """Adapter to provide LDAPUsersConfig for the test layer, using
+    the configuration defined in the ldaptesting fixture."""
     return ldaptesting.LDIF_groupOfNames_10_10.ucfg
 
 
 @implementer(ILDAPGroupsConfig)
 @adapter(Interface)
 def groupsconfig(context):
+    """Adapter to provide LDAPGroupsConfig for the test layer, using
+    the configuration defined in the ldaptesting fixture."""
     return ldaptesting.LDIF_groupOfNames_10_10.gcfg
 
 
 class PASLDAPLayer(Layer):
+    """Testing layer for pas.plugins.ldap add-on."""
 
     defaultBases = (ldaptesting.LDIF_groupOfNames_10_10, zope.INTEGRATION_TESTING)
 

@@ -1,18 +1,39 @@
+"""Unit tests for pas.plugins.ldap."""
+
 from testing import PASLDAP_FIXTURE
 from Products.PlonePAS.plugins.ufactory import PloneUser
+from unittest.mock import MagicMock
 
 import unittest
 
 
-class TestPluginInit(unittest.TestCase):
+class TestInitialize(unittest.TestCase):
+    """Tests for the initialize() function in __init__.py."""
 
+    def test_initialize_registers_plugin(self):
+        """initialize() calls registerMultiPlugin and registerClass."""
+        from pas.plugins.ldap import initialize
+        from pas.plugins.ldap.plugin import LDAPPlugin
+
+        context = MagicMock()
+        initialize(context)
+
+        context.registerClass.assert_called_once()
+        call_kwargs = context.registerClass.call_args
+        self.assertIs(call_kwargs[0][0], LDAPPlugin)
+
+
+class TestPluginInit(unittest.TestCase):
+    """Tests for the initialization of the LDAPPlugin."""
     layer = PASLDAP_FIXTURE
 
     @property
     def pas(self):
+        """Helper to get the PAS from the test layer."""
         return self.layer["app"].acl_users
 
     def test_pas_installed(self):
+        """Test that the PAS is installed."""
         from Products.PluggableAuthService.PluggableAuthService import (
             PluggableAuthService,
         )
@@ -20,6 +41,7 @@ class TestPluginInit(unittest.TestCase):
         self.assertIsInstance(self.pas, PluggableAuthService)
 
     def test_create(self):
+        """Creating the plugin adds it to the PAS."""
         from pas.plugins.ldap.setuphandlers import _addPlugin
 
         _addPlugin(self.pas)
@@ -27,13 +49,16 @@ class TestPluginInit(unittest.TestCase):
 
 
 class TestPluginFeatures(unittest.TestCase):
+    """Tests for the features of the LDAPPlugin."""
     layer = PASLDAP_FIXTURE
 
     @property
     def pas(self):
+        """Helper to get the PAS from the test layer."""
         return self.layer["app"].acl_users
 
     def setUp(self):
+        """Set up the test by adding the LDAP plugin to the PAS and configuring it."""
         # add plugin
         from pas.plugins.ldap.setuphandlers import _addPlugin
 
@@ -48,6 +73,7 @@ class TestPluginFeatures(unittest.TestCase):
         self.ldap.groups.principal_attrmap["title"] = "cn"
 
     def test_IAuthenticationPlugin(self):
+        """Test the IAuthenticationPlugin implementation."""
         self.assertEqual(
             self.ldap.authenticateCredentials({"login": "cn0", "password": "secret0"}),
             ("uid0", "cn0"),
@@ -64,6 +90,7 @@ class TestPluginFeatures(unittest.TestCase):
         )
 
     def test_IGroupEnumerationPlugin_id(self):
+        """Test the IGroupEnumerationPlugin implementation with id criteria."""
         self.assertEqual(
             [sorted(group.items()) for group in self.ldap.enumerateGroups(id="group2")],
             [[("id", "group2"), ("pluginid", "pasldap")]],
@@ -109,6 +136,7 @@ class TestPluginFeatures(unittest.TestCase):
         self.assertEqual(len(self.ldap.enumerateGroups(id="group*", max_results=3)), 3)
 
     def test_IGroupEnumerationPlugin_title(self):
+        """Test the IGroupEnumerationPlugin implementation with title criteria."""
         self.assertEqual(
             [
                 sorted(group.items())
@@ -121,6 +149,7 @@ class TestPluginFeatures(unittest.TestCase):
         )
 
     def test_IGroupsPlugin_without_memberOf_support(self):
+        """Test the IGroupsPlugin implementation without memberOf support."""
         user = self.pas.getUserById("uid9")
         self.assertEqual(self.ldap.getGroupsForPrincipal(user), ["group9"])
 
@@ -144,6 +173,7 @@ class TestPluginFeatures(unittest.TestCase):
         self.assertEqual(self.ldap.getGroupsForPrincipal(user), [])
 
     def test_IGroupsPlugin_with_memberOf_support(self):
+        """Test the IGroupsPlugin implementation with memberOf support."""
         self.ldap.users.parent.ucfg.memberOfSupport = True
         user = self.pas.getUserById("uid9")
         self.assertEqual(self.ldap.getGroupsForPrincipal(user), ["group9"])
@@ -169,6 +199,7 @@ class TestPluginFeatures(unittest.TestCase):
         self.ldap.users.parent.ucfg.memberOfSupport = False
 
     def test_IUserEnumerationPlugin_with_id(self):
+        """Test the IUserEnumerationPlugin implementation with id criteria."""
         self.assertEqual(
             [sorted(user.items()) for user in self.ldap.enumerateUsers(id="uid1")],
             [[("id", "uid1"), ("login", "cn1"), ("pluginid", "pasldap")]],
@@ -215,6 +246,7 @@ class TestPluginFeatures(unittest.TestCase):
         self.assertEqual(len(self.ldap.enumerateUsers(id="uid*", max_results=3)), 3)
 
     def test_IUserEnumerationPlugin_with_login(self):
+        """Test the IUserEnumerationPlugin implementation with login criteria."""
         users = self.ldap.enumerateUsers(login="cn1")
         self.assertEqual(
             [sorted(user.items()) for user in users],
@@ -222,6 +254,7 @@ class TestPluginFeatures(unittest.TestCase):
         )
 
     def test_IUserEnumerationPlugin_with_fullname(self):
+        """Test the IUserEnumerationPlugin implementation with fullname criteria."""
         users = self.ldap.enumerateUsers(fullname="cn1")
         self.assertEqual(
             [sorted(user.items()) for user in users],
@@ -263,6 +296,7 @@ class TestPluginFeatures(unittest.TestCase):
         self.assertIsNone(self.ldap.getGroupById("non-existent"))
 
     def test_IGroupIntrospection_getGroupIds(self):
+        """getGroupIds returns the list of all group ids."""
         self.assertEqual(
             self.ldap.getGroupIds(),
             [
@@ -280,6 +314,7 @@ class TestPluginFeatures(unittest.TestCase):
         )
 
     def test_IGroupIntrospection_getGroups(self):
+        """getGroups returns the list of all group objects."""
         groups = self.ldap.getGroups()
         self.assertEqual(len(groups), 10)
         from Products.PlonePAS.plugins.group import PloneGroup
@@ -287,9 +322,11 @@ class TestPluginFeatures(unittest.TestCase):
         self.assertIsInstance(groups[0], PloneGroup)
 
     def test_IGroupIntrospection_getGroupMembers(self):
+        """getGroupMembers returns the list of all group members."""
         self.assertEqual(self.ldap.getGroupMembers("group3"), ("uid1", "uid2", "uid3"))
 
     def test_IPasswordSetCapability(self):
+        """Test the IPasswordSetCapability implementation."""
         # users may set passwords
         self.assertTrue(self.ldap.allowPasswordSet("uid0"))
         # groups not
@@ -298,6 +335,7 @@ class TestPluginFeatures(unittest.TestCase):
         self.assertFalse(self.ldap.allowPasswordSet("ghost"))
 
     def test_IGroupManagement(self):
+        """Test the IGroupManagement implementation."""
         self.assertFalse(self.ldap.addGroup(id))
         self.assertFalse(self.ldap.addPrincipalToGroup("uid0", "group0"))
         self.assertFalse(self.ldap.updateGroup("group9", **{}))
@@ -306,6 +344,7 @@ class TestPluginFeatures(unittest.TestCase):
         self.assertFalse(self.ldap.removePrincipalFromGroup("uid1", "group1"))
 
     def test_IMutablePropertiesPlugin_get(self):
+        """Test the IMutablePropertiesPlugin implementation."""
         user = self.pas.getUserById("uid0")
         sheet = self.ldap.getPropertiesForUser(user, request=None)
         from pas.plugins.ldap.sheet import LDAPUserPropertySheet
@@ -314,7 +353,8 @@ class TestPluginFeatures(unittest.TestCase):
         self.assertEqual(sheet.getProperty("mail"), "uid0@groupOfNames_10_10.com")
 
     def test_IMutablePropertiesPlugin_set(self):
-        """Set does nothing, but the sheet itselfs set immediatly"""
+        """Test the IMutablePropertiesPlugin implementation.
+        Set does nothing, but the sheet itselfs set immediatly."""
         user = self.pas.getUserById("uid0")
         from pas.plugins.ldap.sheet import LDAPUserPropertySheet
 
@@ -326,6 +366,7 @@ class TestPluginFeatures(unittest.TestCase):
         self.assertEqual(sheet2.getProperty("mail"), "foobar@example.com")
 
     def test_IMutablePropertiesPlugin_pickle(self):
+        """Test that the property sheet is picklable, which is required for caching."""
         user = self.pas.getUserById("uid0")
         from pas.plugins.ldap.sheet import LDAPUserPropertySheet
 
@@ -335,6 +376,7 @@ class TestPluginFeatures(unittest.TestCase):
         self.assertGreater(len(pickle.dumps(sheet)), 600)
 
     def test_IUserManagement(self):
+        """Test the IUserManagement implementation."""
         self.ldap.doChangeUser("uid9", "geheim")
         self.assertEqual(
             self.ldap.authenticateCredentials({"login": "cn9", "password": "geheim"}),
@@ -344,6 +386,7 @@ class TestPluginFeatures(unittest.TestCase):
         self.assertFalse(self.ldap.doDeleteUser("uid0"))
 
     def test_IRolesPlugin(self):
+        """Test the IRolesPlugin implementation."""
         ldap_user = PloneUser("uid0", login="cn0")
         self.assertEqual(
             self.ldap.getRolesForPrincipal(ldap_user),
@@ -357,10 +400,12 @@ class TestPluginFeatures(unittest.TestCase):
 
     # other tests higher pas level
     def test_user_for_group_without_memberOfSupport(self):
+        """Test user group retrieval without memberOf support."""
         user = self.pas.getUserById("uid9")
         self.assertEqual(user.getGroups(), ["group9"])
 
     def test_user_for_group_with_memberOfSupport(self):
+        """Test user group retrieval with memberOf support."""
         self.ldap.users.parent.ucfg.memberOfSupport = True
         user = self.pas.getUserById("uid9")
         self.assertEqual(user.getGroups(), ["group9"])
