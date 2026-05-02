@@ -203,18 +203,12 @@ Maintainers are Robert Niederreiter, Jens Klein and the `BlueDynamics Alliance <
 We appreciate any contribution and if a release is needed to be done on pypi, please just contact one of us:
 `dev@bluedynamics dot com <mailto:dev@bluedynamics.com>`_
 
-
 Contributors
 ============
 
-- Jens W. Klein
-- Robert Niederrreiter
-- Florian Friesdorf
-- Daniel Widerin
-- Johannes Raggam
-- Luca Fabbri
-- Leonardo J. Caballero G.
-
+For a list of all contributors to this project, please checkout the following resources:
+- The `CONTRIBUTORS file <https://github.com/collective/pas.plugins.ldap/blob/main/CONTRIBUTORS.rst>`_.
+- The `Contributors page on GitHub <https://github.com/collective/pas.plugins.ldap/graphs/contributors>`_.
 
 License
 =======
