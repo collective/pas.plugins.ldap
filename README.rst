@@ -22,7 +22,7 @@ It is based on `node.ext.ldap <https://pypi.org/project/node.ext.ldap/>`_, an al
 
 
 Features
---------
+========
 
 - If `Plone <https://plone.org>`_ is installed an integration layer with a `setup profile` and a `Plone Controlpanel` page is available.
 - It works in a plain Zope even if it depends on `PlonePAS <https://pypi.org/project/Products.PlonePAS>`_.
@@ -30,7 +30,6 @@ Features
 - It provides users and/or groups from an LDAP directory.
 - LDAP properties for users and groups, which can be used in the rest of the system as well.
 - For now users and groups can't be added or deleted. Properties on both are read/write.
-
 
 TODO
 ----
@@ -227,7 +226,8 @@ Source Code
 If you want to help with the development (improvement, update, bug-fixing, ...) of ``pas.plugins.ldap`` this is a great idea!
 
 - The code is located in the `GitHub Collective <https://github.com/collective/pas.plugins.ldap>`_.
-  You can clone it or `get access to the GitHub Collective <https://collective.github.io/>`_ and work directly on the project.
+
+- You can clone it or `get access to the GitHub Collective <https://collective.github.io/>`_ and work directly on the project.
 
 Authors
 -------
@@ -240,13 +240,6 @@ This product was developed by `BlueDynamics Alliance <https://bluedynamics.com/>
 
 Maintainers are Robert Niederreiter, Jens Klein and the `BlueDynamics Alliance <https://bluedynamics.com/>`_ developer team.
 
-Contributors
-============
-
-For a list of all contributors to this project, please checkout the following resources:
-- The `CONTRIBUTORS file <https://github.com/collective/pas.plugins.ldap/blob/main/CONTRIBUTORS.rst>`_.
-- The `Contributors page on GitHub <https://github.com/collective/pas.plugins.ldap/graphs/contributors>`_.
-
 Support
 =======
 
@@ -254,6 +247,15 @@ We appreciate any contribution and if a release is needed to be done on pypi, pl
 `dev@bluedynamics dot com <mailto:dev@bluedynamics.com>`_.
 
 - If you are having issues, please let us know at our `issue tracker <https://github.com/collective/pas.plugins.ldap/issues>`_.
+
+Contributors
+============
+
+For a list of all contributors to this project, please checkout the following resources:
+
+- The `CONTRIBUTORS file <https://github.com/collective/pas.plugins.ldap/blob/main/CONTRIBUTORS.rst>`_.
+
+- The `Contributors page on GitHub <https://github.com/collective/pas.plugins.ldap/graphs/contributors>`_.
 
 License
 =======
