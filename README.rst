@@ -16,28 +16,44 @@
 
 This is a `LDAP <https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol>`_ Plugin for the `Zope <https://www.zope.dev/>`_ `Pluggable Authentication Service (PAS) <https://pypi.org/project/Products.PluggableAuthService/>`_.
 
-It provides users and/or groups from an LDAP directory.
-
-It works in a plain Zope even if it depends on `PlonePAS <https://pypi.org/project/Products.PlonePAS>`_.
-
-If `Plone <https://plone.org>`_ is installed an integration layer with a setup-profile and a plone-controlpanel page is available.
-
 ``pas.plugins.ldap`` is **not** releated to the old `LDAPUserFolder <https://pypi.org/project/Products.LDAPUserFolder/>`_ / `LDAPMultiPlugins <https://pypi.org/project/Products.LDAPMultiPlugins/>`_ and the packages (i.e. `PloneLDAP <https://pypi.org/project/Products.PloneLDAP/>`_) stacked on top of it in any way.
 
 It is based on `node.ext.ldap <https://pypi.org/project/node.ext.ldap/>`_, an almost framework independent LDAP stack.
 
-For now users and groups can't be added or deleted. Properties on both are read/write.
 
-See section *TODO*.
+Features
+--------
 
+- If `Plone <https://plone.org>`_ is installed an integration layer with a `setup profile` and a `Plone Controlpanel` page is available.
+- It works in a plain Zope even if it depends on `PlonePAS <https://pypi.org/project/Products.PlonePAS>`_.
+- LDAP authentication and authorization for users and groups.
+- It provides users and/or groups from an LDAP directory.
+- LDAP properties for users and groups, which can be used in the rest of the system as well.
+- For now users and groups can't be added or deleted. Properties on both are read/write.
+
+
+TODO
+----
+
+For a detailed list of TODO tasks to this project, please checkout the `TODO file <https://github.com/collective/pas.plugins.ldap/blob/main/TODO.rst>`_.
+
+Translations
+============
+
+This product has been translated into
+
+- English
+- Spanish
 
 Installation
 ============
 
+This package supports Zope applications and Plone sites using Volto and Classic UI.
+
 Dependencies
 ------------
 
-This package depends on ``python-ldap``.
+This package depends on `python-ldap <https://pypi.org/project/python-ldap/>`_ package.
 
 To build it correctly you need to have some development libraries included in your system.
 
@@ -47,6 +63,7 @@ On a Debian-based installation use:
 
     sudo apt install python-dev libldap2-dev libsasl2-dev libssl-dev
 
+----
 
 Zope
 ----
@@ -65,9 +82,21 @@ Add to the instance section of your buildout:
 
 Run ``buildout``. Restart Zope.
 
-Browse to your ``acl_users`` folder and add an ``LDAP-Plugin``.
+Browse to your ``acl_users`` folder and add an ``LDAP Plugin`` object.
 
-Configure it using the settings form and activate its features with the ``activate`` tab.
+Configure it using the ``LDAP Settings`` form and choose the functionality this
+``LDAP Plugin`` will perform with the ``Activate`` tab.
+
+- `Authentication` (``authenticateCredentials``)
+- `Group_Enumeration` (``enumerateGroups``)
+- `Group_Introspection` (``getGroupById``)
+- `Group_Management` (``addGroup``)
+- `Groups` (``getGroupsForPrincipal``)
+- `Properties` (``getPropertiesForUser``)
+- `Roles` (``getRolesForPrincipal``)
+- `User_Adder` (``doAddUser``)
+- `User_Enumeration` (``enumerateUsers``)
+- `User_Management` (``doChangeUser``)
 
 ----
 
@@ -99,7 +128,7 @@ To use an own integration-profile, add to the profiles ``metadata.xml`` file:
     </dependencies>
     ...
 
-Additionally ldap settings can be exported and imported with ``portal_setup``.
+Additionally the ``LDAP Settings`` can be exported and imported with ``portal_setup`` tool.
 You can place the exported ``ldapsettings.xml`` file in your integration profile, so it will be imported with your next install again.
 
 **Warning:**
@@ -108,6 +137,7 @@ You can place the exported ``ldapsettings.xml`` file in your integration profile
 
 But anonymous bindings are possible.
 
+----
 
 Logging
 -------
@@ -129,6 +159,7 @@ There are two environment variables to control the logging of LDAP-errors:
     If a PAS operation takes longer than he given number of seconds, log it as error.
     Default: 5 (time in seconds, float).
 
+----
 
 Timeouts
 --------
@@ -143,8 +174,9 @@ Global LDAP timeouts are set and controlled by two environment variables:
     Overall timeout.
     Default: 30.0s
 
-See details in python-ldap documentation: OPT_NETWORK_TIMEOUT and OPT_TIMEOUT.
+See details in `python-ldap <https://pypi.org/project/python-ldap/>`_ documentation: OPT_NETWORK_TIMEOUT and OPT_TIMEOUT.
 
+----
 
 Caching
 -------
@@ -162,6 +194,7 @@ The UGM tree is cached by default on the request, that means its built up every 
 There is an alternative adapter available which will cache the ugm tree as volatile attribute (``_v_...``) on the persistent plugin.
 
 Volatile attributes are not persisted in the ZODB.
+
 If the plugin object vanishes from ZODB cache the atrribute is gone.
 
 The volatile plugin cache can be activated by loading its zcml with ``<include package="pas.plugins.ldap" file="cache_volatile.zcml"``.
@@ -176,18 +209,16 @@ It defaults to 10 and its unit is seconds.
 
 If you plan a different implementation of UGM tree caching,provide your own adapter implementing ``pas.plugins.ldap.interfaces.IPluginCacheHandler``.
 
-
 Limitations and Future Optimizations
 ====================================
 
 This package was not tested/developed with Windows.
-It may work under Windows if ``python-ldap`` is installed properly and recognized by buildout.
+It may work under Windows if `python-ldap <https://pypi.org/project/python-ldap/>`_ is installed properly and recognized by buildout.
 
 This package works fine for several 10000 users or groups, **unless you list users**.
 
 This is not that much a problem for small amount of users.
 There is room for future optimization in the underlying `node.ext.ldap <https://pypi.org/project/node.ext.ldap/>`_.
-
 
 Source Code
 ===========
