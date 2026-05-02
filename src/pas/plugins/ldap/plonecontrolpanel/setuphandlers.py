@@ -17,6 +17,7 @@ def _removePlugin(pas, PLUGIN_ID="pasldap"):
     installed = pas.objectIds()
     # check if plugin is installed
     if PLUGIN_ID not in installed:
+        logger.info("LDAPPlugin '%s' is not installed in acl_users.", PLUGIN_ID)
         return TITLE + " already uninstalled."
     plugin = getattr(pas, PLUGIN_ID)
     if not isinstance(plugin, LDAPPlugin):

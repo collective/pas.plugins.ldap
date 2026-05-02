@@ -40,7 +40,7 @@
     <p class="form-help" i18n:translate="">
     Set properties for users and groups from LDAP/ActiveDirectory using the <a href="https://pypi.org/project/pas.plugins.ldap/" i18n:name="plugin_name">pas.plugins.ldap</a> plugin.
     </p>
-    <div class="ldap-manage-form" tal:content="structure python:view.form()">
+    <div class="ldap-manage-form" tal:content="structure python:view.render_form()">
     form
     </div>
 

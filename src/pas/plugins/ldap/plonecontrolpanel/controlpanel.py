@@ -2,23 +2,15 @@
 
 from ..properties import BasePropertiesForm
 from pas.plugins.ldap import _
-from Products.CMFCore.interfaces import ISiteRoot
-from Products.CMFPlone.resources import add_bundle_on_request
+from plumber import plumbing
 from Products.statusmessages.interfaces import IStatusMessage
-from zope.component import getUtility
+from yafowil.plone.form import CSRFProtectionBehavior
+from zope.component.hooks import getSite
 
 
-def getPortal():
-    """Get the Plone portal object."""
-    return getUtility(ISiteRoot)
-
-
+@plumbing(CSRFProtectionBehavior)
 class LDAPControlPanel(BasePropertiesForm):
     """Control panel for managing LDAP settings."""
-
-    def __init__(self, context, request):
-        super().__init__(context, request)
-        add_bundle_on_request(request, "yafowil")
 
     def next(self, request):
         """Next
@@ -34,9 +26,18 @@ class LDAPControlPanel(BasePropertiesForm):
     @property
     def plugin(self):
         """ControlPanel config is only for GS installed 'pasldap' plugin"""
-        portal = getPortal()
+        portal = getSite()
         aclu = portal.acl_users
-        return aclu.pasldap
+        # Use direct item access to avoid Zope acquisition walking up the
+        # chain when 'pasldap' is not installed, which produces a misleading
+        # "'RequestContainer' object has no attribute 'pasldap'" error.
+        try:
+            return aclu["pasldap"]
+        except KeyError:
+            raise AttributeError(
+                "Plugin 'pasldap' not found in acl_users. "
+                "Install pas.plugins.ldap via Plone Add-ons first."
+            )
 
     def save(self, widget, data):
         """Save the LDAP setting.

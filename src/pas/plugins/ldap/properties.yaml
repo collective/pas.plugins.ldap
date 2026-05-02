@@ -2,7 +2,9 @@ factory: form
 name: ldapsettings
 props:
     action: expr:context.action
-    class: edit-form enableFormTabbing enableUnloadProtection
+    class: edit-form enableFormTabbing pat-autotoc enableUnloadProtection
+    data:
+        pat-autotoc: "levels: legend; section: fieldset; className: autotabs"
 widgets:
 - server:
     factory: "*userpassanon:fieldset"

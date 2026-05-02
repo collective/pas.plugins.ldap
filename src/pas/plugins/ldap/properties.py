@@ -15,12 +15,11 @@ from node.ext.ldap.ugm import Ugm
 from odict import odict
 from pas.plugins.ldap import _
 from pas.plugins.ldap import logger
-from Products.Five import BrowserView
 from yafowil import loader  # noqa: F401
 from yafowil.base import ExtractionError
 from yafowil.base import UNSET
 from yafowil.controller import Controller
-from yafowil.yaml import parse_from_YAML
+from yafowil.plone.form import YAMLBaseForm
 from zope.component import adapter
 from zope.component import queryUtility
 from zope.interface import implementer
@@ -30,8 +29,11 @@ import ldap
 _marker = dict()
 
 
-class BasePropertiesForm(BrowserView):
+class BasePropertiesForm(YAMLBaseForm):
     """Base class for LDAP properties forms."""
+
+    form_template = "pas.plugins.ldap:properties.yaml"
+    message_factory = _
 
     # scope vocabulary, used in the form to provide options for the LDAP search
     # scope. The values represent the respective LDAP search scope constants.
@@ -64,21 +66,21 @@ class BasePropertiesForm(BrowserView):
         """Get the form action URL."""
         return self.next({})
 
-    def form(self):
-        """Render the LDAP properties form.
-
-        Returns:
-            str: Rendered HTML of the form
-        """
+    def prepare(self):
+        """Set up LDAP config objects on context and parse the YAML form."""
         # make configuration data available on form context
         try:
             self.props = ILDAPProps(self.plugin)
             self.users = ILDAPUsersConfig(self.plugin)
             self.groups = ILDAPGroupsConfig(self.plugin)
         except Exception:
-            msg = "Problems getting the configuration adapters, re-initialize!"
-            logger.exception(msg)
+            logger.exception(
+                "Problems getting the configuration adapters, re-initialize!"
+            )
             self.plugin.init_settings()
+            self.props = ILDAPProps(self.plugin)
+            self.users = ILDAPUsersConfig(self.plugin)
+            self.groups = ILDAPGroupsConfig(self.plugin)
         self.anonymous = not self.props.user
         # prepare users data on form context
         self.users_attrmap = odict()
@@ -98,9 +100,17 @@ class BasePropertiesForm(BrowserView):
             if key in self.static_attrs_groups:
                 continue
             self.groups_propsheet_attrmap[key] = value
-        # handle form
-        form = parse_from_YAML("pas.plugins.ldap:properties.yaml", self, _)
-        controller = Controller(form, self.request)
+        # parse YAML into self.form (YAMLBaseForm.prepare)
+        super().prepare()
+
+    def render_form(self):
+        """Process and render the LDAP properties form.
+
+        Returns:
+            str: Rendered HTML of the form, or empty string after redirect.
+        """
+        self.prepare()
+        controller = Controller(self.form, self.request)
         if not controller.next:
             return controller.rendered
         self.request.RESPONSE.redirect(controller.next)
@@ -316,7 +326,6 @@ class LDAPProps:
     user = propproxy("server.user")
     roles = propproxy("server.roles")
     password = propproxy("server.password")
-    start_tls = propproxy("server.start_tls")
     ignore_cert = propproxy("server.ignore_cert")
     start_tls = propproxy("server.start_tls")
     tls_cacertfile = propproxy("server.tls_cacertfile")

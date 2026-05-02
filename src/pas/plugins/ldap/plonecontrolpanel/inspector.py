@@ -41,6 +41,7 @@ class LDAPInspector(BrowserView):
         return self.children(users.baseDN)
 
     def groups_children(self):
+        """Get the children of the LDAP groups container."""
         groups = ILDAPGroupsConfig(self.plugin)
         return self.children(groups.baseDN)
 
@@ -72,6 +73,7 @@ class LDAPInspector(BrowserView):
         return json.dumps(ret)
 
     def children(self, baseDN):
+        """Get the children of the LDAP node with the given base DN."""
         node = LDAPNode(baseDN, self.props)
         ret = list()
         # XXX: related search filters for users and groups container?
