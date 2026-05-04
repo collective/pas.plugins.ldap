@@ -259,7 +259,7 @@ Development Workflow
 
 .. code-block:: shell
 
-    make i18n
+    make gettext-create && make gettext-update && make gettext-compile
 
 7. Run unit tests:
 
