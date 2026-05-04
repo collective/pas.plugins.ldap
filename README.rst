@@ -220,6 +220,58 @@ This package works fine for several 10000 users or groups, **unless you list use
 This is not that much a problem for small amount of users.
 There is room for future optimization in the underlying `node.ext.ldap <https://pypi.org/project/node.ext.ldap/>`_.
 
+----
+
+Development Workflow
+====================
+
+1. Install requirements:
+
+::
+    make install
+
+2. Start backend (Docker):
+
+::
+    make backend-docker-start
+
+3. In another terminal, start frontend:
+
+::
+    make start
+
+4. Black format and lint code:
+
+::
+    make black-check && make black-format && make black-check
+
+5. Isort format and lint code:
+
+::
+    make isort-check && make isort-format && make isort-check
+
+6. Zpretty format and lint code:
+
+::
+    make zpretty-check && make zpretty-format && make zpretty-check
+
+1. Extract i18n messages:
+
+::
+    make i18n
+
+7. Run unit tests:
+
+::
+    make test
+
+8. Run coverage unit tests:
+
+::
+    make coverage
+
+----
+
 Source Code
 ===========
 
