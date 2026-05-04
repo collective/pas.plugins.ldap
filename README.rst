@@ -231,17 +231,17 @@ Development Workflow
 
     make install
 
-2. In another terminal, start frontend:
+2. Start Zope instance:
 
 .. code-block:: shell
 
-    make start
+    make zope-start
 
-3. Black format and lint code:
+3. Zpretty format and lint code:
 
 .. code-block:: shell
 
-    make black-check && make black-format && make black-check
+    make zpretty-check && make zpretty-format && make zpretty-check
 
 4. Isort format and lint code:
 
@@ -249,11 +249,11 @@ Development Workflow
 
     make isort-check && make isort-format && make isort-check
 
-5. Zpretty format and lint code:
+5. Black format and lint code:
 
 .. code-block:: shell
 
-    make zpretty-check && make zpretty-format && make zpretty-check
+    make black-check && make black-format && make black-check
 
 6. Extract i18n messages:
 
