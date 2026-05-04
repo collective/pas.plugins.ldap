@@ -1,9 +1,14 @@
-# -*- coding: utf-8 -*-
-from pas.plugins.ldap.plugin import LDAPPlugin
+"""Setup handlers for the LDAP plugin."""
+
+from .plugin import LDAPPlugin
+from pas.plugins.ldap import PACKAGE_NAME
 from zope.component.hooks import getSite
 
+import logging
 
-TITLE = "LDAP plugin (pas.plugins.ldap)"
+logger = logging.getLogger(PACKAGE_NAME)
+
+TITLE = f"LDAP plugin ({PACKAGE_NAME})"
 
 
 def remove_persistent_import_step(context):
@@ -27,8 +32,10 @@ def remove_persistent_import_step(context):
 
 
 def _addPlugin(pas, pluginid="pasldap"):
+    """Add the LDAP plugin to the given PAS instance."""
     installed = pas.objectIds()
     if pluginid in installed:
+        logger.info("LDAPPlugin '%s' is installed in acl_users.", pluginid)
         return TITLE + " already installed."
     plugin = LDAPPlugin(pluginid, title=TITLE)
     pas._setObject(pluginid, plugin)
@@ -44,6 +51,7 @@ def _addPlugin(pas, pluginid="pasldap"):
 
 
 def post_install(context):
+    """Post install script for pas.plugins.ldap."""
     site = getSite()
     pas = site.acl_users
     _addPlugin(pas)

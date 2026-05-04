@@ -1,5 +1,7 @@
-# -*- coding: utf-8 -*-
-from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
+"""Cache settings record provider for plone registry"""
+
+from ..interfaces import ICacheSettingsRecordProvider
+from pas.plugins.ldap import _
 from persistent import Persistent
 from plone.registry import field
 from plone.registry import Record
@@ -7,16 +9,19 @@ from plone.registry.interfaces import IRegistry
 from zope.component import queryUtility
 from zope.interface import implementer
 
-
 REGKEY = "pas.plugins.ldap.memcached"
 
 
-class NullRecord(object):
+class NullRecord:
+    """A null record that returns an empty string for its value."""
+
     value = ""
 
 
 @implementer(ICacheSettingsRecordProvider)
 class CacheSettingsRecordProvider(Persistent):
+    """Provides a registry record for LDAP cache settings."""
+
     def __call__(self):
         registry = queryUtility(IRegistry)
         if not registry:
@@ -25,6 +30,6 @@ class CacheSettingsRecordProvider(Persistent):
         records = registry.records
         if REGKEY not in records:
             # init if not exist
-            value = field.TextLine(title=u"servers, delimited by space")
+            value = field.TextLine(title=_("servers, delimited by space"))
             records[REGKEY] = Record(value)
         return records[REGKEY]

@@ -1,4 +1,9 @@
-# -*- coding: utf-8 -*-
+"""LDAP plugin for Plone PAS."""
+
+from .cache import get_plugin_cache
+from .interfaces import ILDAPPlugin
+from .interfaces import VALUE_NOT_CACHED
+from .sheet import LDAPUserPropertySheet
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
 from BTrees import OOBTree
@@ -6,10 +11,6 @@ from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
 from node.ext.ldap.ugm import Ugm
-from pas.plugins.ldap.cache import get_plugin_cache
-from pas.plugins.ldap.interfaces import ILDAPPlugin
-from pas.plugins.ldap.interfaces import VALUE_NOT_CACHED
-from pas.plugins.ldap.sheet import LDAPUserPropertySheet
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PlonePAS import interfaces as plonepas_interfaces
 from Products.PlonePAS.plugins.group import PloneGroup
@@ -17,7 +18,6 @@ from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
 from Products.PluggableAuthService.permissions import ManageGroups
 from Products.PluggableAuthService.permissions import ManageUsers
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
-from six.moves import map
 from zope.interface import implementer
 
 import ldap
@@ -26,14 +26,10 @@ import os
 import six
 import time
 
-
 logger = logging.getLogger("pas.plugins.ldap")
 zmidir = os.path.join(os.path.dirname(__file__), "zmi")
 
-if six.PY2:
-    process_time = time.clock
-else:
-    process_time = time.process_time
+process_time = time.process_time
 
 LDAP_ERROR_LOG_TIMEOUT = float(
     os.environ.get("PAS_PLUGINS_LDAP_ERROR_LOG_TIMEOUT", 300.0)
@@ -41,6 +37,14 @@ LDAP_ERROR_LOG_TIMEOUT = float(
 LDAP_LONG_RUNNING_LOG_THRESHOLD = float(
     os.environ.get("PAS_PLUGINS_LDAP_LONG_RUNNING_LOG_THRESHOLD", 5.0)
 )
+OPT_NETWORK_TIMEOUT = float(os.environ.get("PAS_PLUGINS_LDAP_OPT_NETWORK_TIMEOUT", 1.0))
+OPT_TIMEOUT = float(os.environ.get("PAS_PLUGINS_LDAP_OPT_TIMEOUT", 30.0))
+
+# initial connection timeout
+ldap.set_option(ldap.OPT_NETWORK_TIMEOUT, OPT_NETWORK_TIMEOUT)
+
+# timeout for operations
+ldap.set_option(ldap.OPT_TIMEOUT, OPT_TIMEOUT)
 
 
 def manage_addLDAPPlugin(dispatcher, id, title="", RESPONSE=None, **kw):
@@ -60,13 +64,16 @@ def ldap_error_handler(prefix, default=None):
     """decorator, deals with non-working LDAP"""
 
     def _decorator(original_method, *args, **kwargs):
+        """Decorator that wraps a method to handle LDAP errors gracefully."""
+
         def _wrapper(self, *args, **kwargs):
+            """Wrapper function that handles LDAP errors and logs them."""
             # look if error is in timeout phase
             if hasattr(self, "_v_ldaperror_timeout"):
                 waiting = time.time() - self._v_ldaperror_timeout
                 if waiting < LDAP_ERROR_LOG_TIMEOUT:
                     logger.debug(
-                        "{0}: retry wait {1:0.5f} of {2:0.0f}s -> {3}".format(
+                        "{}: retry wait {:0.5f} of {:0.0f}s -> {}".format(
                             prefix,
                             waiting,
                             LDAP_ERROR_LOG_TIMEOUT,
@@ -79,7 +86,7 @@ def ldap_error_handler(prefix, default=None):
                 start = process_time()
                 result = original_method(self, *args, **kwargs)
                 delta_t = process_time() - start
-                msg = "Call of {0!r} took {1:0.4f}s".format(original_method, delta_t)
+                msg = f"Call of {original_method!r} took {delta_t:0.4f}s"
                 if delta_t < LDAP_LONG_RUNNING_LOG_THRESHOLD:
                     logger.debug(msg)
                 else:
@@ -90,12 +97,12 @@ def ldap_error_handler(prefix, default=None):
             except ldap.LDAPError as e:
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
-                logger.exception("LDAPError in {0}".format(prefix))
+                logger.exception(f"LDAPError in {prefix}")
                 return default
             except Exception as e:
                 self._v_ldaperror_msg = str(e)
                 self._v_ldaperror_timeout = time.time()
-                logger.exception("Error in {0}".format(prefix))
+                logger.exception(f"Error in {prefix}")
                 return default
 
         return _wrapper
@@ -142,6 +149,7 @@ class LDAPPlugin(BasePlugin):
 
     @security.private
     def is_plugin_active(self, iface):
+        """Check if the plugin is active for a given interface."""
         pas = self._getPAS()
         ids = pas.plugins.listPluginIds(iface)
         return self.getId() in ids
@@ -149,18 +157,22 @@ class LDAPPlugin(BasePlugin):
     @property
     @security.private
     def groups_enabled(self):
+        """Check if group enumeration is enabled."""
         return self.groups is not None
 
     @property
     @security.private
     def users_enabled(self):
+        """Check if user enumeration is enabled."""
         return self.users is not None
 
     @property
     def _ldap_props(self):
+        """Get the LDAP properties from the plugin."""
         return ILDAPProps(self)
 
     def _ugm(self):
+        """Get the user and group management object, using caching if enabled."""
         plugin_cache = get_plugin_cache(self)
         ugm = plugin_cache.get()
         if ugm is not VALUE_NOT_CACHED:
@@ -175,17 +187,20 @@ class LDAPPlugin(BasePlugin):
     @ldap_error_handler("groups")
     @security.private
     def groups(self):
+        """Get the groups from the LDAP plugin."""
         return self._ugm().groups
 
     @property
     @ldap_error_handler("users")
     @security.private
     def users(self):
+        """Get the users from the LDAP plugin."""
         return self._ugm().users
 
     @property
     @security.protected(ManageUsers)
     def ldaperror(self):
+        """Get the current LDAP error message, if any."""
         if hasattr(self, "_v_ldaperror_msg"):
             waiting = time.time() - self._v_ldaperror_timeout
             if waiting < LDAP_ERROR_LOG_TIMEOUT:
@@ -194,6 +209,7 @@ class LDAPPlugin(BasePlugin):
 
     @security.public  # really public??
     def reset(self):
+        """Reset the plugin cache, if caching is enabled."""
         # XXX flush caches
         pass
 
@@ -349,7 +365,7 @@ class LDAPPlugin(BasePlugin):
         exact_match=False,
         sort_by=None,
         max_results=None,
-        **kw
+        **kw,
     ):
         """-> ( user_info_1, ... user_info_N )
 
@@ -396,7 +412,7 @@ class LDAPPlugin(BasePlugin):
             return default
         # XXX: sort_by in node.ext.ldap
         if login:
-            if not isinstance(login, six.string_types):
+            if not isinstance(login, str):
                 # XXX
                 raise NotImplementedError("sequence is not supported yet.")
             kw["login"] = login
@@ -404,7 +420,7 @@ class LDAPPlugin(BasePlugin):
         if "login" in kw and "name" in kw:
             del kw["name"]
         if id:
-            if not isinstance(id, six.string_types):
+            if not isinstance(id, str):
                 # XXX
                 raise NotImplementedError("sequence is not supported yet.")
             kw["id"] = id
@@ -435,6 +451,15 @@ class LDAPPlugin(BasePlugin):
     # pas_interfaces.plugins.IRolesPlugin
     #
     def getRolesForPrincipal(self, principal, request=None):
+        """Get the roles for a principal.
+
+        Args:
+            principal (object): The principal object.
+            request (object, optional): The request object. Defaults to None.
+
+        Returns:
+            tuple: A tuple of roles for the principal.
+        """
         default = ()
         users = self.users
         if not users:
@@ -558,7 +583,7 @@ class LDAPPlugin(BasePlugin):
         if not self.is_plugin_active(pas_interfaces.IPropertiesPlugin):
             return default
         ugid = user_or_group.getId()
-        if not isinstance(ugid, six.text_type):
+        if not isinstance(ugid, str):
             ugid = ugid.decode("utf-8")
         try:
             if self.enumerateUsers(id=ugid, exact_match=True) or self.enumerateGroups(
@@ -612,10 +637,10 @@ class LDAPPlugin(BasePlugin):
         if self.users:
             try:
                 self.users.passwd(user_id, None, password)
-            except KeyError:
-                msg = "{0:s} is not an LDAP user.".format(user_id)
-                logger.warn(msg)
-                raise RuntimeError(msg)
+            except KeyError as exc:
+                msg = f"{user_id:s} is not an LDAP user."
+                logger.warning(msg)
+                raise RuntimeError(msg) from exc
 
     @security.private
     def doDeleteUser(self, login):
@@ -675,7 +700,7 @@ class LDAPPlugin(BasePlugin):
             return default
         if group_id is None:
             return None
-        if not isinstance(group_id, six.text_type):
+        if not isinstance(group_id, str):
             group_id = group_id.decode("utf8")
         groups = self.groups
         if not groups or group_id not in list(groups.keys()):

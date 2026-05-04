@@ -2,9 +2,28 @@
 History
 =======
 
-
-1.9.0 (unreleased)
+2.0.0 (unreleased)
 ------------------
+
+- Target Plone 6.x only. Drop support for Python < 3.10.
+  [jensens]
+
+- Updated package metadata to use `pyproject.toml` and drop `setuptools`.
+  [jensens]
+
+- Use mxmake exclusively for development and testing.
+  [jensens]
+
+- Refactor test setup to use pytest as runner.
+  [jensens]
+
+- Increase PAS_PLUGINS_LDAP_OPT_TIMEOUT t
+
+- Remove five.globalrequest dependency.
+  [cillianderoiste]
+
+- Add i18n support and Spanish translation.
+  [macagua]
 
 - Default user roles configuration implementation.
   [sauzher]

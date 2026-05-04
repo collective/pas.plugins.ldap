@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 def remove_persistent_import_step_from_base_profile(context):
     """Remove broken persistent import step from base profile.
 
@@ -14,7 +11,7 @@ def remove_persistent_import_step_from_base_profile(context):
     A bit double, but then it works cleanly,
     both within Plone and outside of Plone.
     """
-    from pas.plugins.ldap.setuphandlers import remove_persistent_import_step
+    from ..setuphandlers import remove_persistent_import_step
 
     remove_persistent_import_step(context)
     context.setLastVersionForProfile("pas.plugins.ldap:default", "2")

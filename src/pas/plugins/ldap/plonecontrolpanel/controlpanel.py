@@ -1,36 +1,51 @@
-# -*- coding: utf-8 -*-
-from pas.plugins.ldap.properties import BasePropertiesForm
-from Products.CMFCore.interfaces import ISiteRoot
-from Products.CMFPlone.resources import add_bundle_on_request
+"""Control panel for LDAP plugin"""
+
+from ..properties import BasePropertiesForm
+from pas.plugins.ldap import _
+from plumber import plumbing
 from Products.statusmessages.interfaces import IStatusMessage
-from zope.component import getUtility
-from zope.i18nmessageid import MessageFactory
+from yafowil.plone.form import CSRFProtectionBehavior
+from zope.component.hooks import getSite
 
 
-_ = MessageFactory("pas.plugins.ldap")
-
-
-def getPortal():
-    return getUtility(ISiteRoot)
-
-
+@plumbing(CSRFProtectionBehavior)
 class LDAPControlPanel(BasePropertiesForm):
-    def __init__(self, context, request):
-        super(LDAPControlPanel, self).__init__(context, request)
-        add_bundle_on_request(request, "yafowil")
+    """Control panel for managing LDAP settings."""
 
     def next(self, request):
-        return "%s/plone_ldapcontrolpanel" % self.context.absolute_url()
+        """Next
+
+        Args:
+            request (object): Request object
+
+        Returns:
+            str: Absolute URL String
+        """
+        return f"{self.context.absolute_url()}/plone_ldapcontrolpanel"
 
     @property
     def plugin(self):
         """ControlPanel config is only for GS installed 'pasldap' plugin"""
-        portal = getPortal()
+        portal = getSite()
         aclu = portal.acl_users
-        plugin = aclu.pasldap
-        return plugin
+        # Use direct item access to avoid Zope acquisition walking up the
+        # chain when 'pasldap' is not installed, which produces a misleading
+        # "'RequestContainer' object has no attribute 'pasldap'" error.
+        try:
+            return aclu["pasldap"]
+        except KeyError:
+            raise AttributeError(
+                "Plugin 'pasldap' not found in acl_users. "
+                "Install pas.plugins.ldap via Plone Add-ons first."
+            )
 
     def save(self, widget, data):
-        BasePropertiesForm.save(self, widget, data)
+        """Save the LDAP setting.
+
+        Args:
+            widget (Widget): Widget instance
+            data (Data): Data extracted from the form
+        """
+        super().save(widget, data)
         messages = IStatusMessage(self.request)
-        messages.addStatusMessage(_(u"LDAP Settings saved."), type="info")
+        messages.addStatusMessage(_("LDAP Settings saved."), type="info")

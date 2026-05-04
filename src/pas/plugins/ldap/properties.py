@@ -1,4 +1,8 @@
-# -*- coding: utf-8 -*-
+"""Properties and configuration for the LDAP plugin."""
+
+from .defaults import DEFAULTS
+from .interfaces import ICacheSettingsRecordProvider
+from .interfaces import ILDAPPlugin
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
@@ -9,60 +13,74 @@ from node.ext.ldap.scope import ONELEVEL
 from node.ext.ldap.scope import SUBTREE
 from node.ext.ldap.ugm import Ugm
 from odict import odict
-from pas.plugins.ldap.defaults import DEFAULTS
-from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
-from pas.plugins.ldap.interfaces import ILDAPPlugin
-from Products.Five import BrowserView
+from pas.plugins.ldap import _
+from pas.plugins.ldap import logger
 from yafowil import loader  # noqa: F401
 from yafowil.base import ExtractionError
 from yafowil.base import UNSET
 from yafowil.controller import Controller
-from yafowil.yaml import parse_from_YAML
+from yafowil.plone.form import YAMLBaseForm
 from zope.component import adapter
 from zope.component import queryUtility
-from zope.i18nmessageid import MessageFactory
 from zope.interface import implementer
 
 import ldap
-import logging
-
-
-logger = logging.getLogger("pas.plugins.ldap")
-_ = MessageFactory("pas.plugins.ldap")
 
 _marker = dict()
 
 
-class BasePropertiesForm(BrowserView):
+class BasePropertiesForm(YAMLBaseForm):
+    """Base class for LDAP properties forms."""
+
+    form_template = "pas.plugins.ldap:properties.yaml"
+    message_factory = _
+
+    # scope vocabulary, used in the form to provide options for the LDAP search
+    # scope. The values represent the respective LDAP search scope constants.
     scope_vocab = [
-        (str(BASE), "BASE"),
-        (str(ONELEVEL), "ONELEVEL"),
-        (str(SUBTREE), "SUBTREE"),
+        (str(BASE), _("BASE")),
+        (str(ONELEVEL), _("ONELEVEL")),
+        (str(SUBTREE), _("SUBTREE")),
+    ]
+    # account expiration unit vocabulary, used in the form to provide options
+    # for the expiration unit of user accounts. The values represent the number
+    # of seconds in the respective unit.
+    account_expiration_unit_vocab = [
+        (int(0), _("Days since Epoch")),
+        (int(1), _("Seconds since epoch")),
     ]
     static_attrs_users = ["rdn", "id", "login"]
     static_attrs_groups = ["rdn", "id"]
 
     @property
     def plugin(self):
+        """Get the LDAP plugin instance."""
         raise NotImplementedError()
 
     def next(self, request):
+        """Get the next URL for redirection after form submission."""
         raise NotImplementedError()
 
     @property
     def action(self):
+        """Get the form action URL."""
         return self.next({})
 
-    def form(self):
+    def prepare(self):
+        """Set up LDAP config objects on context and parse the YAML form."""
         # make configuration data available on form context
         try:
             self.props = ILDAPProps(self.plugin)
             self.users = ILDAPUsersConfig(self.plugin)
             self.groups = ILDAPGroupsConfig(self.plugin)
         except Exception:
-            msg = "Problems getting the configuration adapters, re-initialize!"
-            logger.exception(msg)
+            logger.exception(
+                "Problems getting the configuration adapters, re-initialize!"
+            )
             self.plugin.init_settings()
+            self.props = ILDAPProps(self.plugin)
+            self.users = ILDAPUsersConfig(self.plugin)
+            self.groups = ILDAPGroupsConfig(self.plugin)
         self.anonymous = not self.props.user
         # prepare users data on form context
         self.users_attrmap = odict()
@@ -82,15 +100,29 @@ class BasePropertiesForm(BrowserView):
             if key in self.static_attrs_groups:
                 continue
             self.groups_propsheet_attrmap[key] = value
-        # handle form
-        form = parse_from_YAML("pas.plugins.ldap:properties.yaml", self, _)
-        controller = Controller(form, self.request)
+        # parse YAML into self.form (YAMLBaseForm.prepare)
+        super().prepare()
+
+    def render_form(self):
+        """Process and render the LDAP properties form.
+
+        Returns:
+            str: Rendered HTML of the form, or empty string after redirect.
+        """
+        self.prepare()
+        controller = Controller(self.form, self.request)
         if not controller.next:
             return controller.rendered
         self.request.RESPONSE.redirect(controller.next)
-        return u""
+        return ""
 
     def save(self, widget, data):
+        """Save the LDAP properties form.
+
+        Args:
+            widget (Widget): Widget instance
+            data (Data): Data extracted from the form
+        """
         props = ILDAPProps(self.plugin)
         users = ILDAPUsersConfig(self.plugin)
         groups = ILDAPGroupsConfig(self.plugin)
@@ -116,11 +148,11 @@ class BasePropertiesForm(BrowserView):
             props.user = ""
             props.password = ""
         props.ignore_cert = fetch("server.ignore_cert")
-        props.start_tls = fetch('server.start_tls')
-        props.tls_cacertfile = fetch('server.tls_cacertfile')
-        props.tls_cacertdir = fetch('server.tls_cacertdir')
-        props.tls_clcertfile = fetch('server.tls_clcertfile')
-        props.tls_clkeyfile = fetch('server.tls_clkeyfile')
+        props.start_tls = fetch("server.start_tls")
+        props.tls_cacertfile = fetch("server.tls_cacertfile")
+        props.tls_cacertdir = fetch("server.tls_cacertdir")
+        props.tls_clcertfile = fetch("server.tls_clcertfile")
+        props.tls_clkeyfile = fetch("server.tls_clkeyfile")
         # TODO: later
         # props.retry_max = fetch(at('server.retry_max')
         # props.retry_delay = fetch('server.retry_delay')
@@ -131,10 +163,12 @@ class BasePropertiesForm(BrowserView):
         props.memcached = fetch("cache.memcached")
         props.timeout = fetch("cache.timeout")
 
-        props.roles =  fetch("users.roles") # a server wide variable, but related to user
+        props.roles = fetch(
+            "users.roles"
+        )  # a server wide variable, but related to user
 
         users.baseDN = fetch("users.dn")
-            # build attrmap from static keys and dynamic keys inputs
+        # build attrmap from static keys and dynamic keys inputs
         users.attrmap = odict()
         users.attrmap.update(fetch("users.aliases_attrmap"))
         users_propsheet_attrmap = fetch("users.propsheet_attrmap")
@@ -174,6 +208,13 @@ class BasePropertiesForm(BrowserView):
         groups.memberOfExternalGroupDNs = []
 
     def userpassanon_extractor(self, widget, data):
+        """Extract the user, password and anonymous values from
+        the form data.
+
+        Args:
+            widget (Widget): Widget instance
+            data (Data): Data extracted from the form
+        """
         if not data.extracted or data["anonymous"].extracted:
             return data.extracted
         has_error = False
@@ -194,6 +235,12 @@ class BasePropertiesForm(BrowserView):
         return data.extracted
 
     def connection_test(self):
+        """Test the LDAP connection.
+
+        Returns:
+            tuple: A tuple containing a boolean indicating success and
+            a message string.
+        """
         try:
             props = ILDAPProps(self.plugin)
         except Exception as e:
@@ -214,7 +261,7 @@ class BasePropertiesForm(BrowserView):
             return False, msg + str(e)
         try:
             ugm = Ugm("test", props=props, ucfg=users, gcfg=groups)
-            ugm.users
+            ugm.users.authenticate("foo", "bar")
         except ldap.SERVER_DOWN:
             return False, _("Server Down")
         except ldap.LDAPError as e:
@@ -223,21 +270,41 @@ class BasePropertiesForm(BrowserView):
             logger.exception("Non-LDAP error while connection test!")
             return False, _("Exception in Users; ") + str(e)
         try:
-            ugm.groups
+            ugm.groups.keys()
         except ldap.LDAPError as e:
             return False, _("LDAP Users ok, but groups not; ") + e.message["desc"]
         except Exception as e:
             logger.exception("Non-LDAP error while connection test!")
             return False, _("Exception in Groups; ") + str(e)
-        return True, "Connection, users- and groups-access tested successfully."
+        return True, _("Connection, users- and groups-access tested successfully.")
 
 
 def propproxy(ckey):
+    """Create a property proxy for LDAP plugin settings.
+
+    Args:
+        ckey (str): The key for the LDAP plugin setting.
+    """
+
     def _getter(context):
+        """Get a property proxy for LDAP plugin settings
+
+        Args:
+            context (object): Context object
+
+        Returns:
+            object: The value of the LDAP plugin setting for the given key.
+        """
         value = context.plugin.settings.get(ckey, DEFAULTS[ckey])
         return value
 
     def _setter(context, value):
+        """Set a property proxy for LDAP plugin settings
+
+        Args:
+            context (object): Context object
+            value (object): Value to set for the LDAP plugin setting.
+        """
         context.plugin.settings[ckey] = value
 
     return property(_getter, _setter)
@@ -245,7 +312,9 @@ def propproxy(ckey):
 
 @implementer(ILDAPProps)
 @adapter(ILDAPPlugin)
-class LDAPProps(object):
+class LDAPProps:
+    """Properties for LDAP plugin."""
+
     def __init__(self, plugin):
         self.plugin = plugin
 
@@ -257,7 +326,6 @@ class LDAPProps(object):
     user = propproxy("server.user")
     roles = propproxy("server.roles")
     password = propproxy("server.password")
-    start_tls = propproxy("server.start_tls")
     ignore_cert = propproxy("server.ignore_cert")
     start_tls = propproxy("server.start_tls")
     tls_cacertfile = propproxy("server.tls_cacertfile")
@@ -273,20 +341,34 @@ class LDAPProps(object):
 
     @property
     def memcached(self):
+        """Get the memcached setting.
+
+        Returns:
+            str: The memcached setting value or a message if the feature
+            is not available.
+        """
         recordProvider = queryUtility(ICacheSettingsRecordProvider)
         if recordProvider is not None:
             record = recordProvider()
             return record.value
-        return u"feature not available"
+        return _("feature not available")
 
     @memcached.setter
     def memcached(self, value):
+        """Set the memcached setting.
+
+        Args:
+            value (object): Value to set for memcached setting.
+
+        Returns:
+            str: The result of setting the memcached value.
+        """
         recordProvider = queryUtility(ICacheSettingsRecordProvider)
         if recordProvider is not None:
             record = recordProvider()
             record.value = value
         else:
-            return u"feature not available"
+            return _("feature not available")
 
     binary_attributes = BINARY_DEFAULTS
     multivalued_attributes = MULTIVALUED_DEFAULTS
@@ -294,7 +376,9 @@ class LDAPProps(object):
 
 @implementer(ILDAPUsersConfig)
 @adapter(ILDAPPlugin)
-class UsersConfig(object):
+class UsersConfig:
+    """Configuration for LDAP users."""
+
     def __init__(self, plugin):
         self.plugin = plugin
 
@@ -315,16 +399,28 @@ class UsersConfig(object):
 
     @property
     def expiresAttr(self):
+        """Expires attribute
+
+        Returns:
+            str: The expiration attribute.
+        """
         return self.account_expiration and self._expiresAttr or None
 
     @property
     def expiresUnit(self):
+        """Expires unit
+
+        Returns:
+            int: The expiration unit.
+        """
         return self.account_expiration and self._expiresUnit or 0
 
 
 @implementer(ILDAPGroupsConfig)
 @adapter(ILDAPPlugin)
-class GroupsConfig(object):
+class GroupsConfig:
+    """Configuration for LDAP groups."""
+
     def __init__(self, plugin):
         self.plugin = plugin
 

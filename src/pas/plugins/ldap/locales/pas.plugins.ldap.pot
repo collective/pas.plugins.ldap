@@ -1,0 +1,515 @@
+#--- PLEASE EDIT THE LINES BELOW CORRECTLY ---
+#SOME DESCRIPTIVE TITLE.
+#FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2026-05-02 16:13+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: pas.plugins.ldap\n"
+
+#: pas/plugins/ldap/properties.py:41
+msgid "BASE"
+msgstr ""
+
+#: pas/plugins/ldap/zmi/manage_plugin.pt:28
+msgid "Connection Test"
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:279
+msgid "Connection, users- and groups-access tested successfully."
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:49
+msgid "Days since Epoch"
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:278
+msgid "Exception in Groups; "
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:271
+msgid "Exception in Users; "
+msgstr ""
+
+#: pas/plugins/ldap/configure.zcml:29
+msgid "Extension profile for pas.plugins.ldap Zope Base."
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/inspector.pt:18
+msgid "Groups"
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/profiles/default/controlpanel.xml
+msgid "LDAP / AD Support"
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/controlpanel.pt:12
+msgid "LDAP / Active Directory Configuration"
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/configure.zcml:19
+msgid "LDAP / Active Directory Support"
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/inspector.pt:11
+msgid "LDAP Child Inspector"
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/controlpanel.pt:30
+msgid "LDAP Inspector"
+msgstr ""
+
+#: pas/plugins/ldap/configure.zcml:29
+msgid "LDAP Plugin for PAS - Zope 2 Base Installation"
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/controlpanel.py:51
+msgid "LDAP Settings saved."
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:275
+msgid "LDAP Users ok, but groups not; "
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:268
+msgid "LDAP users; "
+msgstr ""
+
+#: pas/plugins/ldap/zmi/manage_plugin.pt:38
+msgid "Manage LDAP/AD plugin properties for the '${plugin_properties_id}' id."
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/inspector.pt:23
+msgid "No search base selected"
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:259
+msgid "Non-LDAP error while getting ILDAPGroupsConfig!"
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:247
+msgid "Non-LDAP error while getting ILDAPProps!"
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:253
+msgid "Non-LDAP error while getting ILDAPUsersConfig!"
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:42
+msgid "ONELEVEL"
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:229
+msgid "Password is required for non-anonymous connections."
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:43
+msgid "SUBTREE"
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:50
+msgid "Seconds since epoch"
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/inspector.pt:13
+msgid "Select search base"
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:266
+msgid "Server Down"
+msgstr ""
+
+#: pas/plugins/ldap/zmi/manage_plugin.pt:41
+msgid "Set properties for users and groups from LDAP/ActiveDirectory using the ${plugin_name} plugin."
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/configure.zcml:27
+msgid "Uninstall LDAP Plugin for PAS"
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/configure.zcml:27
+msgid "Uninstalls the pas.plugins.ldap add-on."
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:234
+msgid "User/Password are required if not anonymous."
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:223
+msgid "Username is required for non-anonymous connections."
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/inspector.pt:17
+msgid "Users"
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/controlpanel.pt:17
+msgid "You can configure an LDAP connection in this control panel. You can use a standard LDAP server or a Microsoft Active Directory server."
+msgstr ""
+
+#: pas/plugins/ldap/properties.py:354
+msgid "feature not available"
+msgstr ""
+
+#. Default: LDAP attr name
+#: pas/plugins/ldap/properties.yaml:244
+msgid "head_ldap_attr_name"
+msgstr ""
+
+#. Default: LDAP Attribute
+#: pas/plugins/ldap/properties.yaml:188
+msgid "head_ldap_attribute"
+msgstr ""
+
+#. Default: Name on Sheet
+#: pas/plugins/ldap/properties.yaml:195
+msgid "head_name_on_sheet"
+msgstr ""
+
+#. Default: Reserved Key
+#: pas/plugins/ldap/properties.yaml:187
+msgid "head_reserved_key"
+msgstr ""
+
+#. Default: Example, the protocol is ldap, the IP address 127.0.0.1 and the
+#. port 12345
+#: pas/plugins/ldap/properties.yaml:23
+msgid "help_connection_uri"
+msgstr ""
+
+#. Default: If set on authenticate a failing certificate chain check including
+#. CA is ignored.
+#: pas/plugins/ldap/properties.yaml:60
+msgid "help_ignore_certificate_check"
+msgstr ""
+
+#. Default: The timeout period, in seconds, for waiting for a connection to be
+#. established with the LDAP server.
+#: pas/plugins/ldap/properties.yaml:36
+msgid "help_ldap_connection_timeout_in_seconds"
+msgstr ""
+
+#. Default: The timeout in seconds for an operation such as a search or update
+#. to complete. If no timeout is required, use -1 as the value.
+#: pas/plugins/ldap/properties.yaml:43
+msgid "help_ldap_operation_timeout_in_seconds"
+msgstr ""
+
+#. Default: "Group DNs outside of the groups base DN are ignored, except if
+#. listed here"
+#: pas/plugins/ldap/properties.yaml:158
+msgid "help_memberOf_external_allowed_group_dns"
+msgstr ""
+
+#. Default: global - same server for all ldap plugins
+#: pas/plugins/ldap/properties.yaml:269
+msgid "help_memcached_server_to_use"
+msgstr ""
+
+#. Default: "One of those is mandatory like as one the following options
+#. groupOfNames, groupOfUniqueNames, posixGroup, group"
+#: pas/plugins/ldap/properties.yaml:225
+msgid "help_object_classes_for_groups"
+msgstr ""
+
+#. Default: Maximum page size, number of results to query the server at once
+#. for.
+#: pas/plugins/ldap/properties.yaml:96
+msgid "help_page_size"
+msgstr ""
+
+#. Default: If your LDAP/AD supports it this will use
+#. LDAP_MATCHING_RULE_IN_CHAIN. By default only AD supports this.
+#: pas/plugins/ldap/properties.yaml:153
+msgid "help_support_recursive_nested_groups"
+msgstr ""
+
+#. Default: If set, the LDAP server certificate is checked against the CA
+#. certificates in folder.
+#: pas/plugins/ldap/properties.yaml:78
+msgid "help_tls_cacertdir"
+msgstr ""
+
+#. Default: If set, the LDAP server certificate is checked against the CA
+#. certificate file.
+#: pas/plugins/ldap/properties.yaml:72
+msgid "help_tls_cacertfile"
+msgstr ""
+
+#. Default: If set, the client certificate is sent to the server.
+#: pas/plugins/ldap/properties.yaml:84
+msgid "help_tls_clcertfile"
+msgstr ""
+
+#. Default: If set, the client certificate is sent to the server.
+#: pas/plugins/ldap/properties.yaml:90
+msgid "help_tls_clkeyfile"
+msgstr ""
+
+#. Default: If set, the connection is upgraded to TLS.
+#: pas/plugins/ldap/properties.yaml:66
+msgid "help_use_tls_connection"
+msgstr ""
+
+#. Default: Account expiration unit
+#: pas/plugins/ldap/properties.yaml:177
+msgid "lbl_account_expiration_unit"
+msgstr ""
+
+#. Default: Anonymous Connection?
+#: pas/plugins/ldap/properties.yaml:30
+msgid "lbl_anonymous_connection"
+msgstr ""
+
+#. Default: Attribute containing expiration Time
+#: pas/plugins/ldap/properties.yaml:172
+msgid "lbl_attribute_containing_expiration_time"
+msgstr ""
+
+#. Default: Cache LDAP queries
+#: pas/plugins/ldap/properties.yaml:263
+msgid "lbl_cache_ldap_queries"
+msgstr ""
+
+#. Default: Cache Settings
+#: pas/plugins/ldap/properties.yaml:256
+msgid "lbl_cache_settings"
+msgstr ""
+
+#. Default: Cache timeout in seconds
+#: pas/plugins/ldap/properties.yaml:276
+msgid "lbl_cache_timeout_in_seconds"
+msgstr ""
+
+#. Default: Connection URI
+#: pas/plugins/ldap/properties.yaml:22
+msgid "lbl_connection_uri"
+msgstr ""
+
+#. Default: Group attribute aliases
+#: pas/plugins/ldap/properties.yaml:239
+msgid "lbl_group_attribute_aliases"
+msgstr ""
+
+#. Default: Group Property-Sheet Attributes
+#: pas/plugins/ldap/properties.yaml:249
+msgid "lbl_group_property-sheet_attributes"
+msgstr ""
+
+#. Default: Groups container DN
+#: pas/plugins/ldap/properties.yaml:207
+msgid "lbl_groups_container_dn"
+msgstr ""
+
+#. Default: Groups search query filter
+#: pas/plugins/ldap/properties.yaml:219
+msgid "lbl_groups_search_query_filter"
+msgstr ""
+
+#. Default: Groups search scope
+#: pas/plugins/ldap/properties.yaml:213
+msgid "lbl_groups_search_scope"
+msgstr ""
+
+#. Default: Groups Settings
+#: pas/plugins/ldap/properties.yaml:200
+msgid "lbl_groups_settings"
+msgstr ""
+
+#. Default: Ignore certificate check?
+#: pas/plugins/ldap/properties.yaml:59
+msgid "lbl_ignore_certificate_check"
+msgstr ""
+
+#. Default: LDAP connection timeout in seconds.
+#: pas/plugins/ldap/properties.yaml:35
+msgid "lbl_ldap_connection_timeout_in_seconds"
+msgstr ""
+
+#. Default: LDAP operation timeout in seconds.
+#: pas/plugins/ldap/properties.yaml:42
+msgid "lbl_ldap_operation_timeout_in_seconds"
+msgstr ""
+
+#. Default: LDAP Server Settings
+#: pas/plugins/ldap/properties.yaml:12
+msgid "lbl_ldap_server_settings"
+msgstr ""
+
+#. Default: Manager Password
+#: pas/plugins/ldap/properties.yaml:54
+msgid "lbl_manager_password"
+msgstr ""
+
+#. Default: Manager User
+#: pas/plugins/ldap/properties.yaml:49
+msgid "lbl_manager_user"
+msgstr ""
+
+#. Default: memberOf attribute supported?
+#: pas/plugins/ldap/properties.yaml:137
+msgid "lbl_memberOf_attribute_supported"
+msgstr ""
+
+#. Default: memberOf external allowed Group DNs
+#: pas/plugins/ldap/properties.yaml:159
+msgid "lbl_memberOf_external_allowed_group_dns"
+msgstr ""
+
+#. Default: Memcached Server to use
+#: pas/plugins/ldap/properties.yaml:268
+msgid "lbl_memcached_server_to_use"
+msgstr ""
+
+#. Default: Object class
+#: pas/plugins/ldap/properties.yaml:128
+msgid "lbl_object_class"
+msgstr ""
+
+#. Default: Object classes for Groups
+#: pas/plugins/ldap/properties.yaml:224
+msgid "lbl_object_classes_for_groups"
+msgstr ""
+
+#. Default: Object classes for User creation
+#: pas/plugins/ldap/properties.yaml:127
+msgid "lbl_object_classes_for_user_creation"
+msgstr ""
+
+#. Default: Page Size
+#: pas/plugins/ldap/properties.yaml:95
+msgid "lbl_page_size"
+msgstr ""
+
+#. Default: Role
+#: pas/plugins/ldap/properties.yaml:143
+msgid "lbl_role"
+msgstr ""
+
+#. Default: Roles acquired
+#: pas/plugins/ldap/properties.yaml:142
+msgid "lbl_roles_acquired"
+msgstr ""
+
+#. Default: Save
+#: pas/plugins/ldap/properties.yaml:285
+msgid "lbl_save"
+msgstr ""
+
+#. Default: Support recursive/nested groups?
+#: pas/plugins/ldap/properties.yaml:152
+msgid "lbl_support_recursive_nested_groups"
+msgstr ""
+
+#. Default: Path to folder with CA certificate files for TLS communication
+#. (OPT_X_TLS_CACERTDIR)
+#: pas/plugins/ldap/properties.yaml:77
+msgid "lbl_tls_cacertdir"
+msgstr ""
+
+#. Default: Path to CA certificate file for TLS communication
+#. (OPT_X_TLS_CACERTFILE)
+#: pas/plugins/ldap/properties.yaml:71
+msgid "lbl_tls_cacertfile"
+msgstr ""
+
+#. Default: Path to client certificate file for TLS communication
+#. (OPT_X_TLS_CERTFILE). Requires tls_clkeyfile
+#: pas/plugins/ldap/properties.yaml:83
+msgid "lbl_tls_clcertfile"
+msgstr ""
+
+#. Default: Path to client certificate key for TLS communication
+#. (OPT_X_TLS_KEYFILE). Requires tls_clcertfile
+#: pas/plugins/ldap/properties.yaml:89
+msgid "lbl_tls_clkeyfile"
+msgstr ""
+
+#. Default: Use TLS connection
+#: pas/plugins/ldap/properties.yaml:65
+msgid "lbl_use_tls_connection"
+msgstr ""
+
+#. Default: User Accounts expires?
+#: pas/plugins/ldap/properties.yaml:167
+msgid "lbl_user_accounts_expires"
+msgstr ""
+
+#. Default: User attribute aliases
+#: pas/plugins/ldap/properties.yaml:183
+msgid "lbl_user_attribute_aliases"
+msgstr ""
+
+#. Default: User Property-Sheet Attributes
+#: pas/plugins/ldap/properties.yaml:193
+msgid "lbl_user_property-sheet_attributes"
+msgstr ""
+
+#. Default: Users container DN
+#: pas/plugins/ldap/properties.yaml:110
+msgid "lbl_users_container_dn"
+msgstr ""
+
+#. Default: Users search query filter
+#: pas/plugins/ldap/properties.yaml:122
+msgid "lbl_users_search_query_filter"
+msgstr ""
+
+#. Default: Users search scope
+#: pas/plugins/ldap/properties.yaml:116
+msgid "lbl_users_search_scope"
+msgstr ""
+
+#. Default: Users Settings
+#: pas/plugins/ldap/properties.yaml:103
+msgid "lbl_users_settings"
+msgstr ""
+
+#. Default: No URI defined
+#: pas/plugins/ldap/properties.yaml:24
+msgid "msg_connection_uri"
+msgstr ""
+
+#. Default: Group attribute aliases values are mandatory
+#: pas/plugins/ldap/properties.yaml:240
+msgid "msg_group_attribute_aliases"
+msgstr ""
+
+#. Default: No Groups DN defined
+#: pas/plugins/ldap/properties.yaml:208
+msgid "msg_groups_container_dn"
+msgstr ""
+
+#. Default: 'Page size must be given.'
+#: pas/plugins/ldap/properties.yaml:99
+msgid "msg_page_size"
+msgstr ""
+
+#. Default: User attribute aliases values are mandatory
+#: pas/plugins/ldap/properties.yaml:184
+msgid "msg_user_attribute_aliases"
+msgstr ""
+
+#. Default: No Users DN defined
+#: pas/plugins/ldap/properties.yaml:111
+msgid "msg_users_container_dn"
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/configure.zcml:19
+msgid "pas.plugins.ldap support for users and groups from ldap/active directory."
+msgstr ""
+
+#: pas/plugins/ldap/plonecontrolpanel/cache.py:33
+#: pas/plugins/ldap/plonecontrolpanel/profiles/default/registry.xml
+msgid "servers, delimited by space"
+msgstr ""

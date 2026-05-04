@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
-from node.ext.ldap.scope import ONELEVEL
+"""Default configuration values for the LDAP plugin."""
 
+from node.ext.ldap.scope import ONELEVEL
 
 DEFAULTS = {
     "server.uri": "ldap://127.0.0.1:12345",

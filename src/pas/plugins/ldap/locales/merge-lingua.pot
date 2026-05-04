@@ -1,0 +1,367 @@
+#
+# SOME DESCRIPTIVE TITLE
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE 1.0\n"
+"POT-Creation-Date: 2026-05-02 18:13+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Lingua 4.15.0\n"
+
+#. Default: LDAP Server Settings
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:12
+msgid "lbl_ldap_server_settings"
+msgstr ""
+
+#. Default: Connection URI
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:22
+msgid "lbl_connection_uri"
+msgstr ""
+
+#. Default: Example, the protocol is ldap, the IP address 127.0.0.1 and the
+#. port 12345
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:23
+msgid "help_connection_uri"
+msgstr ""
+
+#. Default: No URI defined
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:24
+msgid "msg_connection_uri"
+msgstr ""
+
+#. Default: Anonymous Connection?
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:30
+msgid "lbl_anonymous_connection"
+msgstr ""
+
+#. Default: LDAP connection timeout in seconds.
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:35
+msgid "lbl_ldap_connection_timeout_in_seconds"
+msgstr ""
+
+#. Default: The timeout period, in seconds, for waiting for a connection to be
+#. established with the LDAP server.
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:36
+msgid "help_ldap_connection_timeout_in_seconds"
+msgstr ""
+
+#. Default: LDAP operation timeout in seconds.
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:42
+msgid "lbl_ldap_operation_timeout_in_seconds"
+msgstr ""
+
+#. Default: The timeout in seconds for an operation such as a search or update
+#. to complete. If no timeout is required, use -1 as the value.
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:43
+msgid "help_ldap_operation_timeout_in_seconds"
+msgstr ""
+
+#. Default: Manager User
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:49
+msgid "lbl_manager_user"
+msgstr ""
+
+#. Default: Manager Password
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:54
+msgid "lbl_manager_password"
+msgstr ""
+
+#. Default: Ignore certificate check?
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:59
+msgid "lbl_ignore_certificate_check"
+msgstr ""
+
+#. Default: If set on authenticate a failing certificate chain check including
+#. CA is ignored.
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:60
+msgid "help_ignore_certificate_check"
+msgstr ""
+
+#. Default: Use TLS connection
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:65
+msgid "lbl_use_tls_connection"
+msgstr ""
+
+#. Default: If set, the connection is upgraded to TLS.
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:66
+msgid "help_use_tls_connection"
+msgstr ""
+
+#. Default: Path to CA certificate file for TLS communication
+#. (OPT_X_TLS_CACERTFILE)
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:71
+msgid "lbl_tls_cacertfile"
+msgstr ""
+
+#. Default: If set, the LDAP server certificate is checked against the CA
+#. certificate file.
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:72
+msgid "help_tls_cacertfile"
+msgstr ""
+
+#. Default: Path to folder with CA certificate files for TLS communication
+#. (OPT_X_TLS_CACERTDIR)
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:77
+msgid "lbl_tls_cacertdir"
+msgstr ""
+
+#. Default: If set, the LDAP server certificate is checked against the CA
+#. certificates in folder.
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:78
+msgid "help_tls_cacertdir"
+msgstr ""
+
+#. Default: Path to client certificate file for TLS communication
+#. (OPT_X_TLS_CERTFILE). Requires tls_clkeyfile
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:83
+msgid "lbl_tls_clcertfile"
+msgstr ""
+
+#. Default: If set, the client certificate is sent to the server.
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:84
+msgid "help_tls_clcertfile"
+msgstr ""
+
+#. Default: Path to client certificate key for TLS communication
+#. (OPT_X_TLS_KEYFILE). Requires tls_clcertfile
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:89
+msgid "lbl_tls_clkeyfile"
+msgstr ""
+
+#. Default: If set, the client certificate is sent to the server.
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:90
+msgid "help_tls_clkeyfile"
+msgstr ""
+
+#. Default: Page Size
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:95
+msgid "lbl_page_size"
+msgstr ""
+
+#. Default: Maximum page size, number of results to query the server at once
+#. for.
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:96
+msgid "help_page_size"
+msgstr ""
+
+#. Default: 'Page size must be given.'
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:99
+msgid "msg_page_size"
+msgstr ""
+
+#. Default: Users Settings
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:103
+msgid "lbl_users_settings"
+msgstr ""
+
+#. Default: Users container DN
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:110
+msgid "lbl_users_container_dn"
+msgstr ""
+
+#. Default: No Users DN defined
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:111
+msgid "msg_users_container_dn"
+msgstr ""
+
+#. Default: Users search scope
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:116
+msgid "lbl_users_search_scope"
+msgstr ""
+
+#. Default: Users search query filter
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:122
+msgid "lbl_users_search_query_filter"
+msgstr ""
+
+#. Default: Object classes for User creation
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:127
+msgid "lbl_object_classes_for_user_creation"
+msgstr ""
+
+#. Default: Object class
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:128
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:226
+msgid "lbl_object_class"
+msgstr ""
+
+#. Default: memberOf attribute supported?
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:137
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:234
+msgid "lbl_memberOf_attribute_supported"
+msgstr ""
+
+#. Default: Roles acquired
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:142
+msgid "lbl_roles_acquired"
+msgstr ""
+
+#. Default: Role
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:143
+msgid "lbl_role"
+msgstr ""
+
+#. Default: Support recursive/nested groups?
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:152
+msgid "lbl_support_recursive_nested_groups"
+msgstr ""
+
+#. Default: If your LDAP/AD supports it this will use
+#. LDAP_MATCHING_RULE_IN_CHAIN. By default only AD supports this.
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:153
+msgid "help_support_recursive_nested_groups"
+msgstr ""
+
+#. Default: "Group DNs outside of the groups base DN are ignored, except if
+#. listed here"
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:158
+msgid "help_memberOf_external_allowed_group_dns"
+msgstr ""
+
+#. Default: memberOf external allowed Group DNs
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:159
+msgid "lbl_memberOf_external_allowed_group_dns"
+msgstr ""
+
+#. Default: User Accounts expires?
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:167
+msgid "lbl_user_accounts_expires"
+msgstr ""
+
+#. Default: Attribute containing expiration Time
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:172
+msgid "lbl_attribute_containing_expiration_time"
+msgstr ""
+
+#. Default: Account expiration unit
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:177
+msgid "lbl_account_expiration_unit"
+msgstr ""
+
+#. Default: User attribute aliases
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:183
+msgid "lbl_user_attribute_aliases"
+msgstr ""
+
+#. Default: User attribute aliases values are mandatory
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:184
+msgid "msg_user_attribute_aliases"
+msgstr ""
+
+#. Default: Reserved Key
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:187
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:243
+msgid "head_reserved_key"
+msgstr ""
+
+#. Default: LDAP Attribute
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:188
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:196
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:252
+msgid "head_ldap_attribute"
+msgstr ""
+
+#. Default: User Property-Sheet Attributes
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:193
+msgid "lbl_user_property-sheet_attributes"
+msgstr ""
+
+#. Default: Name on Sheet
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:195
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:251
+msgid "head_name_on_sheet"
+msgstr ""
+
+#. Default: Groups Settings
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:200
+msgid "lbl_groups_settings"
+msgstr ""
+
+#. Default: Groups container DN
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:207
+msgid "lbl_groups_container_dn"
+msgstr ""
+
+#. Default: No Groups DN defined
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:208
+msgid "msg_groups_container_dn"
+msgstr ""
+
+#. Default: Groups search scope
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:213
+msgid "lbl_groups_search_scope"
+msgstr ""
+
+#. Default: Groups search query filter
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:219
+msgid "lbl_groups_search_query_filter"
+msgstr ""
+
+#. Default: Object classes for Groups
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:224
+msgid "lbl_object_classes_for_groups"
+msgstr ""
+
+#. Default: "One of those is mandatory like as one the following options
+#. groupOfNames, groupOfUniqueNames, posixGroup, group"
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:225
+msgid "help_object_classes_for_groups"
+msgstr ""
+
+#. Default: Group attribute aliases
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:239
+msgid "lbl_group_attribute_aliases"
+msgstr ""
+
+#. Default: Group attribute aliases values are mandatory
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:240
+msgid "msg_group_attribute_aliases"
+msgstr ""
+
+#. Default: LDAP attr name
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:244
+msgid "head_ldap_attr_name"
+msgstr ""
+
+#. Default: Group Property-Sheet Attributes
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:249
+msgid "lbl_group_property-sheet_attributes"
+msgstr ""
+
+#. Default: Cache Settings
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:256
+msgid "lbl_cache_settings"
+msgstr ""
+
+#. Default: Cache LDAP queries
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:263
+msgid "lbl_cache_ldap_queries"
+msgstr ""
+
+#. Default: Memcached Server to use
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:268
+msgid "lbl_memcached_server_to_use"
+msgstr ""
+
+#. Default: global - same server for all ldap plugins
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:269
+msgid "help_memcached_server_to_use"
+msgstr ""
+
+#. Default: Cache timeout in seconds
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:276
+msgid "lbl_cache_timeout_in_seconds"
+msgstr ""
+
+#. Default: Save
+#: /home/plone/project/backend/sources/pas.plugins.ldap/src/pas/plugins/ldap/properties.yaml:285
+msgid "lbl_save"
+msgstr ""

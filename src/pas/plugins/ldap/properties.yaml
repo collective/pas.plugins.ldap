@@ -2,12 +2,14 @@ factory: form
 name: ldapsettings
 props:
     action: expr:context.action
-    class: edit-form enableFormTabbing enableUnloadProtection
+    class: edit-form enableFormTabbing pat-autotoc enableUnloadProtection
+    data:
+        pat-autotoc: "levels: legend; section: fieldset; className: autotabs"
 widgets:
 - server:
     factory: "*userpassanon:fieldset"
     props:
-        legend: LDAP Server Settings
+        legend: i18n:lbl_ldap_server_settings:LDAP Server Settings
         class: formPanel
     custom:
         userpassanon:
@@ -17,111 +19,113 @@ widgets:
         factory: '#field:text'
         value: expr:context.props.uri
         props:
-            label: Connection URI
-            help: "Example: ldap://127.0.0.1:12345"
-            required: No URI defined
+            label: i18n:lbl_connection_uri:Connection URI
+            help: i18n:help_connection_uri:Example, the protocol is ldap, the IP address 127.0.0.1 and the port 12345
+            required: i18n:msg_connection_uri:No URI defined
     - anonymous:
         factory: '#field:checkbox'
         value: expr:context.anonymous
         default: False
         props:
-            label: Anonymous Connection?
+            label: i18n:lbl_anonymous_connection:Anonymous Connection?
     - conn_timeout:
         factory: '#field:number'
         value: expr:context.props.conn_timeout
         props:
-            label: LDAP connection timeout in seconds
+            label: i18n:lbl_ldap_connection_timeout_in_seconds:LDAP connection timeout in seconds.
+            help: i18n:help_ldap_connection_timeout_in_seconds:The timeout period, in seconds, for waiting for a connection to be established with the LDAP server.
             datatype: integer
     - op_timeout:
         factory: '#field:number'
         value: expr:context.props.op_timeout
         props:
-            label: LDAP operation timeout in seconds
+            label: i18n:lbl_ldap_operation_timeout_in_seconds:LDAP operation timeout in seconds.
+            help: i18n:help_ldap_operation_timeout_in_seconds:The timeout in seconds for an operation such as a search or update to complete. If no timeout is required, use -1 as the value.
             datatype: integer
     - user:
         factory: '#field:text'
         value: expr:context.props.user
         props:
-            label: Manager User
+            label: i18n:lbl_manager_user:Manager User
     - password:
         factory: '#field:password'
         value: expr:context.props.password
         props:
-            label: Manager Password
+            label: i18n:lbl_manager_password:Manager Password
     - ignore_cert:
         factory: '#field:checkbox'
         value: expr:context.props.ignore_cert
         props:
-            label: Ignore certificate check?
-            help: If set on authenticate a failing certificate chain check including CA is ignored.
+            label: i18n:lbl_ignore_certificate_check:Ignore certificate check?
+            help: i18n:help_ignore_certificate_check:If set on authenticate a failing certificate chain check including CA is ignored.
     - start_tls:
         factory: '#field:checkbox'
         value: expr:context.props.start_tls
         props:
-            label: Use TLS connection
-            help: If set, the connection is upgraded to TLS.
+            label: i18n:lbl_use_tls_connection:Use TLS connection
+            help: i18n:help_use_tls_connection:If set, the connection is upgraded to TLS.
     - tls_cacertfile:
         factory: '#field:text'
         value: expr:context.props.tls_cacertfile
         props:
-            label: Path to CA certificate file for TLS communication (OPT_X_TLS_CACERTFILE)
-            help: If set, the LDAP server certificate is checked against the CA certificate file.
+            label: i18n:lbl_tls_cacertfile:Path to CA certificate file for TLS communication (OPT_X_TLS_CACERTFILE)
+            help: i18n:help_tls_cacertfile:If set, the LDAP server certificate is checked against the CA certificate file.
     - tls_cacertdir:
         factory: '#field:text'
         value: expr:context.props.tls_cacertdir
         props:
-            label: Path to folder with CA certificate files for TLS communication (OPT_X_TLS_CACERTDIR)
-            help: If set, the LDAP server certificate is checked against the CA certificates in folder.
+            label: i18n:lbl_tls_cacertdir:Path to folder with CA certificate files for TLS communication (OPT_X_TLS_CACERTDIR)
+            help: i18n:help_tls_cacertdir:If set, the LDAP server certificate is checked against the CA certificates in folder.
     - tls_clcertfile:
         factory: '#field:text'
         value: expr:context.props.tls_clcertfile
         props:
-            label: Path to client certificate file for TLS communication (OPT_X_TLS_CERTFILE). Requires tls_clkeyfile
-            help: If set, the client certificate is sent to the server.
+            label: i18n:lbl_tls_clcertfile:Path to client certificate file for TLS communication (OPT_X_TLS_CERTFILE). Requires tls_clkeyfile
+            help: i18n:help_tls_clcertfile:If set, the client certificate is sent to the server.
     - tls_clkeyfile:
         factory: '#field:text'
         value: expr:context.props.tls_clkeyfile
         props:
-            label: Path to client certificate key for TLS communication (OPT_X_TLS_KEYFILE). Requires tls_clcertfile
-            help: If set, the client certificate is sent to the server.
+            label: i18n:lbl_tls_clkeyfile:Path to client certificate key for TLS communication (OPT_X_TLS_KEYFILE). Requires tls_clcertfile
+            help: i18n:help_tls_clkeyfile:If set, the client certificate is sent to the server.
     - page_size:
         factory: '#field:number'
         value: expr:context.props.page_size
         props:
-            label: Page Size
-            help:  Maximum page size, number of results to query the server at once for.
+            label: i18n:lbl_page_size:Page Size
+            help: i18n:help_page_size:Maximum page size, number of results to query the server at once for.
             datatype: integer
             min: 1
-            required_message: 'Page size must be given.'
+            required_message: i18n:msg_page_size:'Page size must be given.'
 - users:
     factory: fieldset
     props:
-        legend: Users Settings
+        legend: i18n:lbl_users_settings:Users Settings
         class: formPanel
     widgets:
     - dn:
         factory: '#field:text'
         value: expr:context.users.baseDN
         props:
-            label: Users container DN
-            required: No Users DN defined
+            label: i18n:lbl_users_container_dn:Users container DN
+            required: i18n:msg_users_container_dn:No Users DN defined
     - scope:
         factory: '#field:select'
         value: expr:str(context.users.scope)
         props:
-            label: Users search scope
+            label: i18n:lbl_users_search_scope:Users search scope
             vocabulary: expr:context.scope_vocab
     - query:
         factory: '#field:text'
         value: expr:context.users.queryFilter
         props:
-            label: Users search query filter
+            label: i18n:lbl_users_search_query_filter:Users search query filter
     - object_classes:
         factory: '#array'
         value: expr:context.users.objectClasses
         props:
-            label: Object classes for User creation
-            array.label: Object class
+            label: i18n:lbl_object_classes_for_user_creation:Object classes for User creation
+            array.label: i18n:lbl_object_class:Object class
         widgets:
             - oc:
                 factory: field:text
@@ -129,14 +133,14 @@ widgets:
         factory: '#field:checkbox'
         value: expr:context.users.memberOfSupport
         props:
-            label: memberOf attribute supported?
+            label: i18n:lbl_memberOf_attribute_supported:memberOf attribute supported?
 
     - roles:
         factory: '#array'
         value: expr:context.props.roles
         props:
-            label: Roles aquired
-            array.label: Roles acquired
+            label: i18n:lbl_roles_acquired:Roles acquired
+            array.label: i18n:lbl_role:Role
         widgets:
             - roles:
                 factory: field:text
@@ -145,14 +149,14 @@ widgets:
         factory: '#field:checkbox'
         value: expr:context.users.recursiveGroups
         props:
-            label: Support recursive/nested groups?
-            help: If your LDAP/AD supports it this will use LDAP_MATCHING_RULE_IN_CHAIN. By default only AD supports this.
+            label: i18n:lbl_support_recursive_nested_groups:Support recursive/nested groups?
+            help: i18n:help_support_recursive_nested_groups:If your LDAP/AD supports it this will use LDAP_MATCHING_RULE_IN_CHAIN. By default only AD supports this.
     - memberOfExternalGroupDNs:
         factory: '#array'
         value: expr:context.users.memberOfExternalGroupDNs
         props:
-            array.help: "Group DNs outside of the groups base DN are ignored, except if listed here"
-            array.label: memberOf external allowed Group DNs
+            array.help: i18n:help_memberOf_external_allowed_group_dns:"Group DNs outside of the groups base DN are ignored, except if listed here"
+            array.label: i18n:lbl_memberOf_external_allowed_group_dns:memberOf external allowed Group DNs
         widgets:
             - dn:
                 factory: field:text
@@ -160,66 +164,66 @@ widgets:
         factory: '#field:checkbox'
         value: expr:context.users.account_expiration
         props:
-            label: User Accounts expires?
+            label: i18n:lbl_user_accounts_expires:User Accounts expires?
     - expires_attr:
         factory: '#field:text'
         value: expr:context.users.expiresAttr
         props:
-            label: Attribute containing expiration Time
+            label: i18n:lbl_attribute_containing_expiration_time:Attribute containing expiration Time
     - expires_unit:
         factory: '#field:select'
         value: expr:context.users.expiresUnit
         props:
-            label: Account expiration unit
-            vocabulary: expr:((0, 'Days since Epoch'), (1, 'Seconds since epoch'))
+            label: i18n:lbl_account_expiration_unit:Account expiration unit
+            vocabulary: expr:context.account_expiration_unit_vocab
     - aliases_attrmap:
         factory: '#field:dict'
         value: expr:context.users_attrmap
         props:
-            label: User attribute aliases
-            required: User attribute aliases values are mandatory
+            label: i18n:lbl_user_attribute_aliases:User attribute aliases
+            required: i18n:msg_user_attribute_aliases:User attribute aliases values are mandatory
             static: True
             head:
-                key: Reserved Key
-                value: LDAP Attribute
+                key: i18n:head_reserved_key:Reserved Key
+                value: i18n:head_ldap_attribute:LDAP Attribute
     - propsheet_attrmap:
         factory: '#field:dict'
         value: expr:context.users_propsheet_attrmap
         props:
-            label: User Property-Sheet Attributes
+            label: i18n:lbl_user_property-sheet_attributes:User Property-Sheet Attributes
             head:
-                key: Name on Sheet
-                value: LDAP Attribute
+                key: i18n:head_name_on_sheet:Name on Sheet
+                value: i18n:head_ldap_attribute:LDAP Attribute
 - groups:
     factory: fieldset
     props:
-        legend: Groups Settings
+        legend: i18n:lbl_groups_settings:Groups Settings
         class: formPanel
     widgets:
     - dn:
         factory: '#field:text'
         value: expr:context.groups.baseDN
         props:
-            label: Groups container DN
-            required: No Groups DN defined
+            label: i18n:lbl_groups_container_dn:Groups container DN
+            required: i18n:msg_groups_container_dn:No Groups DN defined
     - scope:
         factory: '#field:select'
         value: expr:str(context.groups.scope)
         props:
-            label: Groups search scope
+            label: i18n:lbl_groups_search_scope:Groups search scope
             vocabulary: expr:context.scope_vocab
     - query:
         factory: '#field:text'
         value: expr:context.groups.queryFilter
         props:
-            label: Groups search query filter
+            label: i18n:lbl_groups_search_query_filter:Groups search query filter
     - object_classes:
         factory: '#array'
         value: expr:context.groups.objectClasses
         props:
-            label: Object classes for Groups
-            help: "One of those is mandatory: groupOfNames, groupOfUniqueNames, posixGroup, group"
-            array.label: Object class
+            label: i18n:lbl_object_classes_for_groups:Object classes for Groups
+            help: i18n:help_object_classes_for_groups:"One of those is mandatory like as one the following options groupOfNames, groupOfUniqueNames, posixGroup, group"
+            array.label: i18n:lbl_object_class:Object class
         widgets:
             - oc:
                 factory: field:text
@@ -227,49 +231,49 @@ widgets:
         factory: '#field:checkbox'
         value: expr:context.groups.memberOfSupport
         props:
-            label: memberOf attribute supported?
+            label: i18n:lbl_memberOf_attribute_supported:memberOf attribute supported?
     - aliases_attrmap:
         factory: '#field:dict'
         value: expr:context.groups_attrmap
         props:
-            label: Group attribute aliases
-            required: Group attribute aliases values are mandatory
+            label: i18n:lbl_group_attribute_aliases:Group attribute aliases
+            required: i18n:msg_group_attribute_aliases:Group attribute aliases values are mandatory
             static: True
             head:
-                key: Reserved key
-                value: LDAP attr name
+                key: i18n:head_reserved_key:Reserved Key
+                value: i18n:head_ldap_attr_name:LDAP attr name
     - propsheet_attrmap:
         factory: '#field:dict'
         value: expr:context.groups_propsheet_attrmap
         props:
-            label: Group Property-Sheet Attributes
+            label: i18n:lbl_group_property-sheet_attributes:Group Property-Sheet Attributes
             head:
-                key: Name on Sheet
-                value: LDAP Attribute
+                key: i18n:head_name_on_sheet:Name on Sheet
+                value: i18n:head_ldap_attribute:LDAP Attribute
 - cache:
     factory: fieldset
     props:
-        legend: Cache Settings
+        legend: i18n:lbl_cache_settings:Cache Settings
         class: formPanel
     widgets:
     - cache:
         factory: '#field:checkbox'
         value: expr:context.props.cache
         props:
-            label: Cache LDAP queries
+            label: i18n:lbl_cache_ldap_queries:Cache LDAP queries
     - memcached:
         factory: '#field:text'
         value: expr:context.props.memcached
         props:
-            label: Memcached Server to use
-            help: global - same server for all ldap plugins
+            label: i18n:lbl_memcached_server_to_use:Memcached Server to use
+            help: i18n:help_memcached_server_to_use:global - same server for all ldap plugins
             field.class: memcached field
             datatype: unicode
     - timeout:
         factory: '#field:number'
         value: expr:context.props.timeout
         props:
-            label: Cache timeout in seconds
+            label: i18n:lbl_cache_timeout_in_seconds:Cache timeout in seconds
             datatype: integer
 - save:
     factory: submit
@@ -278,5 +282,5 @@ widgets:
         expression: True
         handler: context.save
         next: context.next
-        label: Save
+        label: i18n:lbl_save:Save
         class: submit-widget button-field context

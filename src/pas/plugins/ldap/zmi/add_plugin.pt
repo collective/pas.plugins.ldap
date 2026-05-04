@@ -1,25 +1,25 @@
 <h1 tal:replace="structure here/manage_page_header">Header</h1>
 
-<h2> Add LDAP plugin</h2>
+<h2 i18n:ignore=""> Add LDAP plugin</h2>
 
-<p class="form-help">
+<p class="form-help" i18n:ignore="">
 Add users and groups from LDAP using the pas.plugins.ldap plugin.
 </p>
 
 <form action="manage_addLDAPPlugin" method="POST">
     <table>
         <tr>
-           <td class="form-label"> Id </td>
+           <td class="form-label" i18n:ignore=""> Id </td>
            <td> <input type="text" name="id" /> </td>
         </tr>
         <tr>
-           <td class="form-label"> Title </td>
+           <td class="form-label" i18n:ignore=""> Title </td>
            <td> <input type="text" name="title" /> </td>
         </tr>
         <tr>
            <td colspan="2">
             <div class="form-element">
-             <input type="submit" value="submit"/>
+             <input type="submit" value="submit" i18n:attributes="value" i18n:ignore-attributes=""/>
              </div>
            </td>
         </tr>

@@ -4,7 +4,7 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       lang="en"
       metal:use-macro="context/prefs_main_template/macros/master"
-      i18n:domain="plone">
+      i18n:domain="pas.plugins.ldap">
 <body>
 
 <metal:main metal:fill-slot="prefs_configlet_main">
@@ -14,13 +14,13 @@
   <br />
   <select name="ldap_base_container">
     <option>-</option>
-    <option>Users</option>
-    <option>Groups</option>
+    <option i18n:translate="">Users</option>
+    <option i18n:translate="">Groups</option>
   </select>
 
   <div>
     <ul id="ldap_child_listing">
-      <li>No search base selected</li>
+      <li i18n:translate="">No search base selected</li>
     </ul>
   </div>
 

@@ -1,0 +1,10 @@
+-c constraints.txt
+waitress_fastlisten
+-e .[test]
+
+# until https://github.com/plone/plone.restapi/issues/1321 is solved
+plone.app.iterate
+yafowil.plone==5.0.0a2
+yafowil.bootstrap==2.0.0a1
+yafowil.widget.array==2.0a1
+yafowil.widget.dict==2.0a1

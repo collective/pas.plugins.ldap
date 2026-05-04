@@ -1,33 +1,30 @@
-# -*- coding: utf-8 -*-
+"""Testing layer for pas.plugins.ldap."""
+
+from pas.plugins.ldap.cache import cacheProviderFactory
+from pas.plugins.ldap.cache import cacheProviderFactory
+from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
+from pas.plugins.ldap.plonecontrolpanel.cache import CacheSettingsRecordProvider
+from pas.plugins.ldap.properties import LDAPProps
 from node.ext.ldap import testing as ldaptesting
 from node.ext.ldap.interfaces import ICacheProviderFactory
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
-from pas.plugins.ldap.cache import cacheProviderFactory
-from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
-from pas.plugins.ldap.plonecontrolpanel.cache import CacheSettingsRecordProvider
-from pas.plugins.ldap.properties import LDAPProps
 from plone.registry import Registry
 from plone.registry.interfaces import IRegistry
 from plone.testing import Layer
-from plone.testing import z2
+from plone.testing import zope
 from Products.CMFCore.interfaces import ISiteRoot
+from Products.PlonePAS.setuphandlers import migrate_root_uf
+from Products.PlonePAS.setuphandlers import registerPluginTypes
 from zope.component import adapter
 from zope.component import provideAdapter
 from zope.component import provideUtility
+from zope.configuration import xmlconfig
+from zope.dottedname.resolve import resolve
 from zope.interface import implementer
 from zope.interface import Interface
 
-
-try:
-    # plone 5.x with PlonePAS >=5.0
-    from Products.PlonePAS.setuphandlers import migrate_root_uf
-    from Products.PlonePAS.setuphandlers import registerPluginTypes
-except ImportError:
-    # plone 4.x with PlonePAS <5.0
-    from Products.PlonePAS.Extensions.Install import migrate_root_uf
-    from Products.PlonePAS.Extensions.Install import registerPluginTypes
 
 SITE_OWNER_NAME = SITE_OWNER_PASSWORD = "admin"
 
@@ -35,11 +32,13 @@ SITE_OWNER_NAME = SITE_OWNER_PASSWORD = "admin"
 @implementer(ILDAPProps)
 @adapter(Interface)
 def ldapprops(context):
+    """Adapter to provide LDAPProps for the test layer, using
+    the properties defined in the ldaptesting fixture."""
     props = LDAPProps(context)
 
     props.uri = ldaptesting.props.uri
     props.user = ldaptesting.props.user
-    props.roles = ldaptesting.props.roles
+    props.roles = ["Member"]
     props.password = ldaptesting.props.password
     props.cache = ldaptesting.props.cache
     props.page_size = ldaptesting.props.page_size
@@ -50,18 +49,23 @@ def ldapprops(context):
 @implementer(ILDAPUsersConfig)
 @adapter(Interface)
 def usersconfig(context):
+    """Adapter to provide LDAPUsersConfig for the test layer, using
+    the configuration defined in the ldaptesting fixture."""
     return ldaptesting.LDIF_groupOfNames_10_10.ucfg
 
 
 @implementer(ILDAPGroupsConfig)
 @adapter(Interface)
 def groupsconfig(context):
+    """Adapter to provide LDAPGroupsConfig for the test layer, using
+    the configuration defined in the ldaptesting fixture."""
     return ldaptesting.LDIF_groupOfNames_10_10.gcfg
 
 
 class PASLDAPLayer(Layer):
+    """Testing layer for pas.plugins.ldap add-on."""
 
-    defaultBases = (ldaptesting.LDIF_groupOfNames_10_10, z2.INTEGRATION_TESTING)
+    defaultBases = (ldaptesting.LDIF_groupOfNames_10_10, zope.INTEGRATION_TESTING)
 
     # Products that will be installed, plus options
     products = (
@@ -95,9 +99,6 @@ class PASLDAPLayer(Layer):
         """
 
         # Load dependent products's ZCML
-        from zope.configuration import xmlconfig
-        from zope.dottedname.resolve import resolve
-
         def loadAll(filename):
             for p, config in self.products:
                 if not config["loadZCML"]:
@@ -107,7 +108,7 @@ class PASLDAPLayer(Layer):
                     xmlconfig.file(
                         filename, package, context=self["configurationContext"]
                     )
-                except IOError:
+                except OSError:
                     pass
 
         loadAll("meta.zcml")
@@ -122,7 +123,7 @@ class PASLDAPLayer(Layer):
         of this class.
         """
         for prd, config in self.products:
-            z2.installProduct(self["app"], prd)
+            zope.installProduct(self["app"], prd)
 
 
 PASLDAP_FIXTURE = PASLDAPLayer()

@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+"""Monkey patch to support user portraits stored in property sheets."""
+
 # TEMPORARY MONKEY PATCH
 # until this is changed upstream!
 from Acquisition import aq_inner
@@ -14,15 +15,19 @@ from zope.traversing.interfaces import ITraversable
 
 
 class PortraitImage(Image):
+    """An image class for user portraits."""
+
     def getPhysicalPath(self):
+        """Get the physical path for the portrait image."""
         parent = aq_parent(aq_inner(self))
-        trav = "++portrait++%s" % self.id()
+        trav = f"++portrait++{self.id()}"
         if not hasattr(parent, "getPhysicalPath"):
             return ("", trav)
         return tuple(list(parent.getPhysicalPath()) + [trav])
 
 
 def getPortraitFromSheet(context, userid):
+    """Get the portrait image for a user from their property sheet."""
     mtool = getToolByName(context, "portal_membership")
     member = mtool.getMemberById(userid)
     if not member:
@@ -46,12 +51,15 @@ def getPortraitFromSheet(context, userid):
 
 
 @implementer(ITraversable)
-class PortraitTraverser(object):
+class PortraitTraverser:
+    """A traverser for user portraits."""
+
     def __init__(self, context, request=None):
         self.context = context
         self.request = request
 
     def traverse(self, userid, subpath):
+        """Traverse to the portrait image for a user."""
         return getPortraitFromSheet(self.context, userid).__of__(self.context)
 
 

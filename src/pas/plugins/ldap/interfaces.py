@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+"""Interfaces for the LDAP plugin."""
+
 from zope.interface import Interface
 
 

@@ -1,13 +1,22 @@
-# -*- coding: utf-8 -*-
-from AccessControl.Permissions import add_user_folders
-from pas.plugins.ldap import monkey  # noqa
-from pas.plugins.ldap.plugin import LDAPPlugin
-from pas.plugins.ldap.plugin import manage_addLDAPPlugin
-from pas.plugins.ldap.plugin import manage_addLDAPPluginForm
-from pas.plugins.ldap.plugin import zmidir
-from Products.PluggableAuthService import registerMultiPlugin
+"""Init and utils."""
 
+from . import monkey  # noqa
+from .plugin import LDAPPlugin
+from .plugin import manage_addLDAPPlugin
+from .plugin import manage_addLDAPPluginForm
+from .plugin import zmidir
+from AccessControl.Permissions import add_user_folders
+from Products.PluggableAuthService import registerMultiPlugin
+from zope.i18nmessageid import MessageFactory
+
+import logging
 import os
+
+PACKAGE_NAME = "pas.plugins.ldap"
+
+_ = MessageFactory(PACKAGE_NAME)
+
+logger = logging.getLogger(PACKAGE_NAME)
 
 
 def initialize(context):
