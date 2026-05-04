@@ -36,6 +36,17 @@ TODO
 
 For a detailed list of TODO tasks to this project, please checkout the `TODO file <https://github.com/collective/pas.plugins.ldap/blob/main/TODO.rst>`_.
 
+Screenshots
+===========
+
+After installation, you will find a new behavior available, go to ``Site Setup`` > ``Users`` > ``LDAP / AD Support`` as the following screenshot:
+
+
+.. image:: https://raw.githubusercontent.com/collective/pas.plugins.ldap/refs/heads/master/docs/images/ldap-settings.png
+    :target: https://github.com/collective/pas.plugins.ldap/
+    :alt: pas.plugins.ldap Plone control panel
+
+
 Translations
 ============
 
