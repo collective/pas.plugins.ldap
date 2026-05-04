@@ -42,7 +42,7 @@ Screenshots
 After installation, you will find a new behavior available, go to ``Site Setup`` > ``Users`` > ``LDAP / AD Support`` as the following screenshot:
 
 
-.. image:: https://raw.githubusercontent.com/collective/pas.plugins.ldap/refs/heads/master/docs/images/ldap-settings.png
+.. image:: https://raw.githubusercontent.com/collective/pas.plugins.ldap/refs/heads/main/docs/images/ldap-settings.png
     :target: https://github.com/collective/pas.plugins.ldap/
     :alt: pas.plugins.ldap Plone control panel
 
