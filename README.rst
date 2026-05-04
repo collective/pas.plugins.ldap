@@ -227,47 +227,50 @@ Development Workflow
 
 1. Install requirements:
 
-::
+.. code-block:: shell
+
     make install
 
-2. Start backend (Docker):
+2. In another terminal, start frontend:
 
-::
-    make backend-docker-start
+.. code-block:: shell
 
-3. In another terminal, start frontend:
-
-::
     make start
 
-4. Black format and lint code:
+3. Black format and lint code:
 
-::
+.. code-block:: shell
+
     make black-check && make black-format && make black-check
 
-5. Isort format and lint code:
+4. Isort format and lint code:
 
-::
+.. code-block:: shell
+
     make isort-check && make isort-format && make isort-check
 
-6. Zpretty format and lint code:
+5. Zpretty format and lint code:
 
-::
+.. code-block:: shell
+
     make zpretty-check && make zpretty-format && make zpretty-check
 
-1. Extract i18n messages:
+6. Extract i18n messages:
 
-::
+.. code-block:: shell
+
     make i18n
 
 7. Run unit tests:
 
-::
+.. code-block:: shell
+
     make test
 
 8. Run coverage unit tests:
 
-::
+.. code-block:: shell
+
     make coverage
 
 ----
