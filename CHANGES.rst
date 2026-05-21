@@ -5,6 +5,9 @@ History
 2.0.0 (unreleased)
 ------------------
 
+- Fixed the "LDAP / Active Directory Configuration" controlpanel uses wrong permission.
+  [szakitibi, macagua]
+
 - Updated the Spanish translation.
   [macagua]
 
