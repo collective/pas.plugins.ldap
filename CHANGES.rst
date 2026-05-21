@@ -5,6 +5,15 @@ History
 2.0.0 (unreleased)
 ------------------
 
+- Updated the Spanish translation.
+  [macagua]
+
+- Added more improvements about the i18n support.
+  [macagua]
+
+- Added a new UX for the 'LDAP / Active Directory Configuration' Plone control panel.
+  [macagua]
+
 - Target Plone 6.x only. Drop support for Python < 3.10.
   [jensens]
 
