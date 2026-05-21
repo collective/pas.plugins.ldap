@@ -13,6 +13,6 @@
              visible="True"
              i18n:attributes="title"
   >
-    <permission>Manage Portal</permission>
+    <permission>Manage portal</permission>
   </configlet>
 </object>
