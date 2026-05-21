@@ -4,15 +4,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pas.plugins.ldap\n"
 "POT-Creation-Date: 2026-05-02 16:13+0000\n"
-"PO-Revision-Date: 2026-05-02 16:32+0200\n"
+"PO-Revision-Date: 2026-05-21 11:42+0200\n"
 "Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language-Code: en\n"
-"Language-Name: English\n"
+"Language-Code: es\n"
+"Language-Name: Spanish\n"
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: pas.plugins.ldap\n"
 "Language: es\n"
@@ -286,7 +286,7 @@ msgstr "Caché de consultas LDAP"
 #. Default: Cache Settings
 #: pas/plugins/ldap/properties.yaml:256
 msgid "lbl_cache_settings"
-msgstr "Configuración de la caché"
+msgstr "Ajustes de caché"
 
 #. Default: Cache timeout in seconds
 #: pas/plugins/ldap/properties.yaml:276
@@ -326,7 +326,7 @@ msgstr "Ámbito de búsqueda de grupos"
 #. Default: Groups Settings
 #: pas/plugins/ldap/properties.yaml:200
 msgid "lbl_groups_settings"
-msgstr "Configuración de grupos"
+msgstr "Ajustes de grupos"
 
 #. Default: Ignore certificate check?
 #: pas/plugins/ldap/properties.yaml:59
@@ -346,7 +346,7 @@ msgstr "Tiempo de espera de la operación LDAP en segundos."
 #. Default: LDAP Server Settings
 #: pas/plugins/ldap/properties.yaml:12
 msgid "lbl_ldap_server_settings"
-msgstr "Configuración del servidor LDAP"
+msgstr "Ajustes de servidor LDAP"
 
 #. Default: Manager Password
 #: pas/plugins/ldap/properties.yaml:54
@@ -475,7 +475,7 @@ msgstr "Ámbito de búsqueda de los usuarios"
 #. Default: Users Settings
 #: pas/plugins/ldap/properties.yaml:103
 msgid "lbl_users_settings"
-msgstr "Configuración de usuarios"
+msgstr "Ajustes de usuarios"
 
 #. Default: No URI defined
 #: pas/plugins/ldap/properties.yaml:24
