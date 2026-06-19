@@ -13,12 +13,19 @@ jobs:
           - "3.11"
           - "3.12"
           - "3.13"
+          - "3.14"
         plone:
           - "6.0.14"
           - "6.1.2"
+          - "6.2.0"
         exclude:
         - python: "3.13"
           plone: "6.0.14"
+        - python: "3.14"
+          plone: "6.0.14"
+        - python: "3.14"
+          plone: "6.1.2"
+
 
     steps:
       - uses: actions/checkout@v2
