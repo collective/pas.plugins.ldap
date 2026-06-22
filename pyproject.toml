@@ -37,7 +37,6 @@ classifiers = [
 ]
 dependencies = [
     "bda.cache",
-    "five.globalrequest",
     "node.ext.ldap>=2.0.0",
     "odict",
     "plone.api",

@@ -130,7 +130,7 @@ class TestGetPortraitFromSheet(unittest.TestCase):
         with patch("pas.plugins.ldap.monkey.getToolByName", return_value=mtool), \
              patch("pas.plugins.ldap.monkey.PortraitImage",
                    return_value=mock_portrait_img), \
-             patch("pas.plugins.ldap.monkey.StringIO"):
+             patch("pas.plugins.ldap.monkey.BytesIO"):
             result = getPortraitFromSheet(context, "uid0")
         self.assertIs(result, mock_portrait_img)
 
@@ -145,7 +145,7 @@ class TestGetPortraitFromSheet(unittest.TestCase):
         mock_sio = MagicMock()
         with patch("pas.plugins.ldap.monkey.getToolByName", return_value=mtool), \
              patch("pas.plugins.ldap.monkey.PortraitImage") as MockPI, \
-             patch("pas.plugins.ldap.monkey.StringIO", return_value=mock_sio):
+             patch("pas.plugins.ldap.monkey.BytesIO", return_value=mock_sio):
             getPortraitFromSheet(context, "testuser")
 
         MockPI.assert_called_once_with("testuser", "Jane Doe", mock_sio, "image/jpeg")

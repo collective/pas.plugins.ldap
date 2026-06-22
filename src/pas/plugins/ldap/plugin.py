@@ -23,7 +23,6 @@ from zope.interface import implementer
 import ldap
 import logging
 import os
-import six
 import time
 
 logger = logging.getLogger("pas.plugins.ldap")
@@ -450,6 +449,7 @@ class LDAPPlugin(BasePlugin):
     # ##
     # pas_interfaces.plugins.IRolesPlugin
     #
+    @security.private
     def getRolesForPrincipal(self, principal, request=None):
         """Get the roles for a principal.
 
@@ -461,6 +461,8 @@ class LDAPPlugin(BasePlugin):
             tuple: A tuple of roles for the principal.
         """
         default = ()
+        if not self.is_plugin_active(pas_interfaces.IRolesPlugin):
+            return default
         users = self.users
         if not users:
             return default
