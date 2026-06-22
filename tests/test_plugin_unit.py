@@ -503,8 +503,18 @@ class TestGetRolesForPrincipal(unittest.TestCase):
     def setUp(self):
         self.plugin = _make_plugin()
 
+    def test_returns_empty_when_not_active(self):
+        """Returns () when the IRolesPlugin interface is not active."""
+        self.plugin.is_plugin_active = MagicMock(return_value=False)
+        with patch.object(type(self.plugin), "users", new_callable=PropertyMock) as pu:
+            pu.return_value = MagicMock()
+            principal = MagicMock()
+            result = self.plugin.getRolesForPrincipal(principal)
+        self.assertEqual(result, ())
+
     def test_returns_empty_when_no_users(self):
         """Returns () when self.users is None (line 466)."""
+        self.plugin.is_plugin_active = MagicMock(return_value=True)
         with patch.object(type(self.plugin), "users", new_callable=PropertyMock) as pu:
             pu.return_value = None
             principal = MagicMock()
@@ -1003,6 +1013,7 @@ class TestGetRolesForPrincipalNotFound(unittest.TestCase):
     def test_returns_empty_when_enumerateusers_finds_nothing(self):
         """Returns () when users is truthy but enumerateUsers returns () (line 469)."""
         plugin = _make_plugin()
+        plugin.is_plugin_active = MagicMock(return_value=True)
         mock_users = MagicMock()
         mock_users.search.return_value = []  # enumerateUsers will return ()
         principal = MagicMock()

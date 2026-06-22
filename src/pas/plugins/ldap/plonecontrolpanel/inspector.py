@@ -12,13 +12,6 @@ from zope.component import getUtility
 import json
 
 
-def safe_encode(val):
-    """Encode a value to bytes if it's a string, otherwise return it as is."""
-    if isinstance(val, str):
-        return val.encode("utf-8")
-    return val
-
-
 class LDAPInspector(BrowserView):
     """A view to inspect the LDAP directory structure and attributes for
     debugging purposes."""
@@ -67,9 +60,9 @@ class LDAPInspector(BrowserView):
                         len(val)
                     )
             except UnicodeDecodeError:
-                ret[safe_encode(key)] = "! (UnicodeDecodeError)"
+                ret[safe_unicode(key)] = "! (UnicodeDecodeError)"
             except Exception:
-                ret[safe_encode(key)] = "! (Unknown Exception)"
+                ret[safe_unicode(key)] = "! (Unknown Exception)"
         return json.dumps(ret)
 
     def children(self, baseDN):

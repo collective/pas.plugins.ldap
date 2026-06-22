@@ -29,10 +29,31 @@ History
 - Refactor test setup to use pytest as runner.
   [jensens]
 
-- Increase PAS_PLUGINS_LDAP_OPT_TIMEOUT t
+- Increase the default of the ``PAS_PLUGINS_LDAP_OPT_TIMEOUT`` overall
+  operation timeout from 2.0 to 30.0 seconds.
+  [jensens]
 
-- Remove five.globalrequest dependency.
-  [cillianderoiste]
+- Remove ``five.globalrequest`` dependency.
+  The package now only depends on ``zope.globalrequest``, which was the only
+  one actually imported. Removes the stale dependency declaration.
+  [cillianderoiste, jensens]
+
+- Drop the unused ``six`` dependency.
+  Fix the portrait property-sheet support to use ``io.BytesIO`` instead of the
+  text-only ``six.StringIO``, which raised a ``TypeError`` on binary image data.
+  [jensens]
+
+- ``getRolesForPrincipal`` now honors the activation state of the
+  ``IRolesPlugin`` interface and is declared ``@security.private`` like the
+  other PAS interface methods.
+  Note: as part of the new default user roles feature, LDAP users receive the
+  configured roles (default ``Member``) only when the *Roles* plugin interface
+  is activated for this plugin.
+  [jensens]
+
+- Fix the LDAP inspector raising a ``TypeError`` (bytes dict key) when a node
+  attribute could not be decoded; the error is now reported gracefully again.
+  [jensens]
 
 - Add i18n support and Spanish translation.
   [macagua]
