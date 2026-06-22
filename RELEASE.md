@@ -40,9 +40,12 @@ This only needs to be done once per project.
    - **Required reviewers** → the actual package maintainers (e.g.
      `jensens`, `rnixx`). A PyPI upload then waits for one of them to approve
      the deployment, even if someone else published the Release.
-   - **Deployment branches and tags** → restrict to the release tags (e.g. a
-     tag rule like `*`) and/or `main`, so the workflow can only publish from
-     intended refs.
+   - **Deployment branches and tags** → add a **tag** rule (e.g. `*`, or a
+     stricter version pattern like `[0-9]*.[0-9]*.[0-9]*`). This is required:
+     `release-pypi` only ever runs when a GitHub **Release** is published, and
+     that workflow runs on the **tag** ref (`refs/tags/<version>`), not on a
+     branch. A branch-only rule (e.g. just `main`) would *block* the real PyPI
+     publish. `main` is not needed for `release-pypi`.
 
    `release-test-pypi` can stay unprotected — in-dev builds to Test PyPI are
    low-risk.
