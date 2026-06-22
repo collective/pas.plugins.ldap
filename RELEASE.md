@@ -106,7 +106,7 @@ Use [PEP 440](https://peps.python.org/pep-0440/) pre-release tags
 
 ## Cutting a release
 
-1. Make sure `main` is green and `CHANGES.rst` lists everything under the
+1. Make sure `main` is green and `CHANGES.md` lists everything under the
    target version heading. Rename the `2.0.0 (unreleased)` heading to the
    release date, e.g. `2.0.0 (2026-06-22)`, and commit/merge that to `main`.
 2. Create and push the tag:
@@ -125,7 +125,7 @@ Use [PEP 440](https://peps.python.org/pep-0440/) pre-release tags
 
 ## Pre-release checklist
 
-- [ ] `CHANGES.rst` is up to date and the heading carries the release date.
+- [ ] `CHANGES.md` is up to date and the heading carries the release date.
 - [ ] CI is green on `main` (QA + the full Plone 6.0–6.2 / Python 3.10–3.14 matrix).
 - [ ] Trusted publishers and GitHub environments are configured (one-time),
       and `release-pypi` has **required reviewers** set (mandatory for this

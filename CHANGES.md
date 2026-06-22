@@ -1,31 +1,33 @@
+# History
 
-History
-=======
+## 2.0.0 (unreleased)
 
-2.0.0 (unreleased)
-------------------
-
-- Derive the package version from git tags via ``hatch-vcs`` (the static
-  ``version`` in ``pyproject.toml`` is gone). Releases are now made by tagging.
+- Derive the package version from git tags via `hatch-vcs` (the static
+  `version` in `pyproject.toml` is gone). Releases are now made by tagging.
   [jensens]
 
-- Switch Python linting and formatting from black/isort to ``ruff``.
+- Switch Python linting and formatting from black/isort to `ruff`.
   [jensens]
 
-- Restructure CI into a ``CI`` umbrella workflow (QA + tests) and add a
+- Restructure CI into a `CI` umbrella workflow (QA + tests) and add a
   PyPI/Test-PyPI release workflow using OIDC Trusted Publishing.
   [jensens]
 
-- Portrait traverser: raise a proper ``LocationError`` (404) when a user has
-  no portrait on the property sheet, instead of an ``AttributeError`` from
-  calling ``__of__`` on ``None``.
-  Fixes `issue #68 <https://github.com/collective/pas.plugins.ldap/issues/68>`_.
+- Convert the documentation files (`README`, `CHANGES`, `CONTRIBUTORS`,
+  `LICENSE`, `TODO`) from reStructuredText to Markdown and drop the unused
+  `MANIFEST.in`. (The `tests/*.rst` doctest files are unchanged.)
   [jensens]
 
-- Compile the gettext ``.po`` catalogs to ``.mo`` automatically during the
+- Portrait traverser: raise a proper `LocationError` (404) when a user has
+  no portrait on the property sheet, instead of an `AttributeError` from
+  calling `__of__` on `None`.
+  Fixes [issue #68](https://github.com/collective/pas.plugins.ldap/issues/68).
+  [jensens]
+
+- Compile the gettext `.po` catalogs to `.mo` automatically during the
   build (hatchling build hook) and ship them in the sdist and wheel, so the
   translations are active for installs from PyPI without a manual
-  ``make gettext-compile`` step.
+  `make gettext-compile` step.
   [jensens]
 
 - Fixed the "LDAP / Active Directory Configuration" controlpanel uses wrong permission.
@@ -52,29 +54,29 @@ History
 - Refactor test setup to use pytest as runner.
   [jensens]
 
-- Increase the default of the ``PAS_PLUGINS_LDAP_OPT_TIMEOUT`` overall
+- Increase the default of the `PAS_PLUGINS_LDAP_OPT_TIMEOUT` overall
   operation timeout from 2.0 to 30.0 seconds.
   [jensens]
 
-- Remove ``five.globalrequest`` dependency.
-  The package now only depends on ``zope.globalrequest``, which was the only
+- Remove `five.globalrequest` dependency.
+  The package now only depends on `zope.globalrequest`, which was the only
   one actually imported. Removes the stale dependency declaration.
   [cillianderoiste, jensens]
 
-- Drop the unused ``six`` dependency.
-  Fix the portrait property-sheet support to use ``io.BytesIO`` instead of the
-  text-only ``six.StringIO``, which raised a ``TypeError`` on binary image data.
+- Drop the unused `six` dependency.
+  Fix the portrait property-sheet support to use `io.BytesIO` instead of the
+  text-only `six.StringIO`, which raised a `TypeError` on binary image data.
   [jensens]
 
-- ``getRolesForPrincipal`` now honors the activation state of the
-  ``IRolesPlugin`` interface and is declared ``@security.private`` like the
+- `getRolesForPrincipal` now honors the activation state of the
+  `IRolesPlugin` interface and is declared `@security.private` like the
   other PAS interface methods.
   Note: as part of the new default user roles feature, LDAP users receive the
-  configured roles (default ``Member``) only when the *Roles* plugin interface
+  configured roles (default `Member`) only when the *Roles* plugin interface
   is activated for this plugin.
   [jensens]
 
-- Fix the LDAP inspector raising a ``TypeError`` (bytes dict key) when a node
+- Fix the LDAP inspector raising a `TypeError` (bytes dict key) when a node
   attribute could not be decoded; the error is now reported gracefully again.
   [jensens]
 
@@ -85,17 +87,15 @@ History
   [sauzher]
 
 
-1.8.4 (2025-07-14)
-------------------
+## 1.8.4 (2025-07-14)
 
-- Remove the dependency from ``five.globalrequest``.
+- Remove the dependency from `five.globalrequest`.
   This is needed to make this package work on Plone 6.1.2.
-  See `PR #134 <https://github.com/collective/pas.plugins.ldap/pull/134>`_.
+  See [PR #134](https://github.com/collective/pas.plugins.ldap/pull/134).
   [cillianderoiste]
 
 
-1.8.3 (2024-11-13)
-------------------
+## 1.8.3 (2024-11-13)
 
 - Add uninstall profile
   [dumitval]
@@ -104,23 +104,20 @@ History
   [mamico]
 
 
-1.8.2 (2022-10-31)
-------------------
+## 1.8.2 (2022-10-31)
 
 - Add connection and operation timeout properties for LDAP server.
-  Fixes `issue #61 <https://github.com/collective/pas.plugins.ldap/issues/61>`_.
+  Fixes [issue #61](https://github.com/collective/pas.plugins.ldap/issues/61).
   [mamico]
 
 
-1.8.1 (2021-10-09)
-------------------
+## 1.8.1 (2021-10-09)
 
 - Fix imports for Zope 5 and Plone 6.
   [pbauer]
 
 
-1.8.0 (2020-06-11)
-------------------
+## 1.8.0 (2020-06-11)
 
 Features:
 
@@ -131,30 +128,27 @@ Features:
   [jensens]
 
 
-1.7.2 (2020-02-21)
-------------------
+## 1.7.2 (2020-02-21)
 
 Bug fixes:
 
 - Import loader from YAFOWIL.
-  Fixes `issue #97 <https://github.com/collective/pas.plugins.ldap/issues/97>`_
-  and `issue #92 <https://github.com/collective/pas.plugins.ldap/issues/92>`_.
+  Fixes [issue #97](https://github.com/collective/pas.plugins.ldap/issues/97)
+  and [issue #92](https://github.com/collective/pas.plugins.ldap/issues/92).
   [al45tair]
 
 
-1.7.1 (2020-02-14)
-------------------
+## 1.7.1 (2020-02-14)
 
 - Use the plugin ID as the property sheet ID instead of the user ID.
-  Fixes `issue  #95 <https://github.com/collective/pas.plugins.ldap/issues/95>`_.
+  Fixes [issue  #95](https://github.com/collective/pas.plugins.ldap/issues/95).
   [reinhardt]
 
 - Grant the Member role to all LDAP users.
   [reinhardt]
 
 
-1.7.0 (2020-01-22)
-------------------
+## 1.7.0 (2020-01-22)
 
 - Fixed error display for /plone_ldapcontrolpanel when a wrong value is
   provided for the "Groups container DN" field.
@@ -166,19 +160,18 @@ Bug fixes:
 - Log LDAP-errors as level error, to get them i.e. into Sentry.
   [jensens]
 
-- Make timeout of LDAP-errors logging configurable with environment variable ``PAS_PLUGINS_LDAP_ERROR_LOG_TIMEOUT``.
+- Make timeout of LDAP-errors logging configurable with environment variable `PAS_PLUGINS_LDAP_ERROR_LOG_TIMEOUT`.
   [jensens]
 
 - Log long running LDAP/ pas.plugin.ldap operations as error.
-  Threshold can be controlled with environment variable ``PAS_PLUGINS_LDAP_LONG_RUNNING_LOG_THRESHOLD``.
+  Threshold can be controlled with environment variable `PAS_PLUGINS_LDAP_LONG_RUNNING_LOG_THRESHOLD`.
   [jensens]
 
 
-1.6.2 (2019-09-12)
-------------------
+## 1.6.2 (2019-09-12)
 
 - Remove broken old import step from base profile.
-  Fixes `issue  #74 <https://github.com/collective/pas.plugins.ldap/issues/74>`_.
+  Fixes [issue  #74](https://github.com/collective/pas.plugins.ldap/issues/74).
   [maurits]
 
 - Remove deprecation warning for removal of time.clock() which will break
@@ -190,8 +183,7 @@ Bug fixes:
   [reinhardt]
 
 
-1.6.1 (2019-05-07)
-------------------
+## 1.6.1 (2019-05-07)
 
 - Pimp ZMI view to look better on Zope 4.
   [jensens]
@@ -200,8 +192,7 @@ Bug fixes:
   [jensens]
 
 
-1.6.0 (2019-05-07)
-------------------
+## 1.6.0 (2019-05-07)
 
 - Fix inspector: In Python 3 JSON dumps does not accept bytes as keys.
   [jensens, 2silver]
@@ -244,11 +235,10 @@ Bug fixes:
   [reinhardt]
 
 
-1.5.3 (2017-12-15)
-------------------
+## 1.5.3 (2017-12-15)
 
-- Remove manual LDAP search pagination on UGM principal ``search`` calls.
-  This is done in downstream API as of ``node.ext.ldap`` 1.0b7.
+- Remove manual LDAP search pagination on UGM principal `search` calls.
+  This is done in downstream API as of `node.ext.ldap` 1.0b7.
   [rnix]
 
 - Fix testing: register plugin type of PlonePAS.
@@ -258,8 +248,7 @@ Bug fixes:
   [jensens]
 
 
-1.5.2 (2017-10-20)
-------------------
+## 1.5.2 (2017-10-20)
 
 - Set the memcached TTW setting in the form definition to unicode, so that you
   can save the controlpanel form if you change this field.
@@ -269,23 +258,20 @@ Bug fixes:
   [svx]
 
 
-1.5.1 (2016-10-18)
-------------------
+## 1.5.1 (2016-10-18)
 
-- Fix: TTW setting of ``page_size`` resulted in float value.
+- Fix: TTW setting of `page_size` resulted in float value.
   Now set form datattype to integer.
   Thanks @datakurre for reporting!
   [jensens]
 
 
-1.5 (2016-10-06)
-----------------
+## 1.5 (2016-10-06)
 
 - No changes.
 
 
-1.5b1 (2016-09-09)
-------------------
+## 1.5b1 (2016-09-09)
 
 - GroupEnumeration paged.
   [jensens]
@@ -312,16 +298,16 @@ Bug fixes:
 - Adopt LDAP instector to use DN instead of RDN for node identification.
   [rnix]
 
-- Add dummy ``defaults`` setting to ``UsersConfig`` and ``GroupsConfig``
+- Add dummy `defaults` setting to `UsersConfig` and `GroupsConfig`
   adapters. These defaults are used to set child creation defaults, thus
   concrete implementation is postponed until user and group creation is
   supported through plone UI.
   [rnix]
 
-- Add ``ignore_cert`` setting to ``LDAPProps`` adapter.
+- Add `ignore_cert` setting to `LDAPProps` adapter.
   [rnix]
 
-- Remove ``check_duplicates`` setting which is not available any more in
+- Remove `check_duplicates` setting which is not available any more in
   node.ext.ldap.
   [rnix]
 
@@ -338,8 +324,7 @@ Bug fixes:
   [jensens]
 
 
-1.4.0 (2014-10-24)
-------------------
+## 1.4.0 (2014-10-24)
 
 - Feature: Alternative volatile cache for UGM tree on plugin.
   [jensens]
@@ -349,53 +334,50 @@ Bug fixes:
 
 - introduce pluggable caching mechanism on ugm-tree level, defaults to
   caching on request. Can be overruled by providing an adapter implementing
-  ``pas.plugins.ldap.interfaces.IPluginCacheHandler``.
+  `pas.plugins.ldap.interfaces.IPluginCacheHandler`.
   [jensens]
 
 - log how long it takes to build up a users or groups tree.
   [jensens]
 
-1.3.2 (2014-09-10)
-------------------
+## 1.3.2 (2014-09-10)
 
 - Small fixes in inspector.
   [rnix]
 
 
-1.3.1 (2014-08-05)
-------------------
+## 1.3.1 (2014-08-05)
 
 - Fix dependency versions.
   [rnix]
 
 
-1.3.0 (2014-05-12)
-------------------
+## 1.3.0 (2014-05-12)
 
-- Raise ``RuntimeError`` instead of ``KeyError`` when password change method
+- Raise `RuntimeError` instead of `KeyError` when password change method
   couldn't locate the user in LDAP tree. Maybe it's a local user and
-  ``Products.PlonePAS.pas.userSetPassword`` expects a ``RuntimeError`` to be
+  `Products.PlonePAS.pas.userSetPassword` expects a `RuntimeError` to be
   raised in this case.
   [saily]
 
 
-1.2.0 (2014-03-13)
-------------------
+## 1.2.0 (2014-03-13)
 
-- add property ``check_duplicates``. Adds ability to disable duplicates check
+- add property `check_duplicates`. Adds ability to disable duplicates check
   for keys in ldap in order to avoid failure if ldap strcuture is not perfect.
 
 - Add new property to disable duplicate primary/secondary key checking
   in LDAP trees. This allows pas.plugins.ldap to read LDAP tree and ignore
-  duplicated items instead of raising::
+  duplicated items instead of raising:
 
-    Traceback (most recent call last):
-    ...
-    RuntimeError: Key not unique: <key>='<value>'.
+  ```
+  Traceback (most recent call last):
+  ...
+  RuntimeError: Key not unique: <key>='<value>'.
+  ```
 
 
-1.1.0 (2014-03-03)
-------------------
+## 1.1.0 (2014-03-03)
 
 - ldap errors dont block that much if ldap is not reachable,
   timeout blocked in past the whole zope. now default timeout for retry is
@@ -412,23 +394,20 @@ Bug fixes:
   [saily]
 
 
-1.0.2
------
+## 1.0.2
 
 - sometimes ldap returns an empty string as portrait. take this as no portrait.
   [jensens, 2013-09-11]
 
-1.0.1
------
+## 1.0.1
 
 - because of passwordreset problem we figured out that pas searchUsers calls
   plugins search with both login and name, which was passed to ugm and returned
   always an empty result
   [benniboy]
 
-1.0
----
+## 1.0
 
 - make it work.
 
-- base work done so far in ``bda.pasldap`` and ``bda.plone.ldap`` was merged.
+- base work done so far in `bda.pasldap` and `bda.plone.ldap` was merged.

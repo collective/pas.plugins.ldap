@@ -2,7 +2,7 @@
 name = "pas.plugins.ldap"
 dynamic = ["version"]
 description = "LDAP/AD Plugin for Plone/Zope PluggableAuthService (users+groups)"
-readme = "README.rst"
+readme = "README.md"
 license = { text = "GPL 2.0" }
 authors = [{ name = "BlueDynamics Alliance", email = "dev@bluedynamics.com" }]
 keywords = [
@@ -64,7 +64,7 @@ test = ["plone.testing", "pytest-plone"]
 target = "plone"
 
 [project.urls]
-ChangeLog = "https://github.com/collective/pas.plugins.ldap/blob/master/CHANGES.rst"
+ChangeLog = "https://github.com/collective/pas.plugins.ldap/blob/main/CHANGES.md"
 Homepage = "https://github.com/collective/pas.plugins.ldap/"
 "Issue Tracker" = "https://github.com/collective/pas.plugins.ldap/issues"
 "Source Code" = "https://github.com/collective/pas.plugins.ldap"
