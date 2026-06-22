@@ -5,6 +5,12 @@ History
 2.0.0 (unreleased)
 ------------------
 
+- Portrait traverser: raise a proper ``LocationError`` (404) when a user has
+  no portrait on the property sheet, instead of an ``AttributeError`` from
+  calling ``__of__`` on ``None``.
+  Fixes `issue #68 <https://github.com/collective/pas.plugins.ldap/issues/68>`_.
+  [jensens]
+
 - Fixed the "LDAP / Active Directory Configuration" controlpanel uses wrong permission.
   [szakitibi, macagua]
 
