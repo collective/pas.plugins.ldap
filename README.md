@@ -4,8 +4,6 @@
 
 [![CI](https://github.com/collective/pas.plugins.ldap/actions/workflows/ci.yaml/badge.svg)](https://github.com/collective/pas.plugins.ldap/actions/workflows/ci.yaml)
 
-[![coveralls](https://coveralls.io/repos/collective/pas.plugins.ldap/badge.svg?branch=master&service=github)](https://coveralls.io/github/collective/pas.plugins.ldap?branch=master)
-
 This is a [LDAP](https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol) Plugin for the [Zope](https://www.zope.dev/) [Pluggable Authentication Service (PAS)](https://pypi.org/project/Products.PluggableAuthService/).
 
 `pas.plugins.ldap` is **not** releated to the old [LDAPUserFolder](https://pypi.org/project/Products.LDAPUserFolder/) / [LDAPMultiPlugins](https://pypi.org/project/Products.LDAPMultiPlugins/) and the packages (i.e. [PloneLDAP](https://pypi.org/project/Products.PloneLDAP/)) stacked on top of it in any way.
