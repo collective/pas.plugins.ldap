@@ -201,6 +201,19 @@ class TestPortraitTraverser(unittest.TestCase):
         self.assertEqual(of_calls, [ctx])
         self.assertIs(result, mock_wrapped)
 
+    def test_traverse_raises_when_no_portrait(self):
+        """traverse raises LocationError when the user has no portrait."""
+        from zope.location.interfaces import LocationError
+
+        ctx = MagicMock()
+        traverser = PortraitTraverser(ctx)
+        with patch(
+            "pas.plugins.ldap.monkey.getPortraitFromSheet",
+            return_value=None,
+        ):
+            with self.assertRaises(LocationError):
+                traverser.traverse("uid0", [])
+
 
 # ---------------------------------------------------------------------------
 # patched_getPersonalPortrait  (lines 72-94)

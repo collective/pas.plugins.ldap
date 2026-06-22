@@ -11,6 +11,7 @@ from Products.PlonePAS.tools.membership import _checkPermission
 from Products.PlonePAS.tools.membership import default_portrait
 from Products.PlonePAS.tools.membership import MembershipTool
 from zope.interface import implementer
+from zope.location.interfaces import LocationError
 from zope.traversing.interfaces import ITraversable
 
 
@@ -61,7 +62,11 @@ class PortraitTraverser:
 
     def traverse(self, userid, subpath):
         """Traverse to the portrait image for a user."""
-        return getPortraitFromSheet(self.context, userid).__of__(self.context)
+        portrait = getPortraitFromSheet(self.context, userid)
+        if portrait is None:
+            # no portrait on the user's property sheet -> not found
+            raise LocationError(self.context, userid)
+        return portrait.__of__(self.context)
 
 
 def patched_getPersonalPortrait(self, id=None, verifyPermission=0):
