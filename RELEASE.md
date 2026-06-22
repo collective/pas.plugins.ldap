@@ -31,8 +31,21 @@ This only needs to be done once per project.
    - `release-pypi`
    - `release-test-pypi`
 
-   Optionally add protection rules (e.g. required reviewers) to
-   `release-pypi`.
+   **Protecting `release-pypi` is required, not optional.** This repository
+   lives in the `collective` org, which grants write access liberally — so
+   *anyone with repo write access could otherwise publish a GitHub Release and
+   push to PyPI*. With Trusted Publishing the upload runs under the workflow's
+   identity in the environment, so the environment's protection rules are the
+   real gate on who can release. On the `release-pypi` environment set:
+   - **Required reviewers** → the actual package maintainers (e.g.
+     `jensens`, `rnixx`). A PyPI upload then waits for one of them to approve
+     the deployment, even if someone else published the Release.
+   - **Deployment branches and tags** → restrict to the release tags (e.g. a
+     tag rule like `*`) and/or `main`, so the workflow can only publish from
+     intended refs.
+
+   `release-test-pypi` can stay unprotected — in-dev builds to Test PyPI are
+   low-risk.
 
 2. **PyPI trusted publisher** — on <https://pypi.org/manage/project/pas.plugins.ldap/settings/publishing/>
    add a GitHub publisher:
@@ -89,5 +102,7 @@ Use [PEP 440](https://peps.python.org/pep-0440/) pre-release tags
 
 - [ ] `CHANGES.rst` is up to date and the heading carries the release date.
 - [ ] CI is green on `main` (QA + the full Plone 6.0–6.2 / Python 3.10–3.14 matrix).
-- [ ] Trusted publishers and GitHub environments are configured (one-time).
+- [ ] Trusted publishers and GitHub environments are configured (one-time),
+      and `release-pypi` has **required reviewers** set (mandatory for this
+      collective repo).
 - [ ] Tag follows PEP 440 (`2.0.0`, `2.0.1`, `2.1.0a1`, …).
