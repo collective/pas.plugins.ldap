@@ -11,6 +11,12 @@ History
   Fixes `issue #68 <https://github.com/collective/pas.plugins.ldap/issues/68>`_.
   [jensens]
 
+- Compile the gettext ``.po`` catalogs to ``.mo`` automatically during the
+  build (hatchling build hook) and ship them in the sdist and wheel, so the
+  translations are active for installs from PyPI without a manual
+  ``make gettext-compile`` step.
+  [jensens]
+
 - Fixed the "LDAP / Active Directory Configuration" controlpanel uses wrong permission.
   [szakitibi, macagua]
 
