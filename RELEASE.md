@@ -50,18 +50,40 @@ This only needs to be done once per project.
    `release-test-pypi` can stay unprotected — in-dev builds to Test PyPI are
    low-risk.
 
-2. **PyPI trusted publisher** — on <https://pypi.org/manage/project/pas.plugins.ldap/settings/publishing/>
-   add a GitHub publisher:
-   - Owner: `collective`
-   - Repository: `pas.plugins.ldap`
-   - Workflow name: `release.yaml`
-   - Environment: `release-pypi`
+2. **PyPI trusted publisher** — the project already exists, so add a GitHub
+   publisher on
+   <https://pypi.org/manage/project/pas.plugins.ldap/settings/publishing/>
+   (you must be an owner/maintainer of the PyPI project):
 
-3. **Test PyPI trusted publisher** — repeat on
-   <https://test.pypi.org/> with environment `release-test-pypi`.
+   | Field | Value |
+   | --- | --- |
+   | Owner | `collective` |
+   | Repository name | `pas.plugins.ldap` |
+   | Workflow name | `release.yaml` |
+   | Environment name | `release-pypi` |
 
-   > For a brand-new project name you may need to create the project first via
-   > a "pending publisher" entry on (Test) PyPI.
+3. **Test PyPI trusted publisher** — Test PyPI is a **separate site with a
+   separate account**. The project most likely does not exist there yet, so add
+   a *pending publisher* on
+   <https://test.pypi.org/manage/account/publishing/>:
+
+   | Field | Value |
+   | --- | --- |
+   | PyPI Project Name | `pas.plugins.ldap` |
+   | Owner | `collective` |
+   | Repository name | `pas.plugins.ldap` |
+   | Workflow name | `release.yaml` |
+   | Environment name | `release-test-pypi` |
+
+   The project is created on Test PyPI on the first successful upload. If it
+   already exists, add the publisher under its project settings instead
+   (`https://test.pypi.org/manage/project/pas.plugins.ldap/settings/publishing/`,
+   without the *PyPI Project Name* field).
+
+   > The only difference between the two entries is the **Environment name**
+   > (`release-pypi` vs `release-test-pypi`); owner, repository and workflow are
+   > identical. The values must match **exactly** or (Test) PyPI rejects the
+   > OIDC token.
 
 ## Versioning / tags
 
