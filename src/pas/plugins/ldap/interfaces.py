@@ -13,7 +13,7 @@ class ICacheSettingsRecordProvider(Interface):
     """
 
 
-VALUE_NOT_CACHED = dict()
+VALUE_NOT_CACHED = {}
 
 
 class IPluginCacheHandler(Interface):

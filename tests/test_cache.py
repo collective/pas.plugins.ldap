@@ -1,8 +1,10 @@
 """Unit tests for pas.plugins.ldap.cache module."""
 
+from unittest.mock import MagicMock
+from unittest.mock import patch
+
 import time
 import unittest
-from unittest.mock import MagicMock, patch
 
 
 class TestCacheProviderFactoryServers(unittest.TestCase):
@@ -43,7 +45,8 @@ class TestVolatilePluginCache(unittest.TestCase):
 
     def test_get_returns_not_cached_when_expired(self):
         """get() returns VALUE_NOT_CACHED when the cached entry has expired."""
-        from pas.plugins.ldap.cache import VOLATILE_CACHE_MAXAGE, VolatilePluginCache
+        from pas.plugins.ldap.cache import VOLATILE_CACHE_MAXAGE
+        from pas.plugins.ldap.cache import VolatilePluginCache
         from pas.plugins.ldap.interfaces import VALUE_NOT_CACHED
 
         context = MagicMock()

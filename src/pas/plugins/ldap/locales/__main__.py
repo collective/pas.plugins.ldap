@@ -7,6 +7,7 @@ import logging
 import re
 import subprocess
 
+
 logger = logging.getLogger("i18n")
 logger.setLevel(logging.DEBUG)
 
@@ -28,8 +29,8 @@ def i18n_script_setup():
     """Setup the i18n scripts"""
     cmd_i18ndude = "uvx i18ndude"
     cmd_lingua = "uvx lingua"
-    subprocess.call(cmd_i18ndude, shell=True)  # noQA: S602
-    subprocess.call(cmd_lingua, shell=True)  # noQA: S602
+    subprocess.call(cmd_i18ndude, shell=True)
+    subprocess.call(cmd_lingua, shell=True)
 
 
 def locale_folder_setup(domain: str):
@@ -51,7 +52,7 @@ def locale_folder_setup(domain: str):
                 f"--input={locale_path}/{domain}.pot "
                 f"--output={locale_path}/{lang}/LC_MESSAGES/{domain}.po"
             )
-            subprocess.call(cmd, shell=True)  # noQA: S602
+            subprocess.call(cmd, shell=True)
 
 
 def _rebuild(domain: str):
@@ -65,7 +66,7 @@ def _rebuild(domain: str):
         f"--exclude {excludes} "
         f"--create {domain} {target_path} {target_path}/plonecontrolpanel"
     )
-    subprocess.call(cmd, shell=True)  # noQA: S602
+    subprocess.call(cmd, shell=True)
 
 
 def _rebuild_pot_to_merge():
@@ -74,7 +75,7 @@ def _rebuild_pot_to_merge():
         f"{lingua} {target_path}/properties.yaml "
         f"--output {locale_path}/merge-lingua.pot"
     )
-    subprocess.call(cmd, shell=True)  # noQA: S602
+    subprocess.call(cmd, shell=True)
 
 
 def _merge(domain: str):
@@ -87,7 +88,7 @@ def _merge(domain: str):
         f"{i18ndude} merge --pot {locale_path}/{domain}.pot "
         f"--merge {locale_path}/merge-lingua.pot"
     )
-    subprocess.call(cmd, shell=True)  # noQA: S602
+    subprocess.call(cmd, shell=True)
 
 
 def _sync(domain: str):
@@ -100,7 +101,7 @@ def _sync(domain: str):
         f"{i18ndude} sync --pot {locale_path}/{domain}.pot "
         f"{locale_path}/*/LC_MESSAGES/{domain}.po"
     )
-    subprocess.call(cmd, shell=True)  # noQA: S602
+    subprocess.call(cmd, shell=True)
 
 
 def main():

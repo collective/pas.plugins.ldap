@@ -4,22 +4,20 @@ These tests exercise all branches of properties.py using unittest.mock so
 no real LDAP server, Zope layer, or Plone infrastructure is needed.
 """
 
-import unittest
-from unittest.mock import MagicMock, patch
-
-import ldap
+from pas.plugins.ldap.defaults import DEFAULTS
+from pas.plugins.ldap.properties import BasePropertiesForm
+from pas.plugins.ldap.properties import GroupsConfig
+from pas.plugins.ldap.properties import LDAPProps
+from pas.plugins.ldap.properties import propproxy
+from pas.plugins.ldap.properties import UsersConfig
+from unittest.mock import MagicMock
+from unittest.mock import patch
 from yafowil.base import ExtractionError
 from yafowil.base import UNSET
 from yafowil.plone.form import YAMLBaseForm
 
-from pas.plugins.ldap.defaults import DEFAULTS
-from pas.plugins.ldap.properties import (
-    BasePropertiesForm,
-    GroupsConfig,
-    LDAPProps,
-    UsersConfig,
-    propproxy,
-)
+import ldap
+import unittest
 
 
 # ---------------------------------------------------------------------------
@@ -76,7 +74,7 @@ def _make_data(field_values):
     data = MagicMock()
 
     def _fetch_side_effect(name):
-        key = name[len("ldapsettings."):]  # strip "ldapsettings." prefix
+        key = name[len("ldapsettings.") :]  # strip "ldapsettings." prefix
         result = MagicMock()
         result.extracted = field_values.get(key, UNSET)
         return result
@@ -222,10 +220,17 @@ class TestPrepare(unittest.TestCase):
         form = _make_form()
         mock_props, mock_users, mock_groups = self._mock_adapters(user="admin")
 
-        with patch("pas.plugins.ldap.properties.ILDAPProps", return_value=mock_props), \
-             patch("pas.plugins.ldap.properties.ILDAPUsersConfig", return_value=mock_users), \
-             patch("pas.plugins.ldap.properties.ILDAPGroupsConfig", return_value=mock_groups), \
-             patch.object(YAMLBaseForm, "prepare"):
+        with (
+            patch("pas.plugins.ldap.properties.ILDAPProps", return_value=mock_props),
+            patch(
+                "pas.plugins.ldap.properties.ILDAPUsersConfig", return_value=mock_users
+            ),
+            patch(
+                "pas.plugins.ldap.properties.ILDAPGroupsConfig",
+                return_value=mock_groups,
+            ),
+            patch.object(YAMLBaseForm, "prepare"),
+        ):
             form.prepare()
 
         self.assertIs(form.props, mock_props)
@@ -253,10 +258,17 @@ class TestPrepare(unittest.TestCase):
         form = _make_form()
         mock_props, mock_users, mock_groups = self._mock_adapters(user="")
 
-        with patch("pas.plugins.ldap.properties.ILDAPProps", return_value=mock_props), \
-             patch("pas.plugins.ldap.properties.ILDAPUsersConfig", return_value=mock_users), \
-             patch("pas.plugins.ldap.properties.ILDAPGroupsConfig", return_value=mock_groups), \
-             patch.object(YAMLBaseForm, "prepare"):
+        with (
+            patch("pas.plugins.ldap.properties.ILDAPProps", return_value=mock_props),
+            patch(
+                "pas.plugins.ldap.properties.ILDAPUsersConfig", return_value=mock_users
+            ),
+            patch(
+                "pas.plugins.ldap.properties.ILDAPGroupsConfig",
+                return_value=mock_groups,
+            ),
+            patch.object(YAMLBaseForm, "prepare"),
+        ):
             form.prepare()
 
         self.assertTrue(form.anonymous)
@@ -274,11 +286,18 @@ class TestPrepare(unittest.TestCase):
                 raise TypeError("adapter failure on first call")
             return mock_props
 
-        with patch("pas.plugins.ldap.properties.ILDAPProps", side_effect=_ildapprops), \
-             patch("pas.plugins.ldap.properties.ILDAPUsersConfig", return_value=mock_users), \
-             patch("pas.plugins.ldap.properties.ILDAPGroupsConfig", return_value=mock_groups), \
-             patch.object(YAMLBaseForm, "prepare"), \
-             patch("pas.plugins.ldap.properties.logger"):
+        with (
+            patch("pas.plugins.ldap.properties.ILDAPProps", side_effect=_ildapprops),
+            patch(
+                "pas.plugins.ldap.properties.ILDAPUsersConfig", return_value=mock_users
+            ),
+            patch(
+                "pas.plugins.ldap.properties.ILDAPGroupsConfig",
+                return_value=mock_groups,
+            ),
+            patch.object(YAMLBaseForm, "prepare"),
+            patch("pas.plugins.ldap.properties.logger"),
+        ):
             form.prepare()
 
         # init_settings() should have been called once on the plugin
@@ -303,8 +322,12 @@ class TestRenderForm(unittest.TestCase):
         mock_controller.next = None
         mock_controller.rendered = "<html>form html</html>"
 
-        with patch.object(form, "prepare"), \
-             patch("pas.plugins.ldap.properties.Controller", return_value=mock_controller):
+        with (
+            patch.object(form, "prepare"),
+            patch(
+                "pas.plugins.ldap.properties.Controller", return_value=mock_controller
+            ),
+        ):
             result = form.render_form()
 
         self.assertEqual(result, "<html>form html</html>")
@@ -315,8 +338,12 @@ class TestRenderForm(unittest.TestCase):
         mock_controller = MagicMock()
         mock_controller.next = "/redirect-target"
 
-        with patch.object(form, "prepare"), \
-             patch("pas.plugins.ldap.properties.Controller", return_value=mock_controller):
+        with (
+            patch.object(form, "prepare"),
+            patch(
+                "pas.plugins.ldap.properties.Controller", return_value=mock_controller
+            ),
+        ):
             result = form.render_form()
 
         form.request.RESPONSE.redirect.assert_called_once_with("/redirect-target")
@@ -331,7 +358,9 @@ class TestRenderForm(unittest.TestCase):
 class TestSave(unittest.TestCase):
     """Tests for BasePropertiesForm.save()."""
 
-    def _run_save(self, field_values, mock_props=None, mock_users=None, mock_groups=None):
+    def _run_save(
+        self, field_values, mock_props=None, mock_users=None, mock_groups=None
+    ):
         """Helper: run save() with patched adapters and the given field values."""
         form = _make_form()
         if mock_props is None:
@@ -342,9 +371,16 @@ class TestSave(unittest.TestCase):
             mock_groups = MagicMock()
         data = _make_data(field_values)
 
-        with patch("pas.plugins.ldap.properties.ILDAPProps", return_value=mock_props), \
-             patch("pas.plugins.ldap.properties.ILDAPUsersConfig", return_value=mock_users), \
-             patch("pas.plugins.ldap.properties.ILDAPGroupsConfig", return_value=mock_groups):
+        with (
+            patch("pas.plugins.ldap.properties.ILDAPProps", return_value=mock_props),
+            patch(
+                "pas.plugins.ldap.properties.ILDAPUsersConfig", return_value=mock_users
+            ),
+            patch(
+                "pas.plugins.ldap.properties.ILDAPGroupsConfig",
+                return_value=mock_groups,
+            ),
+        ):
             form.save(MagicMock(), data)
 
         return mock_props, mock_users, mock_groups
@@ -500,9 +536,7 @@ class TestUserPassAnonExtractor(unittest.TestCase):
     def test_returns_early_when_anonymous(self):
         """Returns data.extracted when anonymous=True (line 219 second branch)."""
         form = _make_form()
-        data, _, _ = self._make_data_mock(
-            extracted="some-data", anonymous=True
-        )
+        data, _, _ = self._make_data_mock(extracted="some-data", anonymous=True)
         result = form.userpassanon_extractor(MagicMock(), data)
         self.assertEqual(result, "some-data")
 
@@ -510,7 +544,11 @@ class TestUserPassAnonExtractor(unittest.TestCase):
         """Empty user → error appended and ExtractionError raised (lines 222-225)."""
         form = _make_form()
         data, user_mock, _ = self._make_data_mock(
-            extracted="data", anonymous=False, user="", password="secret", pw_value="secret"
+            extracted="data",
+            anonymous=False,
+            user="",
+            password="secret",
+            pw_value="secret",
         )
         with self.assertRaises(ExtractionError):
             form.userpassanon_extractor(MagicMock(), data)
@@ -579,10 +617,13 @@ class TestConnectionTest(unittest.TestCase):
     def test_ildapprops_exception_returns_false(self):
         """Returns (False, msg) when ILDAPProps raises (lines 246-249)."""
         form = _make_form()
-        with patch(
-            "pas.plugins.ldap.properties.ILDAPProps",
-            side_effect=RuntimeError("props-fail"),
-        ), patch("pas.plugins.ldap.properties.logger"):
+        with (
+            patch(
+                "pas.plugins.ldap.properties.ILDAPProps",
+                side_effect=RuntimeError("props-fail"),
+            ),
+            patch("pas.plugins.ldap.properties.logger"),
+        ):
             ok, msg = form.connection_test()
 
         self.assertFalse(ok)
@@ -591,12 +632,14 @@ class TestConnectionTest(unittest.TestCase):
     def test_ildapusersconfig_exception_returns_false(self):
         """Returns (False, msg) when ILDAPUsersConfig raises (lines 251-254)."""
         form = _make_form()
-        with patch("pas.plugins.ldap.properties.ILDAPProps", return_value=MagicMock()), \
-             patch(
-                 "pas.plugins.ldap.properties.ILDAPUsersConfig",
-                 side_effect=RuntimeError("users-fail"),
-             ), \
-             patch("pas.plugins.ldap.properties.logger"):
+        with (
+            patch("pas.plugins.ldap.properties.ILDAPProps", return_value=MagicMock()),
+            patch(
+                "pas.plugins.ldap.properties.ILDAPUsersConfig",
+                side_effect=RuntimeError("users-fail"),
+            ),
+            patch("pas.plugins.ldap.properties.logger"),
+        ):
             ok, msg = form.connection_test()
 
         self.assertFalse(ok)
@@ -605,13 +648,17 @@ class TestConnectionTest(unittest.TestCase):
     def test_ildapgroupsconfig_exception_returns_false(self):
         """Returns (False, msg) when ILDAPGroupsConfig raises (lines 256-259)."""
         form = _make_form()
-        with patch("pas.plugins.ldap.properties.ILDAPProps", return_value=MagicMock()), \
-             patch("pas.plugins.ldap.properties.ILDAPUsersConfig", return_value=MagicMock()), \
-             patch(
-                 "pas.plugins.ldap.properties.ILDAPGroupsConfig",
-                 side_effect=RuntimeError("groups-fail"),
-             ), \
-             patch("pas.plugins.ldap.properties.logger"):
+        with (
+            patch("pas.plugins.ldap.properties.ILDAPProps", return_value=MagicMock()),
+            patch(
+                "pas.plugins.ldap.properties.ILDAPUsersConfig", return_value=MagicMock()
+            ),
+            patch(
+                "pas.plugins.ldap.properties.ILDAPGroupsConfig",
+                side_effect=RuntimeError("groups-fail"),
+            ),
+            patch("pas.plugins.ldap.properties.logger"),
+        ):
             ok, msg = form.connection_test()
 
         self.assertFalse(ok)
@@ -624,8 +671,12 @@ class TestConnectionTest(unittest.TestCase):
         mock_ugm.users.authenticate.side_effect = ldap.SERVER_DOWN
 
         p1, p2, p3 = self._patch_adapters()
-        with p1, p2, p3, \
-             patch("pas.plugins.ldap.properties.Ugm", return_value=mock_ugm):
+        with (
+            p1,
+            p2,
+            p3,
+            patch("pas.plugins.ldap.properties.Ugm", return_value=mock_ugm),
+        ):
             ok, msg = form.connection_test()
 
         self.assertFalse(ok)
@@ -638,8 +689,12 @@ class TestConnectionTest(unittest.TestCase):
         mock_ugm.users.authenticate.side_effect = ldap.LDAPError("users ldap error")
 
         p1, p2, p3 = self._patch_adapters()
-        with p1, p2, p3, \
-             patch("pas.plugins.ldap.properties.Ugm", return_value=mock_ugm):
+        with (
+            p1,
+            p2,
+            p3,
+            patch("pas.plugins.ldap.properties.Ugm", return_value=mock_ugm),
+        ):
             ok, msg = form.connection_test()
 
         self.assertFalse(ok)
@@ -652,9 +707,13 @@ class TestConnectionTest(unittest.TestCase):
         mock_ugm.users.authenticate.side_effect = RuntimeError("generic users error")
 
         p1, p2, p3 = self._patch_adapters()
-        with p1, p2, p3, \
-             patch("pas.plugins.ldap.properties.Ugm", return_value=mock_ugm), \
-             patch("pas.plugins.ldap.properties.logger"):
+        with (
+            p1,
+            p2,
+            p3,
+            patch("pas.plugins.ldap.properties.Ugm", return_value=mock_ugm),
+            patch("pas.plugins.ldap.properties.logger"),
+        ):
             ok, msg = form.connection_test()
 
         self.assertFalse(ok)
@@ -668,8 +727,12 @@ class TestConnectionTest(unittest.TestCase):
         mock_ugm.groups.keys.side_effect = _FakeLDAPGroupsError("groups-ldap-error")
 
         p1, p2, p3 = self._patch_adapters()
-        with p1, p2, p3, \
-             patch("pas.plugins.ldap.properties.Ugm", return_value=mock_ugm):
+        with (
+            p1,
+            p2,
+            p3,
+            patch("pas.plugins.ldap.properties.Ugm", return_value=mock_ugm),
+        ):
             ok, msg = form.connection_test()
 
         self.assertFalse(ok)
@@ -683,9 +746,13 @@ class TestConnectionTest(unittest.TestCase):
         mock_ugm.groups.keys.side_effect = RuntimeError("generic groups error")
 
         p1, p2, p3 = self._patch_adapters()
-        with p1, p2, p3, \
-             patch("pas.plugins.ldap.properties.Ugm", return_value=mock_ugm), \
-             patch("pas.plugins.ldap.properties.logger"):
+        with (
+            p1,
+            p2,
+            p3,
+            patch("pas.plugins.ldap.properties.Ugm", return_value=mock_ugm),
+            patch("pas.plugins.ldap.properties.logger"),
+        ):
             ok, msg = form.connection_test()
 
         self.assertFalse(ok)
@@ -699,8 +766,12 @@ class TestConnectionTest(unittest.TestCase):
         mock_ugm.groups.keys.return_value = []
 
         p1, p2, p3 = self._patch_adapters()
-        with p1, p2, p3, \
-             patch("pas.plugins.ldap.properties.Ugm", return_value=mock_ugm):
+        with (
+            p1,
+            p2,
+            p3,
+            patch("pas.plugins.ldap.properties.Ugm", return_value=mock_ugm),
+        ):
             ok, msg = form.connection_test()
 
         self.assertTrue(ok)
@@ -768,7 +839,9 @@ class TestLDAPPropsMemcached(unittest.TestCase):
         mock_record.value = "memcache-host:11211"
         mock_provider = MagicMock(return_value=mock_record)
 
-        with patch("pas.plugins.ldap.properties.queryUtility", return_value=mock_provider):
+        with patch(
+            "pas.plugins.ldap.properties.queryUtility", return_value=mock_provider
+        ):
             result = props.memcached
 
         self.assertEqual(result, "memcache-host:11211")
@@ -788,7 +861,9 @@ class TestLDAPPropsMemcached(unittest.TestCase):
         mock_record = MagicMock()
         mock_provider = MagicMock(return_value=mock_record)
 
-        with patch("pas.plugins.ldap.properties.queryUtility", return_value=mock_provider):
+        with patch(
+            "pas.plugins.ldap.properties.queryUtility", return_value=mock_provider
+        ):
             props.memcached = "new-host:11211"
 
         self.assertEqual(mock_record.value, "new-host:11211")
@@ -828,7 +903,9 @@ class TestUsersConfigExpiry(unittest.TestCase):
 
     def test_expires_attr_returns_attr_when_expiration_enabled(self):
         """expiresAttr returns the attribute name when account_expiration is True (line 407)."""
-        config = self._make_users_config(account_expiration=True, expires_attr="shadowExpire")
+        config = self._make_users_config(
+            account_expiration=True, expires_attr="shadowExpire"
+        )
         self.assertEqual(config.expiresAttr, "shadowExpire")
 
     def test_expires_attr_returns_none_when_expiration_disabled(self):

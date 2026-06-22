@@ -24,7 +24,7 @@ class PortraitImage(Image):
         trav = f"++portrait++{self.id()}"
         if not hasattr(parent, "getPhysicalPath"):
             return ("", trav)
-        return tuple(list(parent.getPhysicalPath()) + [trav])
+        return (*list(parent.getPhysicalPath()), trav)
 
 
 def getPortraitFromSheet(context, userid):
@@ -89,10 +89,13 @@ def patched_getPersonalPortrait(self, id=None, verifyPermission=0):
     portrait = membertool._getPortrait(safe_id)
     if isinstance(portrait, str):
         portrait = None
-    if portrait is not None:
-        if verifyPermission and not _checkPermission("View", portrait):
-            # Don't return the portrait if the user can't get to it
-            portrait = None
+    if (
+        portrait is not None
+        and verifyPermission
+        and not _checkPermission("View", portrait)
+    ):
+        # Don't return the portrait if the user can't get to it
+        portrait = None
     if portrait is None:
         portal = getToolByName(self, "portal_url").getPortalObject()
         portrait = getattr(portal, default_portrait, None)

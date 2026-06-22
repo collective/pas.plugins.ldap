@@ -25,6 +25,7 @@ import logging
 import os
 import time
 
+
 logger = logging.getLogger("pas.plugins.ldap")
 zmidir = os.path.join(os.path.dirname(__file__), "zmi")
 
@@ -72,12 +73,7 @@ def ldap_error_handler(prefix, default=None):
                 waiting = time.time() - self._v_ldaperror_timeout
                 if waiting < LDAP_ERROR_LOG_TIMEOUT:
                     logger.debug(
-                        "{}: retry wait {:0.5f} of {:0.0f}s -> {}".format(
-                            prefix,
-                            waiting,
-                            LDAP_ERROR_LOG_TIMEOUT,
-                            self._v_ldaperror_msg,
-                        )
+                        f"{prefix}: retry wait {waiting:0.5f} of {LDAP_ERROR_LOG_TIMEOUT:0.0f}s -> {self._v_ldaperror_msg}"
                     )
                     return default
             try:
@@ -132,7 +128,8 @@ class LDAPPlugin(BasePlugin):
     meta_type = "LDAP Plugin"
     manage_options = (
         {"label": "LDAP Settings", "action": "manage_ldapplugin"},
-    ) + BasePlugin.manage_options
+        *BasePlugin.manage_options,
+    )
 
     # Tell PAS not to swallow our exceptions
     _dont_swallow_my_exceptions = False
@@ -203,7 +200,7 @@ class LDAPPlugin(BasePlugin):
         if hasattr(self, "_v_ldaperror_msg"):
             waiting = time.time() - self._v_ldaperror_timeout
             if waiting < LDAP_ERROR_LOG_TIMEOUT:
-                return self._v_ldaperror_msg + " (for %0.2fs)" % waiting
+                return self._v_ldaperror_msg + f" (for {waiting:0.2f}s)"
         return False
 
     @security.public  # really public??
@@ -236,13 +233,13 @@ class LDAPPlugin(BasePlugin):
         pw = credentials.get("password")
         if not (login and pw):
             return default
-        logger.debug("login: %s" % login)
+        logger.debug(f"login: {login}")
         users = self.users
         if not users:
             return default
         userid = users.authenticate(login, pw)
         if userid:
-            logger.info("logged in %s" % userid)
+            logger.info(f"logged in {userid}")
             return (userid, login)
         return default
 
@@ -313,7 +310,7 @@ class LDAPPlugin(BasePlugin):
         if sort_by == "id":
             matches = sorted(matches)
         pluginid = self.getId()
-        ret = [dict(id=_id, pluginid=pluginid) for _id in matches]
+        ret = [{"id": _id, "pluginid": pluginid} for _id in matches]
         if max_results and len(ret) > max_results:
             ret = ret[:max_results]
         return ret
@@ -331,7 +328,7 @@ class LDAPPlugin(BasePlugin):
 
         o May assign groups based on values in the REQUEST object, if present
         """
-        default = tuple()
+        default = ()
         if not self.is_plugin_active(pas_interfaces.IGroupsPlugin):
             return default
         users = self.users
@@ -355,7 +352,7 @@ class LDAPPlugin(BasePlugin):
     #
     #   Allow querying users by ID, and searching for users.
     #
-    @ldap_error_handler("enumerateUsers", default=tuple())
+    @ldap_error_handler("enumerateUsers", default=())
     @security.private
     def enumerateUsers(
         self,
@@ -406,7 +403,7 @@ class LDAPPlugin(BasePlugin):
         o Insufficiently-specified criteria may have catastrophic
           scaling issues for some implementations.
         """
-        default = tuple()
+        default = ()
         if not self.is_plugin_active(pas_interfaces.IUserEnumerationPlugin):
             return default
         # XXX: sort_by in node.ext.ldap
@@ -439,7 +436,7 @@ class LDAPPlugin(BasePlugin):
         except ValueError:
             return default
         pluginid = self.getId()
-        ret = list()
+        ret = []
         for id_, attrs in matches:
             ret.append({"id": id_, "login": attrs["login"][0], "pluginid": pluginid})
         if max_results and len(ret) > max_results:
@@ -723,7 +720,9 @@ class LDAPPlugin(BasePlugin):
         # add subgroups
         group._addGroups(pas._getGroupsForPrincipal(group, None, plugins=plugins))
         # add roles
-        for rolemaker_id, rolemaker in plugins.listPlugins(pas_interfaces.IRolesPlugin):
+        for _rolemaker_id, rolemaker in plugins.listPlugins(
+            pas_interfaces.IRolesPlugin
+        ):
             roles = rolemaker.getRolesForPrincipal(group, None)
             if not roles:
                 continue
@@ -748,7 +747,7 @@ class LDAPPlugin(BasePlugin):
         default = []
         if not self.is_plugin_active(plonepas_interfaces.group.IGroupIntrospection):
             return default
-        return self.groups and self.groups.ids or default
+        return (self.groups and self.groups.ids) or default
 
     @security.private
     def getGroupMembers(self, group_id):

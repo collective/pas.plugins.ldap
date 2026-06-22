@@ -4,7 +4,9 @@ from pas.plugins.ldap import PACKAGE_NAME
 from pas.plugins.ldap.plugin import LDAPPlugin
 from zope.component.hooks import getSite
 
+import contextlib
 import logging
+
 
 logger = logging.getLogger(PACKAGE_NAME)
 
@@ -29,11 +31,9 @@ def _removePlugin(pas, PLUGIN_ID="pasldap"):
         interface = info["interface"]
         if not interface.providedBy(plugin):
             continue
-        try:
+        # the plugin may not be active
+        with contextlib.suppress(KeyError):
             pas.plugins.deactivatePlugin(interface, plugin.getId())
-        except KeyError:
-            # the plugin was not active
-            pass
     pas._delObject(PLUGIN_ID)
     logger.info("Removed LDAPPlugin %s from acl_users.", PLUGIN_ID)
 

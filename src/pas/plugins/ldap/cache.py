@@ -12,7 +12,7 @@ from zope.component import queryUtility
 from zope.globalrequest import getRequest
 from zope.interface import implementer
 
-import re
+import contextlib
 import threading
 import time
 
@@ -200,7 +200,5 @@ class VolatilePluginCache(RequestPluginCache):
     def invalidate(self):
         """Invalidate the cache by removing the cached value
         from the context."""
-        try:
+        with contextlib.suppress(AttributeError):
             delattr(self.context, self._key)
-        except AttributeError:
-            pass

@@ -1,7 +1,7 @@
 """Unit tests for pas.plugins.ldap."""
 
-from testing import PASLDAP_FIXTURE
 from Products.PlonePAS.plugins.ufactory import PloneUser
+from testing import PASLDAP_FIXTURE
 from unittest.mock import MagicMock
 
 import unittest
@@ -25,6 +25,7 @@ class TestInitialize(unittest.TestCase):
 
 class TestPluginInit(unittest.TestCase):
     """Tests for the initialization of the LDAPPlugin."""
+
     layer = PASLDAP_FIXTURE
 
     @property
@@ -50,6 +51,7 @@ class TestPluginInit(unittest.TestCase):
 
 class TestPluginFeatures(unittest.TestCase):
     """Tests for the features of the LDAPPlugin."""
+
     layer = PASLDAP_FIXTURE
 
     @property

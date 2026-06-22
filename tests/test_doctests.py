@@ -1,13 +1,11 @@
 """Test suite for pas.plugins.ldap doctests."""
 
-from testing import PASLDAPLayer
 from plone.testing import layered
 from plone.testing import zope
+from testing import PASLDAPLayer
 
 import doctest
 import pprint
-import re
-import six
 import unittest
 
 
