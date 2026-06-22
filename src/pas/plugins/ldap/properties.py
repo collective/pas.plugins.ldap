@@ -26,7 +26,8 @@ from zope.interface import implementer
 
 import ldap
 
-_marker = dict()
+
+_marker = {}
 
 
 class BasePropertiesForm(YAMLBaseForm):
@@ -46,8 +47,8 @@ class BasePropertiesForm(YAMLBaseForm):
     # for the expiration unit of user accounts. The values represent the number
     # of seconds in the respective unit.
     account_expiration_unit_vocab = [
-        (int(0), _("Days since Epoch")),
-        (int(1), _("Seconds since epoch")),
+        (0, _("Days since Epoch")),
+        (1, _("Seconds since epoch")),
     ]
     static_attrs_users = ["rdn", "id", "login"]
     static_attrs_groups = ["rdn", "id"]
@@ -128,7 +129,7 @@ class BasePropertiesForm(YAMLBaseForm):
         groups = ILDAPGroupsConfig(self.plugin)
 
         def fetch(name, default=UNSET):
-            name = "ldapsettings.%s" % name
+            name = f"ldapsettings.{name}"
             __traceback_info__ = name
             val = data.fetch(name).extracted
             if default is UNSET:
@@ -383,7 +384,7 @@ class UsersConfig:
         self.plugin = plugin
 
     strict = False
-    defaults = dict()
+    defaults = {}
     baseDN = propproxy("users.baseDN")
     attrmap = propproxy("users.attrmap")
     scope = propproxy("users.scope")
@@ -404,7 +405,7 @@ class UsersConfig:
         Returns:
             str: The expiration attribute.
         """
-        return self.account_expiration and self._expiresAttr or None
+        return (self.account_expiration and self._expiresAttr) or None
 
     @property
     def expiresUnit(self):
@@ -413,7 +414,7 @@ class UsersConfig:
         Returns:
             int: The expiration unit.
         """
-        return self.account_expiration and self._expiresUnit or 0
+        return (self.account_expiration and self._expiresUnit) or 0
 
 
 @implementer(ILDAPGroupsConfig)
@@ -425,7 +426,7 @@ class GroupsConfig:
         self.plugin = plugin
 
     strict = False
-    defaults = dict()
+    defaults = {}
     baseDN = propproxy("groups.baseDN")
     attrmap = propproxy("groups.attrmap")
     scope = propproxy("groups.scope")

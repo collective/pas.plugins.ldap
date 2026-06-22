@@ -4,20 +4,20 @@ These tests exercise all branches of setuphandlers.py using unittest.mock
 so no real LDAP server, Zope layer, or GenericSetup context is needed.
 """
 
-import unittest
-from unittest.mock import MagicMock, patch, call
+from pas.plugins.ldap.setuphandlers import _addPlugin
+from pas.plugins.ldap.setuphandlers import post_install
+from pas.plugins.ldap.setuphandlers import remove_persistent_import_step
+from pas.plugins.ldap.setuphandlers import TITLE
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
-from pas.plugins.ldap.setuphandlers import (
-    TITLE,
-    _addPlugin,
-    post_install,
-    remove_persistent_import_step,
-)
+import unittest
 
 
 # ---------------------------------------------------------------------------
 # remove_persistent_import_step  (lines 28-31)
 # ---------------------------------------------------------------------------
+
 
 class TestRemovePersistentImportStep(unittest.TestCase):
     """Tests for remove_persistent_import_step."""
@@ -55,6 +55,7 @@ class TestRemovePersistentImportStep(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # _addPlugin  (lines 34-50)
 # ---------------------------------------------------------------------------
+
 
 class TestAddPlugin(unittest.TestCase):
     """Tests for _addPlugin helper."""
@@ -143,6 +144,7 @@ class TestAddPlugin(unittest.TestCase):
 # post_install  (lines 53-57)
 # ---------------------------------------------------------------------------
 
+
 class TestPostInstall(unittest.TestCase):
     """Tests for post_install."""
 
@@ -162,8 +164,12 @@ class TestPostInstall(unittest.TestCase):
         """post_install calls getSite() (line 55)."""
         mock_site = MagicMock()
 
-        with patch("pas.plugins.ldap.setuphandlers.getSite", return_value=mock_site) as mock_get_site:
-            with patch("pas.plugins.ldap.setuphandlers._addPlugin"):
-                post_install(MagicMock())
+        with (
+            patch(
+                "pas.plugins.ldap.setuphandlers.getSite", return_value=mock_site
+            ) as mock_get_site,
+            patch("pas.plugins.ldap.setuphandlers._addPlugin"),
+        ):
+            post_install(MagicMock())
 
         mock_get_site.assert_called_once()

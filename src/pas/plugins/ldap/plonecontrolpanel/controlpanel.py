@@ -33,11 +33,11 @@ class LDAPControlPanel(BasePropertiesForm):
         # "'RequestContainer' object has no attribute 'pasldap'" error.
         try:
             return aclu["pasldap"]
-        except KeyError:
+        except KeyError as err:
             raise AttributeError(
                 "Plugin 'pasldap' not found in acl_users. "
                 "Install pas.plugins.ldap via Plone Add-ons first."
-            )
+            ) from err
 
     def save(self, widget, data):
         """Save the LDAP setting.

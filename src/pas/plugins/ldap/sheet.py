@@ -10,6 +10,7 @@ from zope.interface import implementer
 
 import logging
 
+
 logger = logging.getLogger("pas.plugins.ldap")
 
 
@@ -30,8 +31,8 @@ class LDAPUserPropertySheet(UserPropertySheet):
         """
         # do not set any non-pickable attribute here, i.e. acquisition wrapped
         self._plugin = aq_base(plugin)
-        self._properties = dict()
-        self._attrmap = dict()
+        self._properties = {}
+        self._attrmap = {}
         self._ldapprincipal_id = principal.getId()
         if self._ldapprincipal_id in plugin.users:
             pcfg = ILDAPUsersConfig(plugin)
@@ -79,7 +80,7 @@ class LDAPUserPropertySheet(UserPropertySheet):
             ldapprincipal.context()
         except Exception as e:
             # XXX: specific exception(s)
-            logger.error("LDAPUserPropertySheet.setProperty: %s" % str(e))
+            logger.error(f"LDAPUserPropertySheet.setProperty: {e!s}")
 
     def setProperties(self, obj, mapping):
         """Set multiple property values."""
@@ -92,4 +93,4 @@ class LDAPUserPropertySheet(UserPropertySheet):
             ldapprincipal.context()
         except Exception as e:
             # XXX: specific exception(s)
-            logger.error("LDAPUserPropertySheet.setProperties: %s" % str(e))
+            logger.error(f"LDAPUserPropertySheet.setProperties: {e!s}")

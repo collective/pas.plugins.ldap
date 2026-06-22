@@ -50,15 +50,13 @@ class LDAPInspector(BrowserView):
             baseDN = groups.baseDN
         root = LDAPNode(baseDN, self.props)
         node = root.node_by_dn(safe_unicode(dn), strict=True)
-        ret = dict()
+        ret = {}
         for key, val in node.attrs.items():
             try:
                 if not node.attrs.is_binary(key):
                     ret[safe_unicode(key)] = safe_unicode(val)
                 else:
-                    ret[safe_unicode(key)] = "(Binary Data with {} Bytes)".format(
-                        len(val)
-                    )
+                    ret[safe_unicode(key)] = f"(Binary Data with {len(val)} Bytes)"
             except UnicodeDecodeError:
                 ret[safe_unicode(key)] = "! (UnicodeDecodeError)"
             except Exception:
@@ -68,7 +66,7 @@ class LDAPInspector(BrowserView):
     def children(self, baseDN):
         """Get the children of the LDAP node with the given base DN."""
         node = LDAPNode(baseDN, self.props)
-        ret = list()
+        ret = []
         # XXX: related search filters for users and groups container?
         for dn in node.search():
             ret.append({"dn": dn})

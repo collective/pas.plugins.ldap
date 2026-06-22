@@ -7,4 +7,4 @@ class ManageLDAPPlugin(BasePropertiesForm):
         return self.context
 
     def next(self, request):
-        return "%s/manage_ldapplugin" % self.context.absolute_url()
+        return f"{self.context.absolute_url()}/manage_ldapplugin"

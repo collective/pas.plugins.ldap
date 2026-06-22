@@ -7,9 +7,9 @@
     :target: https://pypi.python.org/pypi/pas.plugins.ldap
     :alt: Number of PyPI downloads
 
-.. image:: https://github.com/collective/pas.plugins.ldap/actions/workflows/tests.yaml/badge.svg
-    :target: https://github.com/collective/pas.plugins.ldap/actions/workflows/tests.yaml
-    :alt: Test the pas.plugins.ldap code
+.. image:: https://github.com/collective/pas.plugins.ldap/actions/workflows/ci.yaml/badge.svg
+    :target: https://github.com/collective/pas.plugins.ldap/actions/workflows/ci.yaml
+    :alt: CI
 
 .. image:: https://coveralls.io/repos/collective/pas.plugins.ldap/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/collective/pas.plugins.ldap?branch=master
@@ -248,37 +248,35 @@ Development Workflow
 
     make zope-start
 
-3. Zpretty format and lint code:
+3. Zpretty format and lint XML/ZCML:
 
 .. code-block:: shell
 
     make zpretty-check && make zpretty-format && make zpretty-check
 
-4. Isort format and lint code:
+4. Lint and format Python code with `ruff <https://docs.astral.sh/ruff/>`_
+   (this is what CI enforces):
 
 .. code-block:: shell
 
-    make isort-check && make isort-format && make isort-check
+    uvx ruff check . && uvx ruff format .
 
-5. Black format and lint code:
-
-.. code-block:: shell
-
-    make black-check && make black-format && make black-check
-
-6. Extract i18n messages:
+5. Extract i18n messages:
 
 .. code-block:: shell
 
     make gettext-create && make gettext-update && make gettext-compile
 
-7. Run unit tests:
+   The compiled ``.mo`` catalogs are also generated automatically when the
+   package is built (sdist/wheel), so they always ship in a release.
+
+6. Run unit tests:
 
 .. code-block:: shell
 
     make test
 
-8. Run coverage unit tests:
+7. Run coverage unit tests:
 
 .. code-block:: shell
 

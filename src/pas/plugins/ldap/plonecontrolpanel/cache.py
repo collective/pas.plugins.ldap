@@ -9,6 +9,7 @@ from plone.registry.interfaces import IRegistry
 from zope.component import queryUtility
 from zope.interface import implementer
 
+
 REGKEY = "pas.plugins.ldap.memcached"
 
 

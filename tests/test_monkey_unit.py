@@ -3,15 +3,14 @@
 100% coverage without Zope/LDAP layer.
 """
 
-import unittest
-from unittest.mock import MagicMock, call, patch
+from pas.plugins.ldap.monkey import getPortraitFromSheet
+from pas.plugins.ldap.monkey import patched_getPersonalPortrait
+from pas.plugins.ldap.monkey import PortraitImage
+from pas.plugins.ldap.monkey import PortraitTraverser
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
-from pas.plugins.ldap.monkey import (
-    PortraitImage,
-    PortraitTraverser,
-    getPortraitFromSheet,
-    patched_getPersonalPortrait,
-)
+import unittest
 
 
 # ---------------------------------------------------------------------------
@@ -35,8 +34,10 @@ class TestPortraitImageGetPhysicalPath(unittest.TestCase):
         portrait = self._make_portrait("uid0")
         mock_parent = MagicMock()
         mock_parent.getPhysicalPath.return_value = ("", "plone", "acl_users")
-        with patch("pas.plugins.ldap.monkey.aq_inner", return_value=portrait), \
-             patch("pas.plugins.ldap.monkey.aq_parent", return_value=mock_parent):
+        with (
+            patch("pas.plugins.ldap.monkey.aq_inner", return_value=portrait),
+            patch("pas.plugins.ldap.monkey.aq_parent", return_value=mock_parent),
+        ):
             result = portrait.getPhysicalPath()
         self.assertEqual(result, ("", "plone", "acl_users", "++portrait++uid0"))
 
@@ -44,8 +45,10 @@ class TestPortraitImageGetPhysicalPath(unittest.TestCase):
         """When parent has no getPhysicalPath, returns ('', trav) (line 25)."""
         portrait = self._make_portrait("uid0")
         mock_parent = object()  # plain object, no getPhysicalPath attr
-        with patch("pas.plugins.ldap.monkey.aq_inner", return_value=portrait), \
-             patch("pas.plugins.ldap.monkey.aq_parent", return_value=mock_parent):
+        with (
+            patch("pas.plugins.ldap.monkey.aq_inner", return_value=portrait),
+            patch("pas.plugins.ldap.monkey.aq_parent", return_value=mock_parent),
+        ):
             result = portrait.getPhysicalPath()
         self.assertEqual(result, ("", "++portrait++uid0"))
 
@@ -64,7 +67,9 @@ class TestGetPortraitFromSheet(unittest.TestCase):
         mtool.getMemberById.return_value = None
         return mtool
 
-    def _member_with_sheet(self, property_ids, portrait_data=None, fullname="Test User"):
+    def _member_with_sheet(
+        self, property_ids, portrait_data=None, fullname="Test User"
+    ):
         """Return (mtool, mock_user) for a member with one property sheet."""
         mock_sheet = MagicMock()
         mock_sheet.propertyIds.return_value = property_ids
@@ -88,8 +93,10 @@ class TestGetPortraitFromSheet(unittest.TestCase):
     def test_returns_none_when_member_not_found(self):
         """getMemberById returns falsy → return None (line 34)."""
         context = MagicMock()
-        with patch("pas.plugins.ldap.monkey.getToolByName",
-                   return_value=self._member_not_found()):
+        with patch(
+            "pas.plugins.ldap.monkey.getToolByName",
+            return_value=self._member_not_found(),
+        ):
             result = getPortraitFromSheet(context, "uid0")
         self.assertIsNone(result)
 
@@ -127,25 +134,30 @@ class TestGetPortraitFromSheet(unittest.TestCase):
             fullname="Full Name",
         )
         mock_portrait_img = MagicMock()
-        with patch("pas.plugins.ldap.monkey.getToolByName", return_value=mtool), \
-             patch("pas.plugins.ldap.monkey.PortraitImage",
-                   return_value=mock_portrait_img), \
-             patch("pas.plugins.ldap.monkey.BytesIO"):
+        with (
+            patch("pas.plugins.ldap.monkey.getToolByName", return_value=mtool),
+            patch(
+                "pas.plugins.ldap.monkey.PortraitImage", return_value=mock_portrait_img
+            ),
+            patch("pas.plugins.ldap.monkey.BytesIO"),
+        ):
             result = getPortraitFromSheet(context, "uid0")
         self.assertIs(result, mock_portrait_img)
 
     def test_portrait_image_created_with_correct_args(self):
         """PortraitImage is constructed with userid, fullname, sio, content_type."""
         context = MagicMock()
-        mtool, mock_user = self._member_with_sheet(
+        mtool, _mock_user = self._member_with_sheet(
             property_ids=["portrait"],
             portrait_data=b"DATA",
             fullname="Jane Doe",
         )
         mock_sio = MagicMock()
-        with patch("pas.plugins.ldap.monkey.getToolByName", return_value=mtool), \
-             patch("pas.plugins.ldap.monkey.PortraitImage") as MockPI, \
-             patch("pas.plugins.ldap.monkey.BytesIO", return_value=mock_sio):
+        with (
+            patch("pas.plugins.ldap.monkey.getToolByName", return_value=mtool),
+            patch("pas.plugins.ldap.monkey.PortraitImage") as MockPI,
+            patch("pas.plugins.ldap.monkey.BytesIO", return_value=mock_sio),
+        ):
             getPortraitFromSheet(context, "testuser")
 
         MockPI.assert_called_once_with("testuser", "Jane Doe", mock_sio, "image/jpeg")
@@ -207,12 +219,14 @@ class TestPortraitTraverser(unittest.TestCase):
 
         ctx = MagicMock()
         traverser = PortraitTraverser(ctx)
-        with patch(
-            "pas.plugins.ldap.monkey.getPortraitFromSheet",
-            return_value=None,
+        with (
+            patch(
+                "pas.plugins.ldap.monkey.getPortraitFromSheet",
+                return_value=None,
+            ),
+            self.assertRaises(LocationError),
         ):
-            with self.assertRaises(LocationError):
-                traverser.traverse("uid0", [])
+            traverser.traverse("uid0", [])
 
 
 # ---------------------------------------------------------------------------
@@ -279,9 +293,12 @@ class TestPatchedGetPersonalPortrait(unittest.TestCase):
         mock_membertool = MagicMock()
         mock_membertool._getPortrait.return_value = mock_portrait_obj
 
-        with patch("pas.plugins.ldap.monkey.getPortraitFromSheet", return_value=None), \
-             patch("pas.plugins.ldap.monkey.getToolByName",
-                   return_value=mock_membertool):
+        with (
+            patch("pas.plugins.ldap.monkey.getPortraitFromSheet", return_value=None),
+            patch(
+                "pas.plugins.ldap.monkey.getToolByName", return_value=mock_membertool
+            ),
+        ):
             result = patched_getPersonalPortrait(mock_self, id="uid0")
 
         self.assertIs(result, mock_portrait_obj)
@@ -297,13 +314,15 @@ class TestPatchedGetPersonalPortrait(unittest.TestCase):
         mock_portal_url_tool = MagicMock()
         mock_portal_url_tool.getPortalObject.return_value = mock_portal
 
-        with patch("pas.plugins.ldap.monkey.getPortraitFromSheet", return_value=None), \
-             patch(
-                 "pas.plugins.ldap.monkey.getToolByName",
-                 side_effect=[mock_membertool, mock_portal_url_tool],
-             ), \
-             patch("pas.plugins.ldap.monkey.default_portrait", "defaultUser.png"):
-            result = patched_getPersonalPortrait(mock_self, id="uid0")
+        with (
+            patch("pas.plugins.ldap.monkey.getPortraitFromSheet", return_value=None),
+            patch(
+                "pas.plugins.ldap.monkey.getToolByName",
+                side_effect=[mock_membertool, mock_portal_url_tool],
+            ),
+            patch("pas.plugins.ldap.monkey.default_portrait", "defaultUser.png"),
+        ):
+            patched_getPersonalPortrait(mock_self, id="uid0")
 
         mock_portal_url_tool.getPortalObject.assert_called_once()
 
@@ -316,12 +335,16 @@ class TestPatchedGetPersonalPortrait(unittest.TestCase):
         mock_membertool = MagicMock()
         mock_membertool._getPortrait.return_value = mock_portrait_obj
 
-        with patch("pas.plugins.ldap.monkey.getPortraitFromSheet", return_value=None), \
-             patch("pas.plugins.ldap.monkey.getToolByName",
-                   return_value=mock_membertool), \
-             patch("pas.plugins.ldap.monkey._checkPermission") as mock_check:
-            result = patched_getPersonalPortrait(mock_self, id="uid0",
-                                                 verifyPermission=0)
+        with (
+            patch("pas.plugins.ldap.monkey.getPortraitFromSheet", return_value=None),
+            patch(
+                "pas.plugins.ldap.monkey.getToolByName", return_value=mock_membertool
+            ),
+            patch("pas.plugins.ldap.monkey._checkPermission") as mock_check,
+        ):
+            result = patched_getPersonalPortrait(
+                mock_self, id="uid0", verifyPermission=0
+            )
 
         mock_check.assert_not_called()
         self.assertIs(result, mock_portrait_obj)
@@ -336,14 +359,15 @@ class TestPatchedGetPersonalPortrait(unittest.TestCase):
         mock_portal_url_tool = MagicMock()
         mock_portal_url_tool.getPortalObject.return_value = mock_portal
 
-        with patch("pas.plugins.ldap.monkey.getPortraitFromSheet", return_value=None), \
-             patch(
-                 "pas.plugins.ldap.monkey.getToolByName",
-                 side_effect=[mock_membertool, mock_portal_url_tool],
-             ), \
-             patch("pas.plugins.ldap.monkey._checkPermission", return_value=False):
-            result = patched_getPersonalPortrait(mock_self, id="uid0",
-                                                 verifyPermission=1)
+        with (
+            patch("pas.plugins.ldap.monkey.getPortraitFromSheet", return_value=None),
+            patch(
+                "pas.plugins.ldap.monkey.getToolByName",
+                side_effect=[mock_membertool, mock_portal_url_tool],
+            ),
+            patch("pas.plugins.ldap.monkey._checkPermission", return_value=False),
+        ):
+            patched_getPersonalPortrait(mock_self, id="uid0", verifyPermission=1)
 
         mock_portal_url_tool.getPortalObject.assert_called_once()
 
@@ -354,12 +378,16 @@ class TestPatchedGetPersonalPortrait(unittest.TestCase):
         mock_membertool = MagicMock()
         mock_membertool._getPortrait.return_value = mock_portrait_obj
 
-        with patch("pas.plugins.ldap.monkey.getPortraitFromSheet", return_value=None), \
-             patch("pas.plugins.ldap.monkey.getToolByName",
-                   return_value=mock_membertool), \
-             patch("pas.plugins.ldap.monkey._checkPermission", return_value=True):
-            result = patched_getPersonalPortrait(mock_self, id="uid0",
-                                                 verifyPermission=1)
+        with (
+            patch("pas.plugins.ldap.monkey.getPortraitFromSheet", return_value=None),
+            patch(
+                "pas.plugins.ldap.monkey.getToolByName", return_value=mock_membertool
+            ),
+            patch("pas.plugins.ldap.monkey._checkPermission", return_value=True),
+        ):
+            result = patched_getPersonalPortrait(
+                mock_self, id="uid0", verifyPermission=1
+            )
 
         self.assertIs(result, mock_portrait_obj)
 
@@ -376,12 +404,14 @@ class TestPatchedGetPersonalPortrait(unittest.TestCase):
         mock_portal_url_tool = MagicMock()
         mock_portal_url_tool.getPortalObject.return_value = mock_portal
 
-        with patch("pas.plugins.ldap.monkey.getPortraitFromSheet", return_value=None), \
-             patch(
-                 "pas.plugins.ldap.monkey.getToolByName",
-                 side_effect=[mock_membertool, mock_portal_url_tool],
-             ), \
-             patch("pas.plugins.ldap.monkey.default_portrait", "defaultUser.png"):
+        with (
+            patch("pas.plugins.ldap.monkey.getPortraitFromSheet", return_value=None),
+            patch(
+                "pas.plugins.ldap.monkey.getToolByName",
+                side_effect=[mock_membertool, mock_portal_url_tool],
+            ),
+            patch("pas.plugins.ldap.monkey.default_portrait", "defaultUser.png"),
+        ):
             result = patched_getPersonalPortrait(mock_self, id="uid0")
 
         mock_portal_url_tool.getPortalObject.assert_called_once()

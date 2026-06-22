@@ -5,6 +5,17 @@ History
 2.0.0 (unreleased)
 ------------------
 
+- Derive the package version from git tags via ``hatch-vcs`` (the static
+  ``version`` in ``pyproject.toml`` is gone). Releases are now made by tagging.
+  [jensens]
+
+- Switch Python linting and formatting from black/isort to ``ruff``.
+  [jensens]
+
+- Restructure CI into a ``CI`` umbrella workflow (QA + tests) and add a
+  PyPI/Test-PyPI release workflow using OIDC Trusted Publishing.
+  [jensens]
+
 - Portrait traverser: raise a proper ``LocationError`` (404) when a user has
   no portrait on the property sheet, instead of an ``AttributeError`` from
   calling ``__of__`` on ``None``.

@@ -14,6 +14,7 @@ of how or where the package is built.
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface
 from pathlib import Path
 
+
 LOCALES = Path("src/pas/plugins/ldap/locales")
 
 

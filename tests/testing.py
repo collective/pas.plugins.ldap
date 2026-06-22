@@ -1,15 +1,14 @@
 """Testing layer for pas.plugins.ldap."""
 
-from pas.plugins.ldap.cache import cacheProviderFactory
-from pas.plugins.ldap.cache import cacheProviderFactory
-from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
-from pas.plugins.ldap.plonecontrolpanel.cache import CacheSettingsRecordProvider
-from pas.plugins.ldap.properties import LDAPProps
 from node.ext.ldap import testing as ldaptesting
 from node.ext.ldap.interfaces import ICacheProviderFactory
 from node.ext.ldap.interfaces import ILDAPGroupsConfig
 from node.ext.ldap.interfaces import ILDAPProps
 from node.ext.ldap.interfaces import ILDAPUsersConfig
+from pas.plugins.ldap.cache import cacheProviderFactory
+from pas.plugins.ldap.interfaces import ICacheSettingsRecordProvider
+from pas.plugins.ldap.plonecontrolpanel.cache import CacheSettingsRecordProvider
+from pas.plugins.ldap.properties import LDAPProps
 from plone.registry import Registry
 from plone.registry.interfaces import IRegistry
 from plone.testing import Layer
@@ -24,6 +23,8 @@ from zope.configuration import xmlconfig
 from zope.dottedname.resolve import resolve
 from zope.interface import implementer
 from zope.interface import Interface
+
+import contextlib
 
 
 SITE_OWNER_NAME = SITE_OWNER_PASSWORD = "admin"
@@ -69,11 +70,11 @@ class PASLDAPLayer(Layer):
 
     # Products that will be installed, plus options
     products = (
-        ("Products.GenericSetup", {"loadZCML": True}),  # noqa
-        ("Products.CMFCore", {"loadZCML": True}),  # noqa
-        ("Products.PluggableAuthService", {"loadZCML": True}),  # noqa
-        ("Products.PluginRegistry", {"loadZCML": True}),  # noqa
-        ("Products.PlonePAS", {"loadZCML": True}),  # noqa
+        ("Products.GenericSetup", {"loadZCML": True}),
+        ("Products.CMFCore", {"loadZCML": True}),
+        ("Products.PluggableAuthService", {"loadZCML": True}),
+        ("Products.PluginRegistry", {"loadZCML": True}),
+        ("Products.PlonePAS", {"loadZCML": True}),
     )
 
     def setUp(self):
@@ -104,12 +105,10 @@ class PASLDAPLayer(Layer):
                 if not config["loadZCML"]:
                     continue
                 package = resolve(p)
-                try:
+                with contextlib.suppress(OSError):
                     xmlconfig.file(
                         filename, package, context=self["configurationContext"]
                     )
-                except OSError:
-                    pass
 
         loadAll("meta.zcml")
         loadAll("configure.zcml")
@@ -122,7 +121,7 @@ class PASLDAPLayer(Layer):
         """Install all old-style products listed in the the ``products`` tuple
         of this class.
         """
-        for prd, config in self.products:
+        for prd, _config in self.products:
             zope.installProduct(self["app"], prd)
 
 

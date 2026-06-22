@@ -129,9 +129,7 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
             node.setAttribute("type", "string")
         else:
             self._logger.warning(
-                "Invalid type {:s} found for key {:s} on export, skipped.".format(
-                    type(data), data
-                )
+                f"Invalid type {type(data):s} found for key {data:s} on export, skipped."
             )
             return
         child = self._doc.createTextNode(data)
@@ -141,14 +139,14 @@ class LDAPPluginXMLAdapter(XMLAdapterBase):
         """Get the data from an XML node based on its type attribute."""
         vtype = node.getAttribute("type")
         if vtype == "list":
-            data = list()
+            data = []
             for element in node.childNodes:
                 if element.nodeName != "element":
                     continue
                 data.append(self._getDataByType(element))
             return data
         if vtype == "dict":
-            data = dict()
+            data = {}
             for element in node.childNodes:
                 if element.nodeName != "element":
                     continue

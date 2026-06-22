@@ -1,7 +1,8 @@
 """Unit tests for pas.plugins.ldap.plonecontrolpanel modules."""
 
-import unittest
 from unittest.mock import patch
+
+import unittest
 
 
 class TestHiddenProfiles(unittest.TestCase):

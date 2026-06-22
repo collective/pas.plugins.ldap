@@ -1,6 +1,7 @@
-name: Test the pas.plugins.ldap code
+name: Tests
+
 on:
-  push
+  workflow_call:
 
 jobs:
   build:
@@ -16,9 +17,10 @@ jobs:
           - { python: "3.10", plone: "6.2.0"  }
           - { python: "3.14", plone: "6.2.0"  }
 
-
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install system packages
         run: |

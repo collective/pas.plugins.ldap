@@ -4,15 +4,20 @@ These tests exercise all branches of sheet.py using unittest.mock so no
 real LDAP server, Zope layer, or acquisition context is needed.
 """
 
+from unittest.mock import MagicMock
+from unittest.mock import patch
+
 import unittest
-from unittest.mock import MagicMock, patch, call
 
 
 # ---------------------------------------------------------------------------
 # Helper builders
 # ---------------------------------------------------------------------------
 
-def _make_bare_sheet(properties=None, principal_type="users", principal_id="uid0", context_raises=False):
+
+def _make_bare_sheet(
+    properties=None, principal_type="users", principal_id="uid0", context_raises=False
+):
     """Create a LDAPUserPropertySheet bypassing __init__, with full state set."""
     from pas.plugins.ldap.sheet import LDAPUserPropertySheet
 
@@ -60,11 +65,13 @@ def _build_init_sheet(user_in_users=True, attrmap=None, request=None):
     plugin.users.__getitem__.return_value = mock_ldap_principal
     plugin.groups.__getitem__.return_value = mock_ldap_principal
 
-    with patch("pas.plugins.ldap.sheet.aq_base", side_effect=lambda x: x), \
-         patch("pas.plugins.ldap.sheet.ILDAPUsersConfig", return_value=mock_pcfg), \
-         patch("pas.plugins.ldap.sheet.ILDAPGroupsConfig", return_value=mock_pcfg), \
-         patch("pas.plugins.ldap.sheet.getRequest", return_value=request), \
-         patch("pas.plugins.ldap.sheet.UserPropertySheet.__init__", return_value=None):
+    with (
+        patch("pas.plugins.ldap.sheet.aq_base", side_effect=lambda x: x),
+        patch("pas.plugins.ldap.sheet.ILDAPUsersConfig", return_value=mock_pcfg),
+        patch("pas.plugins.ldap.sheet.ILDAPGroupsConfig", return_value=mock_pcfg),
+        patch("pas.plugins.ldap.sheet.getRequest", return_value=request),
+        patch("pas.plugins.ldap.sheet.UserPropertySheet.__init__", return_value=None),
+    ):
         sheet = LDAPUserPropertySheet(principal, plugin)
 
     return sheet, plugin, mock_ldap_principal, mock_pcfg
@@ -73,6 +80,7 @@ def _build_init_sheet(user_in_users=True, attrmap=None, request=None):
 # ---------------------------------------------------------------------------
 # __init__  (lines 32-58)
 # ---------------------------------------------------------------------------
+
 
 class TestLDAPUserPropertySheetInit(unittest.TestCase):
     """Tests for LDAPUserPropertySheet.__init__."""
@@ -91,12 +99,17 @@ class TestLDAPUserPropertySheetInit(unittest.TestCase):
 
     def test_init_uses_ILDAPUsersConfig_for_user(self):
         """ILDAPUsersConfig(plugin) is called for user principals (line 37)."""
-        with patch("pas.plugins.ldap.sheet.aq_base", side_effect=lambda x: x), \
-             patch("pas.plugins.ldap.sheet.ILDAPUsersConfig") as mock_cfg, \
-             patch("pas.plugins.ldap.sheet.ILDAPGroupsConfig"), \
-             patch("pas.plugins.ldap.sheet.getRequest", return_value=None), \
-             patch("pas.plugins.ldap.sheet.UserPropertySheet.__init__", return_value=None):
+        with (
+            patch("pas.plugins.ldap.sheet.aq_base", side_effect=lambda x: x),
+            patch("pas.plugins.ldap.sheet.ILDAPUsersConfig") as mock_cfg,
+            patch("pas.plugins.ldap.sheet.ILDAPGroupsConfig"),
+            patch("pas.plugins.ldap.sheet.getRequest", return_value=None),
+            patch(
+                "pas.plugins.ldap.sheet.UserPropertySheet.__init__", return_value=None
+            ),
+        ):
             from pas.plugins.ldap.sheet import LDAPUserPropertySheet
+
             principal = MagicMock()
             principal.getId.return_value = "uid0"
             plugin = MagicMock()
@@ -111,12 +124,17 @@ class TestLDAPUserPropertySheetInit(unittest.TestCase):
 
     def test_init_uses_ILDAPGroupsConfig_for_group(self):
         """ILDAPGroupsConfig(plugin) is called for group principals (line 40)."""
-        with patch("pas.plugins.ldap.sheet.aq_base", side_effect=lambda x: x), \
-             patch("pas.plugins.ldap.sheet.ILDAPUsersConfig"), \
-             patch("pas.plugins.ldap.sheet.ILDAPGroupsConfig") as mock_cfg, \
-             patch("pas.plugins.ldap.sheet.getRequest", return_value=None), \
-             patch("pas.plugins.ldap.sheet.UserPropertySheet.__init__", return_value=None):
+        with (
+            patch("pas.plugins.ldap.sheet.aq_base", side_effect=lambda x: x),
+            patch("pas.plugins.ldap.sheet.ILDAPUsersConfig"),
+            patch("pas.plugins.ldap.sheet.ILDAPGroupsConfig") as mock_cfg,
+            patch("pas.plugins.ldap.sheet.getRequest", return_value=None),
+            patch(
+                "pas.plugins.ldap.sheet.UserPropertySheet.__init__", return_value=None
+            ),
+        ):
             from pas.plugins.ldap.sheet import LDAPUserPropertySheet
+
             principal = MagicMock()
             principal.getId.return_value = "uid0"
             plugin = MagicMock()
@@ -151,7 +169,7 @@ class TestLDAPUserPropertySheetInit(unittest.TestCase):
 
     def test_init_no_request_calls_context_load(self):
         """With request=None, attrs.context.load() is called (lines 50-51)."""
-        sheet, _, mock_ldap_principal, _ = _build_init_sheet(
+        _sheet, _, mock_ldap_principal, _ = _build_init_sheet(
             request=None, attrmap={"mail": "mail"}
         )
         mock_ldap_principal.attrs.context.load.assert_called_once()
@@ -159,14 +177,14 @@ class TestLDAPUserPropertySheetInit(unittest.TestCase):
     def test_init_no_request_does_not_set_reload_flag(self):
         """With request=None, _ldap_props_reloaded is NOT set (line 52 False branch)."""
         request = None
-        sheet, _, _, _ = _build_init_sheet(request=request, attrmap={"mail": "mail"})
+        _sheet, _, _, _ = _build_init_sheet(request=request, attrmap={"mail": "mail"})
         # No exception means the code didn't try to set the item on None
 
     def test_init_request_not_reloaded_sets_flag(self):
         """With a fresh request, loads attrs and sets _ldap_props_reloaded (lines 50-53)."""
         request = MagicMock()
         request.get.return_value = None  # not yet reloaded → falsy
-        sheet, _, mock_ldap_principal, _ = _build_init_sheet(
+        _sheet, _, mock_ldap_principal, _ = _build_init_sheet(
             request=request, attrmap={"mail": "mail"}
         )
         mock_ldap_principal.attrs.context.load.assert_called_once()
@@ -176,7 +194,7 @@ class TestLDAPUserPropertySheetInit(unittest.TestCase):
         """With a reloaded request, skips attrs.context.load (line 50 False branch)."""
         request = MagicMock()
         request.get.return_value = 1  # already reloaded → truthy
-        sheet, _, mock_ldap_principal, _ = _build_init_sheet(
+        _sheet, _, mock_ldap_principal, _ = _build_init_sheet(
             request=request, attrmap={"mail": "mail"}
         )
         mock_ldap_principal.attrs.context.load.assert_not_called()
@@ -185,19 +203,24 @@ class TestLDAPUserPropertySheetInit(unittest.TestCase):
 
     def test_init_loads_properties_from_ldap_attrs(self):
         """Properties are loaded from ldapprincipal.attrs for each attrmap key (lines 54-55)."""
-        sheet, _, mock_ldap_principal, _ = _build_init_sheet(
+        _sheet, _, mock_ldap_principal, _ = _build_init_sheet(
             attrmap={"mail": "mail"}, request=None
         )
         mock_ldap_principal.attrs.get.assert_called_with("mail", "")
 
     def test_init_calls_userpropertysheet_init(self):
         """UserPropertySheet.__init__ is called at the end of __init__ (line 56)."""
-        with patch("pas.plugins.ldap.sheet.aq_base", side_effect=lambda x: x), \
-             patch("pas.plugins.ldap.sheet.ILDAPUsersConfig") as mock_cfg, \
-             patch("pas.plugins.ldap.sheet.ILDAPGroupsConfig"), \
-             patch("pas.plugins.ldap.sheet.getRequest", return_value=None), \
-             patch("pas.plugins.ldap.sheet.UserPropertySheet.__init__", return_value=None) as mock_up_init:
+        with (
+            patch("pas.plugins.ldap.sheet.aq_base", side_effect=lambda x: x),
+            patch("pas.plugins.ldap.sheet.ILDAPUsersConfig") as mock_cfg,
+            patch("pas.plugins.ldap.sheet.ILDAPGroupsConfig"),
+            patch("pas.plugins.ldap.sheet.getRequest", return_value=None),
+            patch(
+                "pas.plugins.ldap.sheet.UserPropertySheet.__init__", return_value=None
+            ) as mock_up_init,
+        ):
             from pas.plugins.ldap.sheet import LDAPUserPropertySheet
+
             principal = MagicMock()
             principal.getId.return_value = "uid0"
             plugin = MagicMock()
@@ -228,6 +251,7 @@ class TestLDAPUserPropertySheetInit(unittest.TestCase):
 # _get_ldap_principal  (lines 66-67)
 # ---------------------------------------------------------------------------
 
+
 class TestGetLDAPPrincipal(unittest.TestCase):
     """Tests for _get_ldap_principal."""
 
@@ -250,6 +274,7 @@ class TestGetLDAPPrincipal(unittest.TestCase):
 # canWriteProperty  (line 71)
 # ---------------------------------------------------------------------------
 
+
 class TestCanWriteProperty(unittest.TestCase):
     """Tests for canWriteProperty."""
 
@@ -268,6 +293,7 @@ class TestCanWriteProperty(unittest.TestCase):
 # setProperty  (lines 73-82)
 # ---------------------------------------------------------------------------
 
+
 class TestSetProperty(unittest.TestCase):
     """Tests for setProperty."""
 
@@ -279,13 +305,19 @@ class TestSetProperty(unittest.TestCase):
 
     def test_updates_ldap_attrs(self):
         """ldapprincipal.attrs[id] is updated (line 77)."""
-        sheet, mock_ldap_principal = _make_bare_sheet(properties={"mail": "old@example.com"})
+        sheet, mock_ldap_principal = _make_bare_sheet(
+            properties={"mail": "old@example.com"}
+        )
         sheet.setProperty(None, "mail", "new@example.com")
-        mock_ldap_principal.attrs.__setitem__.assert_called_with("mail", "new@example.com")
+        mock_ldap_principal.attrs.__setitem__.assert_called_with(
+            "mail", "new@example.com"
+        )
 
     def test_calls_ldapprincipal_context(self):
         """ldapprincipal.context() is called to persist the change (line 79)."""
-        sheet, mock_ldap_principal = _make_bare_sheet(properties={"mail": "old@example.com"})
+        sheet, mock_ldap_principal = _make_bare_sheet(
+            properties={"mail": "old@example.com"}
+        )
         sheet.setProperty(None, "mail", "new@example.com")
         mock_ldap_principal.context.assert_called_once()
 
@@ -310,6 +342,7 @@ class TestSetProperty(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # setProperties  (lines 84-95)
 # ---------------------------------------------------------------------------
+
 
 class TestSetProperties(unittest.TestCase):
     """Tests for setProperties."""

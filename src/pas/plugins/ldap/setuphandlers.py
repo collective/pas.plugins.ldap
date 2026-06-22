@@ -6,6 +6,7 @@ from zope.component.hooks import getSite
 
 import logging
 
+
 logger = logging.getLogger(PACKAGE_NAME)
 
 TITLE = f"LDAP plugin ({PACKAGE_NAME})"

@@ -4,27 +4,25 @@ These tests exercise the branches not reached by the LDAP integration
 tests, using unittest.mock so no real LDAP server or Zope layer is needed.
 """
 
-import time
-import unittest
-from unittest.mock import MagicMock, patch, PropertyMock
+from pas.plugins.ldap.interfaces import VALUE_NOT_CACHED
+from pas.plugins.ldap.plugin import ldap_error_handler
+from pas.plugins.ldap.plugin import LDAP_ERROR_LOG_TIMEOUT
+from pas.plugins.ldap.plugin import LDAP_LONG_RUNNING_LOG_THRESHOLD
+from pas.plugins.ldap.plugin import LDAPPlugin
+from pas.plugins.ldap.plugin import manage_addLDAPPlugin
+from unittest.mock import MagicMock
+from unittest.mock import patch
+from unittest.mock import PropertyMock
 
 import ldap
-
-from pas.plugins.ldap.plugin import (
-    LDAP_ERROR_LOG_TIMEOUT,
-    LDAP_LONG_RUNNING_LOG_THRESHOLD,
-    LDAPPlugin,
-    ldap_error_handler,
-    manage_addLDAPPlugin,
-)
-from pas.plugins.ldap.interfaces import VALUE_NOT_CACHED
-from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
-from Products.PlonePAS import interfaces as plonepas_interfaces
+import time
+import unittest
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_plugin(plugin_id="testplugin", title="Test Plugin"):
     """Return a minimal LDAPPlugin bypassing Zope/LDAP initialization."""
@@ -45,6 +43,7 @@ class _Dummy:
 # ---------------------------------------------------------------------------
 # manage_addLDAPPlugin  (lines 52-55)
 # ---------------------------------------------------------------------------
+
 
 class TestManageAddLDAPPlugin(unittest.TestCase):
     """Tests for the module-level manage_addLDAPPlugin factory function."""
@@ -79,6 +78,7 @@ class TestManageAddLDAPPlugin(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # ldap_error_handler  (lines 93, 102-106)
 # ---------------------------------------------------------------------------
+
 
 class TestLdapErrorHandler(unittest.TestCase):
     """Tests for the ldap_error_handler decorator factory."""
@@ -134,7 +134,7 @@ class TestLdapErrorHandler(unittest.TestCase):
             return "result"
 
         obj = _Dummy()
-        obj._v_ldaperror_timeout = time.time()   # very recent error
+        obj._v_ldaperror_timeout = time.time()  # very recent error
         obj._v_ldaperror_msg = "previous failure"
         with patch("pas.plugins.ldap.plugin.logger"):
             result = good_op(obj)
@@ -144,6 +144,7 @@ class TestLdapErrorHandler(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # groups_enabled / users_enabled  (lines 161, 167)
 # ---------------------------------------------------------------------------
+
 
 class TestGroupsUsersEnabled(unittest.TestCase):
     def setUp(self):
@@ -178,6 +179,7 @@ class TestGroupsUsersEnabled(unittest.TestCase):
 # ldaperror property  (lines 204-208)
 # ---------------------------------------------------------------------------
 
+
 class TestLdaperror(unittest.TestCase):
     def setUp(self):
         self.plugin = _make_plugin()
@@ -185,7 +187,7 @@ class TestLdaperror(unittest.TestCase):
     def test_ldaperror_returns_message_when_recent_error(self):
         """Returns formatted message string when error is within timeout (204-207)."""
         self.plugin._v_ldaperror_msg = "connection refused"
-        self.plugin._v_ldaperror_timeout = time.time()   # very recent
+        self.plugin._v_ldaperror_timeout = time.time()  # very recent
         result = self.plugin.ldaperror
         self.assertIn("connection refused", result)
         self.assertIn("for", result)
@@ -207,16 +209,18 @@ class TestLdaperror(unittest.TestCase):
 # reset  (line 214)
 # ---------------------------------------------------------------------------
 
+
 class TestReset(unittest.TestCase):
     def test_reset_executes_without_error(self):
         """reset() passes silently (line 214)."""
         plugin = _make_plugin()
-        plugin.reset()   # should not raise
+        plugin.reset()  # should not raise
 
 
 # ---------------------------------------------------------------------------
 # authenticateCredentials  (lines 235, 239, 243, 245-248)
 # ---------------------------------------------------------------------------
+
 
 class TestAuthenticateCredentials(unittest.TestCase):
     def setUp(self):
@@ -272,6 +276,7 @@ class TestAuthenticateCredentials(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # enumerateGroups  (lines 300, 303, 307, 313-320)
 # ---------------------------------------------------------------------------
+
 
 class TestEnumerateGroups(unittest.TestCase):
     def setUp(self):
@@ -348,6 +353,7 @@ class TestEnumerateGroups(unittest.TestCase):
 # getGroupsForPrincipal  (lines 337, 341-352)
 # ---------------------------------------------------------------------------
 
+
 class TestGetGroupsForPrincipal(unittest.TestCase):
     def setUp(self):
         self.plugin = _make_plugin()
@@ -408,6 +414,7 @@ class TestGetGroupsForPrincipal(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # enumerateUsers  (lines 412, 417, 421, 425, 429, 441-448)
 # ---------------------------------------------------------------------------
+
 
 class TestEnumerateUsers(unittest.TestCase):
     def setUp(self):
@@ -499,6 +506,7 @@ class TestEnumerateUsers(unittest.TestCase):
 # getRolesForPrincipal  (lines 466, 468)
 # ---------------------------------------------------------------------------
 
+
 class TestGetRolesForPrincipal(unittest.TestCase):
     def setUp(self):
         self.plugin = _make_plugin()
@@ -548,6 +556,7 @@ class TestGetRolesForPrincipal(unittest.TestCase):
 # updateUser / updateEveryLoginName  (lines 485, 501)
 # ---------------------------------------------------------------------------
 
+
 class TestUpdateMethods(unittest.TestCase):
     def setUp(self):
         self.plugin = _make_plugin()
@@ -568,6 +577,7 @@ class TestUpdateMethods(unittest.TestCase):
 # setPropertiesForUser  (line 606)
 # deleteUser            (line 615)
 # ---------------------------------------------------------------------------
+
 
 class TestPropertiesMethods(unittest.TestCase):
     def setUp(self):
@@ -638,6 +648,7 @@ class TestPropertiesMethods(unittest.TestCase):
 # doAddUser / doChangeUser / doDeleteUser  (lines 629, 641-643, 654)
 # ---------------------------------------------------------------------------
 
+
 class TestUserManagementMethods(unittest.TestCase):
     def setUp(self):
         self.plugin = _make_plugin()
@@ -653,9 +664,11 @@ class TestUserManagementMethods(unittest.TestCase):
         mock_users.passwd.side_effect = KeyError("uid_unknown")
         with patch.object(type(self.plugin), "users", new_callable=PropertyMock) as pu:
             pu.return_value = mock_users
-            with patch("pas.plugins.ldap.plugin.logger"):
-                with self.assertRaises(RuntimeError) as ctx:
-                    self.plugin.doChangeUser("uid_unknown", "newpass")
+            with (
+                patch("pas.plugins.ldap.plugin.logger"),
+                self.assertRaises(RuntimeError) as ctx,
+            ):
+                self.plugin.doChangeUser("uid_unknown", "newpass")
         self.assertIn("uid_unknown", str(ctx.exception))
 
     def test_doDeleteUser_returns_false(self):
@@ -667,6 +680,7 @@ class TestUserManagementMethods(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # getGroupById  (lines 700, 702, 704, 707-729)
 # ---------------------------------------------------------------------------
+
 
 class TestGetGroupById(unittest.TestCase):
     def setUp(self):
@@ -730,7 +744,7 @@ class TestGetGroupById(unittest.TestCase):
             with patch("pas.plugins.ldap.plugin.PloneGroup") as MockPloneGroup:
                 mock_group = MagicMock()
                 MockPloneGroup.return_value.__of__ = MagicMock(return_value=mock_group)
-                result = self.plugin.getGroupById("grp1")
+                self.plugin.getGroupById("grp1")
         # Should have tried to create a PloneGroup
         MockPloneGroup.assert_called_once_with("grp1", "Group One")
 
@@ -753,7 +767,7 @@ class TestGetGroupById(unittest.TestCase):
         # Return one propfinder and no role finder
         mock_plugins.listPlugins.side_effect = [
             [("propfinder1", mock_propfinder)],  # IPropertiesPlugin
-            [],                                   # IRolesPlugin
+            [],  # IRolesPlugin
         ]
         mock_pas.plugins = mock_plugins
         mock_pas._getGroupsForPrincipal.return_value = []
@@ -765,7 +779,9 @@ class TestGetGroupById(unittest.TestCase):
                 mock_group = MagicMock()
                 MockPloneGroup.return_value.__of__ = MagicMock(return_value=mock_group)
                 self.plugin.getGroupById("grp1")
-        mock_group.addPropertysheet.assert_called_once_with("propfinder1", mock_propdata)
+        mock_group.addPropertysheet.assert_called_once_with(
+            "propfinder1", mock_propdata
+        )
 
     def test_adds_roles_to_group(self):
         """Iterates role makers and adds non-empty roles (line 728)."""
@@ -783,8 +799,8 @@ class TestGetGroupById(unittest.TestCase):
         mock_pas = MagicMock()
         mock_plugins = MagicMock()
         mock_plugins.listPlugins.side_effect = [
-            [],                                     # IPropertiesPlugin
-            [("rolemaker1", mock_rolemaker)],        # IRolesPlugin
+            [],  # IPropertiesPlugin
+            [("rolemaker1", mock_rolemaker)],  # IRolesPlugin
         ]
         mock_pas.plugins = mock_plugins
         mock_pas._getGroupsForPrincipal.return_value = []
@@ -802,6 +818,7 @@ class TestGetGroupById(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # getGroupIds  (line 748)
 # ---------------------------------------------------------------------------
+
 
 class TestGetGroupIds(unittest.TestCase):
     def setUp(self):
@@ -828,6 +845,7 @@ class TestGetGroupIds(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # getGroupMembers  (lines 758, 762-763)
 # ---------------------------------------------------------------------------
+
 
 class TestGetGroupMembers(unittest.TestCase):
     def setUp(self):
@@ -865,6 +883,7 @@ class TestGetGroupMembers(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # allowPasswordSet  (lines 774, 777, 779)
 # ---------------------------------------------------------------------------
+
 
 class TestAllowPasswordSet(unittest.TestCase):
     def setUp(self):
@@ -909,6 +928,7 @@ class TestAllowPasswordSet(unittest.TestCase):
 # is_plugin_active real body  (lines 153-155)
 # ---------------------------------------------------------------------------
 
+
 class TestIsPluginActiveRealBody(unittest.TestCase):
     def test_returns_true_when_plugin_id_in_list(self):
         """Real method: returns True when getId() is in listPluginIds (153-155)."""
@@ -935,6 +955,7 @@ class TestIsPluginActiveRealBody(unittest.TestCase):
 # _ldap_props property  (line 172)
 # ---------------------------------------------------------------------------
 
+
 class TestLdapPropsProperty(unittest.TestCase):
     def test_returns_ildapprops_adapter(self):
         """_ldap_props calls ILDAPProps(self) and returns the result (line 172)."""
@@ -948,6 +969,7 @@ class TestLdapPropsProperty(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # _ugm() method  (lines 176-184)
 # ---------------------------------------------------------------------------
+
 
 class TestUgmMethod(unittest.TestCase):
     def test_ugm_builds_and_caches_ugm_on_cache_miss(self):
@@ -972,7 +994,9 @@ class TestUgmMethod(unittest.TestCase):
         plugin = _make_plugin()
         cached_ugm = MagicMock()
         mock_cache = MagicMock()
-        mock_cache.get.return_value = cached_ugm  # something other than VALUE_NOT_CACHED
+        mock_cache.get.return_value = (
+            cached_ugm  # something other than VALUE_NOT_CACHED
+        )
 
         with patch("pas.plugins.ldap.plugin.get_plugin_cache", return_value=mock_cache):
             result = plugin._ugm()
@@ -984,6 +1008,7 @@ class TestUgmMethod(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # groups / users real property bodies  (lines 191, 198)
 # ---------------------------------------------------------------------------
+
 
 class TestGroupsUsersPropertyBodies(unittest.TestCase):
     def test_groups_property_calls_ugm_groups(self):
@@ -1009,6 +1034,7 @@ class TestGroupsUsersPropertyBodies(unittest.TestCase):
 # getRolesForPrincipal "user not found" branch  (line 469)
 # ---------------------------------------------------------------------------
 
+
 class TestGetRolesForPrincipalNotFound(unittest.TestCase):
     def test_returns_empty_when_enumerateusers_finds_nothing(self):
         """Returns () when users is truthy but enumerateUsers returns () (line 469)."""
@@ -1028,6 +1054,7 @@ class TestGetRolesForPrincipalNotFound(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # Group management stubs  (lines 513, 522, 531, 542, 551, 560)
 # ---------------------------------------------------------------------------
+
 
 class TestGroupManagementStubs(unittest.TestCase):
     def setUp(self):
@@ -1062,6 +1089,7 @@ class TestGroupManagementStubs(unittest.TestCase):
 # Capability allow methods  (lines 664, 677, 686)
 # ---------------------------------------------------------------------------
 
+
 class TestCapabilityAllowMethods(unittest.TestCase):
     def setUp(self):
         self.plugin = _make_plugin()
@@ -1082,6 +1110,7 @@ class TestCapabilityAllowMethods(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # getGroupById continue branches  (lines 719, 727)
 # ---------------------------------------------------------------------------
+
 
 class TestGetGroupByIdContinueBranches(unittest.TestCase):
     def setUp(self):
@@ -1107,7 +1136,7 @@ class TestGetGroupByIdContinueBranches(unittest.TestCase):
         mock_plugins = MagicMock()
         mock_plugins.listPlugins.side_effect = [
             [("propfinder1", mock_propfinder)],  # IPropertiesPlugin
-            [],                                   # IRolesPlugin
+            [],  # IRolesPlugin
         ]
         mock_pas.plugins = mock_plugins
         mock_pas._getGroupsForPrincipal.return_value = []
@@ -1131,8 +1160,8 @@ class TestGetGroupByIdContinueBranches(unittest.TestCase):
         mock_pas = MagicMock()
         mock_plugins = MagicMock()
         mock_plugins.listPlugins.side_effect = [
-            [],                                    # IPropertiesPlugin
-            [("rolemaker1", mock_rolemaker)],       # IRolesPlugin
+            [],  # IPropertiesPlugin
+            [("rolemaker1", mock_rolemaker)],  # IRolesPlugin
         ]
         mock_pas.plugins = mock_plugins
         mock_pas._getGroupsForPrincipal.return_value = []
@@ -1151,6 +1180,7 @@ class TestGetGroupByIdContinueBranches(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # getGroups  (line 739)
 # ---------------------------------------------------------------------------
+
 
 class TestGetGroups(unittest.TestCase):
     def test_getGroups_returns_list_via_getGroupById(self):
