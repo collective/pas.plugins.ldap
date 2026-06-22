@@ -307,7 +307,9 @@ Maintainers are Robert Niederreiter, Jens Klein and the `BlueDynamics Alliance <
 Support
 =======
 
-We appreciate any contribution and if a release is needed to be done on pypi, please just contact one of us:
+We appreciate any contribution. Releases to PyPI are automated via tagging and
+Trusted Publishing; see `RELEASE.md <https://github.com/collective/pas.plugins.ldap/blob/main/RELEASE.md>`_
+for the process. If you need a release done, please contact one of us:
 `dev@bluedynamics dot com <mailto:dev@bluedynamics.com>`_.
 
 - If you are having issues, please let us know at our `issue tracker <https://github.com/collective/pas.plugins.ldap/issues>`_.
