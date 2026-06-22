@@ -47,7 +47,6 @@ dependencies = [
     "Products.PluggableAuthService",
     "Products.statusmessages",
     "python-ldap>=3.4.0",
-    "setuptools",
     "yafowil.plone>=6.0.0",
     "yafowil.widget.array>=2.0.0",
     "yafowil.widget.dict>=2.0.0",

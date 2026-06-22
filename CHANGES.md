@@ -18,6 +18,9 @@
   `MANIFEST.in`. (The `tests/*.rst` doctest files are unchanged.)
   [jensens]
 
+- Drop the unused `setuptools` runtime dependency (no `pkg_resources` usage).
+  [jensens]
+
 - Portrait traverser: raise a proper `LocationError` (404) when a user has
   no portrait on the property sheet, instead of an `AttributeError` from
   calling `__of__` on `None`.
