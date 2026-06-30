@@ -2,6 +2,14 @@
 
 ## 2.0.0 (unreleased)
 
+- Fix the user/group property-mapping widgets disappearing from the Plone
+  control panel: scope the `pat-autotoc` tabbing to the top-level
+  `fieldset.formPanel` sections so it no longer hides the nested, legend-less
+  fieldsets rendered by the `yafowil.widget.dict` / `yafowil.widget.array`
+  widgets.
+  Fixes [issue #154](https://github.com/collective/pas.plugins.ldap/issues/154).
+  [jensens]
+
 - Derive the package version from git tags via `hatch-vcs` (the static
   `version` in `pyproject.toml` is gone). Releases are now made by tagging.
   [jensens]

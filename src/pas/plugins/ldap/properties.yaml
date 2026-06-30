@@ -4,7 +4,13 @@ props:
     action: expr:context.action
     class: edit-form enableFormTabbing pat-autotoc enableUnloadProtection
     data:
-        pat-autotoc: "levels: legend; section: fieldset; className: autotabs"
+        # Scope the auto-TOC tabbing to the top-level section fieldsets only
+        # (server/users/groups/cache all carry the ``formPanel`` class).
+        # A bare ``section: fieldset`` also matched the nested, legend-less
+        # ``<fieldset>`` wrappers that yafowil.widget.dict / .array render,
+        # which made pat-autotoc hide the user/group property-mapping widgets
+        # in the Plone control panel (see issue #154).
+        pat-autotoc: "levels: legend; section: fieldset.formPanel; className: autotabs"
 widgets:
 - server:
     factory: "*userpassanon:fieldset"
