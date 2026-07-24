@@ -46,6 +46,6 @@ class LDAPControlPanel(BasePropertiesForm):
             widget (Widget): Widget instance
             data (Data): Data extracted from the form
         """
-        super().save(widget, data)
+        super(LDAPControlPanel, self).save(widget, data)
         messages = IStatusMessage(self.request)
         messages.addStatusMessage(_("LDAP Settings saved."), type="info")
