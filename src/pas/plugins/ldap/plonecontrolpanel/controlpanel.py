@@ -46,6 +46,13 @@ class LDAPControlPanel(BasePropertiesForm):
             widget (Widget): Widget instance
             data (Data): Data extracted from the form
         """
-        super().save(widget, data)
+        # NOTE: Explicit super() call is required here. The zero-argument
+        # form relies on a compile-time __class__ cell, which becomes stale
+        # because @plumbing(CSRFProtectionBehavior) replaces this class with
+        # a new class object rather than patching it in place. Using
+        # super() (zero-arg) causes:
+        #   TypeError: super(type, obj): obj ... is not an instance or
+        #   subtype of type (LDAPControlPanel)
+        super(LDAPControlPanel, self).save(widget, data)  # noqa: UP008
         messages = IStatusMessage(self.request)
         messages.addStatusMessage(_("LDAP Settings saved."), type="info")
