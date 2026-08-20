@@ -2,6 +2,9 @@
 
 ## 2.0.0 (unreleased)
 
+- Updated the Spanish translation.
+  [macagua]
+
 - Fixed the i18n support for the @@plone_ldapinspector view.
   [macagua]
 
