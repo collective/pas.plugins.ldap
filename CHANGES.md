@@ -2,6 +2,9 @@
 
 ## 2.0.0 (unreleased)
 
+- Fixed the i18n support for the @@plone_ldapinspector view.
+  [macagua]
+
 - Fix the user/group property-mapping widgets disappearing from the Plone
   control panel: scope the `pat-autotoc` tabbing to the top-level
   `fieldset.formPanel` sections so it no longer hides the nested, legend-less

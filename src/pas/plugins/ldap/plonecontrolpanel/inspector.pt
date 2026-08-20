@@ -24,6 +24,11 @@
     </ul>
   </div>
 
+    <div id="ldap_i18n_messages" hidden="hidden">
+        <span id="ldap_no_search_base_selected" i18n:translate="">No search base selected</span>
+        <span id="ldap_empty_result" i18n:translate="">Empty result</span>
+    </div>
+
   <style>
     #ldap_child_listing {
         margin-top:1em;
@@ -72,7 +77,7 @@
                 listing.empty();
                 var li = $(document.createElement('li'));
                 var span = $(document.createElement('span'));
-                span.text('No search base selected');
+                span.text($('#ldap_no_search_base_selected').text());
                 li.append(span);
                 listing.append(li);
             }
@@ -117,7 +122,7 @@
                 if (listing.children().length === 0) {
                     var li = $(document.createElement('li'));
                     var span = $(document.createElement('span'));
-                    span.text('Empty result');
+                    span.text($('#ldap_empty_result').text());
                     li.append(span);
                     listing.append(li);
                 }
