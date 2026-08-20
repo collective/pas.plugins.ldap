@@ -2,9 +2,6 @@
 
 ## 2.0.0 (unreleased)
 
-- Added more QA improvements to the source code.
-  [macagua]
-
 - Updated the Spanish translation.
   [macagua]
 

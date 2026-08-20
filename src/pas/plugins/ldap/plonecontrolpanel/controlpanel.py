@@ -1,13 +1,11 @@
 """Control panel for LDAP plugin"""
 
+from ..properties import BasePropertiesForm
+from pas.plugins.ldap import _
 from plumber import plumbing
 from Products.statusmessages.interfaces import IStatusMessage
 from yafowil.plone.form import CSRFProtectionBehavior
 from zope.component.hooks import getSite
-
-from pas.plugins.ldap import _
-
-from ..properties import BasePropertiesForm
 
 
 @plumbing(CSRFProtectionBehavior)

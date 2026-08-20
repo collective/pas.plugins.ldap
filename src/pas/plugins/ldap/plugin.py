@@ -1,27 +1,30 @@
 """LDAP plugin for Plone PAS."""
 
-import logging
-import os
-import time
-
-import ldap
+from .cache import get_plugin_cache
+from .interfaces import ILDAPPlugin
+from .interfaces import VALUE_NOT_CACHED
+from .sheet import LDAPUserPropertySheet
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
 from BTrees import OOBTree
-from node.ext.ldap.interfaces import (ILDAPGroupsConfig, ILDAPProps,
-                                      ILDAPUsersConfig)
+from node.ext.ldap.interfaces import ILDAPGroupsConfig
+from node.ext.ldap.interfaces import ILDAPProps
+from node.ext.ldap.interfaces import ILDAPUsersConfig
 from node.ext.ldap.ugm import Ugm
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PlonePAS import interfaces as plonepas_interfaces
 from Products.PlonePAS.plugins.group import PloneGroup
 from Products.PluggableAuthService.interfaces import plugins as pas_interfaces
-from Products.PluggableAuthService.permissions import ManageGroups, ManageUsers
+from Products.PluggableAuthService.permissions import ManageGroups
+from Products.PluggableAuthService.permissions import ManageUsers
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from zope.interface import implementer
 
-from .cache import get_plugin_cache
-from .interfaces import VALUE_NOT_CACHED, ILDAPPlugin
-from .sheet import LDAPUserPropertySheet
+import ldap
+import logging
+import os
+import time
+
 
 logger = logging.getLogger("pas.plugins.ldap")
 zmidir = os.path.join(os.path.dirname(__file__), "zmi")

@@ -1,14 +1,14 @@
 """Cache settings record provider for plone registry"""
 
+from ..interfaces import ICacheSettingsRecordProvider
+from pas.plugins.ldap import _
 from persistent import Persistent
-from plone.registry import Record, field
+from plone.registry import field
+from plone.registry import Record
 from plone.registry.interfaces import IRegistry
 from zope.component import queryUtility
 from zope.interface import implementer
 
-from pas.plugins.ldap import _
-
-from ..interfaces import ICacheSettingsRecordProvider
 
 REGKEY = "pas.plugins.ldap.memcached"
 

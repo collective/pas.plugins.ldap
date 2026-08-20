@@ -1,23 +1,31 @@
 """Properties and configuration for the LDAP plugin."""
 
-import ldap
-from node.ext.ldap.interfaces import (ILDAPGroupsConfig, ILDAPProps,
-                                      ILDAPUsersConfig)
-from node.ext.ldap.properties import BINARY_DEFAULTS, MULTIVALUED_DEFAULTS
-from node.ext.ldap.scope import BASE, ONELEVEL, SUBTREE
+from .defaults import DEFAULTS
+from .interfaces import ICacheSettingsRecordProvider
+from .interfaces import ILDAPPlugin
+from node.ext.ldap.interfaces import ILDAPGroupsConfig
+from node.ext.ldap.interfaces import ILDAPProps
+from node.ext.ldap.interfaces import ILDAPUsersConfig
+from node.ext.ldap.properties import BINARY_DEFAULTS
+from node.ext.ldap.properties import MULTIVALUED_DEFAULTS
+from node.ext.ldap.scope import BASE
+from node.ext.ldap.scope import ONELEVEL
+from node.ext.ldap.scope import SUBTREE
 from node.ext.ldap.ugm import Ugm
 from odict import odict
+from pas.plugins.ldap import _
+from pas.plugins.ldap import logger
 from yafowil import loader  # noqa: F401
-from yafowil.base import UNSET, ExtractionError
+from yafowil.base import ExtractionError
+from yafowil.base import UNSET
 from yafowil.controller import Controller
 from yafowil.plone.form import YAMLBaseForm
-from zope.component import adapter, queryUtility
+from zope.component import adapter
+from zope.component import queryUtility
 from zope.interface import implementer
 
-from pas.plugins.ldap import _, logger
+import ldap
 
-from .defaults import DEFAULTS
-from .interfaces import ICacheSettingsRecordProvider, ILDAPPlugin
 
 _marker = {}
 

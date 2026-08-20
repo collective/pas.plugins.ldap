@@ -1,14 +1,15 @@
 """View for inspecting LDAP directory structure and attributes for debugging."""
 
-import json
-
 from node.ext.ldap import LDAPNode
-from node.ext.ldap.interfaces import (ILDAPGroupsConfig, ILDAPProps,
-                                      ILDAPUsersConfig)
+from node.ext.ldap.interfaces import ILDAPGroupsConfig
+from node.ext.ldap.interfaces import ILDAPProps
+from node.ext.ldap.interfaces import ILDAPUsersConfig
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.CMFPlone.utils import safe_unicode
 from Products.Five import BrowserView
 from zope.component import getUtility
+
+import json
 
 
 class LDAPInspector(BrowserView):
