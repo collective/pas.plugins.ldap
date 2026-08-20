@@ -2,14 +2,14 @@
 
 # TEMPORARY MONKEY PATCH
 # until this is changed upstream!
-from Acquisition import aq_inner
-from Acquisition import aq_parent
 from io import BytesIO
+
+from Acquisition import aq_inner, aq_parent
 from OFS.Image import Image
 from Products.CMFCore.utils import getToolByName
-from Products.PlonePAS.tools.membership import _checkPermission
-from Products.PlonePAS.tools.membership import default_portrait
-from Products.PlonePAS.tools.membership import MembershipTool
+from Products.PlonePAS.tools.membership import (MembershipTool,
+                                                _checkPermission,
+                                                default_portrait)
 from zope.interface import implementer
 from zope.location.interfaces import LocationError
 from zope.traversing.interfaces import ITraversable

@@ -1,12 +1,11 @@
 """Update locales."""
 
-from pas.plugins.ldap import PACKAGE_NAME
-from pathlib import Path
-
 import logging
 import re
 import subprocess
+from pathlib import Path
 
+from pas.plugins.ldap import PACKAGE_NAME
 
 logger = logging.getLogger("i18n")
 logger.setLevel(logging.DEBUG)

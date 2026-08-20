@@ -1,11 +1,12 @@
 """Import and export handlers for LDAP settings in Plone's control panel."""
 
 from BTrees.OOBTree import OOBTree
-from pas.plugins.ldap import PACKAGE_NAME
 from Products.GenericSetup.interfaces import IBody
 from Products.GenericSetup.utils import XMLAdapterBase
 from zope.component import queryMultiAdapter
 from zope.interface import implementer
+
+from pas.plugins.ldap import PACKAGE_NAME
 
 
 def _get_import_export_handler(context):

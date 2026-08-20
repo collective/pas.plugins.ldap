@@ -1,15 +1,13 @@
 """Property sheet for LDAP users and groups."""
 
+import logging
+
 from Acquisition import aq_base
-from node.ext.ldap.interfaces import ILDAPGroupsConfig
-from node.ext.ldap.interfaces import ILDAPUsersConfig
+from node.ext.ldap.interfaces import ILDAPGroupsConfig, ILDAPUsersConfig
 from Products.PlonePAS.interfaces.propertysheets import IMutablePropertySheet
 from Products.PluggableAuthService.UserPropertySheet import UserPropertySheet
 from zope.globalrequest import getRequest
 from zope.interface import implementer
-
-import logging
-
 
 logger = logging.getLogger("pas.plugins.ldap")
 

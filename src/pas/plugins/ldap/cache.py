@@ -1,20 +1,17 @@
 """Cache management for the LDAP plugin."""
 
-from .interfaces import ICacheSettingsRecordProvider
-from .interfaces import ILDAPPlugin
-from .interfaces import IPluginCacheHandler
-from .interfaces import VALUE_NOT_CACHED
-from bda.cache import Memcached
-from bda.cache import NullCache
-from node.ext.ldap.interfaces import ICacheProviderFactory
-from zope.component import adapter
-from zope.component import queryUtility
-from zope.globalrequest import getRequest
-from zope.interface import implementer
-
 import contextlib
 import threading
 import time
+
+from bda.cache import Memcached, NullCache
+from node.ext.ldap.interfaces import ICacheProviderFactory
+from zope.component import adapter, queryUtility
+from zope.globalrequest import getRequest
+from zope.interface import implementer
+
+from .interfaces import (VALUE_NOT_CACHED, ICacheSettingsRecordProvider,
+                         ILDAPPlugin, IPluginCacheHandler)
 
 
 class PasLdapMemcached(Memcached):
